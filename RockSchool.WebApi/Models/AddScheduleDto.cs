@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RockSchool.WebApi.Models;
+﻿namespace RockSchool.WebApi.Models;
 
 public class AddScheduleDto
 {

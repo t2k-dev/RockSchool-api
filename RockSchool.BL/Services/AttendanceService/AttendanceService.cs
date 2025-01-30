@@ -67,7 +67,7 @@ public class AttendanceService : IAttendanceService
             {
                 var beginDate = ScheduleHelper.GetNextWeekday(startDate, item.WeekDay);
 
-                var attendance = new AttendanceEntity()
+                var attendance = new AttendanceEntity
                 {
                     StudentId = attendanceServiceRequestDto.StudentId,
                     TeacherId = attendanceServiceRequestDto.TeacherId,

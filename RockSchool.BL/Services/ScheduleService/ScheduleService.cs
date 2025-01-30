@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using RockSchool.BL.Dtos.Service.Requests.ScheduleService;
+﻿using RockSchool.BL.Dtos.Service.Requests.ScheduleService;
 using RockSchool.BL.Dtos.Service.Responses;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
@@ -8,7 +7,7 @@ namespace RockSchool.BL.Services.ScheduleService;
 
 public class ScheduleService : IScheduleService
 {
-    private ScheduleRepository _scheduleRepository;
+    private readonly ScheduleRepository _scheduleRepository;
 
     public ScheduleService(ScheduleRepository scheduleRepository)
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using RockSchool.Data.Entities;
 
-
 namespace RockSchool.WebApi.Models;
 
 public class TeacherDto

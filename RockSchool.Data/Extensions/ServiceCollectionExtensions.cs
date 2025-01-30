@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
 
 namespace RockSchool.Data.Extensions;
 

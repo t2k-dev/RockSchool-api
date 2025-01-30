@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using RockSchool.BL.Dtos.Service.Requests.StudentService;
+﻿using Microsoft.AspNetCore.Identity;
 using RockSchool.BL.Dtos.Service.Requests.UserService;
 using RockSchool.BL.Dtos.Service.Responses;
 using RockSchool.Data.Entities;
@@ -10,8 +8,8 @@ namespace RockSchool.BL.Services.UserService;
 
 public class UserService : IUserService
 {
-    private readonly UserRepository _userRepository;
     private readonly IPasswordHasher<UserEntity> _passwordHasher;
+    private readonly UserRepository _userRepository;
 
     public UserService(UserRepository userRepository, IPasswordHasher<UserEntity> passwordHasher)
     {
@@ -42,31 +40,6 @@ public class UserService : IUserService
         return savedUser.Id;
     }
 
-    private (bool IsSuccess, string FinalPassword, string ErrorMessage) ValidateAndGetFinalPassword(
-        string? password,
-        string? confirmPassword)
-    {
-        if (string.IsNullOrWhiteSpace(password))
-            return (true, "123456", string.Empty);
-
-        if (string.IsNullOrWhiteSpace(confirmPassword))
-            return (false, string.Empty, "ConfirmPassword is required if Password is provided.");
-
-        if (!password.Equals(confirmPassword))
-            return (false, string.Empty, "Password and ConfirmPassword do not match.");
-
-        return (true, password, string.Empty);
-    }
-
-    private UserEntity CreateUserEntity(AddUserServiceRequestDto addUserServiceRequestDto)
-    {
-        return new UserEntity
-        {
-            Login = addUserServiceRequestDto.Login,
-            RoleId = addUserServiceRequestDto.RoleId
-        };
-    }
-
     public async Task<UserDto?> GetUserByIdAsync(int userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
@@ -93,5 +66,30 @@ public class UserService : IUserService
             throw new InvalidOperationException("UserService not found.");
 
         await _userRepository.DeleteAsync(user);
+    }
+
+    private (bool IsSuccess, string FinalPassword, string ErrorMessage) ValidateAndGetFinalPassword(
+        string? password,
+        string? confirmPassword)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+            return (true, "123456", string.Empty);
+
+        if (string.IsNullOrWhiteSpace(confirmPassword))
+            return (false, string.Empty, "ConfirmPassword is required if Password is provided.");
+
+        if (!password.Equals(confirmPassword))
+            return (false, string.Empty, "Password and ConfirmPassword do not match.");
+
+        return (true, password, string.Empty);
+    }
+
+    private UserEntity CreateUserEntity(AddUserServiceRequestDto addUserServiceRequestDto)
+    {
+        return new UserEntity
+        {
+            Login = addUserServiceRequestDto.Login,
+            RoleId = addUserServiceRequestDto.RoleId
+        };
     }
 }

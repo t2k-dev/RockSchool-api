@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos.Service.Requests.TeacherService;
 using RockSchool.BL.Services.TeacherService;
-using RockSchool.Data.Entities;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers;

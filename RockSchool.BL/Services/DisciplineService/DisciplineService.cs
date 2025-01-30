@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using RockSchool.BL.Dtos.Service.Requests.DisciplineService;
+﻿using RockSchool.BL.Dtos.Service.Requests.DisciplineService;
 using RockSchool.BL.Dtos.Service.Responses;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using RockSchool.BL.Dtos.Service.Requests.TeacherService;
+﻿using RockSchool.BL.Dtos.Service.Requests.TeacherService;
 using RockSchool.BL.Dtos.Service.Responses;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
@@ -8,8 +7,8 @@ namespace RockSchool.BL.Services.TeacherService;
 
 public class TeacherService : ITeacherService
 {
-    private readonly TeacherRepository _teacherRepository;
     private readonly DisciplineRepository _disciplineRepository;
+    private readonly TeacherRepository _teacherRepository;
 
     public TeacherService(TeacherRepository teacherRepository,
         DisciplineRepository disciplineRepository)

@@ -17,9 +17,9 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class AccountController : Controller
 {
-    private readonly IUserService _userService;
     private readonly IStudentService _studentService;
     private readonly ITeacherService _teacherService;
+    private readonly IUserService _userService;
 
     public AccountController(IUserService userService, IStudentService studentService, ITeacherService teacherService)
     {
@@ -60,7 +60,7 @@ public class AccountController : Controller
 
         var newUserId = await _userService.AddUserAsync(addUserServiceDto);
 
-        var newStudent = new AddStudentServiceRequestDto()
+        var newStudent = new AddStudentServiceRequestDto
         {
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,
@@ -82,7 +82,7 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             throw new Exception("Incorrect requestDto for registration.");
 
-        var addUserServiceDto = new AddUserServiceRequestDto()
+        var addUserServiceDto = new AddUserServiceRequestDto
         {
             Login = requestDto.Login,
             RoleId = (int)UserRole.Teacher
@@ -90,7 +90,7 @@ public class AccountController : Controller
 
         var newUserId = await _userService.AddUserAsync(addUserServiceDto);
 
-        var newTeacher = new AddTeacherServiceRequestDto()
+        var newTeacher = new AddTeacherServiceRequestDto
         {
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,

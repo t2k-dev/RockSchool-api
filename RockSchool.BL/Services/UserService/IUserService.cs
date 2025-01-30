@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.StudentService;
-using RockSchool.BL.Dtos.Service.Requests.UserService;
+﻿using RockSchool.BL.Dtos.Service.Requests.UserService;
 using RockSchool.BL.Dtos.Service.Responses;
 
 namespace RockSchool.BL.Services.UserService;

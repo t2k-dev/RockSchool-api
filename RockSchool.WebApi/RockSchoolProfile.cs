@@ -1,7 +1,4 @@
-﻿using RockSchool.Data.Entities;
-using RockSchool.WebApi.Models;
-
-namespace RockSchool.WebApi;
+﻿namespace RockSchool.WebApi;
 // public class RockSchoolProfile: Profile
 // {
 //     public RockSchoolProfile()

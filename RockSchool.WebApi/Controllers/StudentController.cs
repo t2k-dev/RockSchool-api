@@ -3,7 +3,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos.Service.Requests.StudentService;
 using RockSchool.BL.Services.StudentService;
-using RockSchool.Data.Entities;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers;
@@ -12,8 +11,8 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class StudentController : Controller
 {
-    private readonly IStudentService _studentService;
     private readonly IMapper _mapper;
+    private readonly IStudentService _studentService;
 
     public StudentController(IStudentService studentService, IMapper mapper)
     {

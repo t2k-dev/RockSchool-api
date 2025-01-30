@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.ScheduleService;
@@ -12,7 +13,6 @@ using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.Data.Entities;
-using RockSchool.Data;
 using RockSchool.Data.Extensions;
 using RockSchool.Data.Repositories;
 
@@ -50,7 +50,7 @@ public class Startup
         // services.AddAutoMapper(this.GetType().Assembly);
         services.AddRockSchoolData(Configuration["DbContextSettings:ConnectionString"]!);
         services.AddControllers().AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         );
         services.AddCors(options =>
         {
