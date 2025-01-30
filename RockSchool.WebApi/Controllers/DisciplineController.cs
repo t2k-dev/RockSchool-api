@@ -4,67 +4,63 @@ using RockSchool.BL.Dtos.Service.Requests.DisciplineService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.WebApi.Models;
 
-namespace RockSchool.WebApi.Controllers
+namespace RockSchool.WebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class DisciplineController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DisciplineController : Controller
+    private readonly IDisciplineService _disciplineService;
+
+    public DisciplineController(IDisciplineService disciplineService)
     {
-        private readonly IDisciplineService _disciplineService;
+        _disciplineService = disciplineService;
+    }
 
-        public DisciplineController(IDisciplineService disciplineService)
+
+    [HttpPost("{disciplineName}")]
+    public async Task<ActionResult> Post(string disciplineName)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var addDisciplineServiceDto = new AddDisciplineServiceRequestDto()
         {
-            _disciplineService = disciplineService;
-        }
+            DisciplineName = disciplineName,
+            IsActive = true
+        };
 
+        await _disciplineService.AddDisciplineAsync(addDisciplineServiceDto);
 
-        [HttpPost("{disciplineName}")]
-        public async Task<ActionResult> Post(string disciplineName)
+        return Ok();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> Get()
+    {
+        var disciplines = await _disciplineService.GetAllDisciplinesAsync();
+
+        return Ok(disciplines);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(int id, [FromBody] DisciplineDto requestDto)
+    {
+        var updateDisciplineServiceDto = new UpdateDisciplineServiceRequestDto()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            DisciplineName = requestDto.DisciplineName,
+            IsActive = requestDto.IsActive
+        };
 
-            var addDisciplineServiceDto = new AddDisciplineServiceRequestDto()
-            {
-                DisciplineName = disciplineName,
-                IsActive = true
-            };
+        await _disciplineService.UpdateDisciplineAsync(updateDisciplineServiceDto);
 
-            await _disciplineService.AddDisciplineAsync(addDisciplineServiceDto);
+        return Ok();
+    }
 
-            return Ok();
-        }
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        await _disciplineService.DeleteDisciplineAsync(new DeleteDisciplineServiceRequestDto() { Id = id });
 
-        [HttpGet]
-        public async Task<ActionResult> Get()
-        {
-            var disciplines = await _disciplineService.GetAllDisciplinesAsync();
-
-            return Ok(disciplines);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] DisciplineDto requestDto)
-        {
-            var updateDisciplineServiceDto = new UpdateDisciplineServiceRequestDto()
-            {
-                DisciplineName = requestDto.DisciplineName,
-                IsActive = requestDto.IsActive
-            };
-
-            await _disciplineService.UpdateDisciplineAsync(updateDisciplineServiceDto);
-
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            await _disciplineService.DeleteDisciplineAsync(new DeleteDisciplineServiceRequestDto() { Id = id });
-
-            return Ok();
-        }
+        return Ok();
     }
 }

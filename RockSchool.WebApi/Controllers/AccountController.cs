@@ -11,106 +11,99 @@ using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Enums;
 
-namespace RockSchool.WebApi.Controllers
+namespace RockSchool.WebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AccountController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AccountController : Controller
+    private readonly IUserService _userService;
+    private readonly IStudentService _studentService;
+    private readonly ITeacherService _teacherService;
+
+    public AccountController(IUserService userService, IStudentService studentService, ITeacherService teacherService)
     {
-        private readonly IUserService _userService;
-        private readonly IStudentService _studentService;
-        private readonly ITeacherService _teacherService;
+        _userService = userService;
+        _studentService = studentService;
+        _teacherService = teacherService;
+    }
 
-        public AccountController(IUserService userService, IStudentService studentService, ITeacherService teacherService)
+    // Not in use
+    [HttpPost("register")]
+    public async Task<ActionResult> Register([FromBody] RegisterUserRequestDto requestDto)
+    {
+        if (!ModelState.IsValid) throw new Exception("Incorrect model for registration.");
+
+        var serviceDto = new AddUserServiceRequestDto
         {
-            _userService = userService;
-            _studentService = studentService;
-            _teacherService = teacherService;
-        }
+            Login = requestDto.Login,
+            Password = requestDto.Password,
+            RoleId = requestDto.RoleId
+        };
 
-        // Not in use
-        [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] RegisterUserRequestDto requestDto)
+        await _userService.AddUserAsync(serviceDto);
+
+        return Ok();
+    }
+
+    [EnableCors("MyPolicy")]
+    [HttpPost("registerStudent")]
+    public async Task<ActionResult> RegisterStudent([FromBody] RegisterStudentRequestDto requestDto)
+    {
+        if (!ModelState.IsValid) throw new Exception("Incorrect requestDto for registration.");
+
+        var addUserServiceDto = new AddUserServiceRequestDto
         {
-            if (!ModelState.IsValid)
-            {
-                throw new Exception("Incorrect model for registration.");
-            }
+            Login = requestDto.Login,
+            RoleId = (int)UserRole.Student
+        };
 
-            var serviceDto = new AddUserServiceRequestDto
-            {
-                Login = requestDto.Login,
-                Password = requestDto.Password,
-                RoleId = requestDto.RoleId
-            };
+        var newUserId = await _userService.AddUserAsync(addUserServiceDto);
 
-            await _userService.AddUserAsync(serviceDto);
-
-            return Ok();
-        }
-
-        [EnableCors("MyPolicy")]
-        [HttpPost("registerStudent")]
-        public async Task<ActionResult> RegisterStudent([FromBody] RegisterStudentRequestDto requestDto)
+        var newStudent = new AddStudentServiceRequestDto()
         {
-            if (!ModelState.IsValid)
-            {
-                throw new Exception("Incorrect requestDto for registration.");
-            }
+            FirstName = requestDto.FirstName,
+            LastName = requestDto.LastName,
+            BirthDate = requestDto.BirthDate,
+            Sex = requestDto.Sex,
+            Phone = requestDto.Phone,
+            UserId = newUserId
+        };
 
-            var addUserServiceDto = new AddUserServiceRequestDto
-            {
-                Login = requestDto.Login,
-                RoleId = (int)UserRole.Student
-            };
+        await _studentService.AddStudentAsync(newStudent);
 
-            var newUserId = await _userService.AddUserAsync(addUserServiceDto);
+        return Ok();
+    }
 
-            var newStudent = new AddStudentServiceRequestDto()
-            {
-                FirstName = requestDto.FirstName,
-                LastName = requestDto.LastName,
-                BirthDate = requestDto.BirthDate,
-                Sex = requestDto.Sex,
-                Phone = requestDto.Phone,
-                UserId = newUserId
-            };
+    [EnableCors("MyPolicy")]
+    [HttpPost("registerTeacher")]
+    public async Task<ActionResult> RegisterTeacher([FromBody] RegisterTeacherRequestDto requestDto)
+    {
+        if (!ModelState.IsValid)
+            throw new Exception("Incorrect requestDto for registration.");
 
-            await _studentService.AddStudentAsync(newStudent);
-
-            return Ok();
-        }
-
-        [EnableCors("MyPolicy")]
-        [HttpPost("registerTeacher")]
-        public async Task<ActionResult> RegisterTeacher([FromBody] RegisterTeacherRequestDto requestDto)
+        var addUserServiceDto = new AddUserServiceRequestDto()
         {
-            if (!ModelState.IsValid)
-                throw new Exception("Incorrect requestDto for registration.");
+            Login = requestDto.Login,
+            RoleId = (int)UserRole.Teacher
+        };
 
-            var addUserServiceDto = new AddUserServiceRequestDto()
-            {
-                Login = requestDto.Login,
-                RoleId = (int)UserRole.Teacher
-            };
+        var newUserId = await _userService.AddUserAsync(addUserServiceDto);
 
-            var newUserId = await _userService.AddUserAsync(addUserServiceDto);
+        var newTeacher = new AddTeacherServiceRequestDto()
+        {
+            FirstName = requestDto.FirstName,
+            LastName = requestDto.LastName,
+            MiddleName = requestDto.MiddleName,
+            BirthDate = requestDto.BirthDate,
+            Phone = requestDto.Phone,
+            UserId = newUserId,
+            Disciplines = requestDto.Disciplines,
+            WorkingHoursEntity = requestDto.WorkingHoursEntity
+        };
 
-            var newTeacher = new AddTeacherServiceRequestDto()
-            {
-                FirstName = requestDto.FirstName,
-                LastName = requestDto.LastName,
-                MiddleName = requestDto.MiddleName,
-                BirthDate = requestDto.BirthDate,
-                Phone = requestDto.Phone,
-                UserId = newUserId,
-                Disciplines = requestDto.Disciplines,
-                WorkingHoursEntity = requestDto.WorkingHoursEntity
-            };
+        await _teacherService.AddTeacher(newTeacher);
 
-            await _teacherService.AddTeacher(newTeacher);
-
-            return Ok();
-        }
+        return Ok();
     }
 }

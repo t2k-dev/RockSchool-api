@@ -1,5 +1,4 @@
 ﻿using RockSchool.Data.Entities;
-
 using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 

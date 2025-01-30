@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using RockSchool.BL.Dtos.Service.Requests.AttendanceService;
 using RockSchool.BL.Dtos.Service.Responses;
+using RockSchool.BL.Helpers;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
-using RockSchool.WebApi.Helpers;
 
 namespace RockSchool.BL.Services.AttendanceService;
 
@@ -11,20 +11,32 @@ public class AttendanceService : IAttendanceService
 {
     private readonly AttendanceRepository _attendanceRepository;
     private readonly ScheduleRepository _scheduleRepository;
-    protected readonly IMapper _mapper;
 
     public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository,
         IMapper mapper)
     {
         _attendanceRepository = attendanceRepository;
         _scheduleRepository = scheduleRepository;
-        _mapper = mapper;
     }
 
     public async Task<AttendanceDto[]> GetAllAttendancesAsync()
     {
         var attendances = await _attendanceRepository.GetAllAsync();
-        var attendancesDto = _mapper.Map<AttendanceDto[]>(attendances);
+
+        var attendancesDto = attendances.Select(a => new AttendanceDto
+        {
+            AttendanceId = a.AttendanceId,
+            StudentId = a.StudentId,
+            StudentEntity = a.StudentEntity,
+            TeacherId = a.TeacherId,
+            TeacherEntity = a.TeacherEntity,
+            BeginDate = a.BeginDate,
+            Status = a.Status,
+            RoomId = a.RoomId,
+            RoomEntity = a.RoomEntity,
+            Duration = a.Duration,
+            Comment = a.Comment
+        }).ToArray();
 
         return attendancesDto;
     }

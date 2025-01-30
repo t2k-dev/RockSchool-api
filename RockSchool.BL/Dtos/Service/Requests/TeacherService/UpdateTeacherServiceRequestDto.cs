@@ -13,6 +13,5 @@ public class UpdateTeacherServiceRequestDto
     public long Phone { get; set; }
     public int[] Disciplines { get; set; }
     public int? UserId { get; set; }
-    [Column(TypeName ="jsonb")]
-    public WorkingHoursEntity WorkingHoursEntity { get; set; }
+    [Column(TypeName = "jsonb")] public WorkingHoursEntity WorkingHoursEntity { get; set; }
 }

@@ -9,40 +9,57 @@ namespace RockSchool.BL.Services.DisciplineService;
 public class DisciplineService : IDisciplineService
 {
     private readonly DisciplineRepository _disciplineRepository;
-    protected readonly IMapper _mapper;
 
-    public DisciplineService(DisciplineRepository disciplineRepository, IMapper mapper)
+    public DisciplineService(DisciplineRepository disciplineRepository)
     {
         _disciplineRepository = disciplineRepository;
-        _mapper = mapper;
     }
 
     public async Task AddDisciplineAsync(
         AddDisciplineServiceRequestDto requestDto)
     {
-        var discipline = _mapper.Map<DisciplineEntity>(requestDto);
+        var discipline = new DisciplineEntity
+        {
+            Id = requestDto.Id,
+            DisciplineName = requestDto.DisciplineName,
+            Teachers = requestDto.Teachers,
+            IsActive = requestDto.IsActive
+        };
+
         await _disciplineRepository.AddAsync(discipline);
     }
 
     public async Task<DisciplineDto[]?> GetAllDisciplinesAsync()
     {
         var disciplines = await _disciplineRepository.GetAllAsync();
-        var disciplineDtos = _mapper.Map<DisciplineDto[]>(disciplines);
+
+        if (disciplines == null || !disciplines.Any())
+            return null;
+
+        var disciplineDtos = disciplines.Select(d => new DisciplineDto
+        {
+            Id = d.Id,
+            DisciplineName = d.DisciplineName,
+            Teachers = d.Teachers, // Be careful with navigation properties
+            IsActive = d.IsActive
+        }).ToArray();
 
         return disciplineDtos;
     }
 
-    public async Task UpdateDisciplineAsync(
-        UpdateDisciplineServiceRequestDto serviceRequestDto)
+    public async Task UpdateDisciplineAsync(UpdateDisciplineServiceRequestDto serviceRequestDto)
     {
         var discipline = await _disciplineRepository.GetByIdAsync(serviceRequestDto.Id);
 
         if (discipline == null)
             throw new ArgumentNullException("DisciplineEntity not found.");
 
-        var updatedDiscipline = _mapper.Map<DisciplineEntity>(serviceRequestDto);
-        await _disciplineRepository.UpdateAsync(updatedDiscipline);
+        discipline.DisciplineName = serviceRequestDto.DisciplineName;
+        discipline.IsActive = serviceRequestDto.IsActive;
+
+        await _disciplineRepository.UpdateAsync(discipline);
     }
+
 
     public async Task DeleteDisciplineAsync(
         DeleteDisciplineServiceRequestDto requestDto)

@@ -6,5 +6,5 @@ namespace RockSchool.BL.Services.AttendanceService;
 public interface IAttendanceService
 {
     Task<AttendanceDto[]> GetAllAttendancesAsync();
-    Task AddAttendancesToStudent(AddAttendanceServiceRequestDto  addAttendanceServiceRequestDto);
+    Task AddAttendancesToStudent(AddAttendanceServiceRequestDto addAttendanceServiceRequestDto);
 }

@@ -6,67 +6,66 @@ using RockSchool.BL.Services.StudentService;
 using RockSchool.Data.Entities;
 using RockSchool.WebApi.Models;
 
-namespace RockSchool.WebApi.Controllers
+namespace RockSchool.WebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class StudentController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StudentController : Controller
+    private readonly IStudentService _studentService;
+    private readonly IMapper _mapper;
+
+    public StudentController(IStudentService studentService, IMapper mapper)
     {
-        private readonly IStudentService _studentService;
-        private readonly IMapper _mapper;
+        _studentService = studentService;
+        _mapper = mapper;
+    }
 
-        public StudentController(IStudentService studentService, IMapper mapper)
-        {
-            _studentService = studentService;
-            _mapper = mapper;
-        }
+    [HttpGet]
+    public async Task<ActionResult> Get()
+    {
+        var studentsDto = await _studentService.GetAllStudentsAsync();
 
-        [HttpGet]
-        public async Task<ActionResult> Get()
-        {
-            var studentsDto = await _studentService.GetAllStudentsAsync();
+        if (studentsDto?.Length == 0)
+            return NotFound();
 
-            if (studentsDto?.Length == 0)
-                return NotFound();
+        return Ok(studentsDto);
+    }
 
-            return Ok(studentsDto);
-        }
+    // TODO: We will use this method
+    // [HttpPost]
+    // public ActionResult Post(AddStudentDto model)
+    // {
+    //     if (!ModelState.IsValid)
+    //     {
+    //         return BadRequest(ModelState);
+    //     }
+    //
+    //     var newStudent = _mapper.Map<StudentEntity>(model);
+    //
+    //     _context.Students.Add(newStudent);
+    //     _context.SaveChanges();
+    //
+    //     return Ok();
+    // }
 
-        // TODO: We will use this method
-        // [HttpPost]
-        // public ActionResult Post(AddStudentDto model)
-        // {
-        //     if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(ModelState);
-        //     }
-        //
-        //     var newStudent = _mapper.Map<StudentEntity>(model);
-        //
-        //     _context.Students.Add(newStudent);
-        //     _context.SaveChanges();
-        //
-        //     return Ok();
-        // }
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(int id, [FromBody] UpdateStudentRequestDto requestDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] UpdateStudentRequestDto requestDto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        var updateStudentDto = _mapper.Map<UpdateStudentServiceRequestDto>(requestDto);
+        await _studentService.UpdateStudentAsync(updateStudentDto);
 
-            var updateStudentDto = _mapper.Map<UpdateStudentServiceRequestDto>(requestDto);
-            await _studentService.UpdateStudentAsync(updateStudentDto);
+        return Ok();
+    }
 
-            return Ok();
-        }
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        await _studentService.DeleteStudentAsync(id);
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            await _studentService.DeleteStudentAsync(id);
-
-            return Ok();
-        }
+        return Ok();
     }
 }

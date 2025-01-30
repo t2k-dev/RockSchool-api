@@ -7,7 +7,7 @@ namespace RockSchool.Data.Repositories;
 public class AttendanceRepository
 {
     private RockSchoolContext _rockSchoolContext;
-    
+
     public AttendanceRepository(RockSchoolContext rockSchoolContext)
     {
         _rockSchoolContext = rockSchoolContext;

@@ -1,9 +1,8 @@
-﻿namespace RockSchool.WebApi.Models.Enums
+﻿namespace RockSchool.WebApi.Models.Enums;
+
+public enum UserRole
 {
-    public enum UserRole
-    {
-        Admin = 1,
-        Teacher = 2,
-        Student = 3
-    }
+    Admin = 1,
+    Teacher = 2,
+    Student = 3
 }
