@@ -1,93 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.WebApi.Entities;
+using RockSchool.BL.Dtos.Service.Requests.StudentService;
+using RockSchool.BL.Services.StudentService;
+using RockSchool.Data.Entities;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentController : MyBaseController
+    public class StudentController : Controller
     {
-        public StudentController(RockSchoolContext rockSchoolContext, IMapper mapper)
-            : base(rockSchoolContext, mapper)
+        private readonly IStudentService _studentService;
+        private readonly IMapper _mapper;
+
+        public StudentController(IStudentService studentService, IMapper mapper)
         {
+            _studentService = studentService;
+            _mapper = mapper;
         }
 
-        [EnableCors("MyPolicy")]
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var students = _context.Students.ToList();
+            var studentsDto = await _studentService.GetAllStudentsAsync();
 
-            if (students == null)
-            {
+            if (studentsDto?.Length == 0)
                 return NotFound();
-            }
 
-            return Ok(students);
+            return Ok(studentsDto);
         }
 
-        [EnableCors("MyPolicy")]
-        [HttpPost]
-        public ActionResult Post(AddStudentDto model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        // TODO: We will use this method
+        // [HttpPost]
+        // public ActionResult Post(AddStudentDto model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //
+        //     var newStudent = _mapper.Map<StudentEntity>(model);
+        //
+        //     _context.Students.Add(newStudent);
+        //     _context.SaveChanges();
+        //
+        //     return Ok();
+        // }
 
-            var newStudent = _mapper.Map<Student>(model);
-
-            _context.Students.Add(newStudent);
-            _context.SaveChanges();
-
-            return Ok();
-        }
-
-        [EnableCors("MyPolicy")]
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody]AddStudentDto model)
+        public async Task<ActionResult> Put(int id, [FromBody] UpdateStudentRequestDto requestDto)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
-            var student = _context.Students.SingleOrDefault(s => s.StudentId == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            student.FirstName = model.FirstName;
-            student.LastName = model.LastName;
-            student.BirthDate = model.BirthDate;
-
-            _context.SaveChanges();
+            var updateStudentDto = _mapper.Map<UpdateStudentServiceRequestDto>(requestDto);
+            await _studentService.UpdateStudentAsync(updateStudentDto);
 
             return Ok();
         }
 
-        [EnableCors("MyPolicy")]
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var student = _context.Students.SingleOrDefault(d => d.StudentId == id);
-
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            _context.Students.Remove(student);
-            _context.SaveChanges();
+            await _studentService.DeleteStudentAsync(id);
 
             return Ok();
         }

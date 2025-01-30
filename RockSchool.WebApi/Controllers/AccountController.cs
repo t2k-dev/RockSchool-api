@@ -1,111 +1,114 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.WebApi.Entities;
+using RockSchool.BL.Dtos.Service.Requests.StudentService;
+using RockSchool.BL.Dtos.Service.Requests.TeacherService;
+using RockSchool.BL.Dtos.Service.Requests.UserService;
+using RockSchool.BL.Services.StudentService;
+using RockSchool.BL.Services.TeacherService;
+using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
-using RockSchool.WebApi.Services;
+using RockSchool.WebApi.Models.Enums;
 
 namespace RockSchool.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : MyBaseController
+    public class AccountController : Controller
     {
-        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IUserService _userService;
+        private readonly IStudentService _studentService;
+        private readonly ITeacherService _teacherService;
 
-        public AccountController(RockSchoolContext rockSchoolContext, IMapper mapper, IPasswordHasher<User> passwordHasher)
-            : base (rockSchoolContext, mapper)
+        public AccountController(IUserService userService, IStudentService studentService, ITeacherService teacherService)
         {
-            _passwordHasher = passwordHasher;
+            _userService = userService;
+            _studentService = studentService;
+            _teacherService = teacherService;
         }
 
+        // Not in use
         [HttpPost("register")]
-        public ActionResult Register([FromBody] RegisterUserDto registerUserDto)
+        public async Task<ActionResult> Register([FromBody] RegisterUserRequestDto requestDto)
         {
             if (!ModelState.IsValid)
             {
                 throw new Exception("Incorrect model for registration.");
             }
 
-            var newUser = new User()
+            var serviceDto = new AddUserServiceRequestDto
             {
-                Login = registerUserDto.Login,
-                RoleId = registerUserDto.RoleId,  
+                Login = requestDto.Login,
+                Password = requestDto.Password,
+                RoleId = requestDto.RoleId
             };
 
-            var passwordHash = _passwordHasher.HashPassword(newUser, registerUserDto.Password);
-            newUser.PasswordHash = passwordHash;
-
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
+            await _userService.AddUserAsync(serviceDto);
 
             return Ok();
         }
 
         [EnableCors("MyPolicy")]
         [HttpPost("registerStudent")]
-        public ActionResult RegisterStudent([FromBody] RegisterStudentDto model)
+        public async Task<ActionResult> RegisterStudent([FromBody] RegisterStudentRequestDto requestDto)
         {
             if (!ModelState.IsValid)
             {
-                throw new Exception("Incorrect model for registration.");
+                throw new Exception("Incorrect requestDto for registration.");
             }
 
-            // Add user
-            var usersService = new UserService(_context, _passwordHasher);
-            var userId = usersService.AddUser(model.Login, (int) UserRole.Student);
-
-            var newStudent = new AddStudentDto
+            var addUserServiceDto = new AddUserServiceRequestDto
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                BirthDate = model.BirthDate,
-                Sex = model.Sex,
-                Phone = model.Phone,
-                UserId = userId
+                Login = requestDto.Login,
+                RoleId = (int)UserRole.Student
             };
 
-            // Add student
-            var studentService = new StudentService(_context, _mapper);
-            studentService.AddStudent(newStudent);
+            var newUserId = await _userService.AddUserAsync(addUserServiceDto);
+
+            var newStudent = new AddStudentServiceRequestDto()
+            {
+                FirstName = requestDto.FirstName,
+                LastName = requestDto.LastName,
+                BirthDate = requestDto.BirthDate,
+                Sex = requestDto.Sex,
+                Phone = requestDto.Phone,
+                UserId = newUserId
+            };
+
+            await _studentService.AddStudentAsync(newStudent);
 
             return Ok();
         }
 
         [EnableCors("MyPolicy")]
         [HttpPost("registerTeacher")]
-        public ActionResult RegisterTeacher([FromBody] RegisterTeacherDto model)
+        public async Task<ActionResult> RegisterTeacher([FromBody] RegisterTeacherRequestDto requestDto)
         {
             if (!ModelState.IsValid)
-            {
-                throw new Exception("Incorrect model for registration.");
-            }
+                throw new Exception("Incorrect requestDto for registration.");
 
-            // Add user
-            var usersService = new UserService(_context, _passwordHasher);
-            var userId = usersService.AddUser(model.Login, (int) UserRole.Teacher);
-
-            var newTeacher = new AddTeacherDto
+            var addUserServiceDto = new AddUserServiceRequestDto()
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                MiddleName = model.MiddleName,
-                BirthDate = model.BirthDate,
-                Phone = model.Phone,
-                UserId = userId,
-                Disciplines = model.Disciplines,
-                WorkingHours = model.WorkingHours
+                Login = requestDto.Login,
+                RoleId = (int)UserRole.Teacher
             };
 
-            // Add teacher
-            var teacherService = new TeacherService(_context, _mapper);
-            var teacherId = teacherService.AddTeacher(newTeacher);
+            var newUserId = await _userService.AddUserAsync(addUserServiceDto);
+
+            var newTeacher = new AddTeacherServiceRequestDto()
+            {
+                FirstName = requestDto.FirstName,
+                LastName = requestDto.LastName,
+                MiddleName = requestDto.MiddleName,
+                BirthDate = requestDto.BirthDate,
+                Phone = requestDto.Phone,
+                UserId = newUserId,
+                Disciplines = requestDto.Disciplines,
+                WorkingHoursEntity = requestDto.WorkingHoursEntity
+            };
+
+            await _teacherService.AddTeacher(newTeacher);
 
             return Ok();
         }

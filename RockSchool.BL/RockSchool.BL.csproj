@@ -6,4 +6,18 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RockSchool.Data\RockSchool.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Identity.Core">
+        <HintPath>C:\Users\timak\.dotnet\shared\Microsoft.AspNetCore.App\9.0.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
+    </ItemGroup>
+
 </Project>

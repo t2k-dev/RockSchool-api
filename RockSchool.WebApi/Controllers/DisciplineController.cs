@@ -1,84 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.WebApi.Entities;
+using RockSchool.BL.Dtos.Service.Requests.DisciplineService;
+using RockSchool.BL.Services.DisciplineService;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DisciplineController : MyBaseController
+    public class DisciplineController : Controller
     {
-        public DisciplineController(RockSchoolContext rockSchoolContext, IMapper mapper)
-            : base(rockSchoolContext, mapper)
+        private readonly IDisciplineService _disciplineService;
+
+        public DisciplineController(IDisciplineService disciplineService)
         {
+            _disciplineService = disciplineService;
         }
 
+
         [HttpPost("{disciplineName}")]
-        public ActionResult Post(string disciplineName)
+        public async Task<ActionResult> Post(string disciplineName)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var discipline = new Discipline()
+            var addDisciplineServiceDto = new AddDisciplineServiceRequestDto()
             {
                 DisciplineName = disciplineName,
                 IsActive = true
             };
 
-            _context.Disciplines.Add(discipline);
-            _context.SaveChanges();
+            await _disciplineService.AddDisciplineAsync(addDisciplineServiceDto);
 
             return Ok();
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var disciplines = _context.Disciplines.ToList();
+            var disciplines = await _disciplineService.GetAllDisciplinesAsync();
 
-            var result = _mapper.Map<List<DisciplineDto>>(disciplines);
-
-            return Ok(result);
+            return Ok(disciplines);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody]DisciplineDto model)
+        public async Task<ActionResult> Put(int id, [FromBody] DisciplineDto requestDto)
         {
-            var discipline = _context.Disciplines.SingleOrDefault(discipline => discipline.Id == id);
-
-            if (discipline == null)
+            var updateDisciplineServiceDto = new UpdateDisciplineServiceRequestDto()
             {
-                return NotFound();
-            }
+                DisciplineName = requestDto.DisciplineName,
+                IsActive = requestDto.IsActive
+            };
 
-            discipline.DisciplineName = model.DisciplineName;
-            discipline.IsActive = model.IsActive;
-
-            _context.SaveChanges();
+            await _disciplineService.UpdateDisciplineAsync(updateDisciplineServiceDto);
 
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var discipline = _context.Disciplines.SingleOrDefault(d => d.Id == id);
-            
-            if (discipline == null)
-            {
-                return NotFound();
-            }
-
-            _context.Disciplines.Remove(discipline);
-            _context.SaveChanges();
+            await _disciplineService.DeleteDisciplineAsync(new DeleteDisciplineServiceRequestDto() { Id = id });
 
             return Ok();
         }

@@ -1,19 +1,20 @@
 using System;
-using AutoMapper;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using RockSchool.WebApi.Entities;
+using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.DisciplineService;
+using RockSchool.BL.Services.ScheduleService;
+using RockSchool.BL.Services.StudentService;
+using RockSchool.BL.Services.TeacherService;
+using RockSchool.BL.Services.UserService;
+using RockSchool.Data.Entities;
+using RockSchool.Data;
+using RockSchool.Data.Extensions;
+using RockSchool.Data.Repositories;
 
 namespace RockSchool.WebApi
 {
@@ -29,12 +30,25 @@ namespace RockSchool.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddControllers();
-            services.AddAutoMapper(this.GetType().Assembly);
-            services.AddDbContext<RockSchoolContext>(
-                opts => opts.UseNpgsql(Configuration["DbContextSettings:ConnectionString"])
-            );
+            services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+            services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<IDisciplineService, DisciplineService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<AttendanceRepository>();
+            services.AddScoped<DisciplineRepository>();
+            services.AddScoped<ScheduleRepository>();
+            services.AddScoped<StudentRepository>();
+            services.AddScoped<TeacherRepository>();
+            services.AddScoped<UserRepository>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // services.AddControllers();
+            // services.AddAutoMapper(this.GetType().Assembly);
+            services.AddRockSchoolData(Configuration["DbContextSettings:ConnectionString"]!);
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );

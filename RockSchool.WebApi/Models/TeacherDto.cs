@@ -1,5 +1,5 @@
 ﻿using System;
-using RockSchool.WebApi.Entities;
+using RockSchool.Data.Entities;
 
 
 namespace RockSchool.WebApi.Models
@@ -13,7 +13,7 @@ namespace RockSchool.WebApi.Models
         public DateTime BirthDate { get; set; }
         public long Phone { get; set; }
         public int[] Disciplines { get; set; }
-        public WorkingHours WorkingHours { get; set; }
+        public WorkingHoursEntity WorkingHoursEntity { get; set; }
         public int UserId { get; set; }
     }
 }

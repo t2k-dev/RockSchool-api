@@ -1,49 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.WebApi.Entities;
+using RockSchool.BL.Dtos.Service.Requests.ScheduleService;
+using RockSchool.BL.Services.ScheduleService;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ScheduleController : MyBaseController
+    public class ScheduleController : Controller
     {
-        public ScheduleController(RockSchoolContext rockSchoolContext, IMapper mapper)
-            : base(rockSchoolContext, mapper)
+        private readonly IScheduleService _scheduleService;
+
+        public ScheduleController(IScheduleService scheduleService)
         {
+            _scheduleService = scheduleService;
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var schedules = _context.Schedules.ToList();
-
-            if (schedules == null)
-            {
-                return NotFound();
-            }
+            var schedules = await _scheduleService.GetAllSchedulesAsync();
 
             return Ok(schedules);
         }
 
         [HttpPost]
-        public ActionResult Post(AddScheduleDto model)
+        public async Task<ActionResult> Post(AddScheduleDto requestDto)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
-            var newSchedule = _mapper.Map<Schedule>(model);
+            var serviceRequestDto = new AddScheduleServiceRequestDto
+            {
+                StudentId = requestDto.StudentId,
+                WeekDay = requestDto.WeekDay,
+                StartTime = requestDto.StartTime,
+                Duration = requestDto.Duration,
+                DisciplineId = requestDto.DisciplineId
+            };
 
-            _context.Schedules.Add(newSchedule);
-            _context.SaveChanges();
+            await _scheduleService.AddScheduleAsync(serviceRequestDto);
 
             return Ok();
         }

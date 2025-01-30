@@ -2,34 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RockSchool.WebApi.Entities;
+using RockSchool.BL.Dtos.Service.Requests.TeacherService;
+using RockSchool.BL.Services.TeacherService;
+using RockSchool.Data.Entities;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TeacherController : MyBaseController
+    public class TeacherController : Controller
     {
-        public TeacherController(RockSchoolContext rockSchoolContext, IMapper mapper)
-            : base(rockSchoolContext, mapper)
+        private readonly ITeacherService _teacherService;
+
+        public TeacherController(ITeacherService teacherService)
         {
+            _teacherService = teacherService;
         }
 
         [EnableCors("MyPolicy")]
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var teachers = _context.Teachers
-                .Include(t => t.Disciplines)
-                .ToList();
+            var teachers = await _teacherService.GetAllTeachersAsync();
 
-            if (teachers == null)
+            if (teachers.Length == 0)
             {
                 return NotFound();
             }
@@ -39,21 +38,13 @@ namespace RockSchool.WebApi.Controllers
 
         [EnableCors("MyPolicy")]
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var teacher = _context.Teachers
-                .Include(t => t.User)
-                .Include(t => t.Disciplines)
-                .SingleOrDefault(t => t.TeacherId == id);
+            var teacher = await _teacherService.GetTeacherByIdAsync(id);
 
-            if (teacher == null)
+            var result = new GetTeacherResponseDto
             {
-                return NotFound();
-            }
-
-            var result = new TeacherDto
-            {
-                Email = teacher.User.Login,
+                Email = teacher.UserEntity.Login,
                 FirstName = teacher.FirstName,
                 LastName = teacher.LastName,
                 MiddleName = teacher.MiddleName,
@@ -65,83 +56,65 @@ namespace RockSchool.WebApi.Controllers
             return Ok(result);
         }
 
-        [EnableCors("MyPolicy")]
-        [HttpPost]
-        public ActionResult Post(AddTeacherDto model)
+        // TODO: We already add teacherEntity in account controller
+        // [EnableCors("MyPolicy")]
+        // [HttpPost]
+        // public ActionResult Post(AddTeacherDto model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //
+        //     var newTeacher = new AddTeacherServiceRequestDto()
+        //     {
+        //         FirstName = model.FirstName,
+        //         LastName = model.LastName,
+        //         MiddleName = model.MiddleName,
+        //         BirthDate = model.BirthDate,
+        //         UserId = model.UserId,
+        //         Disciplines = new List<DisciplineEntity>()
+        //     };
+        //
+        //     _teacherService.AddTeacher(newTeacher);
+        //
+        //     foreach (var disciplineId in model.Disciplines)
+        //     {
+        //         var disciplineEntity = _context.Disciplines.SingleOrDefault(d => d.Id == disciplineId);
+        //         newTeacher.Disciplines.Add(disciplineEntity);
+        //     }
+        //
+        //     _context.Teachers.Add(newTeacher);
+        //     _context.SaveChanges();
+        //
+        //     return Ok();
+        // }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(int id, [FromBody] AddTeacherDto model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
-            var newTeacher = new Teacher()
+            var updateRequest = new UpdateTeacherServiceRequestDto
             {
+                TeacherId = id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 MiddleName = model.MiddleName,
                 BirthDate = model.BirthDate,
-                UserId = model.UserId,
-                Disciplines = new List<Discipline>()
+                Disciplines = model.Disciplines
             };
 
-            foreach (var disciplineId in model.Disciplines)
-            {
-                var discipline = _context.Disciplines.SingleOrDefault(d => d.Id == disciplineId);
-                newTeacher.Disciplines.Add(discipline);
-            }
-
-            _context.Teachers.Add(newTeacher);
-            _context.SaveChanges();
-
-            return Ok();
-        }
-
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] AddTeacherDto model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var teacher = _context.Teachers
-                .Include(t => t.Disciplines)
-                .SingleOrDefault(s => s.TeacherId == id);
-            if (teacher == null)
-            {
-                return NotFound();
-            }
-
-            teacher.FirstName = model.FirstName;
-            teacher.LastName = model.LastName;
-            teacher.MiddleName = model.MiddleName;
-            teacher.BirthDate = model.BirthDate;
-
-            teacher.Disciplines.Clear();
-
-            foreach (var disciplineId in model.Disciplines)
-            {
-                var discipline = _context.Disciplines.SingleOrDefault(d => d.Id == disciplineId);
-                teacher.Disciplines.Add(discipline);
-            }
-
-            _context.SaveChanges();
+            await _teacherService.UpdateTeacherAsync(updateRequest);
 
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var teacher = _context.Teachers.SingleOrDefault(d => d.TeacherId == id);
-
-            if (teacher == null)
-            {
-                return NotFound();
-            }
-
-            _context.Teachers.Remove(teacher);
-            _context.SaveChanges();
+            await _teacherService.DeleteTeacherAsync(id);
 
             return Ok();
         }

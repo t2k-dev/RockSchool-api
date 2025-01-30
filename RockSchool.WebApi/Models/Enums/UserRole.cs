@@ -1,4 +1,4 @@
-﻿namespace RockSchool.WebApi.Models
+﻿namespace RockSchool.WebApi.Models.Enums
 {
     public enum UserRole
     {

@@ -1,77 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.WebApi.Entities;
-using RockSchool.WebApi.Helpers;
+using RockSchool.BL.Dtos.Service.Requests.AttendanceService;
+using RockSchool.BL.Services.AttendanceService;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AttendanceController : MyBaseController
+    public class AttendanceController : Controller
     {
-        public AttendanceController(RockSchoolContext rockSchoolContext, IMapper mapper)
-            : base(rockSchoolContext, mapper)
+        private readonly IAttendanceService _attendanceService;
+
+        public AttendanceController(IAttendanceService attendanceService)
         {
+            _attendanceService = attendanceService;
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var attendances = _context.Attendances.ToList();
-
-            if (attendances == null)
-            {
-                return NotFound();
-            }
+            var attendances = await _attendanceService.GetAllAttendancesAsync();
 
             return Ok(attendances);
         }
 
         [HttpPost("addLessons")]
-        public ActionResult AddForStudent(AddAttendancesDto model)
+        public async Task<ActionResult> AddForStudent(AddAttendancesRequestDto requestDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var schedules = _context.Schedules.Where(s => s.StudentId == model.StudentId).ToList();
-
-            var startDate = model.StartingDate;
-            var attendancesToAdd = model.NumberOfAttendances;
-
-            var newAttendances = new List<Attendance>();
-
-            while (attendancesToAdd > 0)
+            var addAttendanceForStudentServiceDto = new AddAttendanceServiceRequestDto
             {
-                foreach (var item in schedules)
-                {
-                    var beginDate = ScheduleHelper.GetNextWeekday(startDate, item.WeekDay);
+                StudentId = requestDto.StudentId,
+                TeacherId = requestDto.TeacherId,
+                DisciplineId = requestDto.DisciplineId,
+                NumberOfAttendances = requestDto.NumberOfAttendances,
+                StartingDate = requestDto.StartingDate
+            };
 
-                    var attendance = new Attendance()
-                    {
-                        StudentId = model.StudentId,
-                        TeacherId = model.TeacherId,
-                        Status = 1,
-                        Duration = item.Duration,
-                        BeginDate = beginDate
-                    };
-
-                    newAttendances.Add(attendance);
-
-                    attendancesToAdd--;
-                }
-
-                startDate = startDate.AddDays(7);
-            }
-            _context.Attendances.AddRange(newAttendances.ToArray());
-            _context.SaveChanges();
+            await _attendanceService.AddAttendancesToStudent(addAttendanceForStudentServiceDto);
 
             return Ok();
         }

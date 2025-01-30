@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using RockSchool.WebApi.Models.Enums;
 
-namespace RockSchool.WebApi.Models
+namespace RockSchool.WebApi.Models;
+
+public class AddStudentDto
 {
-    public class AddStudentDto
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public short Sex { get; set; }
-        public long Phone { get; set; }
-        public int UserId { get; set; }
-    }
+    public required string FirstName { get; set; }
+    public DateTime BirthDate { get; set; }
+    public int Sex { get; set; }
+    public long Phone { get; set; }
+    public StudentLevel Level { get; set; }
 }
