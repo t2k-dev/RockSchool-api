@@ -19,8 +19,8 @@ public class DisciplineService : IDisciplineService
     {
         var discipline = new DisciplineEntity
         {
-            Id = requestDto.Id,
-            DisciplineName = requestDto.DisciplineName,
+            DisciplineId = requestDto.Id,
+            Name = requestDto.DisciplineName,
             Teachers = requestDto.Teachers,
             IsActive = requestDto.IsActive
         };
@@ -37,8 +37,8 @@ public class DisciplineService : IDisciplineService
 
         var disciplineDtos = disciplines.Select(d => new DisciplineDto
         {
-            Id = d.Id,
-            DisciplineName = d.DisciplineName,
+            Id = d.DisciplineId,
+            DisciplineName = d.Name,
             Teachers = d.Teachers, // Be careful with navigation properties
             IsActive = d.IsActive
         }).ToArray();
@@ -53,7 +53,7 @@ public class DisciplineService : IDisciplineService
         if (discipline == null)
             throw new ArgumentNullException("DisciplineEntity not found.");
 
-        discipline.DisciplineName = serviceRequestDto.DisciplineName;
+        discipline.Name = serviceRequestDto.DisciplineName;
         discipline.IsActive = serviceRequestDto.IsActive;
 
         await _disciplineRepository.UpdateAsync(discipline);

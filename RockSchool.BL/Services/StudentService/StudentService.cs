@@ -63,7 +63,7 @@ public class StudentService : IStudentService
             Phone = s.Phone,
             Sex = s.Sex,
             UserId = s.UserId,
-            UserEntity = s.UserEntity
+            UserEntity = s.User
         }).ToArray();
 
         return studentDtos;

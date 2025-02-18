@@ -10,9 +10,9 @@ public class RockSchoolContextFactory : IDesignTimeDbContextFactory<RockSchoolCo
         var optionsBuilder = new DbContextOptionsBuilder<RockSchoolContext>();
 
         var connectionString =
-            "UserEntity ID=postgres;Password=azsxdc!2;Host=192.168.50.107;Port=5433;Database=RockSchoolDB;Pooling=true;";
-
-        optionsBuilder.UseSqlServer(connectionString);
+            "User ID=postgres;Password=azsxdc!2;Host=192.168.50.107;Port=5433;Database=RockSchoolDB;Pooling=true;";
+        // Host=192.168.50.107;Port=5432;Database=trade_signals;Username=trade_signals_user;Password=Gl0balink121
+        optionsBuilder.UseNpgsql(connectionString);
 
         return new RockSchoolContext(optionsBuilder.Options);
     }

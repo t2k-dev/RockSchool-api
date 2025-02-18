@@ -1,17 +1,31 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RockSchool.Data.Entities;
 
 public class TeacherEntity
 {
-    public int TeacherId { get; set; }
-    public string LastName { get; set; }
-    public string FirstName { get; set; }
-    public string MiddleName { get; set; }
+    [Key] public int TeacherId { get; set; }
+
+    [Required] [MaxLength(100)] public string FirstName { get; set; }
+
+    [Required] [MaxLength(100)] public string LastName { get; set; }
+
+    [MaxLength(100)] public string MiddleName { get; set; }
+
     public DateTime BirthDate { get; set; }
+
+    public int Sex { get; set; }
+
     public long Phone { get; set; }
-    public ICollection<DisciplineEntity> Disciplines { get; set; }
-    public int? UserId { get; set; }
-    public UserEntity UserEntity { get; set; }
-    [Column(TypeName = "jsonb")] public WorkingHoursEntity WorkingHoursEntity { get; set; }
+
+    public int UserId { get; set; }
+    [ForeignKey(nameof(UserId))] public virtual UserEntity User { get; set; }
+
+    public int BranchId { get; set; }
+    [ForeignKey(nameof(BranchId))] public virtual BranchEntity Branch { get; set; }
+
+    public int AgeLimit { get; set; }
+    public bool AllowGroupLessons { get; set; }
+    public virtual ICollection<DisciplineEntity> Disciplines { get; set; }
 }

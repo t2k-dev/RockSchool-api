@@ -24,33 +24,34 @@ public class ScheduleService : IScheduleService
         var scheduleDtos = schedules.Select(s => new ScheduleDto
         {
             ScheduleId = s.ScheduleId,
-            StudentId = s.StudentId,
-            StudentEntity = s.StudentEntity,
+            StudentId = s.Subscription.StudentId,
+            StudentEntity = s.Subscription.Student,
             WeekDay = s.WeekDay,
             StartTime = s.StartTime,
-            Duration = s.Duration,
-            DisciplineId = s.DisciplineId,
-            DisciplineEntity = s.DisciplineEntity
+            EndTime = s.EndTime,
+            DisciplineId = s.Subscription.DisciplineId,
+            DisciplineEntity = s.Subscription.Discipline
         }).ToArray();
-
+        
         return scheduleDtos;
     }
 
-    public async Task AddScheduleAsync(AddScheduleServiceRequestDto requestDto)
-    {
-        var schedule = new ScheduleEntity
-        {
-            StudentId = requestDto.StudentId,
-            WeekDay = requestDto.WeekDay,
-            StartTime = requestDto.StartTime,
-            Duration = requestDto.Duration,
-            DisciplineId = requestDto.DisciplineId
-        };
-
-        await _scheduleRepository.AddAsync(schedule);
-        var savedSchedule = await _scheduleRepository.GetByIdAsync(schedule.ScheduleId);
-
-        if (savedSchedule == null)
-            throw new InvalidOperationException("Failed to add schedule.");
-    }
+    // public async Task AddScheduleAsync(AddScheduleServiceRequestDto requestDto)
+    // {
+    //     // TODO: we need to add discipline here !! FFS 
+    //     var schedule = new ScheduleEntity
+    //     {
+    //         SubscriptionId = requestDto.,
+    //         WeekDay = requestDto.WeekDay,
+    //         StartTime = requestDto.StartTime,
+    //         EndDate = requestDto.EndDate,
+    //         DisciplineId = requestDto.DisciplineId
+    //     };
+    //
+    //     await _scheduleRepository.AddAsync(schedule);
+    //     var savedSchedule = await _scheduleRepository.GetByIdAsync(schedule.ScheduleId);
+    //
+    //     if (savedSchedule == null)
+    //         throw new InvalidOperationException("Failed to add schedule.");
+    // }
 }

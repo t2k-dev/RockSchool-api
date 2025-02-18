@@ -1,16 +1,37 @@
-﻿namespace RockSchool.Data.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using RockSchool.Data.Enums;
+
+namespace RockSchool.Data.Entities;
 
 public class AttendanceEntity
 {
+    [Key]
     public int AttendanceId { get; set; }
+
     public int StudentId { get; set; }
-    public StudentEntity StudentEntity { get; set; }
+    [ForeignKey(nameof(StudentId))]
+    public virtual StudentEntity Student { get; set; }
+    public int SubscriptionId { get; set; }
+    [ForeignKey(nameof(SubscriptionId))] 
+    public virtual SubscriptionEntity Subscription { get; set; }
+    public int DisciplineId { get; set; }
+    [ForeignKey(nameof(DisciplineId))]
+    public virtual DisciplineEntity Discipline { get; set; }
     public int TeacherId { get; set; }
-    public TeacherEntity TeacherEntity { get; set; }
-    public DateTime BeginDate { get; set; }
-    public int Status { get; set; }
-    public int? RoomId { get; set; }
-    public RoomEntity RoomEntity { get; set; }
-    public int Duration { get; set; }
+    [ForeignKey(nameof(TeacherId))]
+    public virtual TeacherEntity Teacher { get; set; }
+    public AttendanceStatus Status { get; set; }
+
+    public string StatusReason { get; set; }
+    public DateTime StartDate { get; set; }
+
+    public DateTime EndDate { get; set; }
+
+    public bool IsGroup { get; set; }
+    public int RoomId { get; set; }
+    
+    [ForeignKey(nameof(RoomId))]
+    public virtual RoomEntity Room { get; set; }
     public string Comment { get; set; }
 }

@@ -3,6 +3,7 @@ using RockSchool.BL.Dtos.Service.Requests.AttendanceService;
 using RockSchool.BL.Dtos.Service.Responses;
 using RockSchool.BL.Helpers;
 using RockSchool.Data.Entities;
+using RockSchool.Data.Enums;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.AttendanceService;
@@ -27,14 +28,14 @@ public class AttendanceService : IAttendanceService
         {
             AttendanceId = a.AttendanceId,
             StudentId = a.StudentId,
-            StudentEntity = a.StudentEntity,
+            StudentEntity = a.Student,
             TeacherId = a.TeacherId,
-            TeacherEntity = a.TeacherEntity,
-            BeginDate = a.BeginDate,
+            TeacherEntity = a.Teacher,
+            BeginDate = a.StartDate,
             Status = a.Status,
             RoomId = a.RoomId,
-            RoomEntity = a.RoomEntity,
-            Duration = a.Duration,
+            RoomEntity = a.Room,
+            EndDate = a.EndDate,
             Comment = a.Comment
         }).ToArray();
 
@@ -63,17 +64,18 @@ public class AttendanceService : IAttendanceService
 
         while (attendancesToAdd > 0)
         {
-            foreach (var item in schedules!)
+            foreach (var scheduleEntity in schedules!)
             {
-                var beginDate = ScheduleHelper.GetNextWeekday(startDate, item.WeekDay);
+                var beginDate = ScheduleHelper.GetNextWeekday(startDate, scheduleEntity.WeekDay);
 
                 var attendance = new AttendanceEntity
                 {
                     StudentId = attendanceServiceRequestDto.StudentId,
                     TeacherId = attendanceServiceRequestDto.TeacherId,
-                    Status = 1,
-                    Duration = item.Duration,
-                    BeginDate = beginDate
+                    Status = AttendanceStatus.New,
+                    // TODO: day of week and time, add logic, discuss logic!!
+                    EndDate = scheduleEntity.EndTime,
+                    StartDate = beginDate
                 };
 
                 newAttendances.Add(attendance);

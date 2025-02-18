@@ -20,7 +20,7 @@ public class ScheduleRepository
 
     public async Task<ScheduleEntity[]?> GetAllByStudentIdAsync(int studentId)
     {
-        return await _rockSchoolContext.Schedules.Where(s => s.StudentId == studentId).ToArrayAsync();
+        return await _rockSchoolContext.Schedules.Where(s => s.Subscription.StudentId == studentId).ToArrayAsync();
     }
 
     public async Task<ScheduleEntity?> GetByIdAsync(int scheduleId)

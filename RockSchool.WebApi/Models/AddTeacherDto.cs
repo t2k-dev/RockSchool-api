@@ -11,6 +11,6 @@ public class AddTeacherDto
     public DateTime BirthDate { get; set; }
     public long Phone { get; set; }
     public int[] Disciplines { get; set; }
-    public WorkingHoursEntity WorkingHoursEntity { get; set; }
+    // public WorkingHoursEntity WorkingHoursEntity { get; set; }
     public int UserId { get; set; }
 }

@@ -1,7 +1,12 @@
-﻿namespace RockSchool.Data.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RockSchool.Data.Entities;
 
 public class RoleEntity
 {
-    public int RoleId { get; set; }
+    [Key] public int RoleId { get; set; }
+
     public string RoleName { get; set; }
+
+    public bool IsActive { get; set; }
 }

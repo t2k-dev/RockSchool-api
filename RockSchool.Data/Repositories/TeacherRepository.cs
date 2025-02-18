@@ -29,7 +29,7 @@ public class TeacherRepository
     public async Task<TeacherEntity?> GetByIdAsync(int teacherId)
     {
         return await _context.Teachers
-            .Include(t => t.UserEntity)
+            .Include(t => t.User)
             .Include(t => t.Disciplines)
             .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
     }

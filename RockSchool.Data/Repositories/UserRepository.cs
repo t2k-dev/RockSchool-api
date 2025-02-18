@@ -15,7 +15,7 @@ public class UserRepository
 
     public async Task<UserEntity?> GetByIdAsync(int userId)
     {
-        return await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+        return await _context.Users.SingleOrDefaultAsync(u => u.UserId == userId);
     }
 
     public async Task AddAsync(UserEntity userEntity)

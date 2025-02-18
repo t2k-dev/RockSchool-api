@@ -44,7 +44,7 @@ public class TeacherController : Controller
             MiddleName = teacher.MiddleName,
             BirthDate = teacher.BirthDate,
             Phone = teacher.Phone,
-            Disciplines = teacher.Disciplines.Select(d => d.Id).ToArray()
+            Disciplines = teacher.Disciplines.Select(d => d.DisciplineId).ToArray()
         };
 
         return Ok(result);
@@ -74,7 +74,7 @@ public class TeacherController : Controller
     //
     //     foreach (var disciplineId in model.Disciplines)
     //     {
-    //         var disciplineEntity = _context.Disciplines.SingleOrDefault(d => d.Id == disciplineId);
+    //         var disciplineEntity = _context.Disciplines.SingleOrDefault(d => d.AttendanceId == disciplineId);
     //         newTeacher.Disciplines.Add(disciplineEntity);
     //     }
     //

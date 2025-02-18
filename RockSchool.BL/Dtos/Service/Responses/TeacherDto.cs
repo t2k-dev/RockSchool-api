@@ -13,5 +13,4 @@ public class TeacherDto
     public ICollection<DisciplineEntity> Disciplines { get; set; }
     public int? UserId { get; set; }
     public UserEntity UserEntity { get; set; }
-    public WorkingHoursEntity WorkingHoursEntity { get; set; }
 }

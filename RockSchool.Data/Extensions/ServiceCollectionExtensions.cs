@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddRockSchoolData(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<RockSchoolContext>(options =>
-            options.UseSqlServer(connectionString));
+            options.UseNpgsql(connectionString));
 
         return services;
     }

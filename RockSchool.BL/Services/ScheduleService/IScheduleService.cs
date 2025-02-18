@@ -6,5 +6,5 @@ namespace RockSchool.BL.Services.ScheduleService;
 public interface IScheduleService
 {
     Task<ScheduleDto[]?> GetAllSchedulesAsync();
-    Task AddScheduleAsync(AddScheduleServiceRequestDto requestDto);
+    // Task AddScheduleAsync(AddScheduleServiceRequestDto requestDto);
 }

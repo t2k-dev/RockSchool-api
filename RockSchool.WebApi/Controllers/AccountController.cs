@@ -99,7 +99,7 @@ public class AccountController : Controller
             Phone = requestDto.Phone,
             UserId = newUserId,
             Disciplines = requestDto.Disciplines,
-            WorkingHoursEntity = requestDto.WorkingHoursEntity
+            // WorkingHoursEntity = requestDto.WorkingHoursEntity
         };
 
         await _teacherService.AddTeacher(newTeacher);

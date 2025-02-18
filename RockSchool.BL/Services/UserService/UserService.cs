@@ -33,11 +33,11 @@ public class UserService : IUserService
 
         await _userRepository.AddAsync(newUser);
 
-        var savedUser = await _userRepository.GetByIdAsync(newUser.Id);
+        var savedUser = await _userRepository.GetByIdAsync(newUser.UserId);
         if (savedUser == null)
             throw new InvalidOperationException("Failed to add UserService.");
 
-        return savedUser.Id;
+        return savedUser.UserId;
     }
 
     public async Task<UserDto?> GetUserByIdAsync(int userId)
@@ -49,11 +49,11 @@ public class UserService : IUserService
 
         var userDto = new UserDto
         {
-            Id = user.Id,
+            Id = user.UserId,
             Login = user.Login,
             PasswordHash = user.PasswordHash,
             RoleId = user.RoleId,
-            RoleEntity = user.RoleEntity
+            RoleEntity = user.Role
         };
 
         return userDto;

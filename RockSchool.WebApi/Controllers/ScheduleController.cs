@@ -40,7 +40,7 @@ public class ScheduleController : Controller
             DisciplineId = requestDto.DisciplineId
         };
 
-        await _scheduleService.AddScheduleAsync(serviceRequestDto);
+        // await _scheduleService.AddScheduleAsync(serviceRequestDto);
 
         return Ok();
     }

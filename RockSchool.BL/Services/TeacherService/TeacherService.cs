@@ -53,9 +53,9 @@ public class TeacherService : ITeacherService
             BirthDate = t.BirthDate,
             Phone = t.Phone,
             UserId = t.UserId,
-            UserEntity = t.UserEntity,
+            UserEntity = t.User,
             Disciplines = t.Disciplines,
-            WorkingHoursEntity = t.WorkingHoursEntity
+            // WorkingHoursEntity = t.WorkingPeriods
         }).ToArray();
 
         return teacherDtos;
@@ -77,9 +77,9 @@ public class TeacherService : ITeacherService
             BirthDate = teacher.BirthDate,
             Phone = teacher.Phone,
             UserId = teacher.UserId,
-            UserEntity = teacher.UserEntity,
+            UserEntity = teacher.User,
             Disciplines = teacher.Disciplines,
-            WorkingHoursEntity = teacher.WorkingHoursEntity
+            // WorkingHoursEntity = teacher.WorkingPeriods
         };
 
         return teacherDto;
@@ -150,7 +150,7 @@ public class TeacherService : ITeacherService
         if (updateRequest.UserId.HasValue)
             existingTeacher.UserId = updateRequest.UserId.Value;
 
-        if (updateRequest.WorkingHoursEntity != null)
-            existingTeacher.WorkingHoursEntity = updateRequest.WorkingHoursEntity;
+        // if (updateRequest.WorkingHoursEntity != null)
+        //     existingTeacher.WorkingPeriods = updateRequest.WorkingHoursEntity;
     }
 }

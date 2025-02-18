@@ -1,14 +1,18 @@
-﻿namespace RockSchool.Data.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RockSchool.Data.Entities;
 
 public class UserEntity
 {
-    public int Id { get; set; }
+    [Key] public int UserId { get; set; }
 
-    public string Login { get; set; }
+    [Required] [MaxLength(100)] public string Login { get; set; }
 
-    public string PasswordHash { get; set; }
+    [Required] public string PasswordHash { get; set; }
 
     public int RoleId { get; set; }
+    [ForeignKey(nameof(RoleId))] public RoleEntity Role { get; set; }
 
-    public RoleEntity RoleEntity { get; set; }
+    public bool IsActive { get; set; }
 }
