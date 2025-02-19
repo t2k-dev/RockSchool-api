@@ -287,7 +287,7 @@ namespace RockSchool.Data.Migrations
                     b.Property<short>("Sex")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("StudentId");
@@ -575,9 +575,7 @@ namespace RockSchool.Data.Migrations
                 {
                     b.HasOne("RockSchool.Data.Entities.UserEntity", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

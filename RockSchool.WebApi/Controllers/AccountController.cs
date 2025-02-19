@@ -47,35 +47,6 @@ public class AccountController : Controller
     }
 
     [EnableCors("MyPolicy")]
-    [HttpPost("registerStudent")]
-    public async Task<ActionResult> RegisterStudent([FromBody] RegisterStudentRequestDto requestDto)
-    {
-        if (!ModelState.IsValid) throw new Exception("Incorrect requestDto for registration.");
-
-        var addUserServiceDto = new AddUserServiceRequestDto
-        {
-            Login = requestDto.Login,
-            RoleId = (int)UserRole.Student
-        };
-
-        var newUserId = await _userService.AddUserAsync(addUserServiceDto);
-
-        var newStudent = new AddStudentServiceRequestDto
-        {
-            FirstName = requestDto.FirstName,
-            LastName = requestDto.LastName,
-            BirthDate = requestDto.BirthDate,
-            Sex = requestDto.Sex,
-            Phone = requestDto.Phone,
-            UserId = newUserId
-        };
-
-        await _studentService.AddStudentAsync(newStudent);
-
-        return Ok();
-    }
-
-    [EnableCors("MyPolicy")]
     [HttpPost("registerTeacher")]
     public async Task<ActionResult> RegisterTeacher([FromBody] RegisterTeacherRequestDto requestDto)
     {

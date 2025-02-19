@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos.Service.Requests.StudentService;
 using RockSchool.BL.Services.StudentService;
@@ -31,22 +33,26 @@ public class StudentController : Controller
         return Ok(studentsDto);
     }
 
-    // TODO: We will use this method
-    // [HttpPost]
-    // public ActionResult Post(AddStudentDto model)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return BadRequest(ModelState);
-    //     }
-    //
-    //     var newStudent = _mapper.Map<StudentEntity>(model);
-    //
-    //     _context.Students.Add(newStudent);
-    //     _context.SaveChanges();
-    //
-    //     return Ok();
-    // }
+    [EnableCors("MyPolicy")]
+    [HttpPost("registerStudent")]
+    public async Task<ActionResult> RegisterStudent([FromBody] RegisterStudentRequestDto requestDto)
+    {
+        if (!ModelState.IsValid) throw new Exception("Incorrect requestDto for registration.");
+
+        var newStudent = new AddStudentServiceRequestDto
+        {
+            FirstName = requestDto.FirstName,
+            LastName = requestDto.LastName,
+            BirthDate = requestDto.BirthDate,
+            Sex = requestDto.Sex,
+            Phone = requestDto.Phone,
+            Level = requestDto.Level,
+        };
+
+        await _studentService.AddStudentAsync(newStudent);
+
+        return Ok();
+    }
 
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(int id, [FromBody] UpdateStudentRequestDto requestDto)

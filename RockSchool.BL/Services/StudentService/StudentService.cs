@@ -1,5 +1,6 @@
 ﻿using RockSchool.BL.Dtos.Service.Requests.StudentService;
 using RockSchool.BL.Dtos.Service.Responses;
+using RockSchool.BL.Services.UserService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -14,7 +15,7 @@ public class StudentService : IStudentService
         _studentRepository = studentRepository;
     }
 
-    public async Task AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto)
+    public async Task<int> AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto)
     {
         var studentEntity = new StudentEntity
         {
@@ -23,7 +24,8 @@ public class StudentService : IStudentService
             BirthDate = addStudentServiceRequestDto.BirthDate,
             Phone = addStudentServiceRequestDto.Phone,
             Sex = addStudentServiceRequestDto.Sex,
-            UserId = addStudentServiceRequestDto.UserId
+            Level = addStudentServiceRequestDto.Level
+            // UserId = addStudentServiceRequestDto.UserId
         };
 
         await _studentRepository.AddAsync(studentEntity);
@@ -32,6 +34,8 @@ public class StudentService : IStudentService
 
         if (savedStudent == null)
             throw new InvalidOperationException("Failed to add student.");
+
+        return studentEntity.StudentId;
     }
 
     public async Task UpdateStudentAsync(
@@ -62,7 +66,7 @@ public class StudentService : IStudentService
             BirthDate = s.BirthDate,
             Phone = s.Phone,
             Sex = s.Sex,
-            UserId = s.UserId,
+            // UserId = s.UserId,
             UserEntity = s.User
         }).ToArray();
 

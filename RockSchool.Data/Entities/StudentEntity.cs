@@ -5,12 +5,10 @@ namespace RockSchool.Data.Entities;
 
 public class StudentEntity
 {
-    [Key] public int StudentId { get; set; }
-
-    public int UserId { get; set; }
-
-    [ForeignKey(nameof(UserId))] 
-    public virtual UserEntity User { get; set; }
+    [Key]
+    public int StudentId { get; set; }
+    
+    public virtual UserEntity? User { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public short Sex { get; set; }

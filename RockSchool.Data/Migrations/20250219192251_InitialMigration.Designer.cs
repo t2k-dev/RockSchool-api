@@ -12,7 +12,7 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    [Migration("20250218183319_InitialMigration")]
+    [Migration("20250219192251_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -290,7 +290,7 @@ namespace RockSchool.Data.Migrations
                     b.Property<short>("Sex")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("StudentId");
@@ -578,9 +578,7 @@ namespace RockSchool.Data.Migrations
                 {
                     b.HasOne("RockSchool.Data.Entities.UserEntity", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

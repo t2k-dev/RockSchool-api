@@ -5,7 +5,7 @@ namespace RockSchool.BL.Services.StudentService;
 
 public interface IStudentService
 {
-    Task AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto);
+    Task<int> AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto);
     Task UpdateStudentAsync(UpdateStudentServiceRequestDto updateStudentServiceRequestDto);
     Task<StudentDto[]?> GetAllStudentsAsync();
     Task DeleteStudentAsync(int id);

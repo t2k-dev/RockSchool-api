@@ -7,5 +7,5 @@ public class AddStudentServiceRequestDto
     public required DateTime BirthDate { get; set; }
     public required short Sex { get; set; }
     public required long Phone { get; set; }
-    public required int UserId { get; set; }
+    public string Level { get; set; }
 }
