@@ -12,7 +12,7 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    [Migration("20250219192251_InitialMigration")]
+    [Migration("20250219200621_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -277,11 +277,9 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Level")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("Phone")

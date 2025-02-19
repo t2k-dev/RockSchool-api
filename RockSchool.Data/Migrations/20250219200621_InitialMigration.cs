@@ -114,11 +114,11 @@ namespace RockSchool.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: true),
                     FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: true),
                     Sex = table.Column<short>(type: "smallint", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Phone = table.Column<long>(type: "bigint", nullable: false),
-                    Level = table.Column<string>(type: "text", nullable: false)
+                    Level = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -274,11 +274,9 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Level")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("Phone")
