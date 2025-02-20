@@ -39,7 +39,7 @@ public class StudentController : Controller
 
     [EnableCors("MyPolicy")]
     [HttpGet("{id}")]
-    public async Task<ActionResult> Get(int id)
+    public async Task<ActionResult> Get(Guid id)
     {
         var student = await _studentService.GetById(id);
 
