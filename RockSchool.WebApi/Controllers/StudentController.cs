@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RockSchool.BL.Dtos.Service.Requests.StudentService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.WebApi.Models;
@@ -35,6 +36,21 @@ public class StudentController : Controller
 
         return Ok(studentsDto);
     }
+
+    [EnableCors("MyPolicy")]
+    [HttpGet("{id}")]
+    public async Task<ActionResult> Get(int id)
+    {
+        var student = await _studentService.GetById(id);
+
+        if (student == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(student);
+    }
+
 
     [EnableCors("MyPolicy")]
     [HttpGet("getStudentScreenDetails/{id}")]
