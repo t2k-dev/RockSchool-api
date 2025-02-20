@@ -38,7 +38,7 @@ public class StudentController : Controller
 
     [EnableCors("MyPolicy")]
     [HttpGet("getStudentScreenDetails/{id}")]
-    public async Task<ActionResult> GetStudentScreenDetails(int id)
+    public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
 
         var studentDto = await _studentService.GetById(id);
@@ -87,7 +87,7 @@ public class StudentController : Controller
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(Guid id)
     {
         await _studentService.DeleteStudentAsync(id);
 

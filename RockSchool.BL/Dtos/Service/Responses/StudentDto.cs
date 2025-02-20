@@ -4,7 +4,7 @@ namespace RockSchool.BL.Dtos.Service.Responses;
 
 public class StudentDto
 {
-    public int StudentId { get; set; }
+    public Guid StudentId { get; set; }
     public string LastName { get; set; }
     public string FirstName { get; set; }
     public DateTime BirthDate { get; set; }

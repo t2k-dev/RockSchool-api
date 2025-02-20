@@ -7,18 +7,18 @@ namespace RockSchool.Data.Entities;
 public class AttendanceEntity
 {
     [Key]
-    public int AttendanceId { get; set; }
+    public Guid AttendanceId { get; set; }
 
-    public int StudentId { get; set; }
+    public Guid StudentId { get; set; }
     [ForeignKey(nameof(StudentId))]
     public virtual StudentEntity Student { get; set; }
-    public int SubscriptionId { get; set; }
+    public Guid SubscriptionId { get; set; }
     [ForeignKey(nameof(SubscriptionId))] 
     public virtual SubscriptionEntity Subscription { get; set; }
     public int DisciplineId { get; set; }
     [ForeignKey(nameof(DisciplineId))]
     public virtual DisciplineEntity Discipline { get; set; }
-    public int TeacherId { get; set; }
+    public Guid TeacherId { get; set; }
     [ForeignKey(nameof(TeacherId))]
     public virtual TeacherEntity Teacher { get; set; }
     public AttendanceStatus Status { get; set; }

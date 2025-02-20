@@ -5,11 +5,12 @@ namespace RockSchool.Data.Entities;
 
 public class SubscriptionEntity
 {
-    [Key] public int SubscriptionId { get; set; }
+    [Key] 
+    public Guid SubscriptionId { get; set; }
 
     public bool IsGroup { get; set; }
 
-    public int StudentId { get; set; }
+    public Guid StudentId { get; set; }
     [ForeignKey(nameof(StudentId))]
     public virtual StudentEntity Student { get; set; }
 
@@ -27,7 +28,7 @@ public class SubscriptionEntity
 
     public int? TransactionId { get; set; }
 
-    public int TeacherId { get; set; }
+    public Guid TeacherId { get; set; }
     [ForeignKey(nameof(TeacherId))]
     public virtual TeacherEntity Teacher { get; set; }
     public int BranchId { get; set; }

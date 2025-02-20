@@ -4,7 +4,7 @@ namespace RockSchool.BL.Dtos.Service.Responses;
 
 public class UserDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string Login { get; set; }
 

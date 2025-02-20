@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ public class TeacherController : Controller
 
     [EnableCors("MyPolicy")]
     [HttpGet("{id}")]
-    public async Task<ActionResult> Get(int id)
+    public async Task<ActionResult> Get(Guid id)
     {
         var teacher = await _teacherService.GetTeacherByIdAsync(id);
 
@@ -85,7 +86,7 @@ public class TeacherController : Controller
     // }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(int id, [FromBody] AddTeacherDto model)
+    public async Task<ActionResult> Put(Guid id, [FromBody] AddTeacherDto model)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -106,7 +107,7 @@ public class TeacherController : Controller
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(Guid id)
     {
         await _teacherService.DeleteTeacherAsync(id);
 

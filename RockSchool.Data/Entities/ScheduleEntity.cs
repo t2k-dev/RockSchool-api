@@ -6,8 +6,8 @@ namespace RockSchool.Data.Entities;
 public class ScheduleEntity
 {
     [Key] 
-    public int ScheduleId { get; set; }
-    public int SubscriptionId { get; set; }
+    public Guid ScheduleId { get; set; }
+    public Guid SubscriptionId { get; set; }
     [ForeignKey(nameof(SubscriptionId))]
     public SubscriptionEntity Subscription { get; set; }
     public int WeekDay { get; set; }

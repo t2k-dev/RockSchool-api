@@ -19,7 +19,7 @@ public class StudentRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<StudentEntity?> GetByIdAsync(int studentId)
+    public async Task<StudentEntity?> GetByIdAsync(Guid studentId)
     {
         return await _context.Students.SingleOrDefaultAsync(s => s.StudentId == studentId);
     }

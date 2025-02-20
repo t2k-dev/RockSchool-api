@@ -5,10 +5,10 @@ namespace RockSchool.BL.Dtos.Service.Responses;
 
 public class AttendanceDto
 {
-    public int AttendanceId { get; set; }
-    public int StudentId { get; set; }
+    public Guid AttendanceId { get; set; }
+    public Guid StudentId { get; set; }
     public StudentEntity StudentEntity { get; set; }
-    public int TeacherId { get; set; }
+    public Guid TeacherId { get; set; }
     public TeacherEntity TeacherEntity { get; set; }
     public DateTime BeginDate { get; set; }
     public AttendanceStatus Status { get; set; }

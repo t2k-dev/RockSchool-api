@@ -12,7 +12,7 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    [Migration("20250219200621_InitialMigration")]
+    [Migration("20250220081535_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -30,8 +30,8 @@ namespace RockSchool.Data.Migrations
                     b.Property<int>("DisciplinesDisciplineId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TeachersTeacherId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TeachersTeacherId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("DisciplinesDisciplineId", "TeachersTeacherId");
 
@@ -42,11 +42,9 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.AttendanceEntity", b =>
                 {
-                    b.Property<int>("AttendanceId")
+                    b.Property<Guid>("AttendanceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AttendanceId"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -74,14 +72,14 @@ namespace RockSchool.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("SubscriptionId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("SubscriptionId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("AttendanceId");
 
@@ -236,11 +234,9 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.ScheduleEntity", b =>
                 {
-                    b.Property<int>("ScheduleId")
+                    b.Property<Guid>("ScheduleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ScheduleId"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
@@ -248,8 +244,8 @@ namespace RockSchool.Data.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("SubscriptionId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("SubscriptionId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("WeekDay")
                         .HasColumnType("integer");
@@ -263,11 +259,9 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.StudentEntity", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<Guid>("StudentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StudentId"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("timestamp with time zone");
@@ -288,8 +282,8 @@ namespace RockSchool.Data.Migrations
                     b.Property<short>("Sex")
                         .HasColumnType("smallint");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("StudentId");
 
@@ -300,11 +294,9 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.SubscriptionEntity", b =>
                 {
-                    b.Property<int>("SubscriptionId")
+                    b.Property<Guid>("SubscriptionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SubscriptionId"));
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AttendanceCount")
                         .HasColumnType("integer");
@@ -331,11 +323,11 @@ namespace RockSchool.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uuid");
 
                     b.Property<int?>("TransactionId")
                         .HasColumnType("integer");
@@ -355,17 +347,15 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.TeacherDisciplineEntity", b =>
                 {
-                    b.Property<int>("TeacherDisciplineId")
+                    b.Property<Guid>("TeacherDisciplineId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TeacherDisciplineId"));
+                        .HasColumnType("uuid");
 
                     b.Property<int>("DisciplineId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("TeacherDisciplineId");
 
@@ -378,11 +368,9 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.TeacherEntity", b =>
                 {
-                    b.Property<int>("TeacherId")
+                    b.Property<Guid>("TeacherId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TeacherId"));
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AgeLimit")
                         .HasColumnType("integer");
@@ -417,8 +405,8 @@ namespace RockSchool.Data.Migrations
                     b.Property<int>("Sex")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("TeacherId");
 
@@ -431,11 +419,9 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.UserEntity", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
+                        .HasColumnType("uuid");
 
                     b.Property<int?>("BranchEntityBranchId")
                         .HasColumnType("integer");
@@ -445,8 +431,7 @@ namespace RockSchool.Data.Migrations
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -466,11 +451,9 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.WorkingPeriodEntity", b =>
                 {
-                    b.Property<int>("WorkingPeriodId")
+                    b.Property<Guid>("WorkingPeriodId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WorkingPeriodId"));
+                        .HasColumnType("uuid");
 
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("interval");
@@ -478,8 +461,8 @@ namespace RockSchool.Data.Migrations
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("interval");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("WeekDay")
                         .IsRequired()

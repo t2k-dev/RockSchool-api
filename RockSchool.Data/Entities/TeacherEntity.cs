@@ -5,7 +5,7 @@ namespace RockSchool.Data.Entities;
 
 public class TeacherEntity
 {
-    [Key] public int TeacherId { get; set; }
+    [Key] public Guid TeacherId { get; set; }
 
     [Required] [MaxLength(100)] public string FirstName { get; set; }
 
@@ -19,7 +19,7 @@ public class TeacherEntity
 
     public long Phone { get; set; }
 
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
     [ForeignKey(nameof(UserId))] public virtual UserEntity User { get; set; }
 
     public int BranchId { get; set; }

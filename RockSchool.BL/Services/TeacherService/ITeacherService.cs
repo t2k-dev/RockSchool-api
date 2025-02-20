@@ -7,7 +7,7 @@ public interface ITeacherService
 {
     Task AddTeacher(AddTeacherServiceRequestDto addTeacherDto);
     Task<TeacherDto[]> GetAllTeachersAsync();
-    Task<TeacherDto> GetTeacherByIdAsync(int id);
+    Task<TeacherDto> GetTeacherByIdAsync(Guid id);
     Task UpdateTeacherAsync(UpdateTeacherServiceRequestDto updateTeacherServiceRequestDto);
-    Task DeleteTeacherAsync(int id);
+    Task DeleteTeacherAsync(Guid id);
 }

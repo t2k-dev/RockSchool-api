@@ -2,8 +2,8 @@
 
 public class AddAttendanceServiceRequestDto
 {
-    public int StudentId { get; set; }
-    public int TeacherId { get; set; }
+    public Guid StudentId { get; set; }
+    public Guid TeacherId { get; set; }
     public int DisciplineId { get; set; }
     public int NumberOfAttendances { get; set; }
     public DateTime StartingDate { get; set; }

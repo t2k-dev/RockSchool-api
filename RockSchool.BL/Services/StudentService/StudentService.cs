@@ -15,7 +15,7 @@ public class StudentService : IStudentService
         _studentRepository = studentRepository;
     }
 
-    public async Task<int> AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto)
+    public async Task<Guid> AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto)
     {
         var studentEntity = new StudentEntity
         {
@@ -51,7 +51,7 @@ public class StudentService : IStudentService
         await _studentRepository.UpdateAsync(existingStudent);
     }
 
-    public async Task<StudentDto> GetById(int studentId)
+    public async Task<StudentDto> GetById(Guid studentId)
     {
         var student = await _studentRepository.GetByIdAsync(studentId);
 
@@ -91,7 +91,7 @@ public class StudentService : IStudentService
         return studentDtos;
     }
 
-    public async Task DeleteStudentAsync(int id)
+    public async Task DeleteStudentAsync(Guid id)
     {
         var existingStudent = await _studentRepository.GetByIdAsync(id);
 

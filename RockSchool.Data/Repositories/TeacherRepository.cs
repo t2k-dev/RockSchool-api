@@ -26,7 +26,7 @@ public class TeacherRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<TeacherEntity?> GetByIdAsync(int teacherId)
+    public async Task<TeacherEntity?> GetByIdAsync(Guid teacherId)
     {
         return await _context.Teachers
             .Include(t => t.User)

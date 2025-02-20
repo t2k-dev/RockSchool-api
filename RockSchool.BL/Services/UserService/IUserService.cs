@@ -5,7 +5,7 @@ namespace RockSchool.BL.Services.UserService;
 
 public interface IUserService
 {
-    Task<int> AddUserAsync(AddUserServiceRequestDto addUserServiceRequestDto);
-    Task<UserDto?> GetUserByIdAsync(int userId);
-    Task DeleteUserAsync(int userId);
+    Task<Guid> AddUserAsync(AddUserServiceRequestDto addUserServiceRequestDto);
+    Task<UserDto?> GetUserByIdAsync(Guid userId);
+    Task DeleteUserAsync(Guid userId);
 }

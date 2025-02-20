@@ -18,12 +18,12 @@ public class ScheduleRepository
         return await _rockSchoolContext.Schedules.ToArrayAsync();
     }
 
-    public async Task<ScheduleEntity[]?> GetAllByStudentIdAsync(int studentId)
+    public async Task<ScheduleEntity[]?> GetAllByStudentIdAsync(Guid studentId)
     {
         return await _rockSchoolContext.Schedules.Where(s => s.Subscription.StudentId == studentId).ToArrayAsync();
     }
 
-    public async Task<ScheduleEntity?> GetByIdAsync(int scheduleId)
+    public async Task<ScheduleEntity?> GetByIdAsync(Guid scheduleId)
     {
         return await _rockSchoolContext.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == scheduleId);
     }
@@ -40,7 +40,7 @@ public class ScheduleRepository
         await _rockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         var schedule = await _rockSchoolContext.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == id);
         if (schedule != null)

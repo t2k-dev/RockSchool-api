@@ -17,7 +17,7 @@ public class UserService : IUserService
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<int> AddUserAsync(AddUserServiceRequestDto addUserServiceRequestDto)
+    public async Task<Guid> AddUserAsync(AddUserServiceRequestDto addUserServiceRequestDto)
     {
         var passwordValidationResult = ValidateAndGetFinalPassword(
             addUserServiceRequestDto.Password,
@@ -40,7 +40,7 @@ public class UserService : IUserService
         return savedUser.UserId;
     }
 
-    public async Task<UserDto?> GetUserByIdAsync(int userId)
+    public async Task<UserDto?> GetUserByIdAsync(Guid userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
 
@@ -59,7 +59,7 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public async Task DeleteUserAsync(int userId)
+    public async Task DeleteUserAsync(Guid userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)

@@ -82,9 +82,8 @@ namespace RockSchool.Data.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Login = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Login = table.Column<string>(type: "text", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
                     RoleId = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
@@ -110,9 +109,8 @@ namespace RockSchool.Data.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    StudentId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: true),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: true),
                     Sex = table.Column<short>(type: "smallint", nullable: false),
@@ -134,15 +132,14 @@ namespace RockSchool.Data.Migrations
                 name: "Teachers",
                 columns: table => new
                 {
-                    TeacherId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     MiddleName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Sex = table.Column<int>(type: "integer", nullable: false),
                     Phone = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     BranchId = table.Column<int>(type: "integer", nullable: false),
                     AgeLimit = table.Column<int>(type: "integer", nullable: false),
                     AllowGroupLessons = table.Column<bool>(type: "boolean", nullable: false)
@@ -169,7 +166,7 @@ namespace RockSchool.Data.Migrations
                 columns: table => new
                 {
                     DisciplinesDisciplineId = table.Column<int>(type: "integer", nullable: false),
-                    TeachersTeacherId = table.Column<int>(type: "integer", nullable: false)
+                    TeachersTeacherId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,17 +189,16 @@ namespace RockSchool.Data.Migrations
                 name: "Subscriptions",
                 columns: table => new
                 {
-                    SubscriptionId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SubscriptionId = table.Column<Guid>(type: "uuid", nullable: false),
                     IsGroup = table.Column<bool>(type: "boolean", nullable: false),
-                    StudentId = table.Column<int>(type: "integer", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
                     AttendanceCount = table.Column<int>(type: "integer", nullable: false),
                     AttendanceLength = table.Column<int>(type: "integer", nullable: false),
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     DisciplineId = table.Column<int>(type: "integer", nullable: false),
                     TransactionId = table.Column<int>(type: "integer", nullable: true),
-                    TeacherId = table.Column<int>(type: "integer", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     BranchId = table.Column<int>(type: "integer", nullable: false),
                     IsTrial = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -239,9 +235,8 @@ namespace RockSchool.Data.Migrations
                 name: "TeacherDisciplines",
                 columns: table => new
                 {
-                    TeacherDisciplineId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TeacherId = table.Column<int>(type: "integer", nullable: false),
+                    TeacherDisciplineId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     DisciplineId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -265,9 +260,8 @@ namespace RockSchool.Data.Migrations
                 name: "WorkingPeriods",
                 columns: table => new
                 {
-                    WorkingPeriodId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TeacherId = table.Column<int>(type: "integer", nullable: false),
+                    WorkingPeriodId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     WeekDay = table.Column<string>(type: "text", nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "interval", nullable: false),
                     EndTime = table.Column<TimeSpan>(type: "interval", nullable: false)
@@ -287,12 +281,11 @@ namespace RockSchool.Data.Migrations
                 name: "Attendances",
                 columns: table => new
                 {
-                    AttendanceId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StudentId = table.Column<int>(type: "integer", nullable: false),
-                    SubscriptionId = table.Column<int>(type: "integer", nullable: false),
+                    AttendanceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubscriptionId = table.Column<Guid>(type: "uuid", nullable: false),
                     DisciplineId = table.Column<int>(type: "integer", nullable: false),
-                    TeacherId = table.Column<int>(type: "integer", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     StatusReason = table.Column<string>(type: "text", nullable: false),
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -340,9 +333,8 @@ namespace RockSchool.Data.Migrations
                 name: "Schedules",
                 columns: table => new
                 {
-                    ScheduleId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SubscriptionId = table.Column<int>(type: "integer", nullable: false),
+                    ScheduleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubscriptionId = table.Column<Guid>(type: "uuid", nullable: false),
                     WeekDay = table.Column<int>(type: "integer", nullable: false),
                     StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)

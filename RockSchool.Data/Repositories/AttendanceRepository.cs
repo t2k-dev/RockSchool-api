@@ -18,7 +18,7 @@ public class AttendanceRepository
         return await _rockSchoolContext.Attendances.ToArrayAsync();
     }
 
-    public async Task<AttendanceEntity?> GetByIdAsync(int id)
+    public async Task<AttendanceEntity?> GetByIdAsync(Guid id)
     {
         return await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == id);
     }
@@ -35,7 +35,7 @@ public class AttendanceRepository
         await _rockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         var attendance = await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == id);
         if (attendance != null)

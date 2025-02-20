@@ -4,8 +4,8 @@ namespace RockSchool.BL.Dtos.Service.Responses;
 
 public class ScheduleDto
 {
-    public int ScheduleId { get; set; }
-    public int StudentId { get; set; }
+    public Guid ScheduleId { get; set; }
+    public Guid StudentId { get; set; }
     public StudentEntity StudentEntity { get; set; }
     public int WeekDay { get; set; }
     public DateTime StartTime { get; set; }

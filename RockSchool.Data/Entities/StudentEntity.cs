@@ -6,7 +6,7 @@ namespace RockSchool.Data.Entities;
 public class StudentEntity
 {
     [Key]
-    public int StudentId { get; set; }
+    public Guid StudentId { get; set; }
     
     public virtual UserEntity? User { get; set; }
     public string FirstName { get; set; }

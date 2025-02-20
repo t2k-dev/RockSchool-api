@@ -61,7 +61,7 @@ public class TeacherService : ITeacherService
         return teacherDtos;
     }
 
-    public async Task<TeacherDto> GetTeacherByIdAsync(int id)
+    public async Task<TeacherDto> GetTeacherByIdAsync(Guid id)
     {
         var teacher = await _teacherRepository.GetByIdAsync(id);
 
@@ -99,7 +99,7 @@ public class TeacherService : ITeacherService
         await _teacherRepository.UpdateAsync(existingTeacher);
     }
 
-    public async Task DeleteTeacherAsync(int id)
+    public async Task DeleteTeacherAsync(Guid id)
     {
         var existingTeacher = await _teacherRepository.GetByIdAsync(id);
 
