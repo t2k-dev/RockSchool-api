@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Cors;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos.Service.Requests.StudentService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Students;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -22,6 +24,7 @@ public class StudentController : Controller
         _mapper = mapper;
     }
 
+    [EnableCors("MyPolicy")]
     [HttpGet]
     public async Task<ActionResult> Get()
     {
@@ -34,8 +37,25 @@ public class StudentController : Controller
     }
 
     [EnableCors("MyPolicy")]
-    [HttpPost("registerStudent")]
-    public async Task<ActionResult> RegisterStudent([FromBody] RegisterStudentRequestDto requestDto)
+    [HttpGet("getStudentScreenDetails/{id}")]
+    public async Task<ActionResult> GetStudentScreenDetails(int id)
+    {
+
+        var studentDto = await _studentService.GetById(id);
+
+        var studentScreenDetailsDto = new StudentScreenDetailsDto
+        {
+            Student = studentDto,
+            Subscriptions = new List<string>(),
+        };
+
+
+        return Ok(studentScreenDetailsDto);
+    }
+
+    [EnableCors("MyPolicy")]
+    [HttpPost("addStudent")]
+    public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
         if (!ModelState.IsValid) throw new Exception("Incorrect requestDto for registration.");
 
@@ -43,15 +63,15 @@ public class StudentController : Controller
         {
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,
-            BirthDate = requestDto.BirthDate,
+            BirthDate = requestDto.BirthDate.ToUniversalTime(),
             Sex = requestDto.Sex,
             Phone = requestDto.Phone,
             Level = requestDto.Level,
         };
 
-        await _studentService.AddStudentAsync(newStudent);
+        var id = await _studentService.AddStudentAsync(newStudent);
 
-        return Ok();
+        return Ok(id);
     }
 
     [HttpPut("{id}")]

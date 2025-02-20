@@ -51,6 +51,24 @@ public class StudentService : IStudentService
         await _studentRepository.UpdateAsync(existingStudent);
     }
 
+    public async Task<StudentDto> GetById(int studentId)
+    {
+        var student = await _studentRepository.GetByIdAsync(studentId);
+
+        var studentDto = new StudentDto
+        {
+            StudentId = student.StudentId,
+            LastName = student.LastName,
+            FirstName = student.FirstName,
+            BirthDate = student.BirthDate,
+            Phone = student.Phone,
+            Sex = student.Sex,
+
+        };
+
+        return studentDto;
+    }
+
     public async Task<StudentDto[]?> GetAllStudentsAsync()
     {
         var students = await _studentRepository.GetAllAsync();

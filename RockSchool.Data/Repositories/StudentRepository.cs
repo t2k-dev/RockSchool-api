@@ -24,7 +24,6 @@ public class StudentRepository
         return await _context.Students.SingleOrDefaultAsync(s => s.StudentId == studentId);
     }
 
-
     public async Task UpdateAsync(StudentEntity studentEntity)
     {
         _context.Students.Update(studentEntity);
