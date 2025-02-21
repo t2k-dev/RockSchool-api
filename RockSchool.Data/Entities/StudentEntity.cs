@@ -15,4 +15,5 @@ public class StudentEntity
     public DateTime BirthDate { get; set; }
     public long Phone { get; set; }
     public string? Level { get; set; }
+    public virtual BranchEntity? Branch { get; set; }
 }

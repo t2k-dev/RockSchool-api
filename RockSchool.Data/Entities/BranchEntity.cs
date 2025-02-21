@@ -13,6 +13,5 @@ public class BranchEntity
 
     public string Address { get; set; }
 
-    public ICollection<UserEntity>? Users { get; set; }
     public ICollection<RoomEntity>? Rooms { get; set; }
 }
