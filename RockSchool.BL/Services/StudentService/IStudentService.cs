@@ -8,6 +8,6 @@ public interface IStudentService
     Task<Guid> AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto);
     Task UpdateStudentAsync(UpdateStudentServiceRequestDto updateStudentServiceRequestDto);
     Task<StudentDto[]?> GetAllStudentsAsync();
-    Task<StudentDto> GetById(Guid id);
+    Task<StudentDto?> GetByIdAsync(Guid id);
     Task DeleteStudentAsync(Guid id);
 }

@@ -51,7 +51,7 @@ public class StudentService : IStudentService
         await _studentRepository.UpdateAsync(existingStudent);
     }
 
-    public async Task<StudentDto> GetById(Guid studentId)
+    public async Task<StudentDto> GetByIdAsync(Guid studentId)
     {
         var student = await _studentRepository.GetByIdAsync(studentId);
 

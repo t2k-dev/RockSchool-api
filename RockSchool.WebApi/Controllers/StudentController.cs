@@ -16,13 +16,11 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class StudentController : Controller
 {
-    private readonly IMapper _mapper;
     private readonly IStudentService _studentService;
 
-    public StudentController(IStudentService studentService, IMapper mapper)
+    public StudentController(IStudentService studentService)
     {
         _studentService = studentService;
-        _mapper = mapper;
     }
 
     [EnableCors("MyPolicy")]
@@ -41,7 +39,7 @@ public class StudentController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
-        var student = await _studentService.GetById(id);
+        var student = await _studentService.GetByIdAsync(id);
 
         if (student == null)
         {
@@ -57,7 +55,7 @@ public class StudentController : Controller
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
 
-        var studentDto = await _studentService.GetById(id);
+        var studentDto = await _studentService.GetByIdAsync(id);
 
         var studentScreenDetailsDto = new StudentScreenDetailsDto
         {
@@ -91,12 +89,21 @@ public class StudentController : Controller
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(int id, [FromBody] UpdateStudentRequestDto requestDto)
+    public async Task<ActionResult> Put(Guid id, [FromBody] UpdateStudentRequestDto requestDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var updateStudentDto = _mapper.Map<UpdateStudentServiceRequestDto>(requestDto);
+        var updateStudentDto = new UpdateStudentServiceRequestDto
+        {
+            StudentId = id,
+            Login = requestDto.Login,
+            FirstName = requestDto.FirstName,
+            LastName = requestDto.LastName,
+            BirthDate = requestDto.BirthDate,
+            Sex = requestDto.Sex,
+            Phone = requestDto.Phone
+        };
         await _studentService.UpdateStudentAsync(updateStudentDto);
 
         return Ok();
