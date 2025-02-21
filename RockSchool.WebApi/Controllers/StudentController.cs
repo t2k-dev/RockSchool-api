@@ -88,6 +88,7 @@ public class StudentController : Controller
         return Ok(id);
     }
 
+    [EnableCors("MyPolicy")]
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(Guid id, [FromBody] UpdateStudentRequestDto requestDto)
     {
