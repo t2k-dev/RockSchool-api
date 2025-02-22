@@ -14,8 +14,8 @@ namespace RockSchool.WebApi.Controllers
         }
 
         [EnableCors("MyPolicy")]
-        [HttpGet("getHomeScreenDetails")]
-        public async Task<ActionResult> Get()
+        [HttpGet("getHomeScreenDetails/{branchId}")]
+        public async Task<ActionResult> Get(int branchId)
         {
             var result = new 
             {

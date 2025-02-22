@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos.Service.Requests.TeacherService;
+using RockSchool.BL.Dtos.Service.Requests.UserService;
 using RockSchool.BL.Services.TeacherService;
+using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Enums;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -14,9 +17,11 @@ namespace RockSchool.WebApi.Controllers;
 public class TeacherController : Controller
 {
     private readonly ITeacherService _teacherService;
+    private readonly IUserService _userService;
 
-    public TeacherController(ITeacherService teacherService)
+    public TeacherController(ITeacherService teacherService, IUserService userService)
     {
+        _userService = userService;
         _teacherService = teacherService;
     }
 
@@ -29,6 +34,40 @@ public class TeacherController : Controller
         if (teachers.Length == 0) return NotFound();
 
         return Ok(teachers);
+    }
+
+    [EnableCors("MyPolicy")]
+    [HttpPost("addTeacher")]
+    public async Task<ActionResult> addTeacher([FromBody] RegisterTeacherRequestDto requestDto)
+    {
+        if (!ModelState.IsValid)
+            throw new Exception("Incorrect requestDto for registration.");
+
+        //TODO: uncomment and fix this mess)
+
+        //var addUserServiceDto = new AddUserServiceRequestDto
+        //{
+        //    Login = requestDto.Login,
+        //    RoleId = (int)UserRole.Teacher
+        //};
+
+        //var newUserId = await _userService.AddUserAsync(addUserServiceDto);
+
+        var newTeacher = new BL.Dtos.Service.Responses.TeacherDto
+        {
+            FirstName = requestDto.Teacher.FirstName,
+            LastName = requestDto.Teacher.LastName,
+            MiddleName = requestDto.Teacher.MiddleName,
+            BirthDate = Convert.ToDateTime(requestDto.Teacher.BirthDate).ToUniversalTime(),
+            Phone = requestDto.Teacher.Phone,
+            //UserId = newUserId,
+            //Disciplines = requestDto.Teacher.Disciplines,
+            // WorkingHoursEntity = requestDto.WorkingHoursEntity
+        };
+
+        await _teacherService.AddTeacher(newTeacher);
+
+        return Ok();
     }
 
     [EnableCors("MyPolicy")]

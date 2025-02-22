@@ -5,7 +5,7 @@ namespace RockSchool.BL.Services.TeacherService;
 
 public interface ITeacherService
 {
-    Task AddTeacher(AddTeacherServiceRequestDto addTeacherDto);
+    Task AddTeacher(TeacherDto addTeacherDto);
     Task<TeacherDto[]> GetAllTeachersAsync();
     Task<TeacherDto> GetTeacherByIdAsync(Guid id);
     Task UpdateTeacherAsync(UpdateTeacherServiceRequestDto updateTeacherServiceRequestDto);

@@ -45,36 +45,4 @@ public class AccountController : Controller
 
         return Ok();
     }
-
-    [EnableCors("MyPolicy")]
-    [HttpPost("registerTeacher")]
-    public async Task<ActionResult> RegisterTeacher([FromBody] RegisterTeacherRequestDto requestDto)
-    {
-        if (!ModelState.IsValid)
-            throw new Exception("Incorrect requestDto for registration.");
-
-        var addUserServiceDto = new AddUserServiceRequestDto
-        {
-            Login = requestDto.Login,
-            RoleId = (int)UserRole.Teacher
-        };
-
-        var newUserId = await _userService.AddUserAsync(addUserServiceDto);
-
-        var newTeacher = new AddTeacherServiceRequestDto
-        {
-            FirstName = requestDto.FirstName,
-            LastName = requestDto.LastName,
-            MiddleName = requestDto.MiddleName,
-            BirthDate = requestDto.BirthDate,
-            Phone = requestDto.Phone,
-            UserId = newUserId,
-            Disciplines = requestDto.Disciplines,
-            // WorkingHoursEntity = requestDto.WorkingHoursEntity
-        };
-
-        await _teacherService.AddTeacher(newTeacher);
-
-        return Ok();
-    }
 }

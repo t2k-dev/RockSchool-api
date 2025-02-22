@@ -17,16 +17,16 @@ public class TeacherService : ITeacherService
         _disciplineRepository = disciplineRepository;
     }
 
-    public async Task AddTeacher(AddTeacherServiceRequestDto addTeacherDto)
+    public async Task AddTeacher(TeacherDto addTeacherDto)
     {
         var teacher = new TeacherEntity
         {
             LastName = addTeacherDto.LastName,
             FirstName = addTeacherDto.FirstName,
-            MiddleName = addTeacherDto.MiddleName,
+            MiddleName = "addTeacherDto.MiddleName", //TODO
             BirthDate = addTeacherDto.BirthDate,
             Phone = addTeacherDto.Phone,
-            UserId = addTeacherDto.UserId
+            //UserId = addTeacherDto.UserId
         };
 
         await _teacherRepository.AddAsync(teacher);
