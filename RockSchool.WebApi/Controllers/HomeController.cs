@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Services.NoteService;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -8,15 +9,19 @@ namespace RockSchool.WebApi.Controllers
     [ApiController]
     public class HomeController : Controller
     {
-        public HomeController()
+        private readonly INoteService _noteService;
+
+        public HomeController(INoteService noteService)
         {
-            
+            _noteService = noteService;
         }
 
         [EnableCors("MyPolicy")]
         [HttpGet("getHomeScreenDetails/{branchId}")]
         public async Task<ActionResult> Get(int branchId)
         {
+            var notes = await _noteService.GetNotesAsync(branchId);
+
             var result = new 
             {
                 Rooms = new[]
@@ -26,11 +31,7 @@ namespace RockSchool.WebApi.Controllers
                     new {roomName = "Вокальная", teacherName = "", studentName = "", status = "Свободно"},
                     new {roomName = "Гитарная", teacherName = "Михаил", studentName = "", status = "Репетиция до 14:00"},
                 },
-                Notes = new[] 
-                { 
-                    new { description = "Пробный урок в 12:00", stasus = "Active"},
-                    new { description = "Написать +77012031456 когда будут свободные окна у Аружан в 18.00", stasus = "Active"}
-                },
+                Notes = notes,
             };
 
             return Ok(result);

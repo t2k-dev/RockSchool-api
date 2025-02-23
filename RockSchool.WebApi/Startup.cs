@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
+using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.TeacherService;
@@ -37,6 +38,7 @@ public class Startup
         services.AddScoped<IStudentService, StudentService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<INoteService, NoteService>();
 
         services.AddScoped<AttendanceRepository>();
         services.AddScoped<DisciplineRepository>();
@@ -44,6 +46,7 @@ public class Startup
         services.AddScoped<StudentRepository>();
         services.AddScoped<TeacherRepository>();
         services.AddScoped<UserRepository>();
+        services.AddScoped<NoteRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         // services.AddControllers();

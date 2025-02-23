@@ -18,7 +18,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\RockSchool.BL\RockSchool.BL.csproj" />
-        <ProjectReference Include="..\RockSchool.Data\RockSchool.Data.csproj" />
     </ItemGroup>
 
 
