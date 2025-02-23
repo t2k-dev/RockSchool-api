@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RockSchool.BL.Dtos;
+using RockSchool.Data.Entities;
 
 namespace RockSchool.BL.Services.NoteService
 {
@@ -30,6 +31,18 @@ namespace RockSchool.BL.Services.NoteService
                 .ToArray();
 
             return noteDtos;
+        }
+
+        public async Task<bool> AddNote(int branchId, string description)
+        {
+            var note = new NoteEntity()
+            {
+                BranchId = branchId,
+                Description = description,
+                Status = 1,
+            };
+
+            return await _noteRepository.AddNote(note);
         }
     }
 }

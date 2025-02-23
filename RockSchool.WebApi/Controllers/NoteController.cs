@@ -1,12 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Services.NoteService;
+using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class NoteController : Controller
     {
-        public IActionResult Index()
+        private readonly INoteService _noteService;
+
+        public NoteController(INoteService noteService)
         {
-            return View();
+            _noteService = noteService;
+        }
+
+        [EnableCors("MyPolicy")]
+        [HttpPost]
+        public async Task<ActionResult> Add(AddNoteDto addNoteDto)
+        {
+            await _noteService.AddNote(addNoteDto.BranchId, addNoteDto.Description);
+            return Ok();
         }
     }
 }
