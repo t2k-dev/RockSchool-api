@@ -15,11 +15,22 @@ namespace RockSchool.Data.Repositories
             return await RockSchoolContext.Notes.Where(n => n.Branch.BranchId == branchId).ToArrayAsync();
         }
 
+        public async Task<NoteEntity?> GetNote(Guid noteId)
+        {
+            return await RockSchoolContext.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId);
+        }
+
         public async Task<bool> AddNote(NoteEntity noteEntity)
         {
             await RockSchoolContext.Notes.AddAsync(noteEntity);
             await RockSchoolContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task UpdateAsync(NoteEntity noteEntity)
+        {
+            RockSchoolContext.Notes.Update(noteEntity);
+            await RockSchoolContext.SaveChangesAsync();
         }
     }
 }

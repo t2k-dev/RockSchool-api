@@ -11,5 +11,6 @@ namespace RockSchool.BL.Services.NoteService
     {
         Task<NoteDto[]?> GetNotesAsync(int branchId);
         Task<bool> AddNote(int branchId, string description);
+        Task MarkComplete(Guid noteId);
     }
 }

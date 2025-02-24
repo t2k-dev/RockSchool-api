@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.NoteService;
@@ -22,6 +23,14 @@ namespace RockSchool.WebApi.Controllers
         public async Task<ActionResult> Add(AddNoteDto addNoteDto)
         {
             await _noteService.AddNote(addNoteDto.BranchId, addNoteDto.Description);
+            return Ok();
+        }
+
+        [EnableCors("MyPolicy")]
+        [HttpPut("markComplete/{noteId}")]
+        public async Task<ActionResult> MarkComplete(Guid noteId)
+        {
+            await _noteService.MarkComplete(noteId);
             return Ok();
         }
     }

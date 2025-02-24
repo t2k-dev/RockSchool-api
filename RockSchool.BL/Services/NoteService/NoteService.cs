@@ -1,9 +1,4 @@
 ﻿using RockSchool.Data.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RockSchool.BL.Dtos;
 using RockSchool.Data.Entities;
 
@@ -35,7 +30,7 @@ namespace RockSchool.BL.Services.NoteService
 
         public async Task<bool> AddNote(int branchId, string description)
         {
-            var note = new NoteEntity()
+            var note = new NoteEntity
             {
                 BranchId = branchId,
                 Description = description,
@@ -43,6 +38,13 @@ namespace RockSchool.BL.Services.NoteService
             };
 
             return await _noteRepository.AddNote(note);
+        }
+
+        public async Task MarkComplete(Guid noteId)
+        {
+            var note = await _noteRepository.GetNote(noteId);
+            note.Status = 2;
+            await _noteRepository.UpdateAsync(note);
         }
     }
 }
