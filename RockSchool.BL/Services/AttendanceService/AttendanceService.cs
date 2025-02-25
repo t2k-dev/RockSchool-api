@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using RockSchool.BL.Dtos.Service.Requests.AttendanceService;
-using RockSchool.BL.Dtos.Service.Responses;
+﻿using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
@@ -13,8 +11,7 @@ public class AttendanceService : IAttendanceService
     private readonly AttendanceRepository _attendanceRepository;
     private readonly ScheduleRepository _scheduleRepository;
 
-    public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository,
-        IMapper mapper)
+    public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository)
     {
         _attendanceRepository = attendanceRepository;
         _scheduleRepository = scheduleRepository;
@@ -28,13 +25,13 @@ public class AttendanceService : IAttendanceService
         {
             AttendanceId = a.AttendanceId,
             StudentId = a.StudentId,
-            StudentEntity = a.Student,
+            Student = a.Student,
             TeacherId = a.TeacherId,
-            TeacherEntity = a.Teacher,
-            BeginDate = a.StartDate,
+            Teacher = a.Teacher,
+            StartDate = a.StartDate,
             Status = a.Status,
             RoomId = a.RoomId,
-            RoomEntity = a.Room,
+            Room = a.Room,
             EndDate = a.EndDate,
             Comment = a.Comment
         }).ToArray();
@@ -42,13 +39,12 @@ public class AttendanceService : IAttendanceService
         return attendancesDto;
     }
 
-    public async Task AddAttendancesToStudent(
-        AddAttendanceServiceRequestDto attendanceServiceRequestDto)
+    public async Task AddAttendancesToStudent(AttendanceDto attendanceServiceRequestDto)
     {
         var schedules =
             await _scheduleRepository.GetAllByStudentIdAsync(attendanceServiceRequestDto.StudentId);
 
-        var startDate = attendanceServiceRequestDto.StartingDate;
+        var startDate = attendanceServiceRequestDto.StartDate;
         var attendancesToAdd = attendanceServiceRequestDto.NumberOfAttendances;
         var newAttendances =
             GenerateAttendances(attendanceServiceRequestDto, attendancesToAdd, schedules, startDate);
@@ -57,7 +53,7 @@ public class AttendanceService : IAttendanceService
     }
 
     private static List<AttendanceEntity> GenerateAttendances(
-        AddAttendanceServiceRequestDto attendanceServiceRequestDto, int attendancesToAdd,
+        AttendanceDto attendanceServiceRequestDto, int attendancesToAdd,
         ScheduleEntity[] schedules, DateTime startDate)
     {
         var newAttendances = new List<AttendanceEntity>();

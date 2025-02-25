@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RockSchool.BL.Dtos.Service.Requests.StudentService;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
@@ -73,7 +71,7 @@ public class StudentController : Controller
     {
         if (!ModelState.IsValid) throw new Exception("Incorrect requestDto for registration.");
 
-        var newStudent = new AddStudentServiceRequestDto
+        var newStudent = new StudentDto()
         {
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,
@@ -95,10 +93,9 @@ public class StudentController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var updateStudentDto = new UpdateStudentServiceRequestDto
+        var updateStudentDto = new StudentDto()
         {
             StudentId = id,
-            Login = requestDto.Login,
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,
             BirthDate = requestDto.BirthDate,

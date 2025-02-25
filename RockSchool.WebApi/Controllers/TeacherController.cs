@@ -3,12 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos.Service.Requests.TeacherService;
-using RockSchool.BL.Dtos.Service.Requests.UserService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
-using RockSchool.WebApi.Models.Enums;
+using TeacherDto = RockSchool.BL.Dtos.TeacherDto;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -53,7 +51,7 @@ public class TeacherController : Controller
 
         //var newUserId = await _userService.AddUserAsync(addUserServiceDto);
 
-        var newTeacher = new BL.Dtos.Service.Responses.TeacherDto
+        var newTeacher = new TeacherDto
         {
             FirstName = requestDto.Teacher.FirstName,
             LastName = requestDto.Teacher.LastName,
@@ -75,10 +73,10 @@ public class TeacherController : Controller
     public async Task<ActionResult> Get(Guid id)
     {
         var teacher = await _teacherService.GetTeacherByIdAsync(id);
-
+        
         var result = new GetTeacherResponseDto
         {
-            Email = teacher.UserEntity.Login,
+            Email = teacher.User.Login,
             FirstName = teacher.FirstName,
             LastName = teacher.LastName,
             MiddleName = teacher.MiddleName,
@@ -130,7 +128,7 @@ public class TeacherController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var updateRequest = new UpdateTeacherServiceRequestDto
+        var updateRequest = new TeacherDto()
         {
             TeacherId = id,
             FirstName = model.FirstName,

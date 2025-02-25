@@ -1,6 +1,4 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.ScheduleService;
-using RockSchool.BL.Dtos.Service.Responses;
-using RockSchool.Data.Entities;
+﻿using RockSchool.BL.Dtos;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.ScheduleService;
@@ -24,13 +22,10 @@ public class ScheduleService : IScheduleService
         var scheduleDtos = schedules.Select(s => new ScheduleDto
         {
             ScheduleId = s.ScheduleId,
-            StudentId = s.Subscription.StudentId,
-            StudentEntity = s.Subscription.Student,
+            Subscription = s.Subscription,
             WeekDay = s.WeekDay,
             StartTime = s.StartTime,
             EndTime = s.EndTime,
-            DisciplineId = s.Subscription.DisciplineId,
-            DisciplineEntity = s.Subscription.Discipline
         }).ToArray();
         
         return scheduleDtos;

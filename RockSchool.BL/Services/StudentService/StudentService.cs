@@ -1,6 +1,4 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.StudentService;
-using RockSchool.BL.Dtos.Service.Responses;
-using RockSchool.BL.Services.UserService;
+﻿using RockSchool.BL.Dtos;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -15,16 +13,16 @@ public class StudentService : IStudentService
         _studentRepository = studentRepository;
     }
 
-    public async Task<Guid> AddStudentAsync(AddStudentServiceRequestDto addStudentServiceRequestDto)
+    public async Task<Guid> AddStudentAsync(StudentDto studentDto)
     {
         var studentEntity = new StudentEntity
         {
-            LastName = addStudentServiceRequestDto.LastName,
-            FirstName = addStudentServiceRequestDto.FirstName,
-            BirthDate = addStudentServiceRequestDto.BirthDate,
-            Phone = addStudentServiceRequestDto.Phone,
-            Sex = addStudentServiceRequestDto.Sex,
-            Level = addStudentServiceRequestDto.Level
+            LastName = studentDto.LastName,
+            FirstName = studentDto.FirstName,
+            BirthDate = studentDto.BirthDate,
+            Phone = studentDto.Phone,
+            Sex = studentDto.Sex,
+            Level = studentDto.Level
             // UserId = addStudentServiceRequestDto.UserId
         };
 
@@ -38,15 +36,14 @@ public class StudentService : IStudentService
         return studentEntity.StudentId;
     }
 
-    public async Task UpdateStudentAsync(
-        UpdateStudentServiceRequestDto updateStudentServiceRequestDto)
+    public async Task UpdateStudentAsync(StudentDto studentDto)
     {
-        var existingStudent = await _studentRepository.GetByIdAsync(updateStudentServiceRequestDto.StudentId);
+        var existingStudent = await _studentRepository.GetByIdAsync(studentDto.StudentId);
 
         if (existingStudent == null)
             throw new NullReferenceException("StudentEntity not found.");
 
-        ModifyStudentAttributes(updateStudentServiceRequestDto, existingStudent);
+        ModifyStudentAttributes(studentDto, existingStudent);
 
         await _studentRepository.UpdateAsync(existingStudent);
     }
@@ -85,7 +82,7 @@ public class StudentService : IStudentService
             Phone = s.Phone,
             Sex = s.Sex,
             // UserId = s.UserId,
-            UserEntity = s.User
+            User = s.User
         }).ToArray();
 
         return studentDtos;
@@ -101,7 +98,7 @@ public class StudentService : IStudentService
         await _studentRepository.DeleteAsync(existingStudent);
     }
 
-    private static void ModifyStudentAttributes(UpdateStudentServiceRequestDto updateStudentServiceRequestDto,
+    private static void ModifyStudentAttributes(StudentDto updateStudentServiceRequestDto,
         StudentEntity existingStudentEntity)
     {
         if (!string.IsNullOrEmpty(updateStudentServiceRequestDto.FirstName))

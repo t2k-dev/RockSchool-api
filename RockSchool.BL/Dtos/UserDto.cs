@@ -1,16 +1,13 @@
 ﻿using RockSchool.Data.Entities;
 
-namespace RockSchool.BL.Dtos.Service.Responses;
+namespace RockSchool.BL.Dtos;
 
 public class UserDto
 {
-    public Guid Id { get; set; }
-
+    public Guid UserId { get; set; }
     public string Login { get; set; }
-
     public string PasswordHash { get; set; }
-
     public int RoleId { get; set; }
-
-    public RoleEntity RoleEntity { get; set; }
+    public RoleEntity Role { get; set; }
+    public bool IsActive { get; set; }
 }

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos.Service.Requests.StudentService;
-using RockSchool.BL.Dtos.Service.Requests.TeacherService;
-using RockSchool.BL.Dtos.Service.Requests.UserService;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
-using RockSchool.WebApi.Models.Enums;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -17,15 +13,11 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class AccountController : Controller
 {
-    private readonly IStudentService _studentService;
-    private readonly ITeacherService _teacherService;
     private readonly IUserService _userService;
 
-    public AccountController(IUserService userService, IStudentService studentService, ITeacherService teacherService)
+    public AccountController(IUserService userService)
     {
         _userService = userService;
-        _studentService = studentService;
-        _teacherService = teacherService;
     }
 
     // Not in use
@@ -34,10 +26,9 @@ public class AccountController : Controller
     {
         if (!ModelState.IsValid) throw new Exception("Incorrect model for registration.");
 
-        var serviceDto = new AddUserServiceRequestDto
+        var serviceDto = new UserDto()
         {
             Login = requestDto.Login,
-            Password = requestDto.Password,
             RoleId = requestDto.RoleId
         };
 

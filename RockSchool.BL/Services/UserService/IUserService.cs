@@ -1,11 +1,10 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.UserService;
-using RockSchool.BL.Dtos.Service.Responses;
+﻿using RockSchool.BL.Dtos;
 
 namespace RockSchool.BL.Services.UserService;
 
 public interface IUserService
 {
-    Task<Guid> AddUserAsync(AddUserServiceRequestDto addUserServiceRequestDto);
+    Task<Guid> AddUserAsync(UserDto userDto);
     Task<UserDto?> GetUserByIdAsync(Guid userId);
     Task DeleteUserAsync(Guid userId);
 }

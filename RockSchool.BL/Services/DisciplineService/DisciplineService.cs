@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.DisciplineService;
-using RockSchool.BL.Dtos.Service.Responses;
+﻿using RockSchool.BL.Dtos;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -14,15 +13,14 @@ public class DisciplineService : IDisciplineService
         _disciplineRepository = disciplineRepository;
     }
 
-    public async Task AddDisciplineAsync(
-        AddDisciplineServiceRequestDto requestDto)
+    public async Task AddDisciplineAsync(DisciplineDto disciplineDto)
     {
         var discipline = new DisciplineEntity
         {
-            DisciplineId = requestDto.Id,
-            Name = requestDto.DisciplineName,
-            Teachers = requestDto.Teachers,
-            IsActive = requestDto.IsActive
+            DisciplineId = disciplineDto.DisciplineId,
+            Name = disciplineDto.Name,
+            Teachers = disciplineDto.Teachers,
+            IsActive = disciplineDto.IsActive
         };
 
         await _disciplineRepository.AddAsync(discipline);
@@ -37,8 +35,8 @@ public class DisciplineService : IDisciplineService
 
         var disciplineDtos = disciplines.Select(d => new DisciplineDto
         {
-            Id = d.DisciplineId,
-            DisciplineName = d.Name,
+            DisciplineId = d.DisciplineId,
+            Name = d.Name,
             Teachers = d.Teachers, // Be careful with navigation properties
             IsActive = d.IsActive
         }).ToArray();
@@ -46,24 +44,23 @@ public class DisciplineService : IDisciplineService
         return disciplineDtos;
     }
 
-    public async Task UpdateDisciplineAsync(UpdateDisciplineServiceRequestDto serviceRequestDto)
+    public async Task UpdateDisciplineAsync(DisciplineDto disciplineDto)
     {
-        var discipline = await _disciplineRepository.GetByIdAsync(serviceRequestDto.Id);
+        var discipline = await _disciplineRepository.GetByIdAsync(disciplineDto.DisciplineId);
 
         if (discipline == null)
             throw new ArgumentNullException("DisciplineEntity not found.");
 
-        discipline.Name = serviceRequestDto.DisciplineName;
-        discipline.IsActive = serviceRequestDto.IsActive;
+        discipline.Name = disciplineDto.Name;
+        discipline.IsActive = disciplineDto.IsActive;
 
         await _disciplineRepository.UpdateAsync(discipline);
     }
 
 
-    public async Task DeleteDisciplineAsync(
-        DeleteDisciplineServiceRequestDto requestDto)
+    public async Task DeleteDisciplineAsync(int id)
     {
-        var discipline = await _disciplineRepository.GetByIdAsync(requestDto.Id);
+        var discipline = await _disciplineRepository.GetByIdAsync(id);
 
         if (discipline == null)
             throw new NullReferenceException("DisciplineEntity not found.");

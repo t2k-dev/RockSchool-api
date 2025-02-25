@@ -1,12 +1,11 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.DisciplineService;
-using RockSchool.BL.Dtos.Service.Responses;
+﻿using RockSchool.BL.Dtos;
 
 namespace RockSchool.BL.Services.DisciplineService;
 
 public interface IDisciplineService
 {
-    Task AddDisciplineAsync(AddDisciplineServiceRequestDto requestDto);
+    Task AddDisciplineAsync(DisciplineDto disciplineDto);
     Task<DisciplineDto[]?> GetAllDisciplinesAsync();
-    Task UpdateDisciplineAsync(UpdateDisciplineServiceRequestDto serviceRequestDto);
-    Task DeleteDisciplineAsync(DeleteDisciplineServiceRequestDto requestDto);
+    Task UpdateDisciplineAsync(DisciplineDto disciplineDto);
+    Task DeleteDisciplineAsync(int id);
 }

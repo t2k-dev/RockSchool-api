@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.TeacherService;
-using RockSchool.BL.Dtos.Service.Responses;
+﻿using RockSchool.BL.Dtos;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -52,8 +51,7 @@ public class TeacherService : ITeacherService
             MiddleName = t.MiddleName,
             BirthDate = t.BirthDate,
             Phone = t.Phone,
-            UserId = t.UserId,
-            UserEntity = t.User,
+            User = t.User,
             Disciplines = t.Disciplines,
             // WorkingHoursEntity = t.WorkingPeriods
         }).ToArray();
@@ -76,8 +74,7 @@ public class TeacherService : ITeacherService
             MiddleName = teacher.MiddleName,
             BirthDate = teacher.BirthDate,
             Phone = teacher.Phone,
-            UserId = teacher.UserId,
-            UserEntity = teacher.User,
+            User = teacher.User,
             Disciplines = teacher.Disciplines,
             // WorkingHoursEntity = teacher.WorkingPeriods
         };
@@ -85,16 +82,16 @@ public class TeacherService : ITeacherService
         return teacherDto;
     }
 
-    public async Task UpdateTeacherAsync(UpdateTeacherServiceRequestDto updateTeacherServiceRequestDto)
+    public async Task UpdateTeacherAsync(TeacherDto teacherDto)
     {
-        var existingTeacher = await _teacherRepository.GetByIdAsync(updateTeacherServiceRequestDto.TeacherId);
+        var existingTeacher = await _teacherRepository.GetByIdAsync(teacherDto.TeacherId);
 
         if (existingTeacher == null)
             throw new KeyNotFoundException(
-                $"TeacherEntity with ID {updateTeacherServiceRequestDto.TeacherId} was not found.");
+                $"TeacherEntity with ID {teacherDto.TeacherId} was not found.");
 
-        await UpdateTeacherDisciplines(updateTeacherServiceRequestDto, existingTeacher);
-        UpdateTeacherDetails(updateTeacherServiceRequestDto, existingTeacher);
+        await UpdateTeacherDisciplines(teacherDto, existingTeacher);
+        UpdateTeacherDetails(teacherDto, existingTeacher);
 
         await _teacherRepository.UpdateAsync(existingTeacher);
     }
@@ -109,7 +106,7 @@ public class TeacherService : ITeacherService
         await _teacherRepository.DeleteAsync(existingTeacher);
     }
 
-    private async Task UpdateTeacherDisciplines(UpdateTeacherServiceRequestDto updateTeacherServiceRequestDto,
+    private async Task UpdateTeacherDisciplines(TeacherDto updateTeacherServiceRequestDto,
         TeacherEntity existingTeacherEntity)
     {
         existingTeacherEntity.Disciplines.Clear();
@@ -117,7 +114,7 @@ public class TeacherService : ITeacherService
 
         foreach (var disciplineId in updateTeacherServiceRequestDto.Disciplines)
         {
-            var discipline = await _disciplineRepository.GetByIdAsync(disciplineId);
+            var discipline = await _disciplineRepository.GetByIdAsync(disciplineId.DisciplineId);
 
             if (discipline != null)
                 disciplines.Add(discipline);
@@ -126,7 +123,7 @@ public class TeacherService : ITeacherService
         existingTeacherEntity.Disciplines = disciplines;
     }
 
-    private static void UpdateTeacherDetails(UpdateTeacherServiceRequestDto updateRequest,
+    private static void UpdateTeacherDetails(TeacherDto updateRequest,
         TeacherEntity? existingTeacher)
     {
         if (existingTeacher == null)
@@ -147,8 +144,8 @@ public class TeacherService : ITeacherService
         if (updateRequest.Phone != default)
             existingTeacher.Phone = updateRequest.Phone;
 
-        if (updateRequest.UserId.HasValue)
-            existingTeacher.UserId = updateRequest.UserId.Value;
+        if (updateRequest.User != null)
+            existingTeacher.UserId = updateRequest.User.UserId;
 
         // if (updateRequest.WorkingHoursEntity != null)
         //     existingTeacher.WorkingPeriods = updateRequest.WorkingHoursEntity;

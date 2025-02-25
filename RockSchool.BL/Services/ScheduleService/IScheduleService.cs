@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos.Service.Requests.ScheduleService;
-using RockSchool.BL.Dtos.Service.Responses;
+﻿using RockSchool.BL.Dtos;
 
 namespace RockSchool.BL.Services.ScheduleService;
 

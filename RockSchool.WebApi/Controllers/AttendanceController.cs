@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos.Service.Requests.AttendanceService;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.WebApi.Models;
 
@@ -30,13 +30,13 @@ public class AttendanceController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var addAttendanceForStudentServiceDto = new AddAttendanceServiceRequestDto
+        var addAttendanceForStudentServiceDto = new AttendanceDto()
         {
             StudentId = dto.StudentId,
             TeacherId = dto.TeacherId,
             DisciplineId = dto.DisciplineId,
             NumberOfAttendances = dto.NumberOfAttendances,
-            StartingDate = dto.StartingDate
+            StartDate = dto.StartingDate
         };
 
         await _attendanceService.AddAttendancesToStudent(addAttendanceForStudentServiceDto);

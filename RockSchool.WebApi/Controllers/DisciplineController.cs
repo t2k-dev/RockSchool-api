@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos.Service.Requests.DisciplineService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.WebApi.Models;
 
@@ -23,9 +22,9 @@ public class DisciplineController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var addDisciplineServiceDto = new AddDisciplineServiceRequestDto
+        var addDisciplineServiceDto = new BL.Dtos.DisciplineDto()
         {
-            DisciplineName = disciplineName,
+            Name = disciplineName,
             IsActive = true
         };
 
@@ -45,9 +44,9 @@ public class DisciplineController : Controller
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(int id, [FromBody] DisciplineDto requestDto)
     {
-        var updateDisciplineServiceDto = new UpdateDisciplineServiceRequestDto
+        var updateDisciplineServiceDto = new BL.Dtos.DisciplineDto()
         {
-            DisciplineName = requestDto.DisciplineName,
+            Name = requestDto.DisciplineName,
             IsActive = requestDto.IsActive
         };
 
@@ -59,7 +58,7 @@ public class DisciplineController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
     {
-        await _disciplineService.DeleteDisciplineAsync(new DeleteDisciplineServiceRequestDto { Id = id });
+        await _disciplineService.DeleteDisciplineAsync(id);
 
         return Ok();
     }

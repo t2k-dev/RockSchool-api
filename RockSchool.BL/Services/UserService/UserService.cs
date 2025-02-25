@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using RockSchool.BL.Dtos.Service.Requests.UserService;
-using RockSchool.BL.Dtos.Service.Responses;
+using RockSchool.BL.Dtos;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -17,17 +16,14 @@ public class UserService : IUserService
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<Guid> AddUserAsync(AddUserServiceRequestDto addUserServiceRequestDto)
+    public async Task<Guid> AddUserAsync(UserDto userDto)
     {
-        var passwordValidationResult = ValidateAndGetFinalPassword(
-            addUserServiceRequestDto.Password,
-            addUserServiceRequestDto.ConfirmPassword
-        );
+        var passwordValidationResult = ValidateAndGetFinalPassword(string.Empty, string.Empty);
 
         if (!passwordValidationResult.IsSuccess)
             throw new InvalidOperationException(">" + passwordValidationResult.ErrorMessage + "<");
 
-        var newUser = CreateUserEntity(addUserServiceRequestDto);
+        var newUser = CreateUserEntity(userDto);
 
         newUser.PasswordHash = _passwordHasher.HashPassword(newUser, passwordValidationResult.FinalPassword);
 
@@ -49,11 +45,11 @@ public class UserService : IUserService
 
         var userDto = new UserDto
         {
-            Id = user.UserId,
+            UserId = user.UserId,
             Login = user.Login,
             PasswordHash = user.PasswordHash,
             RoleId = user.RoleId,
-            RoleEntity = user.Role
+            Role = user.Role
         };
 
         return userDto;
@@ -84,12 +80,12 @@ public class UserService : IUserService
         return (true, password, string.Empty);
     }
 
-    private UserEntity CreateUserEntity(AddUserServiceRequestDto addUserServiceRequestDto)
+    private UserEntity CreateUserEntity(UserDto userDto)
     {
         return new UserEntity
         {
-            Login = addUserServiceRequestDto.Login,
-            RoleId = addUserServiceRequestDto.RoleId
+            Login = userDto.Login,
+            RoleId = userDto.RoleId
         };
     }
 }

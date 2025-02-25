@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos.Service.Requests.ScheduleService;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.WebApi.Models;
 
@@ -31,14 +31,15 @@ public class ScheduleController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var serviceRequestDto = new AddScheduleServiceRequestDto
-        {
-            StudentId = requestDto.StudentId,
-            WeekDay = requestDto.WeekDay,
-            StartTime = requestDto.StartTime,
-            Duration = requestDto.Duration,
-            DisciplineId = requestDto.DisciplineId
-        };
+        
+        // var serviceRequestDto = new ScheduleDto()
+        // {
+        //     StudentId = requestDto.StudentId,
+        //     WeekDay = requestDto.WeekDay,
+        //     StartTime = requestDto.StartTime,
+        //     Duration = requestDto.Duration,
+        //     DisciplineId = requestDto.DisciplineId
+        // };
 
         // await _scheduleService.AddScheduleAsync(serviceRequestDto);
 

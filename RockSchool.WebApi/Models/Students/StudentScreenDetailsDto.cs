@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RockSchool.BL.Dtos.Service.Responses;
+using RockSchool.BL.Dtos;
 
 namespace RockSchool.WebApi.Models.Students
 {
