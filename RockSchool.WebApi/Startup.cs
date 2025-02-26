@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
@@ -39,7 +40,9 @@ public class Startup
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();
+        services.AddScoped<IBranchService, BranchService>();
 
+        services.AddScoped<BranchRepository>();
         services.AddScoped<AttendanceRepository>();
         services.AddScoped<DisciplineRepository>();
         services.AddScoped<ScheduleRepository>();
