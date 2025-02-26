@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
+using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.StudentService;
+using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
 
@@ -15,10 +17,12 @@ namespace RockSchool.WebApi.Controllers;
 public class StudentController : Controller
 {
     private readonly IStudentService _studentService;
+    private readonly IBranchService _branchService;
 
-    public StudentController(IStudentService studentService)
+    public StudentController(IStudentService studentService, IBranchService branchService)
     {
         _studentService = studentService;
+        _branchService = branchService;
     }
 
     [EnableCors("MyPolicy")]
@@ -52,7 +56,6 @@ public class StudentController : Controller
     [HttpGet("getStudentScreenDetails/{id}")]
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
-
         var studentDto = await _studentService.GetByIdAsync(id);
 
         var studentScreenDetailsDto = new StudentScreenDetailsDto
@@ -61,7 +64,6 @@ public class StudentController : Controller
             Subscriptions = new List<string>(),
         };
 
-
         return Ok(studentScreenDetailsDto);
     }
 
@@ -69,7 +71,8 @@ public class StudentController : Controller
     [HttpPost("addStudent")]
     public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
-        if (!ModelState.IsValid) throw new Exception("Incorrect requestDto for registration.");
+        if (!ModelState.IsValid)
+            throw new Exception("Incorrect requestDto for registration.");
 
         var newStudent = new StudentDto()
         {
@@ -79,6 +82,7 @@ public class StudentController : Controller
             Sex = requestDto.Sex,
             Phone = requestDto.Phone,
             Level = requestDto.Level,
+            BranchId = requestDto.BranchId
         };
 
         var id = await _studentService.AddStudentAsync(newStudent);
@@ -88,7 +92,7 @@ public class StudentController : Controller
 
     [EnableCors("MyPolicy")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(Guid id, [FromBody] UpdateStudentRequestDto requestDto)
+    public async Task<ActionResult> Put(Guid id, UpdateStudentRequestDto requestDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -100,7 +104,8 @@ public class StudentController : Controller
             LastName = requestDto.LastName,
             BirthDate = requestDto.BirthDate,
             Sex = requestDto.Sex,
-            Phone = requestDto.Phone
+            Phone = requestDto.Phone,
+            Level = requestDto.Level
         };
         await _studentService.UpdateStudentAsync(updateStudentDto);
 

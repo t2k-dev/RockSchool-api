@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Services.BranchService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -7,14 +8,26 @@ namespace RockSchool.BL.Services.StudentService;
 public class StudentService : IStudentService
 {
     private readonly StudentRepository _studentRepository;
+    private readonly IBranchService _branchService;
+    private readonly BranchRepository _branchRepository;
 
-    public StudentService(StudentRepository studentRepository)
+    public StudentService(StudentRepository studentRepository, IBranchService branchService, BranchRepository branchRepository)
     {
         _studentRepository = studentRepository;
+        _branchService = branchService;
+        _branchRepository = branchRepository;
     }
 
     public async Task<Guid> AddStudentAsync(StudentDto studentDto)
     {
+        if (studentDto.BranchId == null)
+            throw new NullReferenceException("BranchId is required.");
+
+        var branchEntity = await _branchRepository.GetByIdAsync(studentDto.BranchId.Value)!;
+
+        if (branchEntity == null)
+            throw new NullReferenceException($"Branch with id {studentDto.BranchId} was not found.");
+
         var studentEntity = new StudentEntity
         {
             LastName = studentDto.LastName,
@@ -22,7 +35,8 @@ public class StudentService : IStudentService
             BirthDate = studentDto.BirthDate,
             Phone = studentDto.Phone,
             Sex = studentDto.Sex,
-            Level = studentDto.Level
+            Level = studentDto.Level,
+            Branch = branchEntity
             // UserId = addStudentServiceRequestDto.UserId
         };
 
@@ -60,7 +74,6 @@ public class StudentService : IStudentService
             BirthDate = student.BirthDate,
             Phone = student.Phone,
             Sex = student.Sex,
-
         };
 
         return studentDto;

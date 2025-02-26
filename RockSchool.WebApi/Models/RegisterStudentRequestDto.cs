@@ -1,4 +1,5 @@
 ﻿using System;
+using RockSchool.Data.Enums;
 
 namespace RockSchool.WebApi.Models;
 
@@ -9,5 +10,6 @@ public class RegisterStudentRequestDto
     public DateTime BirthDate { get; set; }
     public short Sex { get; set; }
     public long Phone { get; set; }
-    public string Level { get; set; }
+    public Level Level { get; set; }
+    public int BranchId { get; set; }
 }

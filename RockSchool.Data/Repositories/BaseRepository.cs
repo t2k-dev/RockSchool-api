@@ -9,6 +9,6 @@ namespace RockSchool.Data.Repositories
             RockSchoolContext = rockSchoolContext;
         }
 
-        public RockSchoolContext RockSchoolContext { get; set; }
+        public RockSchoolContext RockSchoolContext { get; }
     }
 }

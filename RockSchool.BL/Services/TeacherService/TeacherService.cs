@@ -144,8 +144,8 @@ public class TeacherService : ITeacherService
         if (updateRequest.Phone != default)
             existingTeacher.Phone = updateRequest.Phone;
 
-        if (updateRequest.User != null)
-            existingTeacher.UserId = updateRequest.User.UserId;
+        // if (updateRequest.User != null)
+        //     existingTeacher.UserId = updateRequest.User.UserId;
 
         // if (updateRequest.WorkingHoursEntity != null)
         //     existingTeacher.WorkingPeriods = updateRequest.WorkingHoursEntity;

@@ -30,7 +30,6 @@ public class ScheduleController : Controller
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-
         
         // var serviceRequestDto = new ScheduleDto()
         // {
