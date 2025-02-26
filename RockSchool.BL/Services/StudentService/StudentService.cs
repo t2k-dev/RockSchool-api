@@ -8,13 +8,11 @@ namespace RockSchool.BL.Services.StudentService;
 public class StudentService : IStudentService
 {
     private readonly StudentRepository _studentRepository;
-    private readonly IBranchService _branchService;
     private readonly BranchRepository _branchRepository;
 
-    public StudentService(StudentRepository studentRepository, IBranchService branchService, BranchRepository branchRepository)
+    public StudentService(StudentRepository studentRepository, BranchRepository branchRepository)
     {
         _studentRepository = studentRepository;
-        _branchService = branchService;
         _branchRepository = branchRepository;
     }
 
