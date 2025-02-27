@@ -72,6 +72,7 @@ public class StudentService : IStudentService
             BirthDate = student.BirthDate,
             Phone = student.Phone,
             Sex = student.Sex,
+            Level = student.Level,
         };
 
         return studentDto;
