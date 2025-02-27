@@ -21,7 +21,9 @@ public class StudentRepository
 
     public async Task<StudentEntity?> GetByIdAsync(Guid studentId)
     {
-        return await _context.Students.SingleOrDefaultAsync(s => s.StudentId == studentId);
+        return await _context.Students
+            .Include(s => s.Branch)
+            .SingleOrDefaultAsync(s => s.StudentId == studentId);
     }
 
     public async Task UpdateAsync(StudentEntity studentEntity)

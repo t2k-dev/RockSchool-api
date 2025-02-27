@@ -127,6 +127,9 @@ public class StudentService : IStudentService
         if (updateStudentServiceRequestDto.Phone != default)
             existingStudentEntity.Phone = updateStudentServiceRequestDto.Phone;
 
+        if (updateStudentServiceRequestDto.Level != default)
+            existingStudentEntity.Level = updateStudentServiceRequestDto.Level;
+        
         // if (!string.IsNullOrEmpty(updateStudentServiceRequestDto.Login))
         //     existingStudentEntity.Login = updateStudentServiceRequestDto.Login;
     }

@@ -68,7 +68,7 @@ public class StudentController : Controller
     }
 
     [EnableCors("MyPolicy")]
-    [HttpPost("addStudent")]
+    [HttpPost]
     public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
         if (!ModelState.IsValid)
