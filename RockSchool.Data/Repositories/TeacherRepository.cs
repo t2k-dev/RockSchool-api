@@ -31,6 +31,7 @@ public class TeacherRepository
         return await _context.Teachers
             .Include(t => t.User)
             .Include(t => t.Disciplines)
+            .Include(t => t.WorkingPeriods)
             .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
     }
 

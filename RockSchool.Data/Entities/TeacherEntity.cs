@@ -28,4 +28,5 @@ public class TeacherEntity
     public int AgeLimit { get; set; }
     public bool AllowGroupLessons { get; set; }
     public virtual ICollection<DisciplineEntity> Disciplines { get; set; }
+    public virtual ICollection<WorkingPeriodEntity> WorkingPeriods { get; set; }
 }

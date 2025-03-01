@@ -72,6 +72,7 @@ public class TeacherService : ITeacherService
             LastName = teacher.LastName,
             FirstName = teacher.FirstName,
             BirthDate = teacher.BirthDate,
+            Sex = teacher.Sex,
             Phone = teacher.Phone,
             User = teacher.User,
             Disciplines = teacher.Disciplines,

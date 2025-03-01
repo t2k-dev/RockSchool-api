@@ -1,7 +1,9 @@
-﻿namespace RockSchool.WebApi.Models;
+﻿using RockSchool.WebApi.Models.Teachers;
+
+namespace RockSchool.WebApi.Models;
 
 public class RegisterTeacherRequestDto
 {
-    public TeacherDto Teacher { get; set; }
+    public TeacherInfo Teacher { get; set; }
     // public WorkingHoursEntity WorkingHoursEntity { get; set; }
 }
