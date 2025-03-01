@@ -1,7 +1,4 @@
-﻿using System;
-using RockSchool.Data.Entities;
-
-namespace RockSchool.WebApi.Models;
+﻿namespace RockSchool.WebApi.Models;
 
 public class RegisterTeacherRequestDto
 {

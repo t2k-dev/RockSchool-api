@@ -8,12 +8,13 @@ public class TeacherService : ITeacherService
 {
     private readonly DisciplineRepository _disciplineRepository;
     private readonly TeacherRepository _teacherRepository;
+    private readonly BranchRepository _branchRepository;
 
-    public TeacherService(TeacherRepository teacherRepository,
-        DisciplineRepository disciplineRepository)
+    public TeacherService(TeacherRepository teacherRepository, DisciplineRepository disciplineRepository, BranchRepository branchRepository)
     {
         _teacherRepository = teacherRepository;
         _disciplineRepository = disciplineRepository;
+        _branchRepository = branchRepository;
     }
 
     public async Task AddTeacher(TeacherDto addTeacherDto)
@@ -22,9 +23,9 @@ public class TeacherService : ITeacherService
         {
             LastName = addTeacherDto.LastName,
             FirstName = addTeacherDto.FirstName,
-            MiddleName = "addTeacherDto.MiddleName", //TODO
             BirthDate = addTeacherDto.BirthDate,
             Phone = addTeacherDto.Phone,
+            BranchId = addTeacherDto.BranchId.Value,
             //UserId = addTeacherDto.UserId
         };
 
@@ -48,7 +49,6 @@ public class TeacherService : ITeacherService
             TeacherId = t.TeacherId,
             LastName = t.LastName,
             FirstName = t.FirstName,
-            MiddleName = t.MiddleName,
             BirthDate = t.BirthDate,
             Phone = t.Phone,
             User = t.User,
@@ -71,7 +71,6 @@ public class TeacherService : ITeacherService
             TeacherId = teacher.TeacherId,
             LastName = teacher.LastName,
             FirstName = teacher.FirstName,
-            MiddleName = teacher.MiddleName,
             BirthDate = teacher.BirthDate,
             Phone = teacher.Phone,
             User = teacher.User,
@@ -134,9 +133,6 @@ public class TeacherService : ITeacherService
 
         if (!string.IsNullOrWhiteSpace(updateRequest.LastName))
             existingTeacher.LastName = updateRequest.LastName;
-
-        if (!string.IsNullOrWhiteSpace(updateRequest.MiddleName))
-            existingTeacher.MiddleName = updateRequest.MiddleName;
 
         if (updateRequest.BirthDate != default)
             existingTeacher.BirthDate = updateRequest.BirthDate;

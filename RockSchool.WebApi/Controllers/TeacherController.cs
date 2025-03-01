@@ -35,8 +35,8 @@ public class TeacherController : Controller
     }
 
     [EnableCors("MyPolicy")]
-    [HttpPost("addTeacher")]
-    public async Task<ActionResult> addTeacher([FromBody] RegisterTeacherRequestDto requestDto)
+    [HttpPost]
+    public async Task<ActionResult> AddTeacher([FromBody] RegisterTeacherRequestDto requestDto)
     {
         if (!ModelState.IsValid)
             throw new Exception("Incorrect requestDto for registration.");
@@ -55,9 +55,9 @@ public class TeacherController : Controller
         {
             FirstName = requestDto.Teacher.FirstName,
             LastName = requestDto.Teacher.LastName,
-            MiddleName = requestDto.Teacher.MiddleName,
-            BirthDate = Convert.ToDateTime(requestDto.Teacher.BirthDate).ToUniversalTime(),
+            BirthDate = requestDto.Teacher.BirthDate.ToUniversalTime(),
             Phone = requestDto.Teacher.Phone,
+            BranchId = requestDto.Teacher.BranchId,
             //UserId = newUserId,
             //Disciplines = requestDto.Teacher.Disciplines,
             // WorkingHoursEntity = requestDto.WorkingHoursEntity
@@ -79,7 +79,6 @@ public class TeacherController : Controller
             Email = teacher.User.Login,
             FirstName = teacher.FirstName,
             LastName = teacher.LastName,
-            MiddleName = teacher.MiddleName,
             BirthDate = teacher.BirthDate,
             Phone = teacher.Phone,
             Disciplines = teacher.Disciplines.Select(d => d.DisciplineId).ToArray()
@@ -133,7 +132,6 @@ public class TeacherController : Controller
             TeacherId = id,
             FirstName = model.FirstName,
             LastName = model.LastName,
-            MiddleName = model.MiddleName,
             BirthDate = model.BirthDate,
             Disciplines = model.Disciplines
         };
