@@ -50,6 +50,9 @@ public class StudentService : IStudentService
 
     public async Task UpdateStudentAsync(StudentDto studentDto)
     {
+        // TODO: tempfix
+        studentDto.BirthDate = studentDto.BirthDate.ToUniversalTime();
+
         var existingStudent = await _studentRepository.GetByIdAsync(studentDto.StudentId);
 
         if (existingStudent == null)
