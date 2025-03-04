@@ -100,6 +100,9 @@ public class TeacherController : Controller
             Sex = teacher.Sex,
             Phone = teacher.Phone,
             Disciplines = teacher.Disciplines?.Select(d => d.DisciplineId).ToArray(),
+            AllowGroupLessons = teacher.AllowGroupLessons,
+            AgeLimit = teacher.AgeLimit,
+            BranchId = teacher.BranchId,
         };
 
         return Ok(result);
@@ -129,6 +132,21 @@ public class TeacherController : Controller
         };
 
         return Ok(teacherScreenDetailsDto);
+    }
+
+    [EnableCors("MyPolicy")]
+    [HttpGet("getAvailablePeriods")]
+    public async Task<ActionResult> GetAvailablePeriods(int disciplineId,  Guid studentId, int branchId)
+    {
+        //TODO: implement
+
+        var response = new string[]
+        {
+            "Сергей: Пн: 13:00 - 18:00",
+            "Сергей: Ср: 13:00 - 18:00"
+        };
+
+        return Ok(response);
     }
 
     // TODO: We already add teacherEntity in account controller

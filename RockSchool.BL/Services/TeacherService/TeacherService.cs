@@ -76,6 +76,9 @@ public class TeacherService : ITeacherService
             Phone = teacher.Phone,
             User = teacher.User,
             Disciplines = teacher.Disciplines,
+            AllowGroupLessons = teacher.AllowGroupLessons,
+            AgeLimit = teacher.AgeLimit,
+            BranchId = teacher.BranchId,
             // WorkingHoursEntity = teacher.WorkingPeriods
         };
 
