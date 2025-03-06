@@ -16,6 +16,7 @@ public class TeacherDto
     public virtual BranchDto? Branch { get; set; }
     public int AgeLimit { get; set; }
     public bool AllowGroupLessons { get; set; }
-
-    public virtual ICollection<DisciplineEntity>? Disciplines { get; set; }
+    public virtual ICollection<DisciplineDto>? Disciplines { get; set; }
+    public virtual ICollection<WorkingPeriodDto>? WorkingPeriods { get; set; }
+    public int[]? DisciplineIds { get; set; }
 }

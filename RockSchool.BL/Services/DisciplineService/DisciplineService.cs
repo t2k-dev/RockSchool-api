@@ -67,4 +67,20 @@ public class DisciplineService : IDisciplineService
 
         await _disciplineRepository.DeleteAsync(discipline);
     }
+
+    public async Task<DisciplineDto?> GetDisciplineByIdAsync(int id)
+    {
+        var disciplineEntity = await _disciplineRepository.GetByIdAsync(id);
+
+        if (disciplineEntity == null)
+            return null;
+
+        return new DisciplineDto
+        {
+            DisciplineId = disciplineEntity.DisciplineId,
+            Name = disciplineEntity.Name,
+            Teachers = disciplineEntity.Teachers,
+            IsActive = disciplineEntity.IsActive
+        };
+    }
 }

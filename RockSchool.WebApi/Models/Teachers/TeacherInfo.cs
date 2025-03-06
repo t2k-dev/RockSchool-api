@@ -3,6 +3,7 @@ using RockSchool.Data.Entities;
 
 namespace RockSchool.WebApi.Models.Teachers;
 
+// TODO: Implement!
 public class TeacherInfo
 {
     public string Email { get; set; }

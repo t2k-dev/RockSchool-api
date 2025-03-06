@@ -20,7 +20,9 @@ public class DisciplineRepository
 
     public async Task<DisciplineEntity?> GetByIdAsync(int id)
     {
-        return await _rockSchoolContext.Disciplines.FindAsync(id);
+        return await _rockSchoolContext.Disciplines
+            .Include(d => d.Teachers)
+            .FirstOrDefaultAsync(d => d.DisciplineId == id);
     }
 
     public async Task AddAsync(DisciplineEntity disciplineEntity)

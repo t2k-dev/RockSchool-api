@@ -12,7 +12,7 @@ public class WorkingPeriodEntity
     [ForeignKey(nameof(TeacherId))]
     public TeacherEntity Teacher { get; set; }
 
-    public string WeekDay { get; set; }
+    public int WeekDay { get; set; }
 
     public TimeSpan StartTime { get; set; }
 

@@ -19,6 +19,29 @@ public class TeacherService : ITeacherService
 
     public async Task AddTeacher(TeacherDto addTeacherDto)
     {
+        var disciplineEntities = new List<DisciplineEntity>();
+        if (addTeacherDto.DisciplineIds != null)
+            foreach (var disciplineId in addTeacherDto.DisciplineIds)
+            {
+                var discipline = await _disciplineRepository.GetByIdAsync(disciplineId);
+                if (discipline != null)
+                {
+                    disciplineEntities.Add(discipline);
+                }
+            }
+
+        var workingPeriodEntities = new List<WorkingPeriodEntity>();
+
+        foreach (var workingPeriodDto in addTeacherDto.WorkingPeriods)
+        {
+            workingPeriodEntities.Add(new WorkingPeriodEntity()
+            {
+                StartTime = workingPeriodDto.StartTime,
+                EndTime = workingPeriodDto.EndTime,
+                WeekDay = workingPeriodDto.WeekDay
+            });
+        }
+        
         var teacher = new TeacherEntity
         {
             LastName = addTeacherDto.LastName,
@@ -26,7 +49,11 @@ public class TeacherService : ITeacherService
             BirthDate = addTeacherDto.BirthDate,
             Phone = addTeacherDto.Phone,
             BranchId = addTeacherDto.BranchId.Value,
-            //UserId = addTeacherDto.UserId
+            Disciplines = disciplineEntities,
+            WorkingPeriods = workingPeriodEntities,
+            Sex = addTeacherDto.Sex,
+            AllowGroupLessons = addTeacherDto.AllowGroupLessons,
+            AgeLimit = addTeacherDto.AgeLimit
         };
 
         await _teacherRepository.AddAsync(teacher);
@@ -40,10 +67,10 @@ public class TeacherService : ITeacherService
     public async Task<TeacherDto[]> GetAllTeachersAsync()
     {
         var teachers = await _teacherRepository.GetAllAsync();
-
+        
         if (teachers == null || !teachers.Any())
             return Array.Empty<TeacherDto>();
-
+        
         var teacherDtos = teachers.Select(t => new TeacherDto
         {
             TeacherId = t.TeacherId,
@@ -52,10 +79,31 @@ public class TeacherService : ITeacherService
             BirthDate = t.BirthDate,
             Phone = t.Phone,
             User = t.User,
-            Disciplines = t.Disciplines,
-            // WorkingHoursEntity = t.WorkingPeriods
+            Disciplines = t.Disciplines?.Select(d => new DisciplineDto
+            {
+                DisciplineId = d.DisciplineId,
+                Name = d.Name,
+                IsActive = d.IsActive,
+                Teachers = d.Teachers,
+            }).ToArray(),
+            WorkingPeriods = t.WorkingPeriods?.Select(w => new WorkingPeriodDto()
+            {
+                StartTime = w.StartTime,
+                EndTime = w.EndTime,
+                WeekDay = w.WeekDay,
+                TeacherId = t.TeacherId,
+                WorkingPeriodId = w.WorkingPeriodId,
+            }).ToArray(),
+            Branch = new BranchDto()
+            {
+                BranchId = t.BranchId,
+                Name = t.Branch?.Name,
+                Phone = t.Branch?.Phone,
+                Address = t.Branch?.Address,
+                Rooms = t.Branch?.Rooms,
+            }
         }).ToArray();
-
+        
         return teacherDtos;
     }
 
@@ -66,6 +114,19 @@ public class TeacherService : ITeacherService
         if (teacher == null)
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
 
+        var discpilineDtos = new List<DisciplineDto>();
+
+        foreach (var teacherDiscipline in teacher.Disciplines)
+        {
+            discpilineDtos.Add(new DisciplineDto()
+            {
+                Name = teacherDiscipline.Name,
+                DisciplineId = teacherDiscipline.DisciplineId,
+                IsActive = teacherDiscipline.IsActive,
+                Teachers = teacherDiscipline.Teachers,
+            });
+        }
+        
         var teacherDto = new TeacherDto
         {
             TeacherId = teacher.TeacherId,
@@ -75,7 +136,7 @@ public class TeacherService : ITeacherService
             Sex = teacher.Sex,
             Phone = teacher.Phone,
             User = teacher.User,
-            Disciplines = teacher.Disciplines,
+            Disciplines = discpilineDtos,
             AllowGroupLessons = teacher.AllowGroupLessons,
             AgeLimit = teacher.AgeLimit,
             BranchId = teacher.BranchId,

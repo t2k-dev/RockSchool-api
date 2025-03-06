@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.WebApi.Models;
 
@@ -44,9 +45,9 @@ public class DisciplineController : Controller
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(int id, [FromBody] DisciplineDto requestDto)
     {
-        var updateDisciplineServiceDto = new BL.Dtos.DisciplineDto()
+        var updateDisciplineServiceDto = new DisciplineDto()
         {
-            Name = requestDto.DisciplineName,
+            Name = requestDto.Name,
             IsActive = requestDto.IsActive
         };
 

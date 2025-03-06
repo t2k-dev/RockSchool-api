@@ -17,6 +17,9 @@ public class TeacherRepository
     {
         return await _context.Teachers
             .Include(t => t.Disciplines)
+            .Include(t => t.WorkingPeriods)
+            .Include(t => t.Branch)
+            .ThenInclude(b => b.Rooms)
             .ToArrayAsync();
     }
 

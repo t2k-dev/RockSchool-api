@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Dtos;
+using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Teachers;
-using TeacherDto = RockSchool.BL.Dtos.TeacherDto;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -18,10 +19,12 @@ public class TeacherController : Controller
 {
     private readonly ITeacherService _teacherService;
     private readonly IUserService _userService;
+    private readonly IDisciplineService _disciplineService;
 
-    public TeacherController(ITeacherService teacherService, IUserService userService)
+    public TeacherController(ITeacherService teacherService, IUserService userService, IDisciplineService disciplineService)
     {
         _userService = userService;
+        _disciplineService = disciplineService;
         _teacherService = teacherService;
     }
 
@@ -31,17 +34,7 @@ public class TeacherController : Controller
     {
         if (!ModelState.IsValid)
             throw new Exception("Incorrect requestDto for registration.");
-
-        //TODO: uncomment and fix this mess)
-
-        //var addUserServiceDto = new AddUserServiceRequestDto
-        //{
-        //    Login = requestDto.Login,
-        //    RoleId = (int)UserRole.Teacher
-        //};
-
-        //var newUserId = await _userService.AddUserAsync(addUserServiceDto);
-
+         
         var newTeacher = new TeacherDto
         {
             FirstName = requestDto.Teacher.FirstName,
@@ -50,9 +43,10 @@ public class TeacherController : Controller
             Phone = requestDto.Teacher.Phone,
             BranchId = requestDto.Teacher.BranchId,
             Sex = requestDto.Teacher.Sex,
-            //UserId = newUserId,
-            //Disciplines = requestDto.Teacher.Disciplines,
-            // WorkingHoursEntity = requestDto.WorkingHoursEntity
+            DisciplineIds = requestDto.Teacher.Disciplines,
+            WorkingPeriods = requestDto.WorkingPeriods,
+            AllowGroupLessons = requestDto.Teacher.AllowGroupLessons,
+            AgeLimit = requestDto.Teacher.AgeLimit
         };
 
         await _teacherService.AddTeacher(newTeacher);
@@ -138,8 +132,8 @@ public class TeacherController : Controller
     [HttpGet("getAvailablePeriods")]
     public async Task<ActionResult> GetAvailablePeriods(int disciplineId,  Guid studentId, int branchId)
     {
-        //TODO: implement
-
+        // TODO: implement
+        // TODO: Order by teacher, day, time
         var response = new
         {
             Periods = new[] {
@@ -151,43 +145,8 @@ public class TeacherController : Controller
                 new { TeacherId = "01956780-2dfd-745e-a5e9-b8e329f1f03a", FullName = "Мария Калас", },
             }
         };
-
         return Ok(response);
     }
-
-    // TODO: We already add teacherEntity in account controller
-    // [EnableCors("MyPolicy")]
-    // [HttpPost]
-    // public ActionResult Post(AddTeacherDto model)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return BadRequest(ModelState);
-    //     }
-    //
-    //     var newTeacher = new AddTeacherServiceRequestDto()
-    //     {
-    //         FirstName = model.FirstName,
-    //         LastName = model.LastName,
-    //         MiddleName = model.MiddleName,
-    //         BirthDate = model.BirthDate,
-    //         UserId = model.UserId,
-    //         Disciplines = new List<DisciplineEntity>()
-    //     };
-    //
-    //     _teacherService.AddTeacher(newTeacher);
-    //
-    //     foreach (var disciplineId in model.Disciplines)
-    //     {
-    //         var disciplineEntity = _context.Disciplines.SingleOrDefault(d => d.AttendanceId == disciplineId);
-    //         newTeacher.Disciplines.Add(disciplineEntity);
-    //     }
-    //
-    //     _context.Teachers.Add(newTeacher);
-    //     _context.SaveChanges();
-    //
-    //     return Ok();
-    // }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)

@@ -8,4 +8,5 @@ public interface IDisciplineService
     Task<DisciplineDto[]?> GetAllDisciplinesAsync();
     Task UpdateDisciplineAsync(DisciplineDto disciplineDto);
     Task DeleteDisciplineAsync(int id);
+    Task<DisciplineDto?> GetDisciplineByIdAsync(int id);
 }
