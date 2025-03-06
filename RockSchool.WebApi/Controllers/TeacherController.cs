@@ -140,10 +140,16 @@ public class TeacherController : Controller
     {
         //TODO: implement
 
-        var response = new string[]
+        var response = new
         {
-            "Сергей: Пн: 13:00 - 18:00",
-            "Сергей: Ср: 13:00 - 18:00"
+            Periods = new[] {
+                "Сергей: Пн: 13:00 - 18:00",
+                "Мария: Ср: 13:00 - 18:00"
+            },
+            Teachers = new[] {
+                new { TeacherId = "0195502c-a46b-70c9-9478-22ab49d46dd7", FullName = "Сергей Барабанский", },
+                new { TeacherId = "01956780-2dfd-745e-a5e9-b8e329f1f03a", FullName = "Мария Калас", },
+            }
         };
 
         return Ok(response);
