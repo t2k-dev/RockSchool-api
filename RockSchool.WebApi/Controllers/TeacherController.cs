@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
+using RockSchool.BL.Services.AvailablePeriodsService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
@@ -20,11 +21,14 @@ public class TeacherController : Controller
     private readonly ITeacherService _teacherService;
     private readonly IUserService _userService;
     private readonly IDisciplineService _disciplineService;
+    private readonly IAvailablePeriodsService _availablePeriodsService;
 
-    public TeacherController(ITeacherService teacherService, IUserService userService, IDisciplineService disciplineService)
+    public TeacherController(ITeacherService teacherService, IUserService userService,
+        IDisciplineService disciplineService, IAvailablePeriodsService availablePeriodsService)
     {
         _userService = userService;
         _disciplineService = disciplineService;
+        _availablePeriodsService = availablePeriodsService;
         _teacherService = teacherService;
     }
 
@@ -34,7 +38,7 @@ public class TeacherController : Controller
     {
         if (!ModelState.IsValid)
             throw new Exception("Incorrect requestDto for registration.");
-         
+
         var newTeacher = new TeacherDto
         {
             FirstName = requestDto.Teacher.FirstName,
@@ -84,7 +88,7 @@ public class TeacherController : Controller
     public async Task<ActionResult> Get(Guid id)
     {
         var teacher = await _teacherService.GetTeacherByIdAsync(id);
-        
+
         var result = new TeacherInfo
         {
             Email = teacher.User?.Login,
@@ -130,22 +134,12 @@ public class TeacherController : Controller
 
     [EnableCors("MyPolicy")]
     [HttpGet("getAvailablePeriods")]
-    public async Task<ActionResult> GetAvailablePeriods(int disciplineId,  Guid studentId, int branchId)
+    public async Task<ActionResult> GetAvailablePeriods(int disciplineId, Guid studentId, int branchId)
     {
-        // TODO: implement
-        // TODO: Order by teacher, day, time
-        var response = new
-        {
-            Periods = new[] {
-                "Сергей: Пн: 13:00 - 18:00",
-                "Мария: Ср: 13:00 - 18:00"
-            },
-            Teachers = new[] {
-                new { TeacherId = "0195502c-a46b-70c9-9478-22ab49d46dd7", FullName = "Сергей Барабанский", },
-                new { TeacherId = "01956780-2dfd-745e-a5e9-b8e329f1f03a", FullName = "Мария Калас", },
-            }
-        };
-        return Ok(response);
+        // TODO: refactor.
+        var periods = await _availablePeriodsService.GetAvailablePeriodsAsync(disciplineId, branchId);
+
+        return Ok(periods);
     }
 
     [HttpDelete("{id}")]
