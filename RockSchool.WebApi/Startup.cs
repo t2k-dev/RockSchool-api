@@ -65,7 +65,7 @@ public class Startup
             options.AddPolicy("MyPolicy",
                 builder =>
                 {
-                    builder.WithOrigins("http://192.168.50.107:3001")
+                    builder.WithOrigins("http://localhost:3000")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
