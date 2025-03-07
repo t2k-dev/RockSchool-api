@@ -49,4 +49,15 @@ public class TeacherRepository
         _context.Teachers.Remove(teacherEntity);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<TeacherEntity[]> GetTeachersByBranchIdAndDisciplineIdAsync(int branchId, int disciplineId)
+    {
+        return await _context.Teachers
+            .Include(t => t.WorkingPeriods)
+            .Include(t => t.Disciplines)
+            .Include(t => t.Branch)
+            .Where(t => t.BranchId == branchId && t.Disciplines.Any(d => d.DisciplineId == disciplineId))
+            .AsSplitQuery() 
+            .ToArrayAsync();
+    }
 }
