@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.AvailablePeriodsService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.NoteService;
@@ -41,6 +42,7 @@ public class Startup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();
         services.AddScoped<IBranchService, BranchService>();
+        services.AddScoped<IAvailablePeriodsService, AvailablePeriodsService>();
 
         services.AddScoped<BranchRepository>();
         services.AddScoped<AttendanceRepository>();
@@ -63,7 +65,7 @@ public class Startup
             options.AddPolicy("MyPolicy",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
+                    builder.WithOrigins("http://192.168.50.107:3001")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
