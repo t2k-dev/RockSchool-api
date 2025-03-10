@@ -75,7 +75,7 @@ public class TeacherController : Controller
             Phone = model.Teacher.Phone,
             AgeLimit = model.Teacher.AgeLimit,
             AllowGroupLessons = model.Teacher.AllowGroupLessons,
-            //Disciplines = model.Disciplines
+            DisciplineIds = model.Teacher.Disciplines
         };
 
         await _teacherService.UpdateTeacherAsync(updateRequest);
