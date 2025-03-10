@@ -176,9 +176,9 @@ public class TeacherService : ITeacherService
         existingTeacherEntity.Disciplines.Clear();
         var disciplines = new List<DisciplineEntity>();
 
-        foreach (var disciplineId in updateTeacherServiceRequestDto.Disciplines)
+        foreach (var disciplineId in updateTeacherServiceRequestDto.DisciplineIds)
         {
-            var discipline = await _disciplineRepository.GetByIdAsync(disciplineId.DisciplineId);
+            var discipline = await _disciplineRepository.GetByIdAsync(disciplineId);
 
             if (discipline != null)
                 disciplines.Add(discipline);
