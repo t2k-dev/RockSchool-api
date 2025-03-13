@@ -79,7 +79,7 @@ public class AvailablePeriodsService : IAvailablePeriodsService
         4 => "Чт",
         5 => "Пт",
         6 => "Сб",
-        7 => "Вс",
+        0 => "Вс",
         _ => "N/A"
     };
 }
