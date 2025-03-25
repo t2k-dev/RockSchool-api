@@ -21,6 +21,7 @@ public class RockSchoolContext : DbContext
     public DbSet<SubscriptionEntity> Subscriptions { get; set; }
     public DbSet<TeacherDisciplineEntity> TeacherDisciplines { get; set; }
     public DbSet<WorkingPeriodEntity> WorkingPeriods { get; set; }
+    public DbSet<ScheduledWorkingPeriodEntity> ScheduledWorkingPeriods { get; set; }
     public DbSet<NoteEntity> Notes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

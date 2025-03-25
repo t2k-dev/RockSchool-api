@@ -52,6 +52,8 @@ public class Startup
         services.AddScoped<TeacherRepository>();
         services.AddScoped<UserRepository>();
         services.AddScoped<NoteRepository>();
+        services.AddScoped<WorkingPeriodsRepository>();
+        services.AddScoped<ScheduledWorkingPeriodsRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         // services.AddControllers();
