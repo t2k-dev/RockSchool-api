@@ -54,6 +54,7 @@ public class TeacherRepository
     {
         return await _context.Teachers
             .Include(t => t.WorkingPeriods)
+            .ThenInclude(w => w.ScheduledWorkingPeriods)
             .Include(t => t.Disciplines)
             .Include(t => t.Branch)
             .Where(t => t.BranchId == branchId && t.Disciplines.Any(d => d.DisciplineId == disciplineId))
