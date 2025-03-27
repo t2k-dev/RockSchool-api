@@ -42,7 +42,7 @@ public class Startup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();
         services.AddScoped<IBranchService, BranchService>();
-        services.AddScoped<IAvailablePeriodsService, AvailablePeriodsService>();
+        services.AddScoped<IAvailableTeachersService, AvailableTeachersService>();
 
         services.AddScoped<BranchRepository>();
         services.AddScoped<AttendanceRepository>();

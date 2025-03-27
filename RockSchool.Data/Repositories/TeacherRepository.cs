@@ -50,14 +50,14 @@ public class TeacherRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<TeacherEntity[]> GetTeachersByBranchIdAndDisciplineIdAsync(int branchId, int disciplineId)
+    public async Task<TeacherEntity[]> GetTeachersAsync(int branchId, int disciplineId, int studentAge)
     {
         return await _context.Teachers
             .Include(t => t.WorkingPeriods)
             .ThenInclude(w => w.ScheduledWorkingPeriods)
             .Include(t => t.Disciplines)
             .Include(t => t.Branch)
-            .Where(t => t.BranchId == branchId && t.Disciplines.Any(d => d.DisciplineId == disciplineId))
+            .Where(t => t.BranchId == branchId && t.AgeLimit >= studentAge && t.Disciplines.Any(d => d.DisciplineId == disciplineId))
             .AsSplitQuery() 
             .ToArrayAsync();
     }

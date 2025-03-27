@@ -2,5 +2,6 @@
 // TODO: FILL!!!
 public enum AttendanceStatus
 {
-    New = 1
+    New = 1,
+
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Data.Entities;
+using RockSchool.Data.Enums;
 
 namespace RockSchool.Data.Repositories;
 
@@ -49,5 +50,12 @@ public class AttendanceRepository
     {
         await _rockSchoolContext.Attendances.AddRangeAsync(attendances);
         await _rockSchoolContext.SaveChangesAsync();
+    }
+
+    public async Task<AttendanceEntity[]> GetAttendancesByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate,
+        AttendanceStatus status)
+    {
+        return await _rockSchoolContext.Attendances.Where(a =>
+            a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate && a.Status == status).ToArrayAsync();
     }
 }

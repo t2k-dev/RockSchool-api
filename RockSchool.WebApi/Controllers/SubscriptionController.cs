@@ -15,6 +15,7 @@ namespace RockSchool.WebApi.Controllers
         public async Task<ActionResult> Add(SubscriptionDto subscriptionDtoDto)
         {
             // TODO: Implement
+            // TODO: Subscription - add trial method
             return Ok("Test");
         }
 

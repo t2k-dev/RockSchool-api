@@ -21,14 +21,14 @@ public class TeacherController : Controller
     private readonly ITeacherService _teacherService;
     private readonly IUserService _userService;
     private readonly IDisciplineService _disciplineService;
-    private readonly IAvailablePeriodsService _availablePeriodsService;
+    private readonly IAvailableTeachersService _availableTeachersService;
 
     public TeacherController(ITeacherService teacherService, IUserService userService,
-        IDisciplineService disciplineService, IAvailablePeriodsService availablePeriodsService)
+        IDisciplineService disciplineService, IAvailableTeachersService availableTeachersService)
     {
         _userService = userService;
         _disciplineService = disciplineService;
-        _availablePeriodsService = availablePeriodsService;
+        _availableTeachersService = availableTeachersService;
         _teacherService = teacherService;
     }
 
@@ -123,21 +123,30 @@ public class TeacherController : Controller
     {
         var teacherDto = await _teacherService.GetTeacherByIdAsync(id);
 
+        // TODO: Add scheduled working periods and attendancies!
         var teacherScreenDetailsDto = new TeacherScreenDetailsDto
         {
             Teacher = teacherDto,
             Subscriptions = new List<string>(),
+
         };
 
         return Ok(teacherScreenDetailsDto);
     }
 
+    // TODO: rename to getAvailableTeachers
+    // TODO: change studentid parameter to age
+    // TODO: watch trialsubsription screen (post endpoint)
+    // TODO: watch teacher form -> save button click (post endpoint)
+    // PRIORITY
+    // TODO: add this method
+    // TODO: add trial!!
     [EnableCors("MyPolicy")]
-    [HttpGet("getAvailablePeriods")]
-    public async Task<ActionResult> GetAvailablePeriods(int disciplineId, Guid studentId, int branchId)
+    [HttpGet("getAvailableTeachers")]
+    public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
         // TODO: refactor.
-        var periods = await _availablePeriodsService.GetAvailablePeriodsAsync(disciplineId, branchId);
+        var periods = await _availableTeachersService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
 
         return Ok(periods);
     }
