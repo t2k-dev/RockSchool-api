@@ -183,6 +183,7 @@ public class TeacherService : ITeacherService
             AgeLimit = teacher.AgeLimit,
             BranchId = teacher.BranchId,
             WorkingPeriods = teacher.WorkingPeriods.ToDto(),
+            ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods.ToDto(),
         };
 
         return teacherDto;

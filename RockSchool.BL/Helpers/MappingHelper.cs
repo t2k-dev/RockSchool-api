@@ -21,5 +21,21 @@ namespace RockSchool.BL.Helpers
             return entities.Select(w => w.ToDto())
                 .ToArray();
         }
+
+        public static ScheduledWorkingPeriodDto ToDto(this ScheduledWorkingPeriodEntity entity)
+        {
+            return new ScheduledWorkingPeriodDto
+            {
+                ScheduledWorkingPeriodId = entity.ScheduledWorkingPeriodId,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
+            };
+        }
+
+        public static ScheduledWorkingPeriodDto[] ToDto(this IEnumerable<ScheduledWorkingPeriodEntity> entities)
+        {
+            return entities.Select(w => w.ToDto())
+                .ToArray();
+        }
     }
 }
