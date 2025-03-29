@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.NoteService;
+using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -22,17 +24,50 @@ namespace RockSchool.WebApi.Controllers
         {
             var notes = await _noteService.GetNotesAsync(branchId);
 
-            var result = new 
+            var result = new HomeScreenDetails
             {
-                Rooms = new[]
+                Attendances = new[]
                 {
-                    new {roomName = "Зеленая", teacherName = "Сергей", studentName = "Акакий", status = "Занятие до 12:00"},
-                    new {roomName = "Жёлтая", teacherName = "", studentName = "", status = "Свободно"},
-                    new {roomName = "Вокальная", teacherName = "", studentName = "", status = "Свободно"},
-                    new {roomName = "Гитарная", teacherName = "Михаил", studentName = "", status = "Репетиция до 14:00"},
+                    new AttendanceInfo
+                    {
+                        AttendanceId = Guid.NewGuid(),
+                        StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0),
+                        EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
+                        DisciplineId = 5,
+                        Status = 1,
+                        RoomId = 1,
+                        Student = new
+                        {
+                            FirstName = "Алексей",
+                            LastName = "Кутузов",
+                        },
+                        Teacher = new
+                        {
+                            FirstName = "Варвара",
+                        },
+                    },
+                    new AttendanceInfo
+                    {
+                        AttendanceId = Guid.NewGuid(),
+                        StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 15, 0, 0),
+                        EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0),
+                        DisciplineId = 1,
+                        Status = 1,
+                        RoomId = 3,
+                        Student = new
+                        {
+                            FirstName = "Назар",
+                            LastName = "Рахимжанов",
+                        },
+                        Teacher = new
+                        {
+                            FirstName = "Оспан",
+                        },
+                    },
                 },
                 Notes = notes,
             };
+
 
             return Ok(result);
         }
