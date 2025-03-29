@@ -25,9 +25,9 @@ public class AttendanceService : IAttendanceService
         {
             AttendanceId = a.AttendanceId,
             StudentId = a.StudentId,
-            Student = a.Student,
+            Student = a.Student.ToDto(),
             TeacherId = a.TeacherId,
-            Teacher = a.Teacher,
+            Teacher = a.Teacher.ToDto(),
             StartDate = a.StartDate,
             Status = a.Status,
             RoomId = a.RoomId,
@@ -50,6 +50,18 @@ public class AttendanceService : IAttendanceService
             GenerateAttendances(attendanceServiceRequestDto, attendancesToAdd, schedules, startDate);
 
         await _attendanceRepository.AddRangeAsync(newAttendances);
+    }
+
+    public async Task<AttendanceDto[]?> GetAttendanciesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
+    {
+        var attendanceEntities = await _attendanceRepository.GetAttendancesByTeacherIdForPeriodOfTimeAsync(
+            teacherId,
+            DateTime.UtcNow.AddMonths(-1),
+            DateTime.UtcNow.AddMonths(1),
+            AttendanceStatus.New
+        );
+
+        return attendanceEntities?.ToDto();
     }
 
     private static List<AttendanceEntity> GenerateAttendances(

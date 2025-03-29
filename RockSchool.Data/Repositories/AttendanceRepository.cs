@@ -52,7 +52,7 @@ public class AttendanceRepository
         await _rockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task<AttendanceEntity[]> GetAttendancesByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate,
+    public async Task<AttendanceEntity[]?> GetAttendancesByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate,
         AttendanceStatus status)
     {
         return await _rockSchoolContext.Attendances.Where(a =>

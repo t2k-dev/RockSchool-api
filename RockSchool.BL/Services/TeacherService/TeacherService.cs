@@ -126,7 +126,7 @@ public class TeacherService : ITeacherService
                 DisciplineId = d.DisciplineId,
                 Name = d.Name,
                 IsActive = d.IsActive,
-                Teachers = d.Teachers,
+                Teachers = d.Teachers.ToDto(),
             }).ToArray(),
             WorkingPeriods = t.WorkingPeriods?.Select(w => new WorkingPeriodDto()
             {
@@ -142,7 +142,7 @@ public class TeacherService : ITeacherService
                 Name = t.Branch?.Name,
                 Phone = t.Branch?.Phone,
                 Address = t.Branch?.Address,
-                Rooms = t.Branch?.Rooms,
+                Rooms = t.Branch?.Rooms?.ToDto(),
             }
         }).ToArray();
         
@@ -165,7 +165,7 @@ public class TeacherService : ITeacherService
                 Name = teacherDiscipline.Name,
                 DisciplineId = teacherDiscipline.DisciplineId,
                 IsActive = teacherDiscipline.IsActive,
-                Teachers = teacherDiscipline.Teachers,
+                Teachers = teacherDiscipline.Teachers.ToDto(),
             });
         }
         
@@ -253,5 +253,11 @@ public class TeacherService : ITeacherService
 
         // if (updateRequest.WorkingHoursEntity != null)
         //     existingTeacher.WorkingPeriods = updateRequest.WorkingHoursEntity;
+    }
+
+    public async Task<List<TeacherDto>>  GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
+    {
+        var teacherEntities = await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
+        throw new NotImplementedException();
     }
 }

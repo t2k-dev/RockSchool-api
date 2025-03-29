@@ -7,5 +7,6 @@ public class AvailableTeacherDto
     public string LastName { get; set; }
     public int WorkLoad { get; set; }
 
-
+    public ScheduledWorkingPeriodDto[] ScheduledWorkingPeriods { get; set; } = Array.Empty<ScheduledWorkingPeriodDto>();
+    public AvailabilityAttendanceDto[] Attendancies { get; set; } = Array.Empty<AvailabilityAttendanceDto>();
 }

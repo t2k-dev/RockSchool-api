@@ -17,7 +17,7 @@ namespace RockSchool.BL.Dtos
 
         public Guid StudentId { get; set; }
 
-        public virtual StudentEntity Student { get; set; }
+        public virtual StudentDto Student { get; set; }
 
         public int? AttendanceCount { get; set; }
 
@@ -29,17 +29,17 @@ namespace RockSchool.BL.Dtos
 
         public int DisciplineId { get; set; }
 
-        public virtual DisciplineEntity Discipline { get; set; }
+        public virtual DisciplineDto Discipline { get; set; }
 
         public int? TransactionId { get; set; }
 
         public Guid TeacherId { get; set; }
 
-        public virtual TeacherEntity Teacher { get; set; }
+        public virtual TeacherDto Teacher { get; set; }
 
         public int BranchId { get; set; }
 
-        public virtual BranchEntity Branch { get; set; }
+        public virtual BranchDto Branch { get; set; }
 
         public int? TrialStatus { get; set; }
     }

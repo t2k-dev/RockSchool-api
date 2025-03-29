@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Helpers;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.BranchService;
@@ -25,7 +26,7 @@ public class BranchService : IBranchService
             Name = branchEntity.Name,
             Phone = branchEntity.Phone,
             Address = branchEntity.Address,
-            Rooms = branchEntity.Rooms
+            Rooms = branchEntity.Rooms?.ToDto()
         };
     }
 }

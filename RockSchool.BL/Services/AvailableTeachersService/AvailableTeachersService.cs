@@ -3,7 +3,7 @@ using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
 using RockSchool.Data.Repositories;
 
-namespace RockSchool.BL.Services.AvailablePeriodsService
+namespace RockSchool.BL.Services.AvailableTeachersService
 {
     public class AvailableTeachersService : IAvailableTeachersService
     {
@@ -18,45 +18,47 @@ namespace RockSchool.BL.Services.AvailablePeriodsService
 
         public async Task<AvailableTeachersDto?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
         {
-            var teacherEntities = await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
 
-            if (teacherEntities.Length == 0)
-                return null;
-
-            var allAttendanceDtos = new List<AvailabilityAttendanceDto>();
-
-            foreach (var teacherEntity in teacherEntities)
-            {
-                var attendances = await _attendanceRepository.GetAttendancesByTeacherIdForPeriodOfTimeAsync(
-                    teacherEntity.TeacherId,
-                    DateTime.UtcNow.AddMonths(-1),
-                    DateTime.UtcNow.AddMonths(1),
-                    AttendanceStatus.New
-                );
-
-                if (attendances != null)
-                {
-                    var mapped = attendances.Select(a => new AvailabilityAttendanceDto
-                    {
-                        TeacherId = teacherEntity.TeacherId,
-                        StartDate = a.StartDate,
-                        EndDate = a.EndDate,
-                        Status = (int)a.Status
-                    });
-
-                    allAttendanceDtos.AddRange(mapped);
-                }
-            }
-
-            var teachers = CreateAvailableTeachersArray(teacherEntities);
-            var scheduledPeriods = CreateScheduledWorkingPeriodsArray(teacherEntities);
-
-            return new AvailableTeachersDto
-            {
-                AvailableTeachers = teachers,
-                ScheduledWorkingPeriods = scheduledPeriods,
-                Attendancies = allAttendanceDtos.ToArray()
-            };
+            throw new NotImplementedException();
+            // var teacherEntities = await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
+            //
+            // if (teacherEntities.Length == 0)
+            //     return null;
+            //
+            // var allAttendanceDtos = new List<AvailabilityAttendanceDto>();
+            //
+            // foreach (var teacherEntity in teacherEntities)
+            // {
+            //     var attendances = await _attendanceRepository.GetAttendancesByTeacherIdForPeriodOfTimeAsync(
+            //         teacherEntity.TeacherId,
+            //         DateTime.UtcNow.AddMonths(-1),
+            //         DateTime.UtcNow.AddMonths(1),
+            //         AttendanceStatus.New
+            //     );
+            //
+            //     if (attendances != null)
+            //     {
+            //         var mapped = attendances.Select(a => new AvailabilityAttendanceDto
+            //         {
+            //             TeacherId = teacherEntity.TeacherId,
+            //             StartDate = a.StartDate,
+            //             EndDate = a.EndDate,
+            //             Status = (int)a.Status
+            //         });
+            //
+            //         allAttendanceDtos.AddRange(mapped);
+            //     }
+            // }
+            //
+            // var teachers = CreateAvailableTeachersArray(teacherEntities);
+            // var scheduledPeriods = CreateScheduledWorkingPeriodsArray(teacherEntities);
+            //
+            // return new AvailableTeachersDto
+            // {
+            //     AvailableTeachers = teachers,
+            //     ScheduledWorkingPeriods = scheduledPeriods,
+            //     Attendancies = allAttendanceDtos.ToArray()
+            // };
         }
 
 

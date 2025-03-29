@@ -1,6 +1,6 @@
 ﻿using RockSchool.BL.Dtos;
 
-namespace RockSchool.BL.Services.AvailablePeriodsService;
+namespace RockSchool.BL.Services.AvailableTeachersService;
 
 public interface IAvailableTeachersService
 {

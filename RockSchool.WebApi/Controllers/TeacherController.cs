@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
-using RockSchool.BL.Services.AvailablePeriodsService;
+using RockSchool.BL.Services.AvailableTeachersService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;

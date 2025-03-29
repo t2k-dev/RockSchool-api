@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Helpers;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -19,7 +20,7 @@ public class DisciplineService : IDisciplineService
         {
             DisciplineId = disciplineDto.DisciplineId,
             Name = disciplineDto.Name,
-            Teachers = disciplineDto.Teachers,
+            Teachers = disciplineDto.Teachers?.Select(t => new TeacherEntity { TeacherId = t.TeacherId }).ToList() ?? new List<TeacherEntity>(),
             IsActive = disciplineDto.IsActive
         };
 
@@ -37,7 +38,7 @@ public class DisciplineService : IDisciplineService
         {
             DisciplineId = d.DisciplineId,
             Name = d.Name,
-            Teachers = d.Teachers, // Be careful with navigation properties
+            Teachers = d.Teachers.ToDto(),
             IsActive = d.IsActive
         }).ToArray();
 
@@ -79,7 +80,7 @@ public class DisciplineService : IDisciplineService
         {
             DisciplineId = disciplineEntity.DisciplineId,
             Name = disciplineEntity.Name,
-            Teachers = disciplineEntity.Teachers,
+            Teachers = disciplineEntity.Teachers.ToDto(),
             IsActive = disciplineEntity.IsActive
         };
     }

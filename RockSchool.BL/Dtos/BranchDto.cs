@@ -12,5 +12,5 @@ public class BranchDto
 
     public string Address { get; set; }
 
-    public ICollection<RoomEntity>? Rooms { get; set; }
+    public ICollection<RoomDto>? Rooms { get; set; }
 }
