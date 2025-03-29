@@ -1,4 +1,5 @@
 ﻿using System;
+using RockSchool.BL.Dtos;
 using RockSchool.Data.Entities;
 
 namespace RockSchool.WebApi.Models.Teachers;
@@ -17,4 +18,5 @@ public class TeacherInfo
     public int? BranchId { get; set; }
     public bool AllowGroupLessons { get; set; }
     public int AgeLimit { get; set; }
+    public WorkingPeriodDto[] WorkingPeriods { get; set; }
 }

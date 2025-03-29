@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Helpers;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -155,11 +156,11 @@ public class TeacherService : ITeacherService
         if (teacher == null)
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
 
-        var discpilineDtos = new List<DisciplineDto>();
+        var disciplineDtos = new List<DisciplineDto>();
 
         foreach (var teacherDiscipline in teacher.Disciplines)
         {
-            discpilineDtos.Add(new DisciplineDto()
+            disciplineDtos.Add(new DisciplineDto
             {
                 Name = teacherDiscipline.Name,
                 DisciplineId = teacherDiscipline.DisciplineId,
@@ -177,11 +178,11 @@ public class TeacherService : ITeacherService
             Sex = teacher.Sex,
             Phone = teacher.Phone,
             User = teacher.User,
-            Disciplines = discpilineDtos,
+            Disciplines = disciplineDtos,
             AllowGroupLessons = teacher.AllowGroupLessons,
             AgeLimit = teacher.AgeLimit,
             BranchId = teacher.BranchId,
-            // WorkingHoursEntity = teacher.WorkingPeriods
+            WorkingPeriods = teacher.WorkingPeriods.ToDto(),
         };
 
         return teacherDto;

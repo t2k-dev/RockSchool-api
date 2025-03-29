@@ -101,6 +101,7 @@ public class TeacherController : Controller
             AllowGroupLessons = teacher.AllowGroupLessons,
             AgeLimit = teacher.AgeLimit,
             BranchId = teacher.BranchId,
+            WorkingPeriods = teacher.WorkingPeriods?.OrderBy(p => p.WeekDay).ToArray()
         };
 
         return Ok(result);
