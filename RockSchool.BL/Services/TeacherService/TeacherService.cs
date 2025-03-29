@@ -112,39 +112,41 @@ public class TeacherService : ITeacherService
         
         if (teachers == null || !teachers.Any())
             return Array.Empty<TeacherDto>();
-        
-        var teacherDtos = teachers.Select(t => new TeacherDto
-        {
-            TeacherId = t.TeacherId,
-            LastName = t.LastName,
-            FirstName = t.FirstName,
-            BirthDate = t.BirthDate,
-            Phone = t.Phone,
-            User = t.User,
-            Disciplines = t.Disciplines?.Select(d => new DisciplineDto
-            {
-                DisciplineId = d.DisciplineId,
-                Name = d.Name,
-                IsActive = d.IsActive,
-                Teachers = d.Teachers.ToDto(),
-            }).ToArray(),
-            WorkingPeriods = t.WorkingPeriods?.Select(w => new WorkingPeriodDto()
-            {
-                StartTime = w.StartTime,
-                EndTime = w.EndTime,
-                WeekDay = w.WeekDay,
-                TeacherId = t.TeacherId,
-                WorkingPeriodId = w.WorkingPeriodId,
-            }).ToArray(),
-            Branch = new BranchDto()
-            {
-                BranchId = t.BranchId,
-                Name = t.Branch?.Name,
-                Phone = t.Branch?.Phone,
-                Address = t.Branch?.Address,
-                Rooms = t.Branch?.Rooms?.ToDto(),
-            }
-        }).ToArray();
+
+        var teacherDtos = teachers.ToDto();
+
+        // var teacherDtos = teachers.Select(t => new TeacherDto
+        // {
+        //     TeacherId = t.TeacherId,
+        //     LastName = t.LastName,
+        //     FirstName = t.FirstName,
+        //     BirthDate = t.BirthDate,
+        //     Phone = t.Phone,
+        //     User = t.User,
+        //     Disciplines = t.Disciplines?.Select(d => new DisciplineDto
+        //     {
+        //         DisciplineId = d.DisciplineId,
+        //         Name = d.Name,
+        //         IsActive = d.IsActive,
+        //         Teachers = d.Teachers.ToDto(),
+        //     }).ToArray(),
+        //     WorkingPeriods = t.WorkingPeriods?.Select(w => new WorkingPeriodDto()
+        //     {
+        //         StartTime = w.StartTime,
+        //         EndTime = w.EndTime,
+        //         WeekDay = w.WeekDay,
+        //         TeacherId = t.TeacherId,
+        //         WorkingPeriodId = w.WorkingPeriodId,
+        //     }).ToArray(),
+        //     Branch = new BranchDto()
+        //     {
+        //         BranchId = t.BranchId,
+        //         Name = t.Branch?.Name,
+        //         Phone = t.Branch?.Phone,
+        //         Address = t.Branch?.Address,
+        //         Rooms = t.Branch?.Rooms?.ToDto(),
+        //     }
+        // }).ToArray();
         
         return teacherDtos;
     }
@@ -255,9 +257,10 @@ public class TeacherService : ITeacherService
         //     existingTeacher.WorkingPeriods = updateRequest.WorkingHoursEntity;
     }
 
-    public async Task<List<TeacherDto>>  GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
+    public async Task<TeacherDto[]?>  GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
     {
         var teacherEntities = await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
-        throw new NotImplementedException();
+
+        return teacherEntities.ToDto();
     }
 }

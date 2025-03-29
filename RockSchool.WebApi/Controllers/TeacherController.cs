@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
-using RockSchool.BL.Services.AvailableTeachersService;
+using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
+using RockSchool.WebApi.Factories;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Teachers;
 
@@ -21,14 +22,14 @@ public class TeacherController : Controller
     private readonly ITeacherService _teacherService;
     private readonly IUserService _userService;
     private readonly IDisciplineService _disciplineService;
-    private readonly IAvailableTeachersService _availableTeachersService;
+    private readonly IAttendanceService _attendanceService;
 
     public TeacherController(ITeacherService teacherService, IUserService userService,
-        IDisciplineService disciplineService, IAvailableTeachersService availableTeachersService)
+        IDisciplineService disciplineService, IAttendanceService attendanceService)
     {
         _userService = userService;
         _disciplineService = disciplineService;
-        _availableTeachersService = availableTeachersService;
+        _attendanceService = attendanceService;
         _teacherService = teacherService;
     }
 
@@ -129,7 +130,6 @@ public class TeacherController : Controller
         {
             Teacher = teacherDto,
             Subscriptions = new List<string>(),
-
         };
 
         return Ok(teacherScreenDetailsDto);
@@ -146,11 +146,23 @@ public class TeacherController : Controller
     [HttpGet("getAvailableTeachers")]
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
-        // TODO: refactor.
-        var periods = await _availableTeachersService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
+        var teachers = await _teacherService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
+        var attendanceMap = new Dictionary<Guid, AttendanceDto[]>();
 
-        return Ok(periods);
+        foreach (var teacher in teachers)
+        {
+            var attendances = await _attendanceService.GetAttendanciesByTeacherIdForPeriodOfTime(
+                teacher.TeacherId,
+                DateTime.MinValue,
+                DateTime.MaxValue);
+
+            attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<AttendanceDto>();
+        }
+
+        var response = AvailableTeacherFactory.CreateResponse(teachers, attendanceMap);
+        return Ok(response);
     }
+
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)

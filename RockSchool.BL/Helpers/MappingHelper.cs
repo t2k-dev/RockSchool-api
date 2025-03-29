@@ -182,17 +182,56 @@ namespace RockSchool.BL.Helpers
                 Phone = entity.Phone,
                 User = entity.User,
                 BranchId = entity.BranchId,
-                Branch = entity.Branch?.ToDto(),
+                Branch = entity.Branch == null
+                    ? null
+                    : new BranchDto
+                    {
+                        BranchId = entity.Branch.BranchId,
+                        Name = entity.Branch.Name,
+                        Phone = entity.Branch.Phone,
+                        Address = entity.Branch.Address,
+                        Rooms = entity.Branch.Rooms?.Select(r => new RoomDto
+                        {
+                            RoomId = r.RoomId,
+                            BranchId = r.BranchId,
+                            Name = r.Name,
+                            Status = r.Status,
+                            IsActive = r.IsActive,
+                            Branch = null
+                        }).ToList()
+                    },
                 AgeLimit = entity.AgeLimit,
                 AllowGroupLessons = entity.AllowGroupLessons,
-                Disciplines = entity.Disciplines.ToDto(),
-                WorkingPeriods = entity.WorkingPeriods.ToDto(),
-                ScheduledWorkingPeriods = entity.ScheduledWorkingPeriods.ToDto(),
-                DisciplineIds = entity.Disciplines?
-                    .Select(d => d.DisciplineId)
-                    .ToArray()
+
+                Disciplines = entity.Disciplines?.Select(d => new DisciplineDto
+                {
+                    DisciplineId = d.DisciplineId,
+                    Name = d.Name,
+                    IsActive = d.IsActive,
+                    Teachers = null
+                }).ToList(),
+
+                DisciplineIds = entity.Disciplines?.Select(d => d.DisciplineId).ToArray(),
+
+                WorkingPeriods = entity.WorkingPeriods?.Select(wp => new WorkingPeriodDto
+                {
+                    WorkingPeriodId = wp.WorkingPeriodId,
+                    TeacherId = wp.TeacherId,
+                    StartTime = wp.StartTime,
+                    EndTime = wp.EndTime,
+                    WeekDay = wp.WeekDay
+                }).ToList(),
+
+                ScheduledWorkingPeriods = entity.ScheduledWorkingPeriods?.Select(swp => new ScheduledWorkingPeriodDto
+                {
+                    ScheduledWorkingPeriodId = swp.ScheduledWorkingPeriodId,
+                    TeacherId = swp.TeacherId,
+                    StartDate = swp.StartDate,
+                    EndDate = swp.EndDate
+                }).ToList()
             };
         }
+
 
         public static TeacherDto[] ToDto(this IEnumerable<TeacherEntity> entities)
         {

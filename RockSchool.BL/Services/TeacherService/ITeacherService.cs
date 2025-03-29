@@ -9,5 +9,5 @@ public interface ITeacherService
     Task<TeacherDto> GetTeacherByIdAsync(Guid id);
     Task UpdateTeacherAsync(TeacherDto teacherDto);
     Task DeleteTeacherAsync(Guid id);
-    Task<List<TeacherDto>> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge);
+    Task<TeacherDto[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge);
 }
