@@ -159,6 +159,7 @@ public class TeacherService : ITeacherService
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
 
         var disciplineDtos = new List<DisciplineDto>();
+        var disciplineIds = new List<int>();
 
         foreach (var teacherDiscipline in teacher.Disciplines)
         {
@@ -169,6 +170,8 @@ public class TeacherService : ITeacherService
                 IsActive = teacherDiscipline.IsActive,
                 Teachers = teacherDiscipline.Teachers.ToDto(),
             });
+
+            disciplineIds.Add(teacherDiscipline.DisciplineId);
         }
         
         var teacherDto = new TeacherDto
@@ -181,6 +184,7 @@ public class TeacherService : ITeacherService
             Phone = teacher.Phone,
             User = teacher.User,
             Disciplines = disciplineDtos,
+            DisciplineIds = disciplineIds.ToArray(),
             AllowGroupLessons = teacher.AllowGroupLessons,
             AgeLimit = teacher.AgeLimit,
             BranchId = teacher.BranchId,

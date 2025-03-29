@@ -58,10 +58,61 @@ public class StudentController : Controller
     {
         var studentDto = await _studentService.GetByIdAsync(id);
 
-        var studentScreenDetailsDto = new StudentScreenDetailsDto
+        var studentScreenDetailsDto = new StudentScreenDetailsInfo
         {
             Student = studentDto,
-            Subscriptions = new List<string>(),
+            Subscriptions = new SubscriptionsInfo[]
+            {
+                new()
+                {
+                    IsTrial = true,
+                    SubscriptionId = Guid.NewGuid(),
+                    Status = 1,
+                }
+            },
+            Attendances = new[]
+            {
+                new AttendanceInfo
+                {
+                    AttendanceId = Guid.NewGuid(),
+                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 15, 0, 0),
+                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0),
+                    Status = 2,
+                    IsTrial = true,
+                    RoomId = 1,
+                    Teacher = new
+                    {
+                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
+                        FirstName = "Оспан",
+                    },
+                },
+                new AttendanceInfo
+                {
+                    AttendanceId = Guid.NewGuid(),
+                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 2, 15, 0, 0),
+                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 2, 16, 0, 0),
+                    Status = 2,
+                    RoomId = 1,
+                    Teacher = new
+                    {
+                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
+                        FirstName = "Оспан",
+                    },
+                },
+                new AttendanceInfo
+                {
+                    AttendanceId = Guid.NewGuid(),
+                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 4, 15, 0, 0),
+                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 4, 16, 0, 0),
+                    Status = 1,
+                    RoomId = 1,
+                    Teacher = new
+                    {
+                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
+                        FirstName = "Оспан",
+                    },
+                }
+            }
         };
 
         return Ok(studentScreenDetailsDto);

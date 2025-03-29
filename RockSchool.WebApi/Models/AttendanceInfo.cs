@@ -12,5 +12,10 @@ namespace RockSchool.WebApi.Models
         public int DisciplineId { get; set; }
         public object Student { get; set; }
         public object Teacher { get; set; }
+
+        /// <summary>
+        /// Temp
+        /// </summary>
+        public bool IsTrial { get; set; }
     }
 }

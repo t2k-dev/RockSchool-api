@@ -61,6 +61,7 @@ namespace RockSchool.WebApi.Controllers
                         },
                         Teacher = new
                         {
+                            TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
                             FirstName = "Оспан",
                         },
                     },
