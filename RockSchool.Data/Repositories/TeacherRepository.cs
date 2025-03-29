@@ -35,6 +35,7 @@ public class TeacherRepository
             .Include(t => t.User)
             .Include(t => t.Disciplines)
             .Include(t => t.WorkingPeriods)
+            .Include(t => t.ScheduledWorkingPeriods)
             .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
     }
 

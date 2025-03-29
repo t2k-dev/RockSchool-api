@@ -17,16 +17,18 @@ public class TeacherEntity
 
     public long Phone { get; set; }
 
-    // public Guid UserId { get; set; }
-    // [ForeignKey(nameof(UserId))] 
     public virtual UserEntity? User { get; set; }
 
     public int BranchId { get; set; }
-    // [ForeignKey(nameof(BranchId))]
+    
     public virtual BranchEntity? Branch { get; set; }
 
     public int AgeLimit { get; set; }
     public bool AllowGroupLessons { get; set; }
+
     public virtual ICollection<DisciplineEntity> Disciplines { get; set; }
+
     public virtual ICollection<WorkingPeriodEntity> WorkingPeriods { get; set; }
+
+    public virtual ICollection<ScheduledWorkingPeriodEntity> ScheduledWorkingPeriods { get; set; }
 }
