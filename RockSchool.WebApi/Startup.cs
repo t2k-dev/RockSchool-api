@@ -42,6 +42,7 @@ public class Startup
         services.AddScoped<INoteService, NoteService>();
         services.AddScoped<IBranchService, BranchService>();
 
+        services.AddScoped<SubscriptionRepository>();
         services.AddScoped<BranchRepository>();
         services.AddScoped<AttendanceRepository>();
         services.AddScoped<DisciplineRepository>();
