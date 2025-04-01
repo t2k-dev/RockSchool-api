@@ -52,7 +52,12 @@ public class AttendanceService : IAttendanceService
         await _attendanceRepository.AddRangeAsync(newAttendances);
     }
 
-    public async Task<AttendanceDto[]?> GetAttendanciesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
+    public Task AddTrialAttendance(AttendanceDto attendanceDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<AttendanceDto[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
     {
         var attendanceEntities = await _attendanceRepository.GetAttendancesByTeacherIdForPeriodOfTimeAsync(
             teacherId,

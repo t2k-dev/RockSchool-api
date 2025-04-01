@@ -1,0 +1,14 @@
+﻿using System;
+using RockSchool.WebApi.Models.Students;
+
+namespace RockSchool.WebApi.Models.Subscriptions
+{
+    public class AddTrialRequest
+    {
+        public int Discipline { get; set; }
+        public int BranchId { get; set; }
+        public Guid TeacherId { get; set; }
+        public DateTime TrialDate { get; set; }
+        public StudentInfo Student { get; set; }
+    }
+}

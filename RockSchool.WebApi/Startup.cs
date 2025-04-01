@@ -12,6 +12,7 @@ using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
+using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.Data.Entities;
@@ -37,6 +38,7 @@ public class Startup
         services.AddScoped<IDisciplineService, DisciplineService>();
         services.AddScoped<IScheduleService, ScheduleService>();
         services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();

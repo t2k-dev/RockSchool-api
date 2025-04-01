@@ -5,6 +5,7 @@ namespace RockSchool.BL.Services.AttendanceService;
 public interface IAttendanceService
 {
     Task<AttendanceDto[]> GetAllAttendancesAsync();
+    Task<AttendanceDto[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate);
     Task AddAttendancesToStudent(AttendanceDto attendanceDto);
-    Task<AttendanceDto[]?> GetAttendanciesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate);
+    Task AddTrialAttendance(AttendanceDto attendanceDto);
 }

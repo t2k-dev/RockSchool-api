@@ -151,7 +151,7 @@ public class TeacherController : Controller
 
         foreach (var teacher in teachers)
         {
-            var attendances = await _attendanceService.GetAttendanciesByTeacherIdForPeriodOfTime(
+            var attendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
                 teacher.TeacherId,
                 DateTime.MinValue,
                 DateTime.MaxValue);
