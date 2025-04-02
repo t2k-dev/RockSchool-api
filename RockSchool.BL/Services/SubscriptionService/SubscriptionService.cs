@@ -22,13 +22,22 @@ namespace RockSchool.BL.Services.SubscriptionService
         {
             var subscriptionEntity = new SubscriptionEntity
             {
-
+                AttendanceCount = subscriptionDto.AttendanceCount,
+                AttendanceLength = subscriptionDto.AttendanceLength,
+                BranchId = subscriptionDto.BranchId,
+                DisciplineId = subscriptionDto.DisciplineId,
+                IsGroup = subscriptionDto.IsGroup,
+                StartDate = subscriptionDto.StartDate,
+                Status = subscriptionDto.Status,
+                StudentId = subscriptionDto.StudentId,
+                TeacherId = subscriptionDto.TeacherId,
+                TransactionId = subscriptionDto.TransactionId,
+                TrialStatus = subscriptionDto.TrialStatus
             };
-
 
             await _subscriptionRepository.AddSubscriptionAsync(subscriptionEntity);
 
-            return Guid.NewGuid();
+            return subscriptionEntity.SubscriptionId;
         }
     }
 }

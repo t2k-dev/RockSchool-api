@@ -5,7 +5,7 @@ namespace RockSchool.WebApi.Models.Subscriptions
 {
     public class AddTrialRequest
     {
-        public int Discipline { get; set; }
+        public int DisciplineId { get; set; }
         public int BranchId { get; set; }
         public Guid TeacherId { get; set; }
         public DateTime TrialDate { get; set; }

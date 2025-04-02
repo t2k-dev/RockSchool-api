@@ -24,10 +24,11 @@ public class AttendanceRepository
         return await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == id);
     }
 
-    public async Task AddAsync(AttendanceEntity attendanceEntity)
+    public async Task<Guid> AddAsync(AttendanceEntity attendanceEntity)
     {
         await _rockSchoolContext.Attendances.AddAsync(attendanceEntity);
         await _rockSchoolContext.SaveChangesAsync();
+        return attendanceEntity.AttendanceId;
     }
 
     public async Task UpdateAsync(AttendanceEntity attendanceEntity)

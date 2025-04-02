@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
-using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Subscriptions;
 using System.Threading.Tasks;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.Data.Enums;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -46,10 +46,20 @@ namespace RockSchool.WebApi.Controllers
             // Add subscription
             var subscriptionDto = new SubscriptionDto()
             {
-                DisciplineId = request.Discipline,
+                DisciplineId = request.DisciplineId,
+                StudentId = newStudentId,
+                AttendanceCount = 1,
+                AttendanceLength = 1,
+                BranchId = request.BranchId,
+                IsGroup = false,
+                StartDate = request.TrialDate,
+                TrialStatus = (int)TrialStatus.Created,
+                TransactionId = null,
+                Status = (int)SubscriptionStatus.Active,
+                TeacherId = request.TeacherId
             };
 
-            var subscription = _subscriptionService.AddAsync(subscriptionDto);
+            var subscriptionId = await _subscriptionService.AddAsync(subscriptionDto);
 
             // Add attendance
             var trialAttendance = new AttendanceDto()
@@ -57,10 +67,18 @@ namespace RockSchool.WebApi.Controllers
                 StartDate = request.TrialDate,
                 EndDate = request.TrialDate.AddHours(1),
                 RoomId = 1,
+                Comment = "Hello",
+                DisciplineId = request.DisciplineId,
+                IsGroup = false,
+                NumberOfAttendances = 1,
+                Status = AttendanceStatus.New,
+                StatusReason = "no reason",
+                StudentId = newStudentId,
+                TeacherId = request.TeacherId,
+                SubscriptionId = subscriptionId
             };
 
-            _attendanceService.AddTrialAttendance(trialAttendance);
-
+            var attendanceId = await _attendanceService.AddTrialAttendanceAsync(trialAttendance);
 
             return Ok(newStudentId);
         }
