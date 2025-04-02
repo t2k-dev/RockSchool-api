@@ -85,6 +85,13 @@ public class AttendanceService : IAttendanceService
         return attendanceEntities?.ToDto();
     }
 
+    public async Task<AttendanceDto[]?> GetAttendancesByStudentId(Guid studentId)
+    {
+        var attendanceEntities = await _attendanceRepository.GetAttendancesByStudentIdAsync(studentId);
+
+        return attendanceEntities?.ToDto();
+    }
+
     private static List<AttendanceEntity> GenerateAttendances(
         AttendanceDto attendanceServiceRequestDto, int attendancesToAdd,
         ScheduleEntity[] schedules, DateTime startDate)

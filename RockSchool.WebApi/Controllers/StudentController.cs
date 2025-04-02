@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
+using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.StudentService;
+using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
@@ -18,11 +20,15 @@ public class StudentController : Controller
 {
     private readonly IStudentService _studentService;
     private readonly IBranchService _branchService;
+    private readonly IAttendanceService _attendanceService;
+    private readonly ISubscriptionService _subscriptionService;
 
-    public StudentController(IStudentService studentService, IBranchService branchService)
+    public StudentController(IStudentService studentService, IBranchService branchService, IAttendanceService attendanceService, ISubscriptionService subscriptionService)
     {
         _studentService = studentService;
         _branchService = branchService;
+        _attendanceService = attendanceService;
+        _subscriptionService = subscriptionService;
     }
 
     [EnableCors("MyPolicy")]
@@ -57,20 +63,22 @@ public class StudentController : Controller
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
         var studentDto = await _studentService.GetByIdAsync(id);
+        var attendances = await _attendanceService.GetAttendancesByStudentId(id);
 
-        var studentScreenDetailsDto = new StudentScreenDetailsInfo
+        var attendanceInfos = new List<AttendanceInfo>();
+        foreach (var attendance in attendances)
         {
-            Student = studentDto,
-            Subscriptions = new SubscriptionsInfo[]
+            attendanceInfos.Add(new AttendanceInfo
             {
-                new()
-                {
-                    IsTrial = true,
-                    SubscriptionId = Guid.NewGuid(),
-                    Status = 1,
-                }
-            },
-            Attendances = new[]
+                StartDate = attendance.StartDate,
+                EndDate = attendance.EndDate,
+                Status = (int)attendance.Status,
+                Teacher = attendance.Teacher,
+                IsTrial = true,
+                RoomId = attendance.RoomId,
+            });
+        }
+        /*var attendanceInfos = new[]
             {
                 new AttendanceInfo
                 {
@@ -111,8 +119,26 @@ public class StudentController : Controller
                         TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
                         FirstName = "Оспан",
                     },
-                }
-            }
+                }*/
+
+        var subscriptions = await _subscriptionService.GetSubscriptionsByStudentId(id);
+        var subscriptionsInfos = new List<SubscriptionsInfo>();
+        foreach (var subscription in subscriptions)
+        {
+            subscriptionsInfos.Add(new SubscriptionsInfo
+            {
+                SubscriptionId = subscription.SubscriptionId,
+                Status = subscription.Status,
+                IsTrial = true,
+                DisciplineId = subscription.DisciplineId,
+            });
+        }
+
+        var studentScreenDetailsDto = new StudentScreenDetailsInfo
+        {
+            Student = studentDto,
+            Subscriptions = subscriptionsInfos.ToArray(),
+            Attendances = attendanceInfos.ToArray(),
         };
 
         return Ok(studentScreenDetailsDto);

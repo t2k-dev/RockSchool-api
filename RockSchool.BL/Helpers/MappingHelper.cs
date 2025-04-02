@@ -149,6 +149,12 @@ namespace RockSchool.BL.Helpers
             };
         }
 
+        public static SubscriptionDto[] ToDto(this IEnumerable<SubscriptionEntity> entities)
+        {
+            return entities.Select(w => w.ToDto())
+                .ToArray();
+        }
+
         public static DisciplineDto ToDto(this DisciplineEntity entity)
         {
             if (entity == null) return null;

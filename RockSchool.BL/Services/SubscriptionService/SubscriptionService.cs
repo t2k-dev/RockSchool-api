@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RockSchool.BL.Dtos;
+using RockSchool.BL.Helpers;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -38,6 +39,12 @@ namespace RockSchool.BL.Services.SubscriptionService
             await _subscriptionRepository.AddSubscriptionAsync(subscriptionEntity);
 
             return subscriptionEntity.SubscriptionId;
+        }
+
+        public async Task<SubscriptionDto[]> GetSubscriptionsByStudentId(Guid studentId)
+        {
+            var subscriptions = await _subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
+            return subscriptions.ToDto();
         }
     }
 }

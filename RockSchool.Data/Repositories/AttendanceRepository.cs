@@ -59,4 +59,12 @@ public class AttendanceRepository
         return await _rockSchoolContext.Attendances.Where(a =>
             a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate && a.Status == status).ToArrayAsync();
     }
+
+    public async Task<AttendanceEntity[]?> GetAttendancesByStudentIdAsync(Guid studentId)
+    {
+        return await _rockSchoolContext.Attendances
+            .Where(a => a.StudentId == studentId)
+            .Include(a => a.Teacher)
+            .ToArrayAsync();
+    }
 }

@@ -9,6 +9,8 @@ namespace RockSchool.BL.Services.SubscriptionService
 {
     public interface ISubscriptionService
     {
+        Task<SubscriptionDto[]> GetSubscriptionsByStudentId(Guid studentId);
+
         Task<Guid> AddAsync(SubscriptionDto subscriptionDto);
     }
 }
