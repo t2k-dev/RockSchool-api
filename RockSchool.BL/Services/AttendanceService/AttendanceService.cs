@@ -33,7 +33,8 @@ public class AttendanceService : IAttendanceService
             RoomId = a.RoomId,
             Room = a.Room,
             EndDate = a.EndDate,
-            Comment = a.Comment
+            Comment = a.Comment,
+            DisciplineId = a.DisciplineId,
         }).ToArray();
 
         return attendancesDto;

@@ -16,7 +16,10 @@ public class AttendanceRepository
 
     public async Task<AttendanceEntity[]> GetAllAsync()
     {
-        return await _rockSchoolContext.Attendances.ToArrayAsync();
+        return await _rockSchoolContext.Attendances
+            .Include(a => a.Teacher)
+            .Include(a => a.Student)
+            .ToArrayAsync();
     }
 
     public async Task<AttendanceEntity?> GetByIdAsync(Guid id)
