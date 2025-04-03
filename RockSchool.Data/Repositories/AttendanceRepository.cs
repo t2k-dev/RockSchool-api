@@ -56,8 +56,10 @@ public class AttendanceRepository
     public async Task<AttendanceEntity[]?> GetAttendancesByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate,
         AttendanceStatus status)
     {
-        return await _rockSchoolContext.Attendances.Where(a =>
-            a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate && a.Status == status).ToArrayAsync();
+        return await _rockSchoolContext.Attendances
+            .Where(a => a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate && a.Status == status)
+            .Include(a => a.Student)
+            .ToArrayAsync();
     }
 
     public async Task<AttendanceEntity[]?> GetAttendancesByStudentIdAsync(Guid studentId)

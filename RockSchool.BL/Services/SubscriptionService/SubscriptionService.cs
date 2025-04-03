@@ -46,5 +46,12 @@ namespace RockSchool.BL.Services.SubscriptionService
             var subscriptions = await _subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
             return subscriptions.ToDto();
         }
+
+        public async Task<SubscriptionDto[]> GetSubscriptionsByTeacherId(Guid teacherId)
+        {
+            var subscriptions = await _subscriptionRepository.GetSubscriptionsByTeacherIdAsync(teacherId);
+            return subscriptions.ToDto();
+        }
+
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using RockSchool.BL.Dtos;
 
-namespace RockSchool.WebApi.Models.Students
+namespace RockSchool.WebApi.Models.Teachers
 {
-    public class StudentScreenDetailsInfo
+    public class TeacherScreenDetailsInfo
     {
-        public StudentDto Student { get; set; }
+        public TeacherInfo Teacher { get; set; }
         public SubscriptionInfo[] Subscriptions { get; set; }
         public AttendanceInfo[] Attendances { get; set; }
     }

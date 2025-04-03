@@ -76,6 +76,7 @@ public class StudentController : Controller
                 Teacher = attendance.Teacher,
                 IsTrial = true,
                 RoomId = attendance.RoomId,
+                DisciplineId = attendance.DisciplineId,
             });
         }
         /*var attendanceInfos = new[]
@@ -122,15 +123,17 @@ public class StudentController : Controller
                 }*/
 
         var subscriptions = await _subscriptionService.GetSubscriptionsByStudentId(id);
-        var subscriptionsInfos = new List<SubscriptionsInfo>();
+        var subscriptionsInfos = new List<SubscriptionInfo>();
         foreach (var subscription in subscriptions)
         {
-            subscriptionsInfos.Add(new SubscriptionsInfo
+            subscriptionsInfos.Add(new SubscriptionInfo
             {
                 SubscriptionId = subscription.SubscriptionId,
                 Status = subscription.Status,
                 IsTrial = true,
                 DisciplineId = subscription.DisciplineId,
+                Teacher = subscription.Teacher,
+                AttendanceCount = subscription.AttendanceCount,
             });
         }
 

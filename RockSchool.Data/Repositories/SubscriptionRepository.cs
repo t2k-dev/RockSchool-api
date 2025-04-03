@@ -30,8 +30,18 @@ public class SubscriptionRepository : BaseRepository
     {
         return await RockSchoolContext.Subscriptions
             .Where(a => a.StudentId == studentId)
+            .Include(s => s.Teacher)
             .ToArrayAsync();
     }
+
+    public async Task<SubscriptionEntity[]?> GetSubscriptionsByTeacherIdAsync(Guid teacherId)
+    {
+        return await RockSchoolContext.Subscriptions
+            .Where(s => s.TeacherId == teacherId)
+            .Include(s => s.Student)
+            .ToArrayAsync();
+    }
+
 
     public async Task UpdateSubscriptionAsync(SubscriptionEntity subscriptionEntity)
     {

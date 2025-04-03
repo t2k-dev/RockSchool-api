@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
+using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Factories;
@@ -23,13 +24,15 @@ public class TeacherController : Controller
     private readonly IUserService _userService;
     private readonly IDisciplineService _disciplineService;
     private readonly IAttendanceService _attendanceService;
+    private readonly ISubscriptionService _subscriptionService;
 
     public TeacherController(ITeacherService teacherService, IUserService userService,
-        IDisciplineService disciplineService, IAttendanceService attendanceService)
+        IDisciplineService disciplineService, IAttendanceService attendanceService, ISubscriptionService subscriptionService)
     {
         _userService = userService;
         _disciplineService = disciplineService;
         _attendanceService = attendanceService;
+        _subscriptionService = subscriptionService;
         _teacherService = teacherService;
     }
 
@@ -125,23 +128,56 @@ public class TeacherController : Controller
     {
         var teacherDto = await _teacherService.GetTeacherByIdAsync(id);
 
-        // TODO: Add scheduled working periods and attendancies!
-        var teacherScreenDetailsDto = new TeacherScreenDetailsDto
+        var attendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
+            id,
+            DateTime.MinValue,
+            DateTime.MaxValue);
+        var attendanceInfos = new List<AttendanceInfo>();
+        foreach (var attendance in attendances)
         {
-            Teacher = teacherDto,
-            Subscriptions = new List<string>(),
+            attendanceInfos.Add(new AttendanceInfo
+            {
+                StartDate = attendance.StartDate,
+                EndDate = attendance.EndDate,
+                Status = (int)attendance.Status,
+                Student = attendance.Student,
+                IsTrial = true,
+                RoomId = attendance.RoomId,
+                DisciplineId = attendance.DisciplineId,
+            });
+        }
+
+        var subscriptions = await _subscriptionService.GetSubscriptionsByTeacherId(id);
+        var subscriptionInfos = new List<SubscriptionInfo>();
+        foreach (var subscription in subscriptions)
+        {
+            subscriptionInfos.Add(new SubscriptionInfo
+            {
+                Student = subscription.Student,
+                Status = subscription.Status,
+                DisciplineId = subscription.DisciplineId,
+                IsTrial = true,
+            });
+        }
+
+        // TODO: remap from DTO to Info
+        var teacherScreenDetails = new TeacherScreenDetailsInfo
+        {
+            Teacher = new TeacherInfo
+            {
+                FirstName = teacherDto.FirstName,
+                LastName = teacherDto.LastName,
+                WorkingPeriods = teacherDto.WorkingPeriods.ToArray(),
+                ScheduledWorkingPeriods = teacherDto.ScheduledWorkingPeriods.ToArray(),
+                Disciplines = teacherDto.DisciplineIds.ToArray(),
+            },
+            Attendances = attendanceInfos.ToArray(),
+            Subscriptions = subscriptionInfos.ToArray(),
         };
 
-        return Ok(teacherScreenDetailsDto);
+        return Ok(teacherScreenDetails);
     }
 
-    // TODO: rename to getAvailableTeachers
-    // TODO: change studentid parameter to age
-    // TODO: watch trialsubsription screen (post endpoint)
-    // TODO: watch teacher form -> save button click (post endpoint)
-    // PRIORITY
-    // TODO: add this method
-    // TODO: add trial!!
     [EnableCors("MyPolicy")]
     [HttpGet("getAvailableTeachers")]
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
