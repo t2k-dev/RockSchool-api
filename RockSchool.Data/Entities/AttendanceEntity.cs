@@ -23,7 +23,7 @@ public class AttendanceEntity
     public virtual TeacherEntity Teacher { get; set; }
     public AttendanceStatus Status { get; set; }
 
-    public string StatusReason { get; set; }
+    public string? StatusReason { get; set; }
     public DateTime StartDate { get; set; }
 
     public DateTime EndDate { get; set; }
@@ -33,5 +33,5 @@ public class AttendanceEntity
     
     [ForeignKey(nameof(RoomId))]
     public virtual RoomEntity Room { get; set; }
-    public string Comment { get; set; }
+    public string? Comment { get; set; }
 }
