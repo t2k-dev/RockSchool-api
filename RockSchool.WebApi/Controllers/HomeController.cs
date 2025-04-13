@@ -41,6 +41,7 @@ namespace RockSchool.WebApi.Controllers
                     EndDate = attendance.EndDate,
                     Student = attendance.Student,
                     Teacher = attendance.Teacher,
+                    IsTrial = true,
                 });
             }
 
@@ -52,8 +53,8 @@ namespace RockSchool.WebApi.Controllers
                     StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0),
                     EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
                     DisciplineId = 5,
-                    Status = 1,
-                    RoomId = 1,
+                    Status = 2,
+                    RoomId = 4,
                     Student = new
                     {
                         FirstName = "Алексей",
@@ -61,6 +62,26 @@ namespace RockSchool.WebApi.Controllers
                     },
                     Teacher = new
                     {
+                        TeacherId = "01958931-da30-780a-aadc-e99ae26bd87f",
+                        FirstName = "Варвара",
+                    },
+                },
+                new AttendanceInfo
+                {
+                    AttendanceId = Guid.NewGuid(),
+                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0),
+                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
+                    DisciplineId = 5,
+                    Status = 3,
+                    RoomId = 1,
+                    Student = new
+                    {
+                        FirstName = "Витали",
+                        LastName = "Шабанов",
+                    },
+                    Teacher = new
+                    {
+                        TeacherId = "01958931-da30-780a-aadc-e99ae26bd87f",
                         FirstName = "Варвара",
                     },
                 },
@@ -75,11 +96,33 @@ namespace RockSchool.WebApi.Controllers
                     IsTrial = true,
                     Student = new
                     {
-                        FirstName = "Мария",
-                        LastName = "Шелест",
+                        StudentId = "01960baf-2c2f-7fdb-b621-84eb4a05cc6c",
+                        FirstName = "Сеит",
+                        LastName = "Тасбулатов",
                     },
                     Teacher = new
                     {
+                        TeacherId = "01960b95-a2e0-7d75-8e55-ec81cea904ec",
+                        FirstName = "Влад",
+                        LastName = "Лобанов",
+                    },
+                },
+                new AttendanceInfo
+                {
+                    AttendanceId = Guid.NewGuid(),
+                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
+                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0),
+                    DisciplineId = 5,
+                    Status = 5,
+                    RoomId = 3,
+                    Student = new
+                    {
+                        FirstName = "Давид",
+                        LastName = "Голенков",
+                    },
+                    Teacher = new
+                    {
+                        TeacherId = "01958931-da30-780a-aadc-e99ae26bd87f",
                         FirstName = "Варвара",
                     },
                 },
@@ -108,7 +151,7 @@ namespace RockSchool.WebApi.Controllers
                     StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0),
                     EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 17, 0, 0),
                     DisciplineId = 1,
-                    Status = 3 ,
+                    Status = 4,
                     RoomId = 3,
                     Student = new
                     {

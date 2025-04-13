@@ -58,7 +58,9 @@ public class TeacherRepository
             .ThenInclude(w => w.ScheduledWorkingPeriods)
             .Include(t => t.Disciplines)
             .Include(t => t.Branch)
-            .Where(t => t.BranchId == branchId && t.AgeLimit >= studentAge && t.Disciplines.Any(d => d.DisciplineId == disciplineId))
+            .Where(t => t.BranchId == branchId 
+                        && t.AgeLimit >= studentAge 
+                        && t.Disciplines.Any(d => d.DisciplineId == disciplineId))
             .AsSplitQuery() 
             .ToArrayAsync();
     }

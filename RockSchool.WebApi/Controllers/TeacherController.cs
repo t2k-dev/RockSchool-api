@@ -165,6 +165,7 @@ public class TeacherController : Controller
         {
             Teacher = new TeacherInfo
             {
+                TeacherId = teacherDto.TeacherId,
                 FirstName = teacherDto.FirstName,
                 LastName = teacherDto.LastName,
                 WorkingPeriods = teacherDto.WorkingPeriods.ToArray(),
@@ -199,6 +200,24 @@ public class TeacherController : Controller
         return Ok(response);
     }
 
+    [EnableCors("MyPolicy")]
+    [HttpGet("{id}/workingPeriods")]
+    public async Task<ActionResult> GetTeacherWorkingPeriods(Guid id)
+    {
+        var teacher = await _teacherService.GetTeacherByIdAsync(id);
+
+        var attendanceMap = new Dictionary<Guid, AttendanceDto[]>();
+
+        var attendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
+            teacher.TeacherId,
+            DateTime.MinValue,
+            DateTime.MaxValue);
+
+        attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<AttendanceDto>();
+
+        var response = AvailableTeacherFactory.CreateResponse(new[] { teacher }, attendanceMap);
+        return Ok(response);
+    }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)

@@ -7,6 +7,7 @@ namespace RockSchool.WebApi.Models.Teachers;
 // TODO: Implement!
 public class TeacherInfo
 {
+    public Guid TeacherId { get; set; }
     public string Email { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
