@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RockSchool.BL.Dtos;
+﻿using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
@@ -19,7 +14,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             _subscriptionRepository = subscriptionRepository;
         }
 
-        public async Task<Guid> AddAsync(SubscriptionDto subscriptionDto)
+        public async Task<Guid> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
         {
             var subscriptionEntity = new SubscriptionEntity
             {

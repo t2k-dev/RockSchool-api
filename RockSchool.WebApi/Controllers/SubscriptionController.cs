@@ -5,6 +5,7 @@ using RockSchool.BL.Dtos;
 using RockSchool.WebApi.Models.Subscriptions;
 using System.Threading.Tasks;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.Data.Enums;
@@ -18,19 +19,21 @@ namespace RockSchool.WebApi.Controllers
         private readonly IStudentService _studentService;
         private readonly ISubscriptionService _subscriptionService;
         private readonly IAttendanceService _attendanceService;
+        private readonly IScheduleService _scheduleService;
 
-        public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService)
+        public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService,
+            IScheduleService scheduleService)
         {
             _studentService = studentService;
             _subscriptionService = subscriptionService;
             _attendanceService = attendanceService;
+            _scheduleService = scheduleService;
         }
 
         [EnableCors("MyPolicy")]
         [HttpPost("addTrial")]
         public async Task<ActionResult> AddTrial(AddTrialRequest request)
         {
-            // Add student
             var studentDto = new StudentDto
             {
                 FirstName = request.Student.FirstName,
@@ -43,7 +46,6 @@ namespace RockSchool.WebApi.Controllers
 
             var newStudentId = await _studentService.AddStudentAsync(studentDto);
 
-            // Add subscription
             var subscriptionDto = new SubscriptionDto()
             {
                 DisciplineId = request.DisciplineId,
@@ -59,9 +61,8 @@ namespace RockSchool.WebApi.Controllers
                 TeacherId = request.TeacherId
             };
 
-            var subscriptionId = await _subscriptionService.AddAsync(subscriptionDto);
+            var subscriptionId = await _subscriptionService.AddSubscriptionAsync(subscriptionDto);
 
-            // Add attendance
             var trialAttendance = new AttendanceDto()
             {
                 StartDate = request.TrialDate,
@@ -83,5 +84,30 @@ namespace RockSchool.WebApi.Controllers
             return Ok(newStudentId);
         }
 
+        [EnableCors("MyPolicy")]
+        [HttpPost]
+        public async Task<ActionResult> AddSubscription(AddSubscriptionRequestDto request)
+        {
+            var subscriptionDto = new SubscriptionDto()
+            {
+                TeacherId = request.TeacherId,
+                DisciplineId = request.DisciplineId,
+                StartDate = request.StartDate,
+                StudentId = request.StudentId,
+                AttendanceCount = 1,
+                AttendanceLength = 1,
+                BranchId = request.BranchId,
+                IsGroup = false,
+                TransactionId = null,
+                TrialStatus = null,
+                Status = (int)SubscriptionStatus.Active
+            };
+
+            var newSubscriptionId = await _subscriptionService.AddSubscriptionAsync(subscriptionDto);
+
+            await _scheduleService.AddScheduleAsync(request.Schedule);
+
+            return Ok(newSubscriptionId);
+        }
     }
 }

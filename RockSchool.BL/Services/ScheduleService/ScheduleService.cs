@@ -1,5 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
-using RockSchool.Data.Entities;
+using RockSchool.BL.Helpers;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.ScheduleService;
@@ -23,7 +23,7 @@ public class ScheduleService : IScheduleService
         var scheduleDtos = schedules.Select(s => new ScheduleDto
         {
             ScheduleId = s.ScheduleId,
-            Subscription = s.Subscription,
+            Subscription = s.Subscription.ToDto(),
             WeekDay = s.WeekDay,
             StartTime = s.StartTime,
             EndTime = s.EndTime,
@@ -46,7 +46,7 @@ public class ScheduleService : IScheduleService
         //     DisciplineId = requestDto.DisciplineId
         // };
 
-        // await _scheduleRepository.AddAsync(schedule);
+        // await _scheduleRepository.AddSubscriptionAsync(schedule);
         // var savedSchedule = await _scheduleRepository.GetByIdAsync(schedule.ScheduleId);
         //
         // if (savedSchedule == null)
