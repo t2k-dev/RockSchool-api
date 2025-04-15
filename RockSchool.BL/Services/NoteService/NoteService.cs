@@ -22,18 +22,21 @@ namespace RockSchool.BL.Services.NoteService
                     Description = n.Description,
                     Status = n.Status,
                     BranchId = n.BranchId,
+                    CompleteDate = n.CompleteDate,
+                    ActualCompleteDate = n.ActualCompleteDate,
                 })
                 .ToArray();
 
             return noteDtos;
         }
 
-        public async Task<bool> AddNote(int branchId, string description)
+        public async Task<bool> AddNote(int branchId, string description, DateTime? completeDate)
         {
             var note = new NoteEntity
             {
                 BranchId = branchId,
                 Description = description,
+                CompleteDate = completeDate,
                 Status = 1,
             };
 
@@ -44,6 +47,8 @@ namespace RockSchool.BL.Services.NoteService
         {
             var note = await _noteRepository.GetNote(noteId);
             note.Status = 2;
+            note.ActualCompleteDate = DateTime.Now.ToUniversalTime();
+
             await _noteRepository.UpdateAsync(note);
         }
     }

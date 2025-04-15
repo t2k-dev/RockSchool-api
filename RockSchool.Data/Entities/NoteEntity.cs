@@ -10,4 +10,6 @@ public class NoteEntity
     public virtual BranchEntity Branch { get; set; }
     public string? Description { get; set; }
     public int Status { get; set; }
+    public DateTime? CompleteDate { get; set; }
+    public DateTime? ActualCompleteDate { get; set; }
 }
