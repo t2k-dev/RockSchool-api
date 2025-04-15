@@ -160,7 +160,7 @@ public class StudentController : Controller
             LastName = requestDto.LastName,
             BirthDate = requestDto.BirthDate.ToUniversalTime(),
             Sex = requestDto.Sex,
-            Phone = requestDto.Phone,
+            Phone = requestDto.Phone ?? 0, //TODO: fix
             Level = requestDto.Level,
             BranchId = requestDto.BranchId
         };
@@ -189,7 +189,7 @@ public class StudentController : Controller
         };
         await _studentService.UpdateStudentAsync(updateStudentDto);
 
-        return Ok();
+        return Ok(id);
     }
 
     [HttpDelete("{id}")]
