@@ -5,6 +5,7 @@ using RockSchool.BL.Dtos;
 using RockSchool.WebApi.Models.Subscriptions;
 using System.Threading.Tasks;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
@@ -20,14 +21,16 @@ namespace RockSchool.WebApi.Controllers
         private readonly ISubscriptionService _subscriptionService;
         private readonly IAttendanceService _attendanceService;
         private readonly IScheduleService _scheduleService;
+        private readonly INoteService _noteService;
 
         public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService,
-            IScheduleService scheduleService)
+            IScheduleService scheduleService, INoteService noteService)
         {
             _studentService = studentService;
             _subscriptionService = subscriptionService;
             _attendanceService = attendanceService;
             _scheduleService = scheduleService;
+            _noteService = noteService;
         }
 
         [EnableCors("MyPolicy")]
@@ -81,6 +84,8 @@ namespace RockSchool.WebApi.Controllers
 
             var attendanceId = await _attendanceService.AddTrialAttendanceAsync(trialAttendance);
 
+            await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName} в {request.TrialDate:HH:mm}.", request.TrialDate.ToUniversalTime());
+
             return Ok(newStudentId);
         }
 
@@ -88,7 +93,7 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSubscription(AddSubscriptionRequestDto request)
         {
-            var subscriptionDto = new SubscriptionDto()
+            var subscriptionDto = new SubscriptionDto
             {
                 TeacherId = request.TeacherId,
                 DisciplineId = request.DisciplineId,

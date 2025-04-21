@@ -10,7 +10,7 @@ namespace RockSchool.BL.Services.NoteService
     public interface INoteService
     {
         Task<NoteDto[]?> GetNotesAsync(int branchId);
-        Task<bool> AddNote(int branchId, string description, DateTime? completeDate);
+        Task<bool> AddNoteAsync(int branchId, string description, DateTime? completeDate);
         Task MarkComplete(Guid noteId);
     }
 }

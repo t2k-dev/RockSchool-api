@@ -22,7 +22,7 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(AddNoteDto addNoteDto)
         {
-            await _noteService.AddNote(addNoteDto.BranchId, addNoteDto.Description, addNoteDto.CompleteDate.Value.ToUniversalTime());
+            await _noteService.AddNoteAsync(addNoteDto.BranchId, addNoteDto.Description, addNoteDto.CompleteDate.Value.ToUniversalTime());
             return Ok();
         }
 
