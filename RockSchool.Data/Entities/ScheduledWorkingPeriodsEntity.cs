@@ -18,4 +18,9 @@ public class ScheduledWorkingPeriodEntity
     public DateTime EndDate { get; set; }
 
     public TeacherEntity? Teacher { get; set; }
+
+    public int RoomId { get; set; }
+
+    public RoomEntity Room { get; set; }
+
 }

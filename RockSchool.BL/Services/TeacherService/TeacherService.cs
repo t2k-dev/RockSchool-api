@@ -23,6 +23,7 @@ public class TeacherService : ITeacherService
     {
         var disciplineEntities = new List<DisciplineEntity>();
         if (addTeacherDto.DisciplineIds != null)
+        {
             foreach (var disciplineId in addTeacherDto.DisciplineIds)
             {
                 var discipline = await _disciplineRepository.GetByIdAsync(disciplineId);
@@ -31,16 +32,17 @@ public class TeacherService : ITeacherService
                     disciplineEntities.Add(discipline);
                 }
             }
+        }
 
         var workingPeriodEntities = new List<WorkingPeriodEntity>();
-
         foreach (var workingPeriodDto in addTeacherDto.WorkingPeriods)
         {
-            workingPeriodEntities.Add(new WorkingPeriodEntity()
+            workingPeriodEntities.Add(new WorkingPeriodEntity
             {
                 StartTime = workingPeriodDto.StartTime,
                 EndTime = workingPeriodDto.EndTime,
-                WeekDay = workingPeriodDto.WeekDay
+                WeekDay = workingPeriodDto.WeekDay,
+                RoomId = workingPeriodDto.RoomId,
             });
         }
         
@@ -60,8 +62,8 @@ public class TeacherService : ITeacherService
 
         await _teacherRepository.AddAsync(teacher);
 
-        var scheduledWorkingPeriodEntitites = BuildScheduledWorkingPeriods(workingPeriodEntities, teacher);
-        await _scheduledWorkingPeriodsRepository.AddRangeAsync(scheduledWorkingPeriodEntitites);
+        var scheduledWorkingPeriodEntities = BuildScheduledWorkingPeriods(teacher.TeacherId, workingPeriodEntities);
+        await _scheduledWorkingPeriodsRepository.AddRangeAsync(scheduledWorkingPeriodEntities);
 
         var savedTeacher = await _teacherRepository.GetByIdAsync(teacher.TeacherId);
 
@@ -69,9 +71,9 @@ public class TeacherService : ITeacherService
             throw new InvalidOperationException("Failed to add teacher.");
     }
 
-    private List<ScheduledWorkingPeriodEntity> BuildScheduledWorkingPeriods(List<WorkingPeriodEntity> workingPeriodEntities, TeacherEntity teacher)
+    private List<ScheduledWorkingPeriodEntity> BuildScheduledWorkingPeriods(Guid teacherId, List<WorkingPeriodEntity> workingPeriodEntities)
     {
-        var scheduledWorkingPeriodEntitites = new List<ScheduledWorkingPeriodEntity>();
+        var scheduledWorkingPeriodEntities = new List<ScheduledWorkingPeriodEntity>();
         var startDate = DateTime.UtcNow.Date;
         var endDate = startDate.AddMonths(3);
 
@@ -81,29 +83,25 @@ public class TeacherService : ITeacherService
             {
                 if ((int)currentDate.DayOfWeek == workingPeriodEntity.WeekDay)
                 {
-                    var localStart = DateTime.SpecifyKind(
-                        currentDate.Add(workingPeriodEntity.StartTime),
-                        DateTimeKind.Local);
-
-                    var localEnd = DateTime.SpecifyKind(
-                        currentDate.Add(workingPeriodEntity.EndTime),
-                        DateTimeKind.Local);
+                    var localStart = DateTime.SpecifyKind(currentDate.Add(workingPeriodEntity.StartTime), DateTimeKind.Local);
+                    var localEnd = DateTime.SpecifyKind(currentDate.Add(workingPeriodEntity.EndTime), DateTimeKind.Local);
 
                     var periodStart = localStart.ToUniversalTime();
                     var periodEnd = localEnd.ToUniversalTime();
 
-                    scheduledWorkingPeriodEntitites.Add(new ScheduledWorkingPeriodEntity()
+                    scheduledWorkingPeriodEntities.Add(new ScheduledWorkingPeriodEntity
                     {
                         WorkingPeriodId = workingPeriodEntity.WorkingPeriodId,
-                        TeacherId = teacher.TeacherId,
+                        TeacherId = teacherId,
                         StartDate = periodStart,
-                        EndDate = periodEnd
+                        EndDate = periodEnd,
+                        RoomId = workingPeriodEntity.RoomId,
                     });
                 }
             }
         }
 
-        return scheduledWorkingPeriodEntitites;
+        return scheduledWorkingPeriodEntities;
     }
 
     public async Task<TeacherDto[]> GetAllTeachersAsync()

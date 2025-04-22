@@ -19,5 +19,7 @@ namespace RockSchool.BL.Dtos
         public TimeSpan StartTime { get; set; }
 
         public TimeSpan EndTime { get; set; }
+
+        public int RoomId { get; set; }
     }
 }
