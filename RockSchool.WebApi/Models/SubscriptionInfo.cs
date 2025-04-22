@@ -9,6 +9,8 @@ namespace RockSchool.WebApi.Models
 
         public AttendanceInfo[] Attendances { get; set; }
 
+        public DateTime StartDate { get; set; }
+
         public bool IsTrial { get; set; }
 
         public int DisciplineId { get; set; }

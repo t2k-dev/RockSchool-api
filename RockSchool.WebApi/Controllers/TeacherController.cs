@@ -153,6 +153,7 @@ public class TeacherController : Controller
         {
             subscriptionInfos.Add(new SubscriptionInfo
             {
+                StartDate = subscription.StartDate,
                 Student = subscription.Student,
                 Status = subscription.Status,
                 DisciplineId = subscription.DisciplineId,
