@@ -40,6 +40,30 @@ public class AttendanceService : IAttendanceService
         return attendancesDto;
     }
 
+    public async Task<AttendanceDto[]> GetByBranchIdAsync(int branchId)
+    {
+        var attendances = await _attendanceRepository.GetByBranchIdAsync(branchId);
+
+        var attendancesDto = attendances.Select(a => new AttendanceDto
+        {
+            AttendanceId = a.AttendanceId,
+            StudentId = a.StudentId,
+            Student = a.Student.ToDto(),
+            TeacherId = a.TeacherId,
+            Teacher = a.Teacher.ToDto(),
+            StartDate = a.StartDate,
+            Status = a.Status,
+            Branch = a.Branch.ToDto(),
+            RoomId = a.RoomId,
+            Room = a.Room,
+            EndDate = a.EndDate,
+            Comment = a.Comment,
+            DisciplineId = a.DisciplineId,
+        }).ToArray();
+
+        return attendancesDto;
+    }
+
     public async Task AddAttendancesToStudent(AttendanceDto attendanceServiceRequestDto)
     {
         var schedules =
@@ -59,6 +83,7 @@ public class AttendanceService : IAttendanceService
         {
             StudentId = attendanceDto.StudentId,
             TeacherId = attendanceDto.TeacherId,
+            BranchId = attendanceDto.BranchId,
             StartDate = attendanceDto.StartDate,
             EndDate = attendanceDto.EndDate,
             Status = attendanceDto.Status,

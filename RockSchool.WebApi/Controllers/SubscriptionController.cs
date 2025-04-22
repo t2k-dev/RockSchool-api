@@ -49,7 +49,7 @@ namespace RockSchool.WebApi.Controllers
 
             var newStudentId = await _studentService.AddStudentAsync(studentDto);
 
-            var subscriptionDto = new SubscriptionDto()
+            var subscriptionDto = new SubscriptionDto
             {
                 DisciplineId = request.DisciplineId,
                 StudentId = newStudentId,
@@ -71,6 +71,7 @@ namespace RockSchool.WebApi.Controllers
                 StartDate = request.TrialDate,
                 EndDate = request.TrialDate.AddHours(1),
                 RoomId = 1,
+                BranchId = request.BranchId,
                 Comment = string.Empty,
                 DisciplineId = request.DisciplineId,
                 IsGroup = false,

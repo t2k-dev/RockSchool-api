@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.WebApi.Models;
 
@@ -15,19 +16,24 @@ namespace RockSchool.WebApi.Controllers
     {
         private readonly INoteService _noteService;
         private readonly IAttendanceService _attendanceService;
+        private readonly IBranchService _branchService;
 
-        public HomeController(INoteService noteService, IAttendanceService attendanceService)
+        public HomeController(INoteService noteService, IAttendanceService attendanceService, IBranchService branchService)
         {
             _noteService = noteService;
             _attendanceService = attendanceService;
+            _branchService = branchService;
         }
 
         [EnableCors("MyPolicy")]
         [HttpGet("getHomeScreenDetails/{branchId}")]
         public async Task<ActionResult> Get(int branchId)
         {
+            var branch = await _branchService.GetBranchByIdAsync(branchId);
+
             var notes = await _noteService.GetNotesAsync(branchId);
-            var attendances = await _attendanceService.GetAllAttendancesAsync();
+
+            var attendances = await _attendanceService.GetByBranchIdAsync(branchId);
             var attendanceInfos = new List<AttendanceInfo>();
             foreach (var attendance in attendances)
             {
@@ -171,6 +177,7 @@ namespace RockSchool.WebApi.Controllers
 
             var result = new HomeScreenDetails
             {
+                Branch = branch,
                 Attendances = attendanceInfos.ToArray(),
                 Notes = notes,
             };

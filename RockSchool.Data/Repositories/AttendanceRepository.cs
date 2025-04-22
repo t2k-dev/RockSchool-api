@@ -22,6 +22,15 @@ public class AttendanceRepository
             .ToArrayAsync();
     }
 
+    public async Task<AttendanceEntity[]> GetByBranchIdAsync(int branchId)
+    {
+        return await _rockSchoolContext.Attendances
+            .Where(a => a.BranchId == branchId)
+            .Include(a => a.Teacher)
+            .Include(a => a.Student)
+            .ToArrayAsync();
+    }
+
     public async Task<AttendanceEntity?> GetByIdAsync(Guid id)
     {
         return await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == id);
