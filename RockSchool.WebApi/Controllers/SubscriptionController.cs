@@ -66,7 +66,7 @@ namespace RockSchool.WebApi.Controllers
 
             var subscriptionId = await _subscriptionService.AddSubscriptionAsync(subscriptionDto);
 
-            var trialAttendance = new AttendanceDto()
+            var trialAttendance = new AttendanceDto
             {
                 StartDate = request.TrialDate,
                 EndDate = request.TrialDate.AddHours(1),
@@ -84,7 +84,7 @@ namespace RockSchool.WebApi.Controllers
 
             var attendanceId = await _attendanceService.AddTrialAttendanceAsync(trialAttendance);
 
-            await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName} в {request.TrialDate:HH:mm}.", request.TrialDate.ToUniversalTime());
+            await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
 
             return Ok(newStudentId);
         }

@@ -44,7 +44,8 @@ public class RockSchoolContext : DbContext
         );
 
         modelBuilder.Entity<BranchEntity>().HasData(
-            new BranchEntity { BranchId = 1, Name = "На Абая", Phone = "77471237896", Address = "Абая 137" }
+            new BranchEntity { BranchId = 1, Name = "На Абая", Phone = "77471237896", Address = "Абая 137" },
+            new BranchEntity { BranchId = 2, Name = "На Аль-Фараби", Phone = "77471237896", Address = "Аль-Фараби 15" }
         );
 
         modelBuilder.Entity<RoomEntity>().HasData(
@@ -53,6 +54,14 @@ public class RockSchoolContext : DbContext
             new RoomEntity { RoomId = 4, BranchId = 1, Name = "Барабанная", Status = 1, IsActive = true },
             new RoomEntity { RoomId = 5, BranchId = 1, Name = "Желтая", Status = 1, IsActive = true },
             new RoomEntity { RoomId = 6, BranchId = 1, Name = "Зелёная", Status = 1, IsActive = true }
+        );
+
+        modelBuilder.Entity<RoomEntity>().HasData(
+            new RoomEntity { RoomId = 10, BranchId = 2, Name = "Гитарная", Status = 1, IsActive = true },
+            new RoomEntity { RoomId = 11, BranchId = 2, Name = "Вокальная", Status = 1, IsActive = true },
+            new RoomEntity { RoomId = 12, BranchId = 2, Name = "Барабанная", Status = 1, IsActive = true },
+            new RoomEntity { RoomId = 13, BranchId = 2, Name = "Плакатная", Status = 1, IsActive = true },
+            new RoomEntity { RoomId = 14, BranchId = 2, Name = "Желтая", Status = 1, IsActive = true }
         );
     }
 }
