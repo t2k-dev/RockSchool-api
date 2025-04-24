@@ -13,6 +13,7 @@ namespace RockSchool.BL.Helpers
                 StartTime = entity.StartTime,
                 EndTime = entity.EndTime,
                 WeekDay = entity.WeekDay,
+                RoomId = entity.RoomId,
             };
         }
 
@@ -29,6 +30,7 @@ namespace RockSchool.BL.Helpers
                 ScheduledWorkingPeriodId = entity.ScheduledWorkingPeriodId,
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
+                RoomId = entity.RoomId,
             };
         }
 
@@ -225,7 +227,8 @@ namespace RockSchool.BL.Helpers
                     TeacherId = wp.TeacherId,
                     StartTime = wp.StartTime,
                     EndTime = wp.EndTime,
-                    WeekDay = wp.WeekDay
+                    WeekDay = wp.WeekDay,
+                    RoomId = wp.RoomId,
                 }).ToList(),
 
                 ScheduledWorkingPeriods = entity.ScheduledWorkingPeriods?.Select(swp => new ScheduledWorkingPeriodDto
@@ -233,7 +236,8 @@ namespace RockSchool.BL.Helpers
                     ScheduledWorkingPeriodId = swp.ScheduledWorkingPeriodId,
                     TeacherId = swp.TeacherId,
                     StartDate = swp.StartDate,
-                    EndDate = swp.EndDate
+                    EndDate = swp.EndDate,
+                    RoomId = swp.RoomId,
                 }).ToList()
             };
         }
