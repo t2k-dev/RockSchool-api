@@ -21,7 +21,8 @@ public static class AvailableTeacherFactory
                 {
                     swp.ScheduledWorkingPeriodId,
                     swp.StartDate,
-                    swp.EndDate
+                    swp.EndDate,
+                    swp.RoomId,
                 })
                 .ToArray() ?? Array.Empty<object>(),
 

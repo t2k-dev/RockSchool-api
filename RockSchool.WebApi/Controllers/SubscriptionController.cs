@@ -70,7 +70,7 @@ namespace RockSchool.WebApi.Controllers
             {
                 StartDate = request.TrialDate,
                 EndDate = request.TrialDate.AddHours(1),
-                RoomId = 1,
+                RoomId = request.RoomId,
                 BranchId = request.BranchId,
                 Comment = string.Empty,
                 DisciplineId = request.DisciplineId,
