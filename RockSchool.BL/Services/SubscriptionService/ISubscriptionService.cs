@@ -13,5 +13,7 @@ namespace RockSchool.BL.Services.SubscriptionService
         Task<SubscriptionDto[]> GetSubscriptionsByTeacherId(Guid teacherId);
 
         Task<Guid> AddSubscriptionAsync(SubscriptionDto subscriptionDto);
+
+        Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate);
     }
 }

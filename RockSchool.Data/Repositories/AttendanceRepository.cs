@@ -22,6 +22,12 @@ public class AttendanceRepository
             .ToArrayAsync();
     }
 
+    public async Task<AttendanceEntity?> GetAsync(Guid attendanceId)
+    {
+        return await _rockSchoolContext.Attendances
+            .FirstOrDefaultAsync(a => a.AttendanceId == attendanceId);
+    }
+
     public async Task<AttendanceEntity[]> GetByBranchIdAsync(int branchId)
     {
         return await _rockSchoolContext.Attendances

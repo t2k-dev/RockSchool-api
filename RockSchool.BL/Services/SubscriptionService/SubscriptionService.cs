@@ -48,5 +48,17 @@ namespace RockSchool.BL.Services.SubscriptionService
             return subscriptions.ToDto();
         }
 
+        public async Task<AttendanceDto> GetNextAvailableSlotAsync(Guid subscriptionId)
+        {
+            // TODO: complete after dev sync
+            var subscription = _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId);
+            return null;
+        }
+
+        public Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate)
+        {
+            //RescheduleAttendanceByStudent
+            return null;
+        }
     }
 }

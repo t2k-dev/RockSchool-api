@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
@@ -23,6 +25,14 @@ public class AttendanceController : Controller
         var attendances = await _attendanceService.GetAllAttendancesAsync();
 
         return Ok(attendances);
+    }
+
+    [EnableCors("MyPolicy")]
+    [HttpGet("{id}")]
+    public async Task<ActionResult> Get(Guid id)
+    {
+        var attendance = await _attendanceService.GetAttendanceAsync(id);
+        return Ok(attendance);
     }
 
     [HttpPost("addLessons")]

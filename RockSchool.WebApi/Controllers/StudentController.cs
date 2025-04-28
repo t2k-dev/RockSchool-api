@@ -70,6 +70,7 @@ public class StudentController : Controller
         {
             attendanceInfos.Add(new AttendanceInfo
             {
+                AttendanceId = attendance.AttendanceId,
                 StartDate = attendance.StartDate,
                 EndDate = attendance.EndDate,
                 Status = (int)attendance.Status,
@@ -79,48 +80,6 @@ public class StudentController : Controller
                 DisciplineId = attendance.DisciplineId,
             });
         }
-        /*var attendanceInfos = new[]
-            {
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 15, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0),
-                    Status = 2,
-                    IsTrial = true,
-                    RoomId = 1,
-                    Teacher = new
-                    {
-                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
-                        FirstName = "Оспан",
-                    },
-                },
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 2, 15, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 2, 16, 0, 0),
-                    Status = 2,
-                    RoomId = 1,
-                    Teacher = new
-                    {
-                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
-                        FirstName = "Оспан",
-                    },
-                },
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 4, 15, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 4, 16, 0, 0),
-                    Status = 1,
-                    RoomId = 1,
-                    Teacher = new
-                    {
-                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
-                        FirstName = "Оспан",
-                    },
-                }*/
 
         var subscriptions = await _subscriptionService.GetSubscriptionsByStudentId(id);
         var subscriptionsInfos = new List<SubscriptionInfo>();

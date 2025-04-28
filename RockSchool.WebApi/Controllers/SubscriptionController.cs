@@ -10,6 +10,7 @@ using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.Data.Enums;
+using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -22,6 +23,8 @@ namespace RockSchool.WebApi.Controllers
         private readonly IAttendanceService _attendanceService;
         private readonly IScheduleService _scheduleService;
         private readonly INoteService _noteService;
+        private readonly IReschedulingService _reschedulingService;
+        
 
         public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService,
             IScheduleService scheduleService, INoteService noteService)
@@ -31,6 +34,20 @@ namespace RockSchool.WebApi.Controllers
             _attendanceService = attendanceService;
             _scheduleService = scheduleService;
             _noteService = noteService;
+        }
+
+        [EnableCors("MyPolicy")]
+        [HttpGet("{id}/getNextAvailableSlot")]
+        public async Task<ActionResult> GetNextAvailableSlot(Guid id)
+        {
+            // TODO: Implement
+            var nextAttendance = new AttendanceInfo
+            {
+                StartDate = new DateTime(2025, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0),
+                RoomId = 4,
+            };
+
+            return Ok(nextAttendance);
         }
 
         [EnableCors("MyPolicy")]
@@ -83,7 +100,7 @@ namespace RockSchool.WebApi.Controllers
                 SubscriptionId = subscriptionId
             };
 
-            var attendanceId = await _attendanceService.AddTrialAttendanceAsync(trialAttendance);
+            var attendanceId = await _attendanceService.AddAttendanceAsync(trialAttendance);
 
             await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
 
@@ -115,5 +132,15 @@ namespace RockSchool.WebApi.Controllers
 
             return Ok(newSubscriptionId);
         }
+
+        [EnableCors("MyPolicy")]
+        [HttpPost("rescheduleAttendance")]
+        public async Task<ActionResult> RescheduleAttendance(RescheduleAttendanceRequestDto request)
+        {
+            var attendance = await _reschedulingService.RescheduleAttendanceByStudent(request.AttendanceId, request.NewStartDate);
+
+            return Ok(attendance);
+        }
+
     }
 }
