@@ -6,4 +6,5 @@ public interface IScheduleService
 {
     Task<ScheduleDto[]?> GetAllSchedulesAsync();
     Task AddScheduleAsync(ScheduleDto requestDto);
+    Task AddSchedulesAsync(ScheduleDto[] requestDtos, int attendanceCount);
 }

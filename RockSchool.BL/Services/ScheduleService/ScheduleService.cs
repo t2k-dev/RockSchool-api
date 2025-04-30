@@ -52,4 +52,9 @@ public class ScheduleService : IScheduleService
         // if (savedSchedule == null)
         //     throw new InvalidOperationException("Failed to add schedule.");
     }
+
+    public Task AddSchedulesAsync(ScheduleDto[] requestDtos, int attendanceCount)
+    {
+        throw new NotImplementedException();
+    }
 }

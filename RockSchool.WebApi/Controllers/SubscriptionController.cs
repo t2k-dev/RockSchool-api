@@ -117,18 +117,18 @@ namespace RockSchool.WebApi.Controllers
                 DisciplineId = request.DisciplineId,
                 StartDate = request.StartDate,
                 StudentId = request.StudentId,
-                AttendanceCount = 1,
-                AttendanceLength = 1,
+                AttendanceCount = request.AttendanceCount,
+                AttendanceLength = request.AttendanceLength,
                 BranchId = request.BranchId,
                 IsGroup = false,
                 TransactionId = null,
                 TrialStatus = null,
-                Status = (int)SubscriptionStatus.Active
+                Status = (int)SubscriptionStatus.Draft
             };
 
             var newSubscriptionId = await _subscriptionService.AddSubscriptionAsync(subscriptionDto);
 
-            await _scheduleService.AddScheduleAsync(request.Schedule);
+            await _scheduleService.AddSchedulesAsync(request.Schedules, request.AttendanceCount);
 
             return Ok(newSubscriptionId);
         }
