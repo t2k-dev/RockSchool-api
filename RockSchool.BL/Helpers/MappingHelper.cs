@@ -61,8 +61,10 @@ namespace RockSchool.BL.Helpers
                 EndDate = entity.EndDate,
                 IsGroup = entity.IsGroup,
                 RoomId = entity.RoomId,
+                BranchId = entity.BranchId,
                 Room = entity.Room,
                 Comment = entity.Comment,
+                IsTrial = entity.IsTrial,
             };
         }
 

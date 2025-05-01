@@ -16,7 +16,7 @@ public class SubscriptionRepository : BaseRepository
         await RockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task<SubscriptionEntity?> GetSubscriptionByIdAsync(Guid id)
+    public async Task<SubscriptionEntity?> GetAsync(Guid id)
     {
         return await RockSchoolContext.Subscriptions.FindAsync(id);
     }

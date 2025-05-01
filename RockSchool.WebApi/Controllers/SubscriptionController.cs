@@ -27,27 +27,22 @@ namespace RockSchool.WebApi.Controllers
         
 
         public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService,
-            IScheduleService scheduleService, INoteService noteService)
+            IScheduleService scheduleService, INoteService noteService, IReschedulingService reschedulingService)
         {
             _studentService = studentService;
             _subscriptionService = subscriptionService;
             _attendanceService = attendanceService;
             _scheduleService = scheduleService;
             _noteService = noteService;
+            _reschedulingService = reschedulingService;
         }
 
         [EnableCors("MyPolicy")]
         [HttpGet("{id}/getNextAvailableSlot")]
         public async Task<ActionResult> GetNextAvailableSlot(Guid id)
         {
-            // TODO: Implement
-            var nextAttendance = new AttendanceInfo
-            {
-                StartDate = new DateTime(2025, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0),
-                RoomId = 4,
-            };
-
-            return Ok(nextAttendance);
+            var nextAttendanceDate = await _subscriptionService.GetNextAvailableSlotAsync(id);
+            return Ok(nextAttendanceDate);
         }
 
         [EnableCors("MyPolicy")]
@@ -97,7 +92,8 @@ namespace RockSchool.WebApi.Controllers
                 StatusReason = string.Empty,
                 StudentId = newStudentId,
                 TeacherId = request.TeacherId,
-                SubscriptionId = subscriptionId
+                SubscriptionId = subscriptionId,
+                IsTrial = true,
             };
 
             var attendanceId = await _attendanceService.AddAttendanceAsync(trialAttendance);

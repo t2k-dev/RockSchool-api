@@ -24,6 +24,7 @@ public class AttendanceDto
     public int RoomId { get; set; }
     public virtual RoomEntity Room { get; set; }
     public string Comment { get; set; }
+    public bool IsTrial { get; set; }
     // DEV: Why it is here?
     public int NumberOfAttendances { get; set; }
 }

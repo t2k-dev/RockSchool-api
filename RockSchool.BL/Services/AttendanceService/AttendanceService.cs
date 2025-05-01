@@ -96,7 +96,8 @@ public class AttendanceService : IAttendanceService
             SubscriptionId = attendanceDto.SubscriptionId,
             StatusReason = attendanceDto.StatusReason,
             DisciplineId = attendanceDto.DisciplineId,
-            IsGroup = attendanceDto.IsGroup
+            IsGroup = attendanceDto.IsGroup,
+            IsTrial = attendanceDto.IsTrial,
         };
     
         var attendanceId = await _attendanceRepository.AddAsync(attendanceEntity);
@@ -124,7 +125,7 @@ public class AttendanceService : IAttendanceService
 
     public async Task UpdateAttendanceAsync(AttendanceDto attendanceDto)
     {
-        var existingEntity = await _attendanceRepository.GetByIdAsync(attendanceDto.StudentId);
+        var existingEntity = await _attendanceRepository.GetAsync(attendanceDto.AttendanceId);
 
         if (existingEntity == null)
             throw new NullReferenceException("StudentEntity not found.");
@@ -163,24 +164,6 @@ public class AttendanceService : IAttendanceService
         }
 
         return newAttendances;
-    }
-
-    private static List<DateTime> GenerateAttendancesDates(ScheduleEntity[] schedules, DateTime startDate, int attendancesToAdd)
-    {
-        var attendancesDates = new List<DateTime>();
-
-        while (attendancesToAdd > 0)
-        {
-            foreach (var scheduleEntity in schedules!)
-            {
-                attendancesDates.Add(ScheduleHelper.GetNextWeekday(startDate, scheduleEntity.WeekDay));
-                attendancesToAdd--;
-            }
-
-            startDate = startDate.AddDays(7);
-        }
-
-        return attendancesDates;
     }
 
     private static void ModifyAttendanceAttributes(AttendanceDto updatedAttendance,

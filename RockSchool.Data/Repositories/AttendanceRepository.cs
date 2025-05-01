@@ -24,8 +24,7 @@ public class AttendanceRepository
 
     public async Task<AttendanceEntity?> GetAsync(Guid attendanceId)
     {
-        return await _rockSchoolContext.Attendances
-            .FirstOrDefaultAsync(a => a.AttendanceId == attendanceId);
+        return await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == attendanceId);
     }
 
     public async Task<AttendanceEntity[]> GetByBranchIdAsync(int branchId)
@@ -37,9 +36,28 @@ public class AttendanceRepository
             .ToArrayAsync();
     }
 
-    public async Task<AttendanceEntity?> GetByIdAsync(Guid id)
+    public async Task<AttendanceEntity[]?> GetAttendancesByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate,
+        AttendanceStatus status)
     {
-        return await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == id);
+        return await _rockSchoolContext.Attendances
+            .Where(a => a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate && a.Status == status)
+            .Include(a => a.Student)
+            .ToArrayAsync();
+    }
+
+    public async Task<AttendanceEntity[]?> GetAttendancesByStudentIdAsync(Guid studentId)
+    {
+        return await _rockSchoolContext.Attendances
+            .Where(a => a.StudentId == studentId)
+            .Include(a => a.Teacher)
+            .ToArrayAsync();
+    }
+
+    public async Task<AttendanceEntity[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
+    {
+        return await _rockSchoolContext.Attendances
+            .Where(a => a.SubscriptionId == subscriptionId)
+            .ToArrayAsync();
     }
 
     public async Task<Guid> AddAsync(AttendanceEntity attendanceEntity)
@@ -69,22 +87,5 @@ public class AttendanceRepository
     {
         await _rockSchoolContext.Attendances.AddRangeAsync(attendances);
         await _rockSchoolContext.SaveChangesAsync();
-    }
-
-    public async Task<AttendanceEntity[]?> GetAttendancesByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate,
-        AttendanceStatus status)
-    {
-        return await _rockSchoolContext.Attendances
-            .Where(a => a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate && a.Status == status)
-            .Include(a => a.Student)
-            .ToArrayAsync();
-    }
-
-    public async Task<AttendanceEntity[]?> GetAttendancesByStudentIdAsync(Guid studentId)
-    {
-        return await _rockSchoolContext.Attendances
-            .Where(a => a.StudentId == studentId)
-            .Include(a => a.Teacher)
-            .ToArrayAsync();
     }
 }

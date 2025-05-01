@@ -7,10 +7,12 @@ namespace RockSchool.BL.Services.SubscriptionService
     public class ReschedulingService : IReschedulingService
     {
         private readonly IAttendanceService _attendanceService;
+        private readonly ISubscriptionService _subscriptionService;
 
-        public ReschedulingService(IAttendanceService attendanceService)
+        public ReschedulingService(IAttendanceService attendanceService, ISubscriptionService subscriptionService)
         {
             _attendanceService = attendanceService;
+            _subscriptionService = subscriptionService;
         }
 
         public async Task<AttendanceDto> RescheduleAttendanceByStudent(Guid attendanceId, DateTime startDate)
@@ -19,22 +21,29 @@ namespace RockSchool.BL.Services.SubscriptionService
             var attendance = await _attendanceService.GetAttendanceAsync(attendanceId);
             attendance.Status = AttendanceStatus.CanceledByStudent;
 
+            var subscription = await _subscriptionService.GetAsync(attendance.SubscriptionId);
+
             await _attendanceService.UpdateAttendanceAsync(attendance);
 
             // Create Attendance
+            var endDate = startDate.AddMinutes(subscription.AttendanceLength == 1 ? 60 : 90);
             var newAttendance = new AttendanceDto
             {
+                Status = AttendanceStatus.New,
+                StartDate = startDate,
+                EndDate = endDate,
+
                 StudentId = attendance.StudentId,
                 TeacherId = attendance.TeacherId,
                 DisciplineId = attendance.DisciplineId,
-                StartDate = startDate,
-                Status = AttendanceStatus.New,
                 SubscriptionId = attendance.SubscriptionId,
+                RoomId = attendance.RoomId,
+                BranchId = attendance.BranchId,
+                IsGroup = attendance.IsGroup,
+                IsTrial = attendance.IsTrial,
             };
 
             await _attendanceService.AddAttendanceAsync(newAttendance);
-
-            // UpdateSubscription
 
             return newAttendance;
         }

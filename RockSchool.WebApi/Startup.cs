@@ -39,6 +39,7 @@ public class Startup
         services.AddScoped<IScheduleService, ScheduleService>();
         services.AddScoped<IStudentService, StudentService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
+        services.AddScoped<IReschedulingService, ReschedulingService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();

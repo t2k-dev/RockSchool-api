@@ -8,10 +8,14 @@ namespace RockSchool.BL.Services.SubscriptionService
     public class SubscriptionService : ISubscriptionService
     {
         private readonly SubscriptionRepository _subscriptionRepository;
+        private readonly ScheduleRepository _scheduleRepository;
+        private readonly AttendanceRepository _attendanceRepository;
 
-        public SubscriptionService(SubscriptionRepository subscriptionRepository)
+        public SubscriptionService(SubscriptionRepository subscriptionRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository)
         {
             _subscriptionRepository = subscriptionRepository;
+            _scheduleRepository = scheduleRepository;
+            _attendanceRepository = attendanceRepository;
         }
 
         public async Task<Guid> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
@@ -36,6 +40,12 @@ namespace RockSchool.BL.Services.SubscriptionService
             return subscriptionEntity.SubscriptionId;
         }
 
+        public async Task<SubscriptionDto> GetAsync(Guid subscriptionId)
+        {
+            var subscription = await _subscriptionRepository.GetAsync(subscriptionId);
+            return subscription.ToDto();
+        }
+
         public async Task<SubscriptionDto[]> GetSubscriptionsByStudentId(Guid studentId)
         {
             var subscriptions = await _subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
@@ -48,11 +58,18 @@ namespace RockSchool.BL.Services.SubscriptionService
             return subscriptions.ToDto();
         }
 
-        public async Task<AttendanceDto> GetNextAvailableSlotAsync(Guid subscriptionId)
+        public async Task<DateTime> GetNextAvailableSlotAsync(Guid subscriptionId)
         {
-            // TODO: complete after dev sync
-            var subscription = _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId);
-            return null;
+            var attendances = await _attendanceRepository.GetAllBySubscriptionIdAsync(subscriptionId);
+            var lastAttendance = attendances.MinBy(a => a.StartDate);
+
+
+            var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
+            var orderedSchedules = schedules.OrderBy(s => s.WeekDay).ToArray();
+            
+            var nextDate = ScheduleHelper.GetNextAttendanceDate(lastAttendance.StartDate, orderedSchedules);
+            
+            return nextDate;
         }
 
         public Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate)

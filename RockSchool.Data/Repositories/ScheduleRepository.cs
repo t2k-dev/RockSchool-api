@@ -4,49 +4,53 @@ using RockSchool.Data.Entities;
 
 namespace RockSchool.Data.Repositories;
 
-public class ScheduleRepository
+public class ScheduleRepository : BaseRepository
 {
-    private readonly RockSchoolContext _rockSchoolContext;
-
-    public ScheduleRepository(RockSchoolContext rockSchoolContext)
+    public ScheduleRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
     {
-        _rockSchoolContext = rockSchoolContext;
     }
 
     public async Task<ScheduleEntity[]> GetAllAsync()
     {
-        return await _rockSchoolContext.Schedules.ToArrayAsync();
+        return await RockSchoolContext.Schedules.ToArrayAsync();
     }
 
     public async Task<ScheduleEntity[]?> GetAllByStudentIdAsync(Guid studentId)
     {
-        return await _rockSchoolContext.Schedules.Where(s => s.Subscription.StudentId == studentId).ToArrayAsync();
+        return await RockSchoolContext.Schedules.Where(s => s.Subscription.StudentId == studentId).ToArrayAsync();
+    }
+
+    public async Task<ScheduleEntity[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
+    {
+        return await RockSchoolContext.Schedules.Where(s => s.SubscriptionId == subscriptionId).ToArrayAsync();
     }
 
     public async Task<ScheduleEntity?> GetByIdAsync(Guid scheduleId)
     {
-        return await _rockSchoolContext.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == scheduleId);
+        return await RockSchoolContext.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == scheduleId);
     }
 
     public async Task AddAsync(ScheduleEntity scheduleEntity)
     {
-        await _rockSchoolContext.Schedules.AddAsync(scheduleEntity);
-        await _rockSchoolContext.SaveChangesAsync();
+        await RockSchoolContext.Schedules.AddAsync(scheduleEntity);
+        await RockSchoolContext.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(ScheduleEntity scheduleEntity)
     {
-        _rockSchoolContext.Schedules.Update(scheduleEntity);
-        await _rockSchoolContext.SaveChangesAsync();
+        RockSchoolContext.Schedules.Update(scheduleEntity);
+        await RockSchoolContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var schedule = await _rockSchoolContext.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == id);
+        var schedule = await RockSchoolContext.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == id);
         if (schedule != null)
         {
-            _rockSchoolContext.Schedules.Remove(schedule);
-            await _rockSchoolContext.SaveChangesAsync();
+            RockSchoolContext.Schedules.Remove(schedule);
+            await RockSchoolContext.SaveChangesAsync();
         }
     }
+
+
 }
