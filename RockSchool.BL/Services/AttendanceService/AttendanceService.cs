@@ -49,25 +49,7 @@ public class AttendanceService : IAttendanceService
     public async Task<AttendanceDto[]> GetByBranchIdAsync(int branchId)
     {
         var attendances = await _attendanceRepository.GetByBranchIdAsync(branchId);
-
-        var attendancesDto = attendances.Select(a => new AttendanceDto
-        {
-            AttendanceId = a.AttendanceId,
-            StudentId = a.StudentId,
-            Student = a.Student.ToDto(),
-            TeacherId = a.TeacherId,
-            Teacher = a.Teacher.ToDto(),
-            StartDate = a.StartDate,
-            Status = a.Status,
-            Branch = a.Branch.ToDto(),
-            RoomId = a.RoomId,
-            Room = a.Room,
-            EndDate = a.EndDate,
-            Comment = a.Comment,
-            DisciplineId = a.DisciplineId,
-        }).ToArray();
-
-        return attendancesDto;
+        return attendances.ToDto();
     }
 
     public async Task AddAttendancesToStudent(AttendanceDto attendanceServiceRequestDto)
@@ -133,6 +115,19 @@ public class AttendanceService : IAttendanceService
         ModifyAttendanceAttributes(attendanceDto, existingEntity);
 
         await _attendanceRepository.UpdateAsync(existingEntity);
+    }
+
+    public async Task UpdateStatusAsync(Guid attendanceId, int status)
+    {
+        // TODO: discuss implementation
+        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
+
+        if (attendanceEntity == null)
+            throw new NullReferenceException("StudentEntity not found.");
+
+        attendanceEntity.Status = (AttendanceStatus)status;
+
+        await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
 
     private static List<AttendanceEntity> GenerateAttendances(AttendanceDto attendanceServiceRequestDto, int attendancesToAdd, ScheduleEntity[] schedules, DateTime startDate)

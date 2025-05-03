@@ -47,7 +47,7 @@ namespace RockSchool.WebApi.Controllers
                     EndDate = attendance.EndDate,
                     Student = attendance.Student,
                     Teacher = attendance.Teacher,
-                    IsTrial = true,
+                    IsTrial = attendance.IsTrial,
                 });
             }
 

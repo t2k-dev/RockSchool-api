@@ -8,6 +8,7 @@ using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers;
 
+[EnableCors("MyPolicy")]
 [Route("api/[controller]")]
 [ApiController]
 public class AttendanceController : Controller
@@ -51,6 +52,14 @@ public class AttendanceController : Controller
 
         await _attendanceService.AddAttendancesToStudent(addAttendanceForStudentServiceDto);
 
+        return Ok();
+    }
+
+    
+    [HttpPost("{id}/updateStatus/{status}")]
+    public async Task<ActionResult> UpdateStatus(Guid id, int status)
+    {
+        await _attendanceService.UpdateStatusAsync(id, status);
         return Ok();
     }
 }
