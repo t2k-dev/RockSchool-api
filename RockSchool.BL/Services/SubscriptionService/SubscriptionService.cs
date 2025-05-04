@@ -1,6 +1,10 @@
-﻿using RockSchool.BL.Dtos;
+﻿using Azure.Core;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
+using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.NoteService;
 using RockSchool.Data.Entities;
+using RockSchool.Data.Enums;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
@@ -10,12 +14,16 @@ namespace RockSchool.BL.Services.SubscriptionService
         private readonly SubscriptionRepository _subscriptionRepository;
         private readonly ScheduleRepository _scheduleRepository;
         private readonly AttendanceRepository _attendanceRepository;
+        private readonly IAttendanceService _attendanceService;
+        private readonly INoteService _noteService;
 
-        public SubscriptionService(SubscriptionRepository subscriptionRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository)
+        public SubscriptionService(SubscriptionRepository subscriptionRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository, IAttendanceService attendanceService, INoteService noteService)
         {
             _subscriptionRepository = subscriptionRepository;
             _scheduleRepository = scheduleRepository;
             _attendanceRepository = attendanceRepository;
+            _attendanceService = attendanceService;
+            _noteService = noteService;
         }
 
         public async Task<Guid> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
@@ -76,6 +84,50 @@ namespace RockSchool.BL.Services.SubscriptionService
         {
             //RescheduleAttendanceByStudent
             return null;
+        }
+
+        public async Task<Guid> AddTrialSubscriptionAsync(TrialRequestDto request)
+        {
+            var subscriptionDto = new SubscriptionDto
+            {
+                DisciplineId = request.DisciplineId,
+                StudentId = request.Student.StudentId,
+                AttendanceCount = 1,
+                AttendanceLength = 1,
+                BranchId = request.BranchId,
+                IsGroup = false,
+                StartDate = request.TrialDate,
+                TrialStatus = (int)TrialStatus.Created,
+                TransactionId = null,
+                Status = (int)SubscriptionStatus.Active,
+                TeacherId = request.TeacherId
+            };
+
+            var subscriptionId = await AddSubscriptionAsync(subscriptionDto);
+
+            var trialAttendance = new AttendanceDto
+            {
+                StartDate = request.TrialDate,
+                EndDate = request.TrialDate.AddHours(1),
+                RoomId = request.RoomId,
+                BranchId = request.BranchId,
+                Comment = string.Empty,
+                DisciplineId = request.DisciplineId,
+                IsGroup = false,
+                NumberOfAttendances = 1,
+                Status = AttendanceStatus.New,
+                StatusReason = string.Empty,
+                StudentId = request.Student.StudentId,
+                TeacherId = request.TeacherId,
+                SubscriptionId = subscriptionId,
+                IsTrial = true,
+            };
+
+            await _attendanceService.AddAttendanceAsync(trialAttendance);
+
+            await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
+
+            return subscriptionId;
         }
     }
 }

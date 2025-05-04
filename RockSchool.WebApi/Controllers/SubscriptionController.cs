@@ -60,47 +60,40 @@ namespace RockSchool.WebApi.Controllers
             };
 
             var newStudentId = await _studentService.AddStudentAsync(studentDto);
-
-            var subscriptionDto = new SubscriptionDto
+            var student = await _studentService.GetByIdAsync(newStudentId);
+            var trialRequest = new TrialRequestDto
             {
-                DisciplineId = request.DisciplineId,
-                StudentId = newStudentId,
-                AttendanceCount = 1,
-                AttendanceLength = 1,
-                BranchId = request.BranchId,
-                IsGroup = false,
-                StartDate = request.TrialDate,
-                TrialStatus = (int)TrialStatus.Created,
-                TransactionId = null,
-                Status = (int)SubscriptionStatus.Active,
-                TeacherId = request.TeacherId
-            };
-
-            var subscriptionId = await _subscriptionService.AddSubscriptionAsync(subscriptionDto);
-
-            var trialAttendance = new AttendanceDto
-            {
-                StartDate = request.TrialDate,
-                EndDate = request.TrialDate.AddHours(1),
                 RoomId = request.RoomId,
                 BranchId = request.BranchId,
-                Comment = string.Empty,
                 DisciplineId = request.DisciplineId,
-                IsGroup = false,
-                NumberOfAttendances = 1,
-                Status = AttendanceStatus.New,
-                StatusReason = string.Empty,
-                StudentId = newStudentId,
                 TeacherId = request.TeacherId,
-                SubscriptionId = subscriptionId,
-                IsTrial = true,
+                TrialDate = request.TrialDate,
+                Student = student,
             };
 
-            var attendanceId = await _attendanceService.AddAttendanceAsync(trialAttendance);
-
-            await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
+            await _subscriptionService.AddTrialSubscriptionAsync(trialRequest);
 
             return Ok(newStudentId);
+        }
+
+        [EnableCors("MyPolicy")]
+        [HttpPost("addTrial2")]
+        public async Task<ActionResult> AddTrial2(AddTrialRequest request)
+        {
+            var student = await _studentService.GetByIdAsync(request.Student.StudentId);
+            var trialRequest = new TrialRequestDto
+            {
+                RoomId = request.RoomId,
+                BranchId = request.BranchId,
+                DisciplineId = request.DisciplineId,
+                TeacherId = request.TeacherId,
+                TrialDate = request.TrialDate,
+                Student = student,
+            };
+
+            await _subscriptionService.AddTrialSubscriptionAsync(trialRequest);
+
+            return Ok(request.Student.StudentId);
         }
 
         [EnableCors("MyPolicy")]
