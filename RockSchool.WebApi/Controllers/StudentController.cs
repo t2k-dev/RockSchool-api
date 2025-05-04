@@ -87,6 +87,7 @@ public class StudentController : Controller
         {
             subscriptionsInfos.Add(new SubscriptionInfo
             {
+                StartDate = subscription.StartDate,
                 SubscriptionId = subscription.SubscriptionId,
                 Status = subscription.Status,
                 IsTrial = true,
