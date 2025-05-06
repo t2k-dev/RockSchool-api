@@ -23,6 +23,7 @@ public class RockSchoolContext : DbContext
     public DbSet<WorkingPeriodEntity> WorkingPeriods { get; set; }
     public DbSet<ScheduledWorkingPeriodEntity> ScheduledWorkingPeriods { get; set; }
     public DbSet<NoteEntity> Notes { get; set; }
+    public DbSet<WaitingScheduleEntity> WaitingSchedules { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

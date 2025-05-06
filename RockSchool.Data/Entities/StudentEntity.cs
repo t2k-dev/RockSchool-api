@@ -8,7 +8,6 @@ public class StudentEntity
 {
     [Key]
     public Guid StudentId { get; set; }
-    
     public virtual UserEntity? User { get; set; }
     public string FirstName { get; set; }
     public string? LastName { get; set; }
@@ -17,4 +16,5 @@ public class StudentEntity
     public long Phone { get; set; }
     public int? Level { get; set; }
     public virtual BranchEntity? Branch { get; set; }
+    public bool IsWaiting { get; set; }
 }
