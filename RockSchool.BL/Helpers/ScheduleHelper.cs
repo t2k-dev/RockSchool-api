@@ -10,9 +10,12 @@ public static class ScheduleHelper
         return start.AddDays(daysToAdd);
     }
 
-    public static DateTime GetNextAttendanceDate(DateTime startingFrom, ScheduleEntity[] orderedSchedules)
+    public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, ScheduleEntity[] schedules)
     {
+        var orderedSchedules = schedules.OrderBy(s => s.WeekDay).ToArray();
         var startingDayOfWeek = (int)startingFrom.DayOfWeek;
+
+        var roomId = 0;
 
         // Get week day for next attendance 
         int? nextAttendanceDay = null;
@@ -21,22 +24,36 @@ public static class ScheduleHelper
             if (schedule.WeekDay > startingDayOfWeek)
             {
                 nextAttendanceDay = schedule.WeekDay;
+                roomId = schedule.RoomId;
                 break;
             }
         }
 
-        nextAttendanceDay ??= orderedSchedules[0].WeekDay;
+        if (nextAttendanceDay == null)
+        {
+            nextAttendanceDay = orderedSchedules[0].WeekDay;
+            roomId = orderedSchedules[0].RoomId;
+        }
 
         // Get the actual date
-        var today = DateTime.Today;
-        var daysUntilNext = (nextAttendanceDay.Value - (int)today.DayOfWeek + 7) % 7;
+        var daysUntilNext = (nextAttendanceDay.Value - (int)startingFrom.DayOfWeek + 7) % 7;
 
         if (daysUntilNext == 0)
         {
             daysUntilNext = 7;
         }
 
-        // Get the target date
-        return today.AddDays(daysUntilNext);
+        return new AvailableSlot
+        {
+            // Get the target date
+            StartDate = startingFrom.AddDays(daysUntilNext),
+            RoomId = roomId,
+        };
+    }
+
+    public class AvailableSlot
+    {
+        public DateTime StartDate { get; set; }
+        public int RoomId { get; set; }
     }
 }

@@ -50,7 +50,7 @@ public class AttendanceController : Controller
             StartDate = dto.StartingDate
         };
 
-        await _attendanceService.AddAttendancesToStudent(addAttendanceForStudentServiceDto);
+        //await _attendanceService.AddAttendancesToStudent(addAttendanceForStudentServiceDto);
 
         return Ok();
     }

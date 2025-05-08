@@ -1,5 +1,6 @@
 ﻿using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
+using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.ScheduleService;
@@ -27,29 +28,24 @@ public class ScheduleService : IScheduleService
             WeekDay = s.WeekDay,
             StartTime = s.StartTime,
             EndTime = s.EndTime,
+            RoomId = s.RoomId,
+
         }).ToArray();
         
         return scheduleDtos;
     }
 
-
-
-    public async Task AddScheduleAsync(ScheduleDto requestDto)
+    public async Task<Guid> AddScheduleAsync(ScheduleDto schedule)
     {
-        // TODO: we need to add discipline here !! FFS
-        // var schedule = new ScheduleEntity
-        // {
-        //     SubscriptionId = requestDto.,
-        //     WeekDay = requestDto.WeekDay,
-        //     StartTime = requestDto.StartTime,
-        //     EndDate = requestDto.EndDate,
-        //     DisciplineId = requestDto.DisciplineId
-        // };
+        var scheduleEntity = new ScheduleEntity
+        {
+            SubscriptionId = schedule.SubscriptionId,
+            WeekDay = schedule.WeekDay,
+            StartTime = schedule.StartTime.ToUniversalTime(),
+            EndTime = schedule.EndTime.ToUniversalTime(),
+            RoomId = schedule.RoomId,
+        };
 
-        // await _scheduleRepository.AddSubscriptionAsync(schedule);
-        // var savedSchedule = await _scheduleRepository.GetByIdAsync(schedule.ScheduleId);
-        //
-        // if (savedSchedule == null)
-        //     throw new InvalidOperationException("Failed to add schedule.");
+        return await _scheduleRepository.AddAsync(scheduleEntity);
     }
 }

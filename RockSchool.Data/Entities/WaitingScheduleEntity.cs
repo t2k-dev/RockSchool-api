@@ -21,6 +21,7 @@ namespace RockSchool.Data.Entities
         [ForeignKey(nameof(TeacherId))]
         public virtual TeacherEntity? Teacher { get; set; }
 
+        public DateTime CreatedOn { get; set; }
 
         public int WeekDay { get; set; }
 

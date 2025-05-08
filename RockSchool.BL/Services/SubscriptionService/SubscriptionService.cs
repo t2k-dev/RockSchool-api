@@ -73,11 +73,10 @@ namespace RockSchool.BL.Services.SubscriptionService
 
 
             var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
-            var orderedSchedules = schedules.OrderBy(s => s.WeekDay).ToArray();
             
-            var nextDate = ScheduleHelper.GetNextAttendanceDate(lastAttendance.StartDate, orderedSchedules);
+            var availableSlot = ScheduleHelper.GetNextAvailableSlot(lastAttendance.StartDate, schedules);
             
-            return nextDate;
+            return availableSlot.StartDate;
         }
 
         public Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate)

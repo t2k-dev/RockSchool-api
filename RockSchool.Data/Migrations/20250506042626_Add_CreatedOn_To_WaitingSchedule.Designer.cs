@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20250506042626_Add_CreatedOn_To_WaitingSchedule")]
+    partial class Add_CreatedOn_To_WaitingSchedule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -403,21 +406,16 @@ namespace RockSchool.Data.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("SubscriptionId")
+                    b.Property<Guid>("SubscriptionId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("WeekDay")
                         .HasColumnType("integer");
 
                     b.HasKey("ScheduleId");
-
-                    b.HasIndex("RoomId");
 
                     b.HasIndex("SubscriptionId");
 
@@ -803,17 +801,11 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.ScheduleEntity", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.RoomEntity", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RockSchool.Data.Entities.SubscriptionEntity", "Subscription")
                         .WithMany()
-                        .HasForeignKey("SubscriptionId");
-
-                    b.Navigation("Room");
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Subscription");
                 });

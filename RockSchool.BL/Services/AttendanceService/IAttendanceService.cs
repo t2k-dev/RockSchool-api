@@ -10,7 +10,7 @@ public interface IAttendanceService
     Task<AttendanceDto[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate);
     Task<AttendanceDto[]?> GetAttendancesByStudentId(Guid studentId);
     Task<AttendanceDto[]> GetByBranchIdAsync(int branchId);
-    Task AddAttendancesToStudent(AttendanceDto attendanceDto);
+    Task AddAttendancesToStudentAsync(SubscriptionDto subscription);
     Task<Guid> AddAttendanceAsync(AttendanceDto attendanceDto);
     Task UpdateAttendanceAsync(AttendanceDto attendanceDto);
     Task UpdateStatusAsync(Guid attendanceId, int status);

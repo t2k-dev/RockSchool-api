@@ -52,15 +52,37 @@ public class AttendanceService : IAttendanceService
         return attendances.ToDto();
     }
 
-    public async Task AddAttendancesToStudent(AttendanceDto attendanceServiceRequestDto)
+    public async Task AddAttendancesToStudentAsync(SubscriptionDto subscription)
     {
-        var schedules = await _scheduleRepository.GetAllByStudentIdAsync(attendanceServiceRequestDto.StudentId);
+        var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscription.SubscriptionId);
+        var startDate = subscription.StartDate;
+        var attendancesToAdd = subscription.AttendanceCount;
 
-        var startDate = attendanceServiceRequestDto.StartDate;
-        var attendancesToAdd = attendanceServiceRequestDto.NumberOfAttendances;
-        var newAttendances = GenerateAttendances(attendanceServiceRequestDto, attendancesToAdd, schedules, startDate);
+        while (attendancesToAdd > 0)
+        {
+            var availableSlot = ScheduleHelper.GetNextAvailableSlot(startDate, schedules);
+            var attendanceBeginDate = availableSlot.StartDate;
 
-        await _attendanceRepository.AddRangeAsync(newAttendances);
+            var newAttendance = new AttendanceDto
+            {
+                Status = AttendanceStatus.New,
+                StudentId = subscription.StudentId,
+                TeacherId = subscription.TeacherId,
+                SubscriptionId = subscription.SubscriptionId,
+                StartDate = attendanceBeginDate.ToUniversalTime(),
+                EndDate = attendanceBeginDate.AddMinutes(subscription.AttendanceLength == 1 ? 60 : 90).ToUniversalTime(),
+                IsTrial = false,
+                BranchId = subscription.BranchId,
+                RoomId = availableSlot.RoomId,
+                DisciplineId = subscription.DisciplineId,
+            };
+
+            await AddAttendanceAsync(newAttendance);
+
+            attendancesToAdd--;
+
+            startDate = attendanceBeginDate;
+        }
     }
 
     public async Task<Guid> AddAttendanceAsync(AttendanceDto attendanceDto)
@@ -128,37 +150,6 @@ public class AttendanceService : IAttendanceService
         attendanceEntity.Status = (AttendanceStatus)status;
 
         await _attendanceRepository.UpdateAsync(attendanceEntity);
-    }
-
-    private static List<AttendanceEntity> GenerateAttendances(AttendanceDto attendanceServiceRequestDto, int attendancesToAdd, ScheduleEntity[] schedules, DateTime startDate)
-    {
-        var newAttendances = new List<AttendanceEntity>();
-
-        while (attendancesToAdd > 0)
-        {
-            foreach (var scheduleEntity in schedules!)
-            {
-                var beginDate = ScheduleHelper.GetNextWeekday(startDate, scheduleEntity.WeekDay);
-
-                var attendance = new AttendanceEntity
-                {
-                    StudentId = attendanceServiceRequestDto.StudentId,
-                    TeacherId = attendanceServiceRequestDto.TeacherId,
-                    Status = AttendanceStatus.New,
-                    // TODO: day of week and time, add logic, discuss logic!!
-                    EndDate = scheduleEntity.EndTime,
-                    StartDate = beginDate
-                };
-
-                newAttendances.Add(attendance);
-
-                attendancesToAdd--;
-            }
-
-            startDate = startDate.AddDays(7);
-        }
-
-        return newAttendances;
     }
 
     private static void ModifyAttendanceAttributes(AttendanceDto updatedAttendance,

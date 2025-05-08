@@ -98,16 +98,16 @@ namespace RockSchool.WebApi.Controllers
 
         [EnableCors("MyPolicy")]
         [HttpPost]
-        public async Task<ActionResult> AddSubscription(AddSubscriptionRequestDto request)
+        public async Task<ActionResult> AddSubscription(AddSubscriptionRequest request)
         {
-            var subscriptionDto = new SubscriptionDto
+            var subscription = new SubscriptionDto
             {
                 TeacherId = request.TeacherId,
                 DisciplineId = request.DisciplineId,
-                StartDate = request.StartDate,
+                StartDate = request.StartDate.ToUniversalTime(),
                 StudentId = request.StudentId,
-                AttendanceCount = 1,
-                AttendanceLength = 1,
+                AttendanceCount = request.AttendanceCount,
+                AttendanceLength = request.AttendanceLength,
                 BranchId = request.BranchId,
                 IsGroup = false,
                 TransactionId = null,
@@ -115,9 +115,16 @@ namespace RockSchool.WebApi.Controllers
                 Status = (int)SubscriptionStatus.Active
             };
 
-            var newSubscriptionId = await _subscriptionService.AddSubscriptionAsync(subscriptionDto);
+            var newSubscriptionId = await _subscriptionService.AddSubscriptionAsync(subscription);
+            subscription.SubscriptionId = newSubscriptionId;
 
-            await _scheduleService.AddScheduleAsync(request.Schedule);
+            foreach (var schedule in request.Schedules)
+            {
+                schedule.SubscriptionId = newSubscriptionId;
+                await _scheduleService.AddScheduleAsync(schedule);
+            }
+
+            await _attendanceService.AddAttendancesToStudentAsync(subscription);
 
             return Ok(newSubscriptionId);
         }
