@@ -40,7 +40,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 StudentId = subscriptionDto.StudentId,
                 TeacherId = subscriptionDto.TeacherId,
                 TransactionId = subscriptionDto.TransactionId,
-                TrialStatus = subscriptionDto.TrialStatus
+                TrialStatus = (int?)subscriptionDto.TrialStatus
             };
 
             await _subscriptionRepository.AddSubscriptionAsync(subscriptionEntity);
@@ -96,7 +96,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 BranchId = request.BranchId,
                 IsGroup = false,
                 StartDate = request.TrialDate,
-                TrialStatus = (int)TrialStatus.Created,
+                TrialStatus = TrialStatus.Created,
                 TransactionId = null,
                 Status = (int)SubscriptionStatus.Active,
                 TeacherId = request.TeacherId

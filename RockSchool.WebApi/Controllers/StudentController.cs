@@ -90,7 +90,7 @@ public class StudentController : Controller
                 StartDate = subscription.StartDate,
                 SubscriptionId = subscription.SubscriptionId,
                 Status = subscription.Status,
-                IsTrial = true,
+                TrialStatus = subscription.TrialStatus,
                 DisciplineId = subscription.DisciplineId,
                 Teacher = subscription.Teacher,
                 AttendanceCount = subscription.AttendanceCount,

@@ -1,5 +1,6 @@
 ﻿using RockSchool.BL.Dtos;
 using RockSchool.Data.Entities;
+using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Helpers
 {
@@ -149,7 +150,7 @@ namespace RockSchool.BL.Helpers
                 Teacher = entity.Teacher?.ToDto(),
                 BranchId = entity.BranchId,
                 Branch = entity.Branch?.ToDto(),
-                TrialStatus = entity.TrialStatus
+                TrialStatus = (TrialStatus?)entity.TrialStatus
             };
         }
 

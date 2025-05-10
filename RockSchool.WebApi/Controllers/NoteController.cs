@@ -22,6 +22,8 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(AddNoteDto addNoteDto)
         {
+            var dt = addNoteDto.CompleteDate.Value.ToUniversalTime();
+
             await _noteService.AddNoteAsync(addNoteDto.BranchId, addNoteDto.Description, addNoteDto.CompleteDate.Value.ToUniversalTime());
             return Ok();
         }

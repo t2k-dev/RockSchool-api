@@ -4,51 +4,50 @@ namespace RockSchool.BL.Helpers;
 
 public static class ScheduleHelper
 {
-    public static DateTime GetNextWeekday(DateTime start, int day)
-    {
-        var daysToAdd = (day - (int)start.DayOfWeek + 7) % 7;
-        return start.AddDays(daysToAdd);
-    }
-
     public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, ScheduleEntity[] schedules)
     {
+        // TODO: remove ordering from here
         var orderedSchedules = schedules.OrderBy(s => s.WeekDay).ToArray();
-        var startingDayOfWeek = (int)startingFrom.DayOfWeek;
-
-        var roomId = 0;
 
         // Get week day for next attendance 
-        int? nextAttendanceDay = null;
+
+        var schedule = GetCorrespondingSchedule(startingFrom, orderedSchedules);
+        var date = GetNextDate(startingFrom, schedule);
+
+        var startDate = new DateTime(date.Year, date.Month, date.Day, schedule.StartTime.Hour, schedule.StartTime.Minute, 0);
+        startDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+        //var startDate = new DateTimeOffset(year, month, day, schedule.StartTime.Hour, schedule.StartTime.Minute, 0, TimeSpan.Zero);
+
+        return new AvailableSlot
+        {
+            StartDate = startDate,
+            RoomId = schedule.RoomId,
+        };
+    }
+
+    private static ScheduleEntity GetCorrespondingSchedule(DateTime startingFrom, ScheduleEntity[]  orderedSchedules)
+    {
         foreach (var schedule in orderedSchedules)
         {
-            if (schedule.WeekDay > startingDayOfWeek)
+            if (schedule.WeekDay > (int)startingFrom.DayOfWeek)
             {
-                nextAttendanceDay = schedule.WeekDay;
-                roomId = schedule.RoomId;
-                break;
+                return schedule;
             }
         }
 
-        if (nextAttendanceDay == null)
-        {
-            nextAttendanceDay = orderedSchedules[0].WeekDay;
-            roomId = orderedSchedules[0].RoomId;
-        }
+        return orderedSchedules[0];
+    }
 
-        // Get the actual date
-        var daysUntilNext = (nextAttendanceDay.Value - (int)startingFrom.DayOfWeek + 7) % 7;
+    private static DateTime GetNextDate(DateTime startingFrom, ScheduleEntity schedule)
+    {
+        var daysUntilNext = (schedule.WeekDay - (int)startingFrom.DayOfWeek + 7) % 7;
 
         if (daysUntilNext == 0)
         {
             daysUntilNext = 7;
         }
 
-        return new AvailableSlot
-        {
-            // Get the target date
-            StartDate = startingFrom.AddDays(daysUntilNext),
-            RoomId = roomId,
-        };
+        return startingFrom.AddDays(daysUntilNext);
     }
 
     public class AvailableSlot

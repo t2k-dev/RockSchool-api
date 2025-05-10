@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Dtos
 {
@@ -41,6 +42,6 @@ namespace RockSchool.BL.Dtos
 
         public virtual BranchDto Branch { get; set; }
 
-        public int? TrialStatus { get; set; }
+        public TrialStatus? TrialStatus { get; set; }
     }
 }

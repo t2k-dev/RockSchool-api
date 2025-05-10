@@ -1,4 +1,5 @@
 ﻿using System;
+using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models.Teachers;
 
 namespace RockSchool.WebApi.Models
@@ -23,5 +24,7 @@ namespace RockSchool.WebApi.Models
         public int Status { get; set; }
 
         public int? AttendanceCount { get; set; }
+
+        public TrialStatus? TrialStatus { get; set; }
     }
 }
