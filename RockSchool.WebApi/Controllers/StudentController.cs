@@ -75,6 +75,8 @@ public class StudentController : Controller
                 EndDate = attendance.EndDate,
                 Status = (int)attendance.Status,
                 Teacher = attendance.Teacher,
+                StudentId = attendance.StudentId,
+                Student = attendance.Student,
                 IsTrial = attendance.IsTrial,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,

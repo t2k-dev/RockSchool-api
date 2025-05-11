@@ -173,7 +173,7 @@ namespace RockSchool.WebApi.Controllers
             };
 
             //tmp:
-            attendanceInfos.AddRange(fakeAttendanceInfos);
+            //attendanceInfos.AddRange(fakeAttendanceInfos);
 
             var result = new HomeScreenDetails
             {
