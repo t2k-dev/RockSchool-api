@@ -23,6 +23,8 @@ public class SubscriptionEntity
 
     public int Status { get; set; }
 
+    public string? StatusReason { get; set; }
+
     public int DisciplineId { get; set; }
 
     [ForeignKey(nameof(DisciplineId))]

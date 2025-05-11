@@ -5,6 +5,7 @@ namespace RockSchool.WebApi.Models
     public class AttendanceInfo
     {
         public Guid AttendanceId { get; set; }
+        public Guid SubscriptionId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int Status { get; set; }

@@ -40,7 +40,9 @@ namespace RockSchool.BL.Services.SubscriptionService
                 StudentId = subscriptionDto.StudentId,
                 TeacherId = subscriptionDto.TeacherId,
                 TransactionId = subscriptionDto.TransactionId,
-                TrialStatus = (int?)subscriptionDto.TrialStatus
+                TrialStatus = (int?)subscriptionDto.TrialStatus,
+                StatusReason = subscriptionDto.StatusReason,
+                
             };
 
             await _subscriptionRepository.AddSubscriptionAsync(subscriptionEntity);
@@ -66,17 +68,26 @@ namespace RockSchool.BL.Services.SubscriptionService
             return subscriptions.ToDto();
         }
 
-        public async Task<DateTime> GetNextAvailableSlotAsync(Guid subscriptionId)
+        public async Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId)
         {
             var attendances = await _attendanceRepository.GetAllBySubscriptionIdAsync(subscriptionId);
             var lastAttendance = attendances.MinBy(a => a.StartDate);
-
 
             var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
             
             var availableSlot = ScheduleHelper.GetNextAvailableSlot(lastAttendance.StartDate, schedules);
             
-            return availableSlot.StartDate;
+            return availableSlot;
+        }
+
+        public async Task DeclineTrialSubscription(Guid subscriptionId, string statusReason)
+        {
+            var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
+            subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
+            subscriptionEntity.TrialStatus = (int)TrialStatus.Negative;
+            subscriptionEntity.StatusReason = statusReason;
+
+            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
 
         public Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate)

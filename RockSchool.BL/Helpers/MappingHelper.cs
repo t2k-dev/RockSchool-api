@@ -143,6 +143,7 @@ namespace RockSchool.BL.Helpers
                 AttendanceLength = entity.AttendanceLength,
                 StartDate = entity.StartDate,
                 Status = entity.Status,
+                StatusReason = entity.StatusReason,
                 DisciplineId = entity.DisciplineId,
                 Discipline = entity.Discipline?.ToDto(),
                 TransactionId = entity.TransactionId,

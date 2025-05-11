@@ -43,5 +43,7 @@ namespace RockSchool.BL.Dtos
         public virtual BranchDto Branch { get; set; }
 
         public TrialStatus? TrialStatus { get; set; }
+
+        public string? StatusReason { get; set; }
     }
 }

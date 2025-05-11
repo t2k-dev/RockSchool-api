@@ -41,8 +41,8 @@ namespace RockSchool.WebApi.Controllers
         [HttpGet("{id}/getNextAvailableSlot")]
         public async Task<ActionResult> GetNextAvailableSlot(Guid id)
         {
-            var nextAttendanceDate = await _subscriptionService.GetNextAvailableSlotAsync(id);
-            return Ok(nextAttendanceDate);
+            var availableSlot = await _subscriptionService.GetNextAvailableSlotAsync(id);
+            return Ok(availableSlot);
         }
 
         [EnableCors("MyPolicy")]
@@ -112,7 +112,8 @@ namespace RockSchool.WebApi.Controllers
                 IsGroup = false,
                 TransactionId = null,
                 TrialStatus = null,
-                Status = (int)SubscriptionStatus.Active
+                Status = (int)SubscriptionStatus.Active,
+                StatusReason = null,
             };
 
             var newSubscriptionId = await _subscriptionService.AddSubscriptionAsync(subscription);

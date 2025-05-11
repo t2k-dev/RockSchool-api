@@ -40,6 +40,7 @@ namespace RockSchool.WebApi.Controllers
                 attendanceInfos.Add(new AttendanceInfo
                 {
                     AttendanceId = attendance.AttendanceId,
+                    SubscriptionId = attendance.SubscriptionId,
                     Status = (int)attendance.Status,
                     DisciplineId = attendance.DisciplineId,
                     RoomId = attendance.RoomId,

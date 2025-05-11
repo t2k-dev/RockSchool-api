@@ -1,4 +1,5 @@
-﻿using RockSchool.Data.Entities;
+﻿using RockSchool.BL.Dtos;
+using RockSchool.Data.Entities;
 
 namespace RockSchool.BL.Helpers;
 
@@ -16,7 +17,6 @@ public static class ScheduleHelper
 
         var startDate = new DateTime(date.Year, date.Month, date.Day, schedule.StartTime.Hour, schedule.StartTime.Minute, 0);
         startDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
-        //var startDate = new DateTimeOffset(year, month, day, schedule.StartTime.Hour, schedule.StartTime.Minute, 0, TimeSpan.Zero);
 
         return new AvailableSlot
         {
@@ -48,11 +48,5 @@ public static class ScheduleHelper
         }
 
         return startingFrom.AddDays(daysUntilNext);
-    }
-
-    public class AvailableSlot
-    {
-        public DateTime StartDate { get; set; }
-        public int RoomId { get; set; }
     }
 }

@@ -157,6 +157,7 @@ public class TeacherController : Controller
                 Student = subscription.Student,
                 Status = subscription.Status,
                 DisciplineId = subscription.DisciplineId,
+                TrialStatus = subscription.TrialStatus,
                 IsTrial = true,
             });
         }

@@ -80,6 +80,7 @@ public class StudentController : Controller
                 IsTrial = attendance.IsTrial,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,
+                SubscriptionId = attendance.SubscriptionId,
             });
         }
 
