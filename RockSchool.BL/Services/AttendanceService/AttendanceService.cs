@@ -113,8 +113,7 @@ public class AttendanceService : IAttendanceService
         var attendanceEntities = await _attendanceRepository.GetAttendancesByTeacherIdForPeriodOfTimeAsync(
             teacherId,
             DateTime.UtcNow.AddMonths(-1),
-            DateTime.UtcNow.AddMonths(1),
-            AttendanceStatus.New
+            DateTime.UtcNow.AddMonths(1)
         );
 
         return attendanceEntities?.ToDto();

@@ -141,7 +141,7 @@ public class TeacherController : Controller
                 EndDate = attendance.EndDate,
                 Status = (int)attendance.Status,
                 Student = attendance.Student,
-                IsTrial = true,
+                IsTrial = attendance.IsTrial,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,
             });
@@ -153,12 +153,13 @@ public class TeacherController : Controller
         {
             subscriptionInfos.Add(new SubscriptionInfo
             {
+                SubscriptionId = subscription.SubscriptionId,
                 StartDate = subscription.StartDate,
                 Student = subscription.Student,
                 Status = subscription.Status,
                 DisciplineId = subscription.DisciplineId,
                 TrialStatus = subscription.TrialStatus,
-                IsTrial = true,
+                AttendanceCount = subscription.AttendanceCount,
             });
         }
 

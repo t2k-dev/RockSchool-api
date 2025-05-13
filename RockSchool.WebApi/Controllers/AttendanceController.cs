@@ -70,6 +70,17 @@ public class AttendanceController : Controller
         return Ok();
     }
 
+    [HttpPost("{id}/acceptTrial")]
+    public async Task<ActionResult> AcceptTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    {
+        var attendance = await _attendanceService.GetAttendanceAsync(id);
+        await _attendanceService.UpdateStatusAsync(id, (int)AttendanceStatus.Attended);
+
+        await _subscriptionService.AcceptTrialSubscription(attendance.SubscriptionId, declineAttendanceRequest.StatusReason);
+
+        return Ok();
+    }
+
     [HttpPost("{id}/updateStatus/{status}")]
     public async Task<ActionResult> UpdateStatus(Guid id, int status)
     {

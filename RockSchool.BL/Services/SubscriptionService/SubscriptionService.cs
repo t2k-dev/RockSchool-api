@@ -90,6 +90,16 @@ namespace RockSchool.BL.Services.SubscriptionService
             await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
 
+        public async Task AcceptTrialSubscription(Guid subscriptionId, string statusReason)
+        {
+            var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
+            subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
+            subscriptionEntity.TrialStatus = (int)TrialStatus.Positive;
+            subscriptionEntity.StatusReason = statusReason;
+
+            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+        }
+
         public Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate)
         {
             //RescheduleAttendanceByStudent
