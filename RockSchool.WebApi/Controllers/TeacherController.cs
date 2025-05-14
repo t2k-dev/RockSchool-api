@@ -16,6 +16,7 @@ using RockSchool.WebApi.Models.Teachers;
 
 namespace RockSchool.WebApi.Controllers;
 
+[EnableCors("MyPolicy")]
 [Route("api/[controller]")]
 [ApiController]
 public class TeacherController : Controller
@@ -36,7 +37,6 @@ public class TeacherController : Controller
         _teacherService = teacherService;
     }
 
-    [EnableCors("MyPolicy")]
     [HttpPost]
     public async Task<ActionResult> AddTeacher([FromBody] RegisterTeacherRequestDto requestDto)
     {
@@ -57,12 +57,11 @@ public class TeacherController : Controller
             AgeLimit = requestDto.Teacher.AgeLimit
         };
 
-        await _teacherService.AddTeacher(newTeacher);
+        var teacherId = await _teacherService.AddTeacher(newTeacher);
 
-        return Ok();
+        return Ok(teacherId);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(Guid id, [FromBody] TeacherFormDto model)
     {
@@ -87,7 +86,6 @@ public class TeacherController : Controller
         return Ok();
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
@@ -111,7 +109,6 @@ public class TeacherController : Controller
         return Ok(result);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet]
     public async Task<ActionResult> Get()
     {
@@ -122,7 +119,6 @@ public class TeacherController : Controller
         return Ok(teachers);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet("getTeacherScreenDetails/{id}")]
     public async Task<ActionResult> GetTeacherScreenDetails(Guid id)
     {
@@ -182,7 +178,6 @@ public class TeacherController : Controller
         return Ok(teacherScreenDetails);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet("getAvailableTeachers")]
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
@@ -203,7 +198,6 @@ public class TeacherController : Controller
         return Ok(response);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet("{id}/workingPeriods")]
     public async Task<ActionResult> GetTeacherWorkingPeriods(Guid id)
     {

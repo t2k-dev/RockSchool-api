@@ -19,7 +19,7 @@ public class TeacherService : ITeacherService
         _scheduledWorkingPeriodsRepository = scheduledWorkingPeriodsRepository;
     }
 
-    public async Task AddTeacher(TeacherDto addTeacherDto)
+    public async Task<Guid> AddTeacher(TeacherDto addTeacherDto)
     {
         var disciplineEntities = new List<DisciplineEntity>();
         if (addTeacherDto.DisciplineIds != null)
@@ -69,6 +69,8 @@ public class TeacherService : ITeacherService
 
         if (savedTeacher == null)
             throw new InvalidOperationException("Failed to add teacher.");
+
+        return savedTeacher.TeacherId;
     }
 
     private List<ScheduledWorkingPeriodEntity> BuildScheduledWorkingPeriods(Guid teacherId, List<WorkingPeriodEntity> workingPeriodEntities)
