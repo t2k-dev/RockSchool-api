@@ -63,7 +63,10 @@ public class AttendanceController : Controller
     public async Task<ActionResult> DeclineTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
     {
         var attendance = await _attendanceService.GetAttendanceAsync(id);
-        await _attendanceService.UpdateStatusAsync(id, (int)AttendanceStatus.Attended);
+        attendance.Status = AttendanceStatus.Attended;
+        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+
+        await _attendanceService.UpdateAttendanceAsync(attendance);
 
         await _subscriptionService.DeclineTrialSubscription(attendance.SubscriptionId, declineAttendanceRequest.StatusReason);
 
@@ -74,9 +77,36 @@ public class AttendanceController : Controller
     public async Task<ActionResult> AcceptTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
     {
         var attendance = await _attendanceService.GetAttendanceAsync(id);
-        await _attendanceService.UpdateStatusAsync(id, (int)AttendanceStatus.Attended);
+        attendance.Status = AttendanceStatus.Attended;
+        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+
+        await _attendanceService.UpdateAttendanceAsync(attendance);
 
         await _subscriptionService.AcceptTrialSubscription(attendance.SubscriptionId, declineAttendanceRequest.StatusReason);
+
+        return Ok();
+    }
+
+    [HttpPost("{id}/attend")]
+    public async Task<ActionResult> Attend(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    {
+        var attendance = await _attendanceService.GetAttendanceAsync(id);
+        attendance.Status = AttendanceStatus.Attended;
+        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+
+        await _attendanceService.UpdateAttendanceAsync(attendance);
+
+        return Ok();
+    }
+
+    [HttpPost("{id}/missed")]
+    public async Task<ActionResult> Missed(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    {
+        var attendance = await _attendanceService.GetAttendanceAsync(id);
+        attendance.Status = AttendanceStatus.Missed;
+        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+
+        await _attendanceService.UpdateAttendanceAsync(attendance);
 
         return Ok();
     }

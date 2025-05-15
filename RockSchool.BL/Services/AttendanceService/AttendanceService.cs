@@ -157,5 +157,8 @@ public class AttendanceService : IAttendanceService
 
         if (updatedAttendance.Status != default)
             existingEntity.Status = updatedAttendance.Status;
+        
+        if (updatedAttendance.StatusReason != default)
+            existingEntity.StatusReason = updatedAttendance.StatusReason;
     }
 }

@@ -9,6 +9,7 @@ namespace RockSchool.WebApi.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int Status { get; set; }
+        public string StatusReason { get; set; }
         public int RoomId { get; set; }
         public int DisciplineId { get; set; }
         public Guid StudentId { get; set; }
