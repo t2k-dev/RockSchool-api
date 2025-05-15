@@ -14,6 +14,7 @@ using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
+    [EnableCors("MyPolicy")]
     [ApiController]
     [Route("api/[controller]")]
     public class SubscriptionController : Controller
@@ -37,7 +38,6 @@ namespace RockSchool.WebApi.Controllers
             _reschedulingService = reschedulingService;
         }
 
-        [EnableCors("MyPolicy")]
         [HttpGet("{id}/getNextAvailableSlot")]
         public async Task<ActionResult> GetNextAvailableSlot(Guid id)
         {
@@ -45,40 +45,8 @@ namespace RockSchool.WebApi.Controllers
             return Ok(availableSlot);
         }
 
-        [EnableCors("MyPolicy")]
         [HttpPost("addTrial")]
         public async Task<ActionResult> AddTrial(AddTrialRequest request)
-        {
-            var studentDto = new StudentDto
-            {
-                FirstName = request.Student.FirstName,
-                LastName = request.Student.LastName,
-                BirthDate = DateTime.Now.AddDays(-20).ToUniversalTime(),
-                Phone = request.Student.Phone.Value,
-                BranchId = request.BranchId,
-                Level = request.Student.Level,
-            };
-
-            var newStudentId = await _studentService.AddStudentAsync(studentDto);
-            var student = await _studentService.GetByIdAsync(newStudentId);
-            var trialRequest = new TrialRequestDto
-            {
-                RoomId = request.RoomId,
-                BranchId = request.BranchId,
-                DisciplineId = request.DisciplineId,
-                TeacherId = request.TeacherId,
-                TrialDate = request.TrialDate,
-                Student = student,
-            };
-
-            await _subscriptionService.AddTrialSubscriptionAsync(trialRequest);
-
-            return Ok(newStudentId);
-        }
-
-        [EnableCors("MyPolicy")]
-        [HttpPost("addTrial2")]
-        public async Task<ActionResult> AddTrial2(AddTrialRequest request)
         {
             var student = await _studentService.GetByIdAsync(request.Student.StudentId);
             var trialRequest = new TrialRequestDto
@@ -96,7 +64,6 @@ namespace RockSchool.WebApi.Controllers
             return Ok(request.Student.StudentId);
         }
 
-        [EnableCors("MyPolicy")]
         [HttpPost]
         public async Task<ActionResult> AddSubscription(AddSubscriptionRequest request)
         {
@@ -130,7 +97,6 @@ namespace RockSchool.WebApi.Controllers
             return Ok(newSubscriptionId);
         }
 
-        [EnableCors("MyPolicy")]
         [HttpPost("rescheduleAttendance")]
         public async Task<ActionResult> RescheduleAttendance(RescheduleAttendanceRequestDto request)
         {
@@ -138,6 +104,5 @@ namespace RockSchool.WebApi.Controllers
 
             return Ok(attendance);
         }
-
     }
 }
