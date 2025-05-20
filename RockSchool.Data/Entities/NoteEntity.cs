@@ -13,4 +13,5 @@ public class NoteEntity
     public NoteStatus Status { get; set; }
     public DateTime? CompleteDate { get; set; }
     public DateTime? ActualCompleteDate { get; set; }
+    public string? Comment { get; set; }
 }

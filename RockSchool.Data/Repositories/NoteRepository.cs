@@ -15,7 +15,7 @@ namespace RockSchool.Data.Repositories
             return await RockSchoolContext.Notes.Where(n => n.Branch.BranchId == branchId).ToArrayAsync();
         }
 
-        public async Task<NoteEntity?> GetNote(Guid noteId)
+        public async Task<NoteEntity?> GetByIdAsync(Guid noteId)
         {
             return await RockSchoolContext.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId);
         }

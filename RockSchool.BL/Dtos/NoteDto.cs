@@ -2,7 +2,7 @@
 
 namespace RockSchool.BL.Dtos
 {
-    public class NoteDto
+    public class Note
     {
         public Guid NoteId { get; set; }
         public int? BranchId { get; set; }
@@ -10,5 +10,6 @@ namespace RockSchool.BL.Dtos
         public NoteStatus Status { get; set; }
         public DateTime? CompleteDate { get; set; }
         public DateTime? ActualCompleteDate { get; set; }
+        public string? Comment { get; set; }
     }
 }

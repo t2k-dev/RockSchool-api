@@ -14,10 +14,10 @@ namespace RockSchool.BL.Services.NoteService
             _noteRepository = noteRepository;
         }
 
-        public async Task<NoteDto[]?> GetNotesAsync(int branchId)
+        public async Task<Note[]?> GetNotesAsync(int branchId)
         {
             var notes = await _noteRepository.GetNotes(branchId);
-            var noteDtos = notes.Select(n => new NoteDto
+            var noteDtos = notes.Select(n => new Note
                 {
                     NoteId = n.NoteId,
                     Description = n.Description,
@@ -44,13 +44,44 @@ namespace RockSchool.BL.Services.NoteService
             return await _noteRepository.AddNote(note);
         }
 
+        public async Task UpdateNoteAsync(Note note)
+        {
+            var existingEntity = await _noteRepository.GetByIdAsync(note.NoteId);
+
+            if (existingEntity == null)
+                throw new KeyNotFoundException(
+                    $"TeacherEntity with ID {note.NoteId} was not found.");
+
+            ModifyNoteAttributes(note, existingEntity);
+
+            await _noteRepository.UpdateAsync(existingEntity);
+        }
+
         public async Task MarkComplete(Guid noteId)
         {
-            var note = await _noteRepository.GetNote(noteId);
+            var note = await _noteRepository.GetByIdAsync(noteId);
             note.Status = NoteStatus.Completed;
             note.ActualCompleteDate = DateTime.Now.ToUniversalTime();
 
             await _noteRepository.UpdateAsync(note);
+        }
+
+        private static void ModifyNoteAttributes(Note updatedNote, NoteEntity existingEntity)
+        {
+            if (updatedNote.Status != default)
+                existingEntity.Status = updatedNote.Status;
+
+            if (updatedNote.Description!= default)
+                existingEntity.Description = updatedNote.Description;
+
+            if (updatedNote.Comment != default)
+                existingEntity.Comment = updatedNote.Comment;
+
+            if (updatedNote.CompleteDate != default)
+                existingEntity.CompleteDate = updatedNote.CompleteDate;
+
+            if (updatedNote.ActualCompleteDate != default)
+                existingEntity.ActualCompleteDate = updatedNote.ActualCompleteDate;
         }
     }
 }
