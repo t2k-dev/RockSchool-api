@@ -71,7 +71,7 @@ namespace RockSchool.BL.Services.SubscriptionService
         public async Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId)
         {
             var attendances = await _attendanceRepository.GetAllBySubscriptionIdAsync(subscriptionId);
-            var lastAttendance = attendances.MinBy(a => a.StartDate);
+            var lastAttendance = attendances.MaxBy(a => a.StartDate);
 
             var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
             
