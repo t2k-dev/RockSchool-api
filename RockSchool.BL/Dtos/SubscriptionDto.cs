@@ -14,7 +14,7 @@ namespace RockSchool.BL.Dtos
     {
         public Guid SubscriptionId { get; set; }
 
-        public bool IsGroup { get; set; }
+        public Guid? GroupId { get; set; }
 
         public Guid StudentId { get; set; }
 

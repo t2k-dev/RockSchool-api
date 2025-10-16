@@ -39,7 +39,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 SubscriptionId = attendance.SubscriptionId,
                 RoomId = attendance.RoomId,
                 BranchId = attendance.BranchId,
-                IsGroup = attendance.IsGroup,
+                GroupId = attendance.GroupId,
                 IsTrial = attendance.IsTrial,
             };
 

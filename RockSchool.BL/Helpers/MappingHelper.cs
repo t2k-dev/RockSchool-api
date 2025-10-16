@@ -60,7 +60,7 @@ namespace RockSchool.BL.Helpers
                 StatusReason = entity.StatusReason,
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
-                IsGroup = entity.IsGroup,
+                GroupId = entity.GroupId,
                 RoomId = entity.RoomId,
                 BranchId = entity.BranchId,
                 Room = entity.Room,
@@ -136,7 +136,7 @@ namespace RockSchool.BL.Helpers
             return new SubscriptionDto
             {
                 SubscriptionId = entity.SubscriptionId,
-                IsGroup = entity.IsGroup,
+                GroupId = entity.GroupId,
                 StudentId = entity.StudentId,
                 Student = entity.Student?.ToDto(),
                 AttendanceCount = entity.AttendanceCount,

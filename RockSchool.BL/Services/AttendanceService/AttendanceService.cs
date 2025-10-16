@@ -100,7 +100,7 @@ public class AttendanceService : IAttendanceService
             SubscriptionId = attendanceDto.SubscriptionId,
             StatusReason = attendanceDto.StatusReason,
             DisciplineId = attendanceDto.DisciplineId,
-            IsGroup = attendanceDto.IsGroup,
+            GroupId = attendanceDto.GroupId,
             IsTrial = attendanceDto.IsTrial,
         };
     

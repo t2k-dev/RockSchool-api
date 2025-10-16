@@ -18,7 +18,7 @@ public class AttendanceDto
     public string StatusReason { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public bool IsGroup { get; set; }
+    public Guid? GroupId { get; set; }
     public int BranchId { get; set; }
     public virtual BranchDto Branch { get; set; }
     public int RoomId { get; set; }

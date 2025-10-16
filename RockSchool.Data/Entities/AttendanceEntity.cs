@@ -37,7 +37,7 @@ public class AttendanceEntity
 
     public DateTime EndDate { get; set; }
 
-    public bool IsGroup { get; set; }
+    public Guid? GroupId { get; set; }
     
     [ForeignKey(nameof(BranchId))]
     public virtual BranchEntity Branch { get; set; }

@@ -38,6 +38,19 @@ namespace RockSchool.WebApi.Controllers
             _reschedulingService = reschedulingService;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult> Get(Guid id)
+        {
+            var subscription = await _subscriptionService.GetAsync(id);
+
+            if (subscription == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(subscription);
+        }
+
         [HttpGet("{id}/getNextAvailableSlot")]
         public async Task<ActionResult> GetNextAvailableSlot(Guid id)
         {
@@ -76,7 +89,7 @@ namespace RockSchool.WebApi.Controllers
                 AttendanceCount = request.AttendanceCount,
                 AttendanceLength = request.AttendanceLength,
                 BranchId = request.BranchId,
-                IsGroup = false,
+                GroupId = null,
                 TransactionId = null,
                 TrialStatus = null,
                 Status = (int)SubscriptionStatus.Active,
