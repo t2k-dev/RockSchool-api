@@ -14,6 +14,24 @@ public class ScheduleService : IScheduleService
         _scheduleRepository = scheduleRepository;
     }
 
+    public async Task<ScheduleDto[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
+    {
+        var scheduleEntities = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
+
+        var schedules = scheduleEntities.Select(s => new ScheduleDto
+        {
+            ScheduleId = s.ScheduleId,
+            Subscription = s.Subscription.ToDto(),
+            WeekDay = s.WeekDay,
+            StartTime = s.StartTime,
+            EndTime = s.EndTime,
+            RoomId = s.RoomId,
+
+        }).ToArray();
+
+        return schedules;
+    }
+
     public async Task<ScheduleDto[]?> GetAllSchedulesAsync()
     {
         var schedules = await _scheduleRepository.GetAllAsync();

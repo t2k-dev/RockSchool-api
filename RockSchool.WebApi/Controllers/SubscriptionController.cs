@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
@@ -48,7 +50,33 @@ namespace RockSchool.WebApi.Controllers
                 return NotFound();
             }
 
-            return Ok(subscription);
+            var schedules = await _scheduleService.GetAllBySubscriptionIdAsync(id);
+            var scheduleInfos = schedules?.Select(schedule => new ScheduleInfo
+                {
+                    ScheduleId = schedule.ScheduleId,
+                    SubscriptionId = schedule.SubscriptionId,
+                    RoomId = schedule.RoomId,
+                    WeekDay = schedule.WeekDay,
+                    StartTime = schedule.StartTime.ToString("HH:mm"),
+                    EndTime = schedule.EndTime.ToString("HH:mm"),
+                })
+                .ToArray();
+
+            var response = new SubscriptionInfo
+            {
+                SubscriptionId = subscription.SubscriptionId,
+                AttendanceCount = subscription.AttendanceCount,
+                AttendanceLength = subscription.AttendanceLength,
+                DisciplineId = subscription.DisciplineId,
+                Status = subscription.Status,
+                StartDate = subscription.StartDate,
+                //IsTrial = 
+                StudentId = subscription.StudentId,
+                TeacherId = subscription.TeacherId,
+                Schedules = scheduleInfos,
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id}/getNextAvailableSlot")]

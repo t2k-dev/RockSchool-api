@@ -12,6 +12,7 @@ using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Factories;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
 
 namespace RockSchool.WebApi.Controllers;
@@ -93,6 +94,7 @@ public class TeacherController : Controller
 
         var result = new TeacherInfo
         {
+            TeacherId = teacher.TeacherId,
             Email = teacher.User?.Login,
             FirstName = teacher.FirstName,
             LastName = teacher.LastName,

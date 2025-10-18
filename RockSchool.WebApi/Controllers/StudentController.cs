@@ -8,9 +8,9 @@ using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
-using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
+using RockSchool.WebApi.Models.Subscriptions;
 
 namespace RockSchool.WebApi.Controllers;
 
