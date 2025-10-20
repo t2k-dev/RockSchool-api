@@ -3,6 +3,7 @@ using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
+using RockSchool.BL.Services.ScheduleService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
 using RockSchool.Data.Repositories;
@@ -15,15 +16,17 @@ namespace RockSchool.BL.Services.SubscriptionService
         private readonly ScheduleRepository _scheduleRepository;
         private readonly AttendanceRepository _attendanceRepository;
         private readonly IAttendanceService _attendanceService;
+        private readonly IScheduleService _scheduleService;
         private readonly INoteService _noteService;
 
-        public SubscriptionService(SubscriptionRepository subscriptionRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository, IAttendanceService attendanceService, INoteService noteService)
+        public SubscriptionService(SubscriptionRepository subscriptionRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository, IAttendanceService attendanceService, INoteService noteService, IScheduleService scheduleService)
         {
             _subscriptionRepository = subscriptionRepository;
             _scheduleRepository = scheduleRepository;
             _attendanceRepository = attendanceRepository;
             _attendanceService = attendanceService;
             _noteService = noteService;
+            _scheduleService = scheduleService;
         }
 
         public async Task<Guid> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
@@ -48,6 +51,51 @@ namespace RockSchool.BL.Services.SubscriptionService
             await _subscriptionRepository.AddSubscriptionAsync(subscriptionEntity);
 
             return subscriptionEntity.SubscriptionId;
+        }
+
+        public async Task<Guid> AddSubscription(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] schedules)
+        {
+            var newSubscriptionIds = new List<Guid>();
+
+            Guid? groupId = null;
+            if (studentIds.Length > 1)
+            {
+                groupId = Guid.NewGuid();
+            }
+
+            foreach (var studentId in studentIds)
+            {
+                var subscription = new SubscriptionDto
+                {
+                    TeacherId = subscriptionDetails.TeacherId,
+                    DisciplineId = subscriptionDetails.DisciplineId,
+                    StartDate = subscriptionDetails.StartDate.ToUniversalTime(),
+                    StudentId = studentId,
+                    AttendanceCount = subscriptionDetails.AttendanceCount,
+                    AttendanceLength = subscriptionDetails.AttendanceLength,
+                    BranchId = subscriptionDetails.BranchId,
+                    GroupId = groupId,
+                    TransactionId = null,
+                    TrialStatus = null,
+                    Status = (int)SubscriptionStatus.Draft,
+                    StatusReason = null,
+                };
+
+                var newSubscriptionId = await AddSubscriptionAsync(subscription);
+                subscription.SubscriptionId = newSubscriptionId;
+
+                foreach (var schedule in schedules)
+                {
+                    schedule.SubscriptionId = newSubscriptionId;
+                    await _scheduleService.AddScheduleAsync(schedule);
+                }
+
+                await _attendanceService.AddAttendancesToStudentAsync(subscription);
+
+                newSubscriptionIds.Add(newSubscriptionId);
+            }
+
+            return newSubscriptionIds[0];
         }
 
         public async Task<SubscriptionDto> GetAsync(Guid subscriptionId)

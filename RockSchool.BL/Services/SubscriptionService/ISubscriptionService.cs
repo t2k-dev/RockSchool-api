@@ -9,6 +9,7 @@ namespace RockSchool.BL.Services.SubscriptionService
         Task<SubscriptionDto[]> GetSubscriptionsByTeacherId(Guid teacherId);
         Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId);
         Task<Guid> AddSubscriptionAsync(SubscriptionDto subscriptionDto);
+        Task<Guid> AddSubscription(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] schedules);
         Task<Guid> AddTrialSubscriptionAsync(TrialRequestDto request);
         Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate);
         Task AcceptTrialSubscription(Guid subscriptionId, string statusReason);
