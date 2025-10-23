@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20251021172052_IsActive_Added_to_Teacher")]
+    partial class IsActive_Added_to_Teacher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -445,7 +448,7 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("WorkingPeriodId")
+                    b.Property<Guid>("WorkingPeriodId")
                         .HasColumnType("uuid");
 
                     b.HasKey("ScheduledWorkingPeriodId");
@@ -843,7 +846,9 @@ namespace RockSchool.Data.Migrations
 
                     b.HasOne("RockSchool.Data.Entities.WorkingPeriodEntity", "WorkingPeriod")
                         .WithMany("ScheduledWorkingPeriods")
-                        .HasForeignKey("WorkingPeriodId");
+                        .HasForeignKey("WorkingPeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Room");
 

@@ -214,7 +214,7 @@ namespace RockSchool.BL.Helpers
                     },
                 AgeLimit = entity.AgeLimit,
                 AllowGroupLessons = entity.AllowGroupLessons,
-
+                IsActive = entity.IsActive,
                 Disciplines = entity.Disciplines?.Select(d => new DisciplineDto
                 {
                     DisciplineId = d.DisciplineId,

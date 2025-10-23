@@ -24,7 +24,10 @@ public class TeacherEntity
     public virtual BranchEntity? Branch { get; set; }
 
     public int AgeLimit { get; set; }
+
     public bool AllowGroupLessons { get; set; }
+
+    public bool IsActive { get; set; }
 
     public virtual ICollection<DisciplineEntity> Disciplines { get; set; }
 

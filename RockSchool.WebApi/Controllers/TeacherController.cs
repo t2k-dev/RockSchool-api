@@ -42,7 +42,9 @@ public class TeacherController : Controller
     public async Task<ActionResult> AddTeacher([FromBody] RegisterTeacherRequestDto requestDto)
     {
         if (!ModelState.IsValid)
+        {
             throw new Exception("Incorrect requestDto for registration.");
+        }
 
         var newTeacher = new TeacherDto
         {
@@ -55,7 +57,8 @@ public class TeacherController : Controller
             DisciplineIds = requestDto.Teacher.Disciplines,
             WorkingPeriods = requestDto.WorkingPeriods,
             AllowGroupLessons = requestDto.Teacher.AllowGroupLessons,
-            AgeLimit = requestDto.Teacher.AgeLimit
+            AgeLimit = requestDto.Teacher.AgeLimit,
+            IsActive = true,
         };
 
         var teacherId = await _teacherService.AddTeacher(newTeacher);
@@ -69,7 +72,7 @@ public class TeacherController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var updateRequest = new TeacherDto()
+        var teacher = new TeacherDto
         {
             TeacherId = id,
             FirstName = model.Teacher.FirstName,
@@ -79,10 +82,11 @@ public class TeacherController : Controller
             Phone = model.Teacher.Phone,
             AgeLimit = model.Teacher.AgeLimit,
             AllowGroupLessons = model.Teacher.AllowGroupLessons,
-            DisciplineIds = model.Teacher.Disciplines
+            DisciplineIds = model.Teacher.Disciplines,
+            WorkingPeriods = model.WorkingPeriods,
         };
 
-        await _teacherService.UpdateTeacherAsync(updateRequest);
+        await _teacherService.UpdateTeacherAsync(teacher, model.DisciplinesChanged, model.PeriodsChanged);
 
         return Ok();
     }

@@ -1,5 +1,6 @@
 ﻿using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
+using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -9,102 +10,17 @@ public class TeacherService : ITeacherService
 {
     private readonly DisciplineRepository _disciplineRepository;
     private readonly TeacherRepository _teacherRepository;
-    private readonly ScheduledWorkingPeriodsRepository _scheduledWorkingPeriodsRepository;
+    private readonly IScheduledWorkingPeriodsService _scheduledWorkingPeriodsService;
 
     public TeacherService(TeacherRepository teacherRepository, DisciplineRepository disciplineRepository,
-        ScheduledWorkingPeriodsRepository scheduledWorkingPeriodsRepository)
+        IScheduledWorkingPeriodsService scheduledWorkingPeriodsService)
     {
         _teacherRepository = teacherRepository;
         _disciplineRepository = disciplineRepository;
-        _scheduledWorkingPeriodsRepository = scheduledWorkingPeriodsRepository;
+        _scheduledWorkingPeriodsService = scheduledWorkingPeriodsService;
     }
 
-    public async Task<Guid> AddTeacher(TeacherDto addTeacherDto)
-    {
-        var disciplineEntities = new List<DisciplineEntity>();
-        if (addTeacherDto.DisciplineIds != null)
-        {
-            foreach (var disciplineId in addTeacherDto.DisciplineIds)
-            {
-                var discipline = await _disciplineRepository.GetByIdAsync(disciplineId);
-                if (discipline != null)
-                {
-                    disciplineEntities.Add(discipline);
-                }
-            }
-        }
-
-        var workingPeriodEntities = new List<WorkingPeriodEntity>();
-        foreach (var workingPeriodDto in addTeacherDto.WorkingPeriods)
-        {
-            workingPeriodEntities.Add(new WorkingPeriodEntity
-            {
-                StartTime = workingPeriodDto.StartTime,
-                EndTime = workingPeriodDto.EndTime,
-                WeekDay = workingPeriodDto.WeekDay,
-                RoomId = workingPeriodDto.RoomId,
-            });
-        }
-        
-        var teacher = new TeacherEntity
-        {
-            LastName = addTeacherDto.LastName,
-            FirstName = addTeacherDto.FirstName,
-            BirthDate = addTeacherDto.BirthDate,
-            Phone = addTeacherDto.Phone,
-            BranchId = addTeacherDto.BranchId.Value,
-            Disciplines = disciplineEntities,
-            WorkingPeriods = workingPeriodEntities,
-            Sex = addTeacherDto.Sex,
-            AllowGroupLessons = addTeacherDto.AllowGroupLessons,
-            AgeLimit = addTeacherDto.AgeLimit
-        };
-
-        await _teacherRepository.AddAsync(teacher);
-
-        var scheduledWorkingPeriodEntities = BuildScheduledWorkingPeriods(teacher.TeacherId, workingPeriodEntities);
-        await _scheduledWorkingPeriodsRepository.AddRangeAsync(scheduledWorkingPeriodEntities);
-
-        var savedTeacher = await _teacherRepository.GetByIdAsync(teacher.TeacherId);
-
-        if (savedTeacher == null)
-            throw new InvalidOperationException("Failed to add teacher.");
-
-        return savedTeacher.TeacherId;
-    }
-
-    private List<ScheduledWorkingPeriodEntity> BuildScheduledWorkingPeriods(Guid teacherId, List<WorkingPeriodEntity> workingPeriodEntities)
-    {
-        var scheduledWorkingPeriodEntities = new List<ScheduledWorkingPeriodEntity>();
-        var startDate = DateTime.UtcNow.Date;
-        var endDate = startDate.AddMonths(3);
-
-        for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
-        {
-            foreach (var workingPeriodEntity in workingPeriodEntities)
-            {
-                if ((int)currentDate.DayOfWeek == workingPeriodEntity.WeekDay)
-                {
-                    var localStart = DateTime.SpecifyKind(currentDate.Add(workingPeriodEntity.StartTime), DateTimeKind.Local);
-                    var localEnd = DateTime.SpecifyKind(currentDate.Add(workingPeriodEntity.EndTime), DateTimeKind.Local);
-
-                    var periodStart = localStart.ToUniversalTime();
-                    var periodEnd = localEnd.ToUniversalTime();
-
-                    scheduledWorkingPeriodEntities.Add(new ScheduledWorkingPeriodEntity
-                    {
-                        WorkingPeriodId = workingPeriodEntity.WorkingPeriodId,
-                        TeacherId = teacherId,
-                        StartDate = periodStart,
-                        EndDate = periodEnd,
-                        RoomId = workingPeriodEntity.RoomId,
-                    });
-                }
-            }
-        }
-
-        return scheduledWorkingPeriodEntities;
-    }
+    
 
     public async Task<TeacherDto[]> GetAllTeachersAsync()
     {
@@ -153,57 +69,98 @@ public class TeacherService : ITeacherService
 
     public async Task<TeacherDto> GetTeacherByIdAsync(Guid id)
     {
-        var teacher = await _teacherRepository.GetByIdAsync(id);
-
-        if (teacher == null)
+        var teacherEntity = await _teacherRepository.GetByIdAsync(id);
+        if (teacherEntity == null)
+        {
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
-
-        var disciplineDtos = new List<DisciplineDto>();
-        var disciplineIds = new List<int>();
-
-        foreach (var teacherDiscipline in teacher.Disciplines)
-        {
-            disciplineDtos.Add(new DisciplineDto
-            {
-                Name = teacherDiscipline.Name,
-                DisciplineId = teacherDiscipline.DisciplineId,
-                IsActive = teacherDiscipline.IsActive,
-                Teachers = teacherDiscipline.Teachers.ToDto(),
-            });
-
-            disciplineIds.Add(teacherDiscipline.DisciplineId);
         }
-        
-        var teacherDto = new TeacherDto
+
+        var disciplines = teacherEntity.Disciplines.Select(teacherDiscipline => new DisciplineDto
+            {
+                Name = teacherDiscipline.Name, 
+                DisciplineId = teacherDiscipline.DisciplineId, 
+                IsActive = teacherDiscipline.IsActive, 
+                Teachers = teacherDiscipline.Teachers.ToDto(),
+            })
+            .ToList();
+
+        var teacher = new TeacherDto
         {
-            TeacherId = teacher.TeacherId,
-            LastName = teacher.LastName,
-            FirstName = teacher.FirstName,
-            BirthDate = teacher.BirthDate,
-            Sex = teacher.Sex,
-            Phone = teacher.Phone,
-            User = teacher.User,
-            Disciplines = disciplineDtos,
-            DisciplineIds = disciplineIds.ToArray(),
-            AllowGroupLessons = teacher.AllowGroupLessons,
-            AgeLimit = teacher.AgeLimit,
-            BranchId = teacher.BranchId,
-            WorkingPeriods = teacher.WorkingPeriods.ToDto(),
-            ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods.ToDto(),
+            TeacherId = teacherEntity.TeacherId,
+            LastName = teacherEntity.LastName,
+            FirstName = teacherEntity.FirstName,
+            BirthDate = teacherEntity.BirthDate,
+            Sex = teacherEntity.Sex,
+            Phone = teacherEntity.Phone,
+            User = teacherEntity.User,
+            Disciplines = disciplines,
+            DisciplineIds = disciplines.Select(d => d.DisciplineId).ToArray(),
+            AllowGroupLessons = teacherEntity.AllowGroupLessons,
+            AgeLimit = teacherEntity.AgeLimit,
+            BranchId = teacherEntity.BranchId,
+            WorkingPeriods = teacherEntity.WorkingPeriods.ToDto(),
+            ScheduledWorkingPeriods = teacherEntity.ScheduledWorkingPeriods.ToDto(),
         };
 
-        return teacherDto;
+        return teacher;
     }
 
-    public async Task UpdateTeacherAsync(TeacherDto teacherDto)
+    public async Task<TeacherDto[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
+    {
+        var teacherEntities = await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
+
+        return teacherEntities.ToDto();
+    }
+
+    public async Task<Guid> AddTeacher(TeacherDto addTeacherDto)
+    {
+        var disciplines = await _disciplineRepository.GetByIdsAsync(addTeacherDto.DisciplineIds);
+        var workingPeriodEntities = addTeacherDto.WorkingPeriods.ToEntities();
+        var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities, addTeacherDto.TeacherId, DateTime.Now, 3);
+
+        // Teacher
+        var teacherEntity = new TeacherEntity
+        {
+            LastName = addTeacherDto.LastName,
+            FirstName = addTeacherDto.FirstName,
+            BirthDate = addTeacherDto.BirthDate,
+            Phone = addTeacherDto.Phone,
+            BranchId = addTeacherDto.BranchId.Value,
+            Disciplines = disciplines,
+            WorkingPeriods = workingPeriodEntities,
+            ScheduledWorkingPeriods = scheduledWorkingPeriods,
+            Sex = addTeacherDto.Sex,
+            AllowGroupLessons = addTeacherDto.AllowGroupLessons,
+            AgeLimit = addTeacherDto.AgeLimit,
+            IsActive = addTeacherDto.IsActive,
+        };
+
+        await _teacherRepository.AddAsync(teacherEntity);
+
+        return teacherEntity.TeacherId;
+    }
+
+    public async Task UpdateTeacherAsync(TeacherDto teacherDto, bool updateDisciplines, bool recalculatePeriods)
     {
         var existingTeacher = await _teacherRepository.GetByIdAsync(teacherDto.TeacherId);
-
         if (existingTeacher == null)
-            throw new KeyNotFoundException(
-                $"TeacherEntity with ID {teacherDto.TeacherId} was not found.");
+        {
+            throw new KeyNotFoundException($"TeacherEntity with ID {teacherDto.TeacherId} was not found.");
+        }
 
-        await UpdateTeacherDisciplines(teacherDto, existingTeacher);
+        // Disciplines
+        if (updateDisciplines)
+        {
+            existingTeacher.Disciplines.Clear();
+            existingTeacher.Disciplines = await _disciplineRepository.GetByIdsAsync(teacherDto.DisciplineIds);
+        }
+
+        // Periods
+        if (recalculatePeriods)
+        {
+            UpdateTeacherWorkingPeriods(existingTeacher, teacherDto.WorkingPeriods.ToList());
+        }
+
         UpdateTeacherDetails(teacherDto, existingTeacher);
 
         await _teacherRepository.UpdateAsync(existingTeacher);
@@ -212,32 +169,15 @@ public class TeacherService : ITeacherService
     public async Task DeleteTeacherAsync(Guid id)
     {
         var existingTeacher = await _teacherRepository.GetByIdAsync(id);
-
         if (existingTeacher == null)
+        {
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
+        }
 
         await _teacherRepository.DeleteAsync(existingTeacher);
     }
 
-    private async Task UpdateTeacherDisciplines(TeacherDto updateTeacherServiceRequestDto,
-        TeacherEntity existingTeacherEntity)
-    {
-        existingTeacherEntity.Disciplines.Clear();
-        var disciplines = new List<DisciplineEntity>();
-
-        foreach (var disciplineId in updateTeacherServiceRequestDto.DisciplineIds)
-        {
-            var discipline = await _disciplineRepository.GetByIdAsync(disciplineId);
-
-            if (discipline != null)
-                disciplines.Add(discipline);
-        }
-
-        existingTeacherEntity.Disciplines = disciplines;
-    }
-
-    private static void UpdateTeacherDetails(TeacherDto updateRequest,
-        TeacherEntity? existingTeacher)
+    private static void UpdateTeacherDetails(TeacherDto updateRequest, TeacherEntity existingTeacher)
     {
         if (existingTeacher == null)
             throw new KeyNotFoundException($"TeacherEntity with ID {updateRequest.TeacherId} was not found.");
@@ -254,6 +194,15 @@ public class TeacherService : ITeacherService
         if (updateRequest.Phone != default)
             existingTeacher.Phone = updateRequest.Phone;
 
+        if (updateRequest.Sex != default)
+            existingTeacher.Sex = updateRequest.Sex;
+
+        if (updateRequest.AgeLimit != default)
+            existingTeacher.AgeLimit = updateRequest.AgeLimit;
+
+        if (updateRequest.AllowGroupLessons != default)
+            existingTeacher.AllowGroupLessons = updateRequest.AllowGroupLessons;
+
         // if (updateRequest.User != null)
         //     existingTeacher.UserId = updateRequest.User.UserId;
 
@@ -261,10 +210,53 @@ public class TeacherService : ITeacherService
         //     existingTeacher.WorkingPeriods = updateRequest.WorkingHoursEntity;
     }
 
-    public async Task<TeacherDto[]?>  GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
+    private List<ScheduledWorkingPeriodEntity> BuildScheduledWorkingPeriods(List<WorkingPeriodEntity> workingPeriodEntities, Guid teacherId, DateTime startDate, int months)
     {
-        var teacherEntities = await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
+        var scheduledWorkingPeriodEntities = new List<ScheduledWorkingPeriodEntity>();
 
-        return teacherEntities.ToDto();
+        startDate = startDate.Date;
+        var endDate = startDate.AddMonths(months);
+
+        for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
+        {
+            foreach (var workingPeriodEntity in workingPeriodEntities)
+            {
+                if ((int)currentDate.DayOfWeek == workingPeriodEntity.WeekDay)
+                {
+                    var localStart = DateTime.SpecifyKind(currentDate.Add(workingPeriodEntity.StartTime), DateTimeKind.Local);
+                    var localEnd = DateTime.SpecifyKind(currentDate.Add(workingPeriodEntity.EndTime), DateTimeKind.Local);
+
+                    var periodStart = localStart.ToUniversalTime();
+                    var periodEnd = localEnd.ToUniversalTime();
+
+                    scheduledWorkingPeriodEntities.Add(new ScheduledWorkingPeriodEntity
+                    {
+                        WorkingPeriod = workingPeriodEntity,
+                        TeacherId = teacherId,
+                        StartDate = periodStart,
+                        EndDate = periodEnd,
+                        RoomId = workingPeriodEntity.RoomId,
+                    });
+                }
+            }
+        }
+
+        return scheduledWorkingPeriodEntities;
+    }
+
+    private void UpdateTeacherWorkingPeriods(TeacherEntity existingTeacher, List<WorkingPeriodDto> workingPeriods)
+    {
+        var newWorkingPeriodsEntities = workingPeriods.ToEntities();
+
+        //existingTeacher.ScheduledWorkingPeriods.ToList().RemoveRange() (swp => swp.StartDate > DateTime.Now)
+        // Exclude future scheduled periods that are not actual and add new ones.
+        var scheduledWorkingPeriods = existingTeacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < DateTime.Now).ToList();
+
+        var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, existingTeacher.TeacherId, DateTime.Now, 3);
+        scheduledWorkingPeriods.AddRange(newScheduledWorkingPeriods);
+
+        existingTeacher.WorkingPeriods.Clear();
+        existingTeacher.WorkingPeriods = newWorkingPeriodsEntities;
+        existingTeacher.ScheduledWorkingPeriods = scheduledWorkingPeriods;
     }
 }

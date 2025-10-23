@@ -10,6 +10,7 @@ using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.NoteService;
+using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
@@ -40,6 +41,7 @@ public class Startup
         services.AddScoped<IStudentService, StudentService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<IReschedulingService, ReschedulingService>();
+        services.AddScoped<IScheduledWorkingPeriodsService, ScheduledWorkingPeriodsService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();
