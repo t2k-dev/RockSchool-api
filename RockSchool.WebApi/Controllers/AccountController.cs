@@ -6,6 +6,7 @@ using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Account;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -35,5 +36,14 @@ public class AccountController : Controller
         await _userService.AddUserAsync(serviceDto);
 
         return Ok();
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult> Login([FromBody] LoginRequest requestDto)
+    {
+        if (!ModelState.IsValid) throw new Exception("Incorrect model for registration.");
+
+
+        return Ok("tutBudetToken");
     }
 }
