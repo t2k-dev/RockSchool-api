@@ -1,22 +1,56 @@
 ﻿using RockSchool.BL.Dtos;
-using RockSchool.Data.Entities;
+using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Helpers;
 
 public static class ScheduleHelper
 {
-    public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, ScheduleEntity[] schedules)
+    public static List<AttendanceDto> GenerateTemplateAttendances(SubscriptionDetails subscriptionDetails, ScheduleDto[] schedules, bool isGroup)
     {
-        // TODO: remove ordering from here
-        var orderedSchedules = schedules.OrderBy(s => s.WeekDay).ToArray();
+        var attendances = new List<AttendanceDto>();
 
-        // Get week day for next attendance 
+        var attendancesToAdd = subscriptionDetails.AttendanceCount;
+        var lessonMinutes = subscriptionDetails.AttendanceLength == 1 ? 60 : 90;
+        var startDate = subscriptionDetails.StartDate.ToDateTime(TimeOnly.MinValue);
+        var orderedSchedules = schedules
+            .OrderBy(s => s.WeekDay)
+            .ThenBy(s => s.StartTime)
+            .ToArray();
 
-        var schedule = GetCorrespondingSchedule(startingFrom, orderedSchedules);
+        while (attendancesToAdd > 0)
+        {
+            var availableSlot = GetNextAvailableSlot(startDate, orderedSchedules);
+            var attendanceStartDate = availableSlot.StartDate;
+
+            var newAttendance = new AttendanceDto
+            {
+                Status = AttendanceStatus.New,
+                TeacherId = subscriptionDetails.TeacherId,
+                StartDate = attendanceStartDate,
+                EndDate = attendanceStartDate.AddMinutes(lessonMinutes),
+                IsTrial = false,
+                BranchId = subscriptionDetails.BranchId,
+                RoomId = availableSlot.RoomId,
+                DisciplineId = subscriptionDetails.DisciplineId,
+                GroupId = isGroup ? Guid.NewGuid() : null,
+            };
+
+            attendances.Add(newAttendance);
+
+            startDate = attendanceStartDate;
+            attendancesToAdd--;
+        }
+
+        return attendances;
+    }
+
+    public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, ScheduleDto[] orderedSchedules)
+    {
+        const int timeZone = 5; // DEV move somewhere
+        var schedule = GetNextSchedule(startingFrom, orderedSchedules);
         var date = GetNextDate(startingFrom, schedule);
 
-        var startDate = new DateTime(date.Year, date.Month, date.Day, schedule.StartTime.Hour, schedule.StartTime.Minute, 0);
-        startDate = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+        var startDate = new DateTime(date.Year, date.Month, date.Day, schedule.StartTime.Hours - timeZone, schedule.StartTime.Minutes, 0, DateTimeKind.Utc);
 
         return new AvailableSlot
         {
@@ -25,7 +59,7 @@ public static class ScheduleHelper
         };
     }
 
-    private static ScheduleEntity GetCorrespondingSchedule(DateTime startingFrom, ScheduleEntity[]  orderedSchedules)
+    private static ScheduleDto GetNextSchedule(DateTime startingFrom, ScheduleDto[]  orderedSchedules)
     {
         foreach (var schedule in orderedSchedules)
         {
@@ -38,7 +72,7 @@ public static class ScheduleHelper
         return orderedSchedules[0];
     }
 
-    private static DateTime GetNextDate(DateTime startingFrom, ScheduleEntity schedule)
+    private static DateTime GetNextDate(DateTime startingFrom, ScheduleDto schedule)
     {
         var daysUntilNext = (schedule.WeekDay - (int)startingFrom.DayOfWeek + 7) % 7;
 

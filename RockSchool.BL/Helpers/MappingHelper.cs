@@ -24,6 +24,25 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
+        public static ScheduleDto ToDto(this ScheduleEntity entity)
+        {
+            return new ScheduleDto
+            {
+                ScheduleId = entity.ScheduleId,
+                SubscriptionId = entity.SubscriptionId.Value, // DEV
+                StartTime = entity.StartTime,
+                EndTime = entity.EndTime,
+                WeekDay = entity.WeekDay,
+                RoomId = entity.RoomId,
+            };
+        }
+
+        public static ScheduleDto[] ToDto(this IEnumerable<ScheduleEntity> entities)
+        {
+            return entities.Select(w => w.ToDto())
+                .ToArray();
+        }
+
         public static ScheduledWorkingPeriodDto ToDto(this ScheduledWorkingPeriodEntity entity)
         {
             return new ScheduledWorkingPeriodDto
@@ -43,8 +62,6 @@ namespace RockSchool.BL.Helpers
 
         public static AttendanceDto ToDto(this AttendanceEntity entity)
         {
-            if (entity == null) return null;
-
             return new AttendanceDto
             {
                 AttendanceId = entity.AttendanceId,

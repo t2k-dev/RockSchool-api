@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20251102052021_Schedules_Time_Type_Changed")]
+    partial class Schedules_Time_Type_Changed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -523,8 +526,8 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid?>("GroupId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");

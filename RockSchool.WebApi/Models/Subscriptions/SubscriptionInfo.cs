@@ -1,5 +1,6 @@
 ﻿using RockSchool.BL.Dtos;
 using RockSchool.Data.Enums;
+using RockSchool.WebApi.Models.Attendances;
 using System;
 
 namespace RockSchool.WebApi.Models.Subscriptions
@@ -10,7 +11,7 @@ namespace RockSchool.WebApi.Models.Subscriptions
 
         public AttendanceInfo[] Attendances { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateOnly StartDate { get; set; }
 
         public bool IsTrial { get; set; }
 

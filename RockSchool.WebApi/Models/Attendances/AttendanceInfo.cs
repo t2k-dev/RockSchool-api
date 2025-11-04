@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RockSchool.WebApi.Models
+namespace RockSchool.WebApi.Models.Attendances
 {
     public class AttendanceInfo
     {
@@ -16,5 +16,6 @@ namespace RockSchool.WebApi.Models
         public object Student { get; set; }
         public object Teacher { get; set; }
         public bool IsTrial { get; set; }
+        public Guid? GroupId { get; set; }
     }
 }

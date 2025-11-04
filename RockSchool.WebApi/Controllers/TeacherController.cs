@@ -12,6 +12,7 @@ using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Factories;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
 

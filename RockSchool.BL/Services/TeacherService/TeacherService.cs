@@ -116,7 +116,7 @@ public class TeacherService : ITeacherService
     {
         var disciplines = await _disciplineRepository.GetByIdsAsync(addTeacherDto.DisciplineIds);
         var workingPeriodEntities = addTeacherDto.WorkingPeriods.ToEntities();
-        var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities, addTeacherDto.TeacherId, DateTime.Now, 3);
+        var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities, addTeacherDto.TeacherId, DateTime.Now.ToUniversalTime(), 3);
 
         // Teacher
         var teacherEntity = new TeacherEntity
@@ -250,7 +250,7 @@ public class TeacherService : ITeacherService
 
         //existingTeacher.ScheduledWorkingPeriods.ToList().RemoveRange() (swp => swp.StartDate > DateTime.Now)
         // Exclude future scheduled periods that are not actual and add new ones.
-        var scheduledWorkingPeriods = existingTeacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < DateTime.Now).ToList();
+        var scheduledWorkingPeriods = existingTeacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < DateTime.Now.ToUniversalTime()).ToList();
 
         var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, existingTeacher.TeacherId, DateTime.Now, 3);
         scheduledWorkingPeriods.AddRange(newScheduledWorkingPeriods);

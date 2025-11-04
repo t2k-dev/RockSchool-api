@@ -59,8 +59,8 @@ public class ScheduleService : IScheduleService
         {
             SubscriptionId = schedule.SubscriptionId,
             WeekDay = schedule.WeekDay,
-            StartTime = schedule.StartTime.ToUniversalTime(),
-            EndTime = schedule.EndTime.ToUniversalTime(),
+            StartTime = schedule.StartTime,
+            EndTime = schedule.EndTime,
             RoomId = schedule.RoomId,
         };
 

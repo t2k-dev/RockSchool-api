@@ -50,7 +50,6 @@ public class AttendanceController : Controller
             StudentId = dto.StudentId,
             TeacherId = dto.TeacherId,
             DisciplineId = dto.DisciplineId,
-            NumberOfAttendances = dto.NumberOfAttendances,
             StartDate = dto.StartingDate
         };
 

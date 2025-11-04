@@ -53,23 +53,21 @@ namespace RockSchool.BL.Services.SubscriptionService
             return subscriptionEntity.SubscriptionId;
         }
 
-        public async Task<Guid> AddSubscription(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] schedules)
+        public async Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] schedules)
         {
-            var newSubscriptionIds = new List<Guid>();
+            var isGroup = studentIds.Length > 1;
+            var groupId = isGroup ? Guid.NewGuid() : (Guid?)null;
 
-            Guid? groupId = null;
-            if (studentIds.Length > 1)
-            {
-                groupId = Guid.NewGuid();
-            }
+            var templateAttendances = ScheduleHelper.GenerateTemplateAttendances(subscriptionDetails, schedules, isGroup);
 
             foreach (var studentId in studentIds)
             {
+                // Subscription
                 var subscription = new SubscriptionDto
                 {
                     TeacherId = subscriptionDetails.TeacherId,
                     DisciplineId = subscriptionDetails.DisciplineId,
-                    StartDate = subscriptionDetails.StartDate.ToUniversalTime(),
+                    StartDate = subscriptionDetails.StartDate,
                     StudentId = studentId,
                     AttendanceCount = subscriptionDetails.AttendanceCount,
                     AttendanceLength = subscriptionDetails.AttendanceLength,
@@ -77,31 +75,43 @@ namespace RockSchool.BL.Services.SubscriptionService
                     GroupId = groupId,
                     TransactionId = null,
                     TrialStatus = null,
-                    Status = (int)SubscriptionStatus.Draft,
+                    Status = (int)SubscriptionStatus.Active,
                     StatusReason = null,
                 };
 
                 var newSubscriptionId = await AddSubscriptionAsync(subscription);
-                subscription.SubscriptionId = newSubscriptionId;
 
+                // Schedules
                 foreach (var schedule in schedules)
                 {
                     schedule.SubscriptionId = newSubscriptionId;
                     await _scheduleService.AddScheduleAsync(schedule);
                 }
 
-                await _attendanceService.AddAttendancesToStudentAsync(subscription);
+                // Attendances
+                var attendancesByStudent = templateAttendances.Select(templateAttendance => new AttendanceDto
+                {
+                    DisciplineId = templateAttendance.DisciplineId,
+                    BranchId = templateAttendance.BranchId,
+                    StartDate = templateAttendance.StartDate,
+                    EndDate = templateAttendance.EndDate,
+                    Status = templateAttendance.Status,
+                    StatusReason = templateAttendance.StatusReason,
+                    GroupId = templateAttendance.GroupId,
+                    TeacherId = templateAttendance.TeacherId,
+                    SubscriptionId = newSubscriptionId,
+                    StudentId = studentId,
+                    RoomId = templateAttendance.RoomId,
+                }).ToArray();
 
-                newSubscriptionIds.Add(newSubscriptionId);
+                await _attendanceService.AddAttendancesAsync(attendancesByStudent);
             }
-
-            return newSubscriptionIds[0];
         }
 
-        public async Task<SubscriptionDto> GetAsync(Guid subscriptionId)
+        public async Task<SubscriptionDto?> GetAsync(Guid subscriptionId)
         {
             var subscription = await _subscriptionRepository.GetAsync(subscriptionId);
-            return subscription.ToDto();
+            return subscription?.ToDto();
         }
 
         public async Task<SubscriptionDto[]> GetSubscriptionsByStudentId(Guid studentId)
@@ -122,8 +132,12 @@ namespace RockSchool.BL.Services.SubscriptionService
             var lastAttendance = attendances.MaxBy(a => a.StartDate);
 
             var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
-            
-            var availableSlot = ScheduleHelper.GetNextAvailableSlot(lastAttendance.StartDate, schedules);
+            var orderedSchedules = schedules.ToDto()
+                .OrderBy(s => s.WeekDay)
+                .ThenBy(s => s.StartTime)
+                .ToArray();
+
+            var availableSlot = ScheduleHelper.GetNextAvailableSlot(lastAttendance.StartDate, orderedSchedules);
             
             return availableSlot;
         }
@@ -164,7 +178,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 AttendanceLength = 1,
                 BranchId = request.BranchId,
                 GroupId = null,
-                StartDate = request.TrialDate,
+                StartDate = DateOnly.FromDateTime(request.TrialDate),
                 TrialStatus = TrialStatus.Created,
                 TransactionId = null,
                 Status = (int)SubscriptionStatus.Active,
@@ -182,7 +196,6 @@ namespace RockSchool.BL.Services.SubscriptionService
                 Comment = string.Empty,
                 DisciplineId = request.DisciplineId,
                 GroupId = null,
-                NumberOfAttendances = 1,
                 Status = AttendanceStatus.New,
                 StatusReason = string.Empty,
                 StudentId = request.Student.StudentId,

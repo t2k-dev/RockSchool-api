@@ -19,7 +19,7 @@ public class SubscriptionEntity
 
     public int? AttendanceLength { get; set; }
 
-    public DateTime StartDate { get; set; }
+    public DateOnly StartDate { get; set; }
 
     public int Status { get; set; }
 

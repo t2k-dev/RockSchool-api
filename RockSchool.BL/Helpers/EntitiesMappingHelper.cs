@@ -26,5 +26,33 @@ namespace RockSchool.BL.Helpers
                 RoomId = workingPeriod.RoomId,
             };
         }
+
+        public static List<AttendanceEntity> ToEntities(this IEnumerable<AttendanceDto> attendances)
+        {
+            return attendances.Select(a => a.ToEntity())
+                .ToList();
+        }
+
+        public static AttendanceEntity ToEntity(this AttendanceDto attendance)
+        {
+            return new AttendanceEntity
+            {
+                StudentId = attendance.StudentId,
+                TeacherId = attendance.TeacherId,
+                BranchId = attendance.BranchId,
+                StartDate = attendance.StartDate,
+                EndDate = attendance.EndDate,
+                Status = attendance.Status,
+                RoomId = attendance.RoomId,
+                Comment = attendance.Comment,
+                SubscriptionId = attendance.SubscriptionId,
+                StatusReason = attendance.StatusReason,
+                DisciplineId = attendance.DisciplineId,
+                GroupId = attendance.GroupId,
+                IsTrial = attendance.IsTrial,
+            };
+        }
+
+
     }
 }

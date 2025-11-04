@@ -64,5 +64,8 @@ public class RockSchoolContext : DbContext
             new RoomEntity { RoomId = 13, BranchId = 2, Name = "Плакатная", Status = 1, IsActive = true },
             new RoomEntity { RoomId = 14, BranchId = 2, Name = "Желтая", Status = 1, IsActive = true }
         );
+
+        modelBuilder.Entity<ScheduleEntity>().Property(s => s.StartTime).HasColumnType("time");
+        modelBuilder.Entity<ScheduleEntity>().Property(s => s.EndTime).HasColumnType("time");
     }
 }

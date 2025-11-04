@@ -30,7 +30,7 @@ public class AttendanceRepository
     public async Task<AttendanceEntity[]> GetByBranchIdAsync(int branchId)
     {
         return await _rockSchoolContext.Attendances
-            .Where(a => a.BranchId == branchId)
+            .Where(a => a.BranchId == branchId) 
             .Include(a => a.Teacher)
             .Include(a => a.Student)
             .ToArrayAsync();

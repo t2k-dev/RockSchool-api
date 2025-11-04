@@ -14,6 +14,6 @@ public class ScheduleEntity
     [ForeignKey(nameof(RoomId))]
     public RoomEntity? Room { get; set; }
     public int WeekDay { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public TimeSpan StartTime { get; set; }
+    public TimeSpan EndTime { get; set; }
 }

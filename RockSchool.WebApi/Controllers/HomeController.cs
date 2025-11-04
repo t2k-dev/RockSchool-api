@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.NoteService;
+using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Attendances;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -33,149 +37,11 @@ namespace RockSchool.WebApi.Controllers
 
             var notes = await _noteService.GetNotesAsync(branchId);
 
-            var attendances = await _attendanceService.GetByBranchIdAsync(branchId);
-            var attendanceInfos = new List<AttendanceInfo>();
-            foreach (var attendance in attendances)
-            {
-                attendanceInfos.Add(new AttendanceInfo
-                {
-                    AttendanceId = attendance.AttendanceId,
-                    SubscriptionId = attendance.SubscriptionId,
-                    Status = (int)attendance.Status,
-                    StatusReason = attendance.StatusReason,
-                    DisciplineId = attendance.DisciplineId,
-                    RoomId = attendance.RoomId,
-                    StartDate = attendance.StartDate,
-                    EndDate = attendance.EndDate,
-                    Student = attendance.Student,
-                    Teacher = attendance.Teacher,
-                    IsTrial = attendance.IsTrial,
-                });
-            }
+            var allAttendances = await _attendanceService.GetByBranchIdAsync(branchId);
 
-            var fakeAttendanceInfos = new[]
-            {
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
-                    DisciplineId = 5,
-                    Status = 2,
-                    RoomId = 4,
-                    Student = new
-                    {
-                        FirstName = "Алексей",
-                        LastName = "Кутузов",
-                    },
-                    Teacher = new
-                    {
-                        TeacherId = "01958931-da30-780a-aadc-e99ae26bd87f",
-                        FirstName = "Варвара",
-                    },
-                },
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
-                    DisciplineId = 5,
-                    Status = 3,
-                    RoomId = 1,
-                    Student = new
-                    {
-                        FirstName = "Витали",
-                        LastName = "Шабанов",
-                    },
-                    Teacher = new
-                    {
-                        TeacherId = "01958931-da30-780a-aadc-e99ae26bd87f",
-                        FirstName = "Варвара",
-                    },
-                },
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
-                    DisciplineId = 5,
-                    Status = 2,
-                    RoomId = 2,
-                    IsTrial = true,
-                    Student = new
-                    {
-                        StudentId = "01960baf-2c2f-7fdb-b621-84eb4a05cc6c",
-                        FirstName = "Сеит",
-                        LastName = "Тасбулатов",
-                    },
-                    Teacher = new
-                    {
-                        TeacherId = "01960b95-a2e0-7d75-8e55-ec81cea904ec",
-                        FirstName = "Влад",
-                        LastName = "Лобанов",
-                    },
-                },
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0),
-                    DisciplineId = 5,
-                    Status = 5,
-                    RoomId = 3,
-                    Student = new
-                    {
-                        FirstName = "Давид",
-                        LastName = "Голенков",
-                    },
-                    Teacher = new
-                    {
-                        TeacherId = "01958931-da30-780a-aadc-e99ae26bd87f",
-                        FirstName = "Варвара",
-                    },
-                },
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 15, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0),
-                    DisciplineId = 1,
-                    Status = 1,
-                    RoomId = 3,
-                    Student = new
-                    {
-                        FirstName = "Назар",
-                        LastName = "Рахимжанов",
-                    },
-                    Teacher = new
-                    {
-                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
-                        FirstName = "Оспан",
-                    },
-                },
-                new AttendanceInfo
-                {
-                    AttendanceId = Guid.NewGuid(),
-                    StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0),
-                    EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 17, 0, 0),
-                    DisciplineId = 1,
-                    Status = 4,
-                    RoomId = 3,
-                    Student = new
-                    {
-                        FirstName = "Джамиля",
-                        LastName = "Нургалиева",
-                    },
-                    Teacher = new
-                    {
-                        TeacherId = "0195d5c2-1cda-7136-987a-c4e591b59a78",
-                        FirstName = "Оспан",
-                    },
-                },
-            };
-
-            //tmp:
-            //attendanceInfos.AddRange(fakeAttendanceInfos);
+            var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
+            var groupAttendanceInfos = BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
+            attendanceInfos.AddRange(groupAttendanceInfos);
 
             var result = new HomeScreenDetails
             {
@@ -184,8 +50,24 @@ namespace RockSchool.WebApi.Controllers
                 Notes = notes,
             };
 
-
             return Ok(result);
+        }
+
+        private List<ParentAttendanceInfo> BuildGroupAttendanceInfos(IEnumerable<AttendanceDto> attendances)
+        {
+            var parentAttendances = new List<ParentAttendanceInfo>();
+
+            var groupIds = attendances.Select(a => a.GroupId).Distinct();
+            foreach (var groupId in groupIds)
+            {
+                var currentGroupAttendances = attendances.Where(a => a.GroupId == groupId);
+                var parentAttendance = currentGroupAttendances.First().ToParentAttendanceInfo();
+                parentAttendance.ChildAttendances = currentGroupAttendances.ToAttendanceInfos().ToArray();
+
+                parentAttendances.Add(parentAttendance);
+            }
+
+            return parentAttendances;
         }
     }
 }

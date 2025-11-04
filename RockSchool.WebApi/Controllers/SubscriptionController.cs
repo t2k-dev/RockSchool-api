@@ -44,7 +44,6 @@ namespace RockSchool.WebApi.Controllers
         public async Task<ActionResult> Get(Guid id)
         {
             var subscription = await _subscriptionService.GetAsync(id);
-
             if (subscription == null)
             {
                 return NotFound();
@@ -57,8 +56,8 @@ namespace RockSchool.WebApi.Controllers
                     SubscriptionId = schedule.SubscriptionId,
                     RoomId = schedule.RoomId,
                     WeekDay = schedule.WeekDay,
-                    StartTime = schedule.StartTime.ToString("HH:mm"),
-                    EndTime = schedule.EndTime.ToString("HH:mm"),
+                    StartTime = schedule.StartTime.ToString(@"hh\:mm"),
+                    EndTime = schedule.EndTime.ToString(@"hh\:mm"),
                 })
                 .ToArray();
 
@@ -108,8 +107,8 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSubscription(AddSubscriptionRequest request)
         {
-            var newSubscriptionId = await _subscriptionService.AddSubscription(request.Subscription, request.StudentIds, request.Schedules);
-            return Ok(newSubscriptionId);
+            await _subscriptionService.AddSubscriptionAsync(request.Subscription, request.StudentIds, request.Schedules);
+            return Ok();
         }
 
         [HttpPost("rescheduleAttendance")]
