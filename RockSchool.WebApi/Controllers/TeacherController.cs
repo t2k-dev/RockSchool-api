@@ -39,59 +39,6 @@ public class TeacherController : Controller
         _teacherService = teacherService;
     }
 
-    [HttpPost]
-    public async Task<ActionResult> AddTeacher([FromBody] RegisterTeacherRequestDto requestDto)
-    {
-        if (!ModelState.IsValid)
-        {
-            throw new Exception("Incorrect requestDto for registration.");
-        }
-
-        var newTeacher = new TeacherDto
-        {
-            FirstName = requestDto.Teacher.FirstName,
-            LastName = requestDto.Teacher.LastName,
-            BirthDate = requestDto.Teacher.BirthDate.ToUniversalTime(),
-            Phone = requestDto.Teacher.Phone,
-            BranchId = requestDto.Teacher.BranchId,
-            Sex = requestDto.Teacher.Sex,
-            DisciplineIds = requestDto.Teacher.Disciplines,
-            WorkingPeriods = requestDto.WorkingPeriods,
-            AllowGroupLessons = requestDto.Teacher.AllowGroupLessons,
-            AgeLimit = requestDto.Teacher.AgeLimit,
-            IsActive = true,
-        };
-
-        var teacherId = await _teacherService.AddTeacher(newTeacher);
-
-        return Ok(teacherId);
-    }
-
-    [HttpPut("{id}")]
-    public async Task<ActionResult> Put(Guid id, [FromBody] TeacherFormDto model)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var teacher = new TeacherDto
-        {
-            TeacherId = id,
-            FirstName = model.Teacher.FirstName,
-            LastName = model.Teacher.LastName,
-            BirthDate = model.Teacher.BirthDate,
-            Sex = model.Teacher.Sex,
-            Phone = model.Teacher.Phone,
-            AgeLimit = model.Teacher.AgeLimit,
-            AllowGroupLessons = model.Teacher.AllowGroupLessons,
-            DisciplineIds = model.Teacher.Disciplines,
-            WorkingPeriods = model.WorkingPeriods,
-        };
-
-        await _teacherService.UpdateTeacherAsync(teacher, model.DisciplinesChanged, model.PeriodsChanged);
-
-        return Ok();
-    }
-
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
@@ -177,6 +124,7 @@ public class TeacherController : Controller
                 WorkingPeriods = teacherDto.WorkingPeriods.ToArray(),
                 ScheduledWorkingPeriods = teacherDto.ScheduledWorkingPeriods.ToArray(),
                 Disciplines = teacherDto.DisciplineIds.ToArray(),
+                IsActive = teacherDto.IsActive,
             },
             Attendances = attendanceInfos.ToArray(),
             Subscriptions = subscriptionInfos.ToArray(),
@@ -223,10 +171,71 @@ public class TeacherController : Controller
         return Ok(response);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(Guid id)
+    [HttpPost]
+    public async Task<ActionResult> AddTeacher([FromBody] RegisterTeacherRequestDto requestDto)
     {
-        await _teacherService.DeleteTeacherAsync(id);
+        if (!ModelState.IsValid)
+        {
+            throw new Exception("Incorrect requestDto for registration.");
+        }
+
+        var newTeacher = new TeacherDto
+        {
+            FirstName = requestDto.Teacher.FirstName,
+            LastName = requestDto.Teacher.LastName,
+            BirthDate = requestDto.Teacher.BirthDate.ToUniversalTime(),
+            Phone = requestDto.Teacher.Phone,
+            BranchId = requestDto.Teacher.BranchId,
+            Sex = requestDto.Teacher.Sex,
+            DisciplineIds = requestDto.Teacher.Disciplines,
+            WorkingPeriods = requestDto.WorkingPeriods,
+            AllowGroupLessons = requestDto.Teacher.AllowGroupLessons,
+            AgeLimit = requestDto.Teacher.AgeLimit,
+            IsActive = true,
+        };
+
+        var teacherId = await _teacherService.AddTeacher(newTeacher);
+
+        return Ok(teacherId);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(Guid id, [FromBody] TeacherFormDto model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var teacher = new TeacherDto
+        {
+            TeacherId = id,
+            FirstName = model.Teacher.FirstName,
+            LastName = model.Teacher.LastName,
+            BirthDate = model.Teacher.BirthDate,
+            Sex = model.Teacher.Sex,
+            Phone = model.Teacher.Phone,
+            AgeLimit = model.Teacher.AgeLimit,
+            AllowGroupLessons = model.Teacher.AllowGroupLessons,
+            DisciplineIds = model.Teacher.Disciplines,
+            WorkingPeriods = model.WorkingPeriods,
+        };
+
+        await _teacherService.UpdateTeacherAsync(teacher, model.DisciplinesChanged, model.PeriodsChanged);
+
+        return Ok();
+    }
+
+    [HttpPost("{id}/activate")]
+    public async Task<ActionResult> Activate(Guid id)
+    {
+        await _teacherService.SetTeacherActiveAsync(id, true);
+
+        return Ok();
+    }
+
+    [HttpPost("{id}/deactivate")]
+    public async Task<ActionResult> Deactivate(Guid id)
+    {
+        await _teacherService.SetTeacherActiveAsync(id, false);
 
         return Ok();
     }

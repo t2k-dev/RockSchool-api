@@ -24,47 +24,15 @@ public class TeacherService : ITeacherService
 
     public async Task<TeacherDto[]> GetAllTeachersAsync()
     {
-        var teachers = await _teacherRepository.GetAllAsync();
-        
-        if (teachers == null || !teachers.Any())
-            return Array.Empty<TeacherDto>();
+        var teacherEntities = await _teacherRepository.GetAllAsync();
+        if (!teacherEntities.Any())
+        {
+            return [];
+        }
 
-        var teacherDtos = teachers.ToDto();
+        var teachers = teacherEntities.ToDto();
 
-        // var teacherDtos = teachers.Select(t => new TeacherDto
-        // {
-        //     TeacherId = t.TeacherId,
-        //     LastName = t.LastName,
-        //     FirstName = t.FirstName,
-        //     BirthDate = t.BirthDate,
-        //     Phone = t.Phone,
-        //     User = t.User,
-        //     Disciplines = t.Disciplines?.Select(d => new DisciplineDto
-        //     {
-        //         DisciplineId = d.DisciplineId,
-        //         Name = d.Name,
-        //         IsActive = d.IsActive,
-        //         Teachers = d.Teachers.ToDto(),
-        //     }).ToArray(),
-        //     WorkingPeriods = t.WorkingPeriods?.Select(w => new WorkingPeriodDto()
-        //     {
-        //         StartTime = w.StartTime,
-        //         EndTime = w.EndTime,
-        //         WeekDay = w.WeekDay,
-        //         TeacherId = t.TeacherId,
-        //         WorkingPeriodId = w.WorkingPeriodId,
-        //     }).ToArray(),
-        //     Branch = new BranchDto()
-        //     {
-        //         BranchId = t.BranchId,
-        //         Name = t.Branch?.Name,
-        //         Phone = t.Branch?.Phone,
-        //         Address = t.Branch?.Address,
-        //         Rooms = t.Branch?.Rooms?.ToDto(),
-        //     }
-        // }).ToArray();
-        
-        return teacherDtos;
+        return teachers;
     }
 
     public async Task<TeacherDto> GetTeacherByIdAsync(Guid id)
@@ -83,7 +51,7 @@ public class TeacherService : ITeacherService
                 Teachers = teacherDiscipline.Teachers.ToDto(),
             })
             .ToList();
-
+        
         var teacher = new TeacherDto
         {
             TeacherId = teacherEntity.TeacherId,
@@ -97,6 +65,7 @@ public class TeacherService : ITeacherService
             DisciplineIds = disciplines.Select(d => d.DisciplineId).ToArray(),
             AllowGroupLessons = teacherEntity.AllowGroupLessons,
             AgeLimit = teacherEntity.AgeLimit,
+            IsActive = teacherEntity.IsActive,
             BranchId = teacherEntity.BranchId,
             WorkingPeriods = teacherEntity.WorkingPeriods.ToDto(),
             ScheduledWorkingPeriods = teacherEntity.ScheduledWorkingPeriods.ToDto(),
@@ -162,6 +131,19 @@ public class TeacherService : ITeacherService
         }
 
         UpdateTeacherDetails(teacherDto, existingTeacher);
+
+        await _teacherRepository.UpdateAsync(existingTeacher);
+    }
+
+    public async Task SetTeacherActiveAsync(Guid id, bool isActive)
+    {
+        var existingTeacher = await _teacherRepository.GetByIdAsync(id);
+        if (existingTeacher == null)
+        {
+            throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
+        }
+
+        existingTeacher.IsActive = isActive;
 
         await _teacherRepository.UpdateAsync(existingTeacher);
     }

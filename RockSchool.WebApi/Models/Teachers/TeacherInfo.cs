@@ -19,6 +19,7 @@ public class TeacherInfo
     public int? BranchId { get; set; }
     public bool AllowGroupLessons { get; set; }
     public int AgeLimit { get; set; }
+    public bool IsActive { get; set; }
     public WorkingPeriodDto[] WorkingPeriods { get; set; }
     public ScheduledWorkingPeriodDto[] ScheduledWorkingPeriods { get; set; }
 }
