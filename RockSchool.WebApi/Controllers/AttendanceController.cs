@@ -1,12 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.Data.Enums;
+using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Attendances;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -106,6 +109,15 @@ public class AttendanceController : Controller
         attendance.StatusReason = declineAttendanceRequest.StatusReason;
 
         await _attendanceService.UpdateAttendanceAsync(attendance);
+
+        return Ok();
+    }
+
+    [HttpPost("submit")]
+    public async Task<ActionResult> Submit(SubmitGroupAttendanceRequest submitGroupAttendanceRequest)
+    {
+        var attendances = submitGroupAttendanceRequest.ChildAttendances.ToDtos();
+        await _attendanceService.UpdateAttendances(attendances);
 
         return Ok();
     }

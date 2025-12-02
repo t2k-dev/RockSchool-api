@@ -32,7 +32,7 @@ namespace RockSchool.WebApi.Models.Subscriptions
         public int? AttendanceLength { get; set; }
 
         public TrialStatus? TrialStatus { get; set; }
-
+        public Guid? GroupId { get; set; }
         public ScheduleInfo[] Schedules { get; set; }
     }
 }

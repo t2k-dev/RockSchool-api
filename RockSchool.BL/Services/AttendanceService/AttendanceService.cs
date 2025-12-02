@@ -125,6 +125,19 @@ public class AttendanceService : IAttendanceService
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
 
+    public async Task UpdateAttendances(List<AttendanceDto> attendances)
+    {
+        
+        foreach (var attendance in attendances)
+        {
+            var attendanceEntity = await _attendanceRepository.GetAsync(attendance.AttendanceId);
+            attendanceEntity.Status = attendance.Status;
+            attendanceEntity.StatusReason = attendance.StatusReason;
+
+            _attendanceRepository.UpdateAsync(attendanceEntity);
+        }
+    }
+
     private static void ModifyAttendanceAttributes(AttendanceDto updatedAttendance,
         AttendanceEntity existingEntity)
     {

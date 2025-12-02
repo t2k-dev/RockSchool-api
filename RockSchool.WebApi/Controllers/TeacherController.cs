@@ -113,7 +113,6 @@ public class TeacherController : Controller
             });
         }
 
-        // TODO: remap from DTO to Info
         var teacherScreenDetails = new TeacherScreenDetailsInfo
         {
             Teacher = new TeacherInfo

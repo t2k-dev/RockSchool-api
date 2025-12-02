@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
-using RockSchool.WebApi.Models.Subscriptions;
-using System.Threading.Tasks;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Services.TeacherService;
 using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;
+using RockSchool.WebApi.Models.Students;
+using RockSchool.WebApi.Models.Subscriptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -21,6 +23,7 @@ namespace RockSchool.WebApi.Controllers
     [Route("api/[controller]")]
     public class SubscriptionController : Controller
     {
+        private readonly ITeacherService _teacherService;
         private readonly IStudentService _studentService;
         private readonly ISubscriptionService _subscriptionService;
         private readonly IAttendanceService _attendanceService;
@@ -30,7 +33,7 @@ namespace RockSchool.WebApi.Controllers
         
 
         public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService,
-            IScheduleService scheduleService, INoteService noteService, IReschedulingService reschedulingService)
+            IScheduleService scheduleService, INoteService noteService, IReschedulingService reschedulingService, ITeacherService teacherService)
         {
             _studentService = studentService;
             _subscriptionService = subscriptionService;
@@ -38,6 +41,7 @@ namespace RockSchool.WebApi.Controllers
             _scheduleService = scheduleService;
             _noteService = noteService;
             _reschedulingService = reschedulingService;
+            _teacherService = teacherService;
         }
 
         [HttpGet("{id}")]
@@ -73,6 +77,77 @@ namespace RockSchool.WebApi.Controllers
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
                 Schedules = scheduleInfos,
+            };
+
+            return Ok(response);
+        }
+
+        [HttpGet("{id}/form-data")]
+        public async Task<ActionResult> GetSubscriptionFormData(Guid id)
+        {
+            var subscription = await _subscriptionService.GetAsync(id);
+            if (subscription == null)
+            {
+                return NotFound();
+            }
+
+            var groupId = subscription.GroupId;
+
+            var students = new List<StudentDto>();
+            if (groupId != null)
+            {
+                var subscriptions = await _subscriptionService.GetSubscriptionByGroupIdAsync(groupId.Value);
+                foreach (var groupSubscription in subscriptions)
+                {
+                    var student = await _studentService.GetByIdAsync(groupSubscription.StudentId);
+                    students.Add(student);
+                }
+            }
+            else
+            {
+                var student = await _studentService.GetByIdAsync(subscription.StudentId);
+                students.Add(student);
+            }
+
+            var schedules = await _scheduleService.GetAllBySubscriptionIdAsync(id);
+            var scheduleInfos = schedules?.Select(schedule => new ScheduleInfo
+                {
+                    ScheduleId = schedule.ScheduleId,
+                    SubscriptionId = schedule.SubscriptionId,
+                    RoomId = schedule.RoomId,
+                    WeekDay = schedule.WeekDay,
+                    StartTime = schedule.StartTime.ToString(@"hh\:mm"),
+                    EndTime = schedule.EndTime.ToString(@"hh\:mm"),
+                })
+                .ToArray();
+
+            var teacher = await _teacherService.GetTeacherByIdAsync(subscription.TeacherId);
+            var studentInfos = students.Select(s => new StudentInfo
+            {
+                StudentId = s.StudentId, 
+                FirstName = s.FirstName, 
+                LastName = s.LastName
+            }).ToArray();
+
+            var response = new 
+            {
+                Subscription = new SubscriptionInfo{
+                    SubscriptionId = subscription.SubscriptionId,
+                    AttendanceCount = subscription.AttendanceCount,
+                    AttendanceLength = subscription.AttendanceLength,
+                    DisciplineId = subscription.DisciplineId,
+                    Status = subscription.Status,
+                    StartDate = subscription.StartDate,
+                    Schedules = scheduleInfos,
+                    GroupId = subscription.GroupId,
+                },
+                Teacher = new
+                {
+                    teacher.TeacherId,
+                    teacher.FirstName,
+                    teacher.LastName,
+                },
+                Students = studentInfos
             };
 
             return Ok(response);

@@ -42,6 +42,12 @@ public class SubscriptionRepository : BaseRepository
             .ToArrayAsync();
     }
 
+    public async Task<SubscriptionEntity[]?> GetByGroupIdAsync(Guid groupId)
+    {
+        return await RockSchoolContext.Subscriptions
+            .Where(a => a.GroupId == groupId)
+            .ToArrayAsync();
+    }
 
     public async Task UpdateSubscriptionAsync(SubscriptionEntity subscriptionEntity)
     {
