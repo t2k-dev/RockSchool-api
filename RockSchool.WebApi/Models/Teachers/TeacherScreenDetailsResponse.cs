@@ -5,7 +5,7 @@ using RockSchool.WebApi.Models.Subscriptions;
 
 namespace RockSchool.WebApi.Models.Teachers
 {
-    public class TeacherScreenDetailsInfo
+    public class TeacherScreenDetailsResponse
     {
         public TeacherInfo Teacher { get; set; }
         public SubscriptionInfo[] Subscriptions { get; set; }

@@ -40,7 +40,7 @@ namespace RockSchool.WebApi.Controllers
             var allAttendances = await _attendanceService.GetByBranchIdAsync(branchId);
 
             var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
-            var groupAttendanceInfos = BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
+            var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
             attendanceInfos.AddRange(groupAttendanceInfos);
 
             var result = new HomeScreenDetails
@@ -51,23 +51,6 @@ namespace RockSchool.WebApi.Controllers
             };
 
             return Ok(result);
-        }
-
-        private List<ParentAttendanceInfo> BuildGroupAttendanceInfos(IEnumerable<AttendanceDto> attendances)
-        {
-            var parentAttendances = new List<ParentAttendanceInfo>();
-
-            var groupIds = attendances.Select(a => a.GroupId).Distinct();
-            foreach (var groupId in groupIds)
-            {
-                var currentGroupAttendances = attendances.Where(a => a.GroupId == groupId);
-                var parentAttendance = currentGroupAttendances.First().ToParentAttendanceInfo();
-                parentAttendance.ChildAttendances = currentGroupAttendances.ToAttendanceInfos().ToArray();
-
-                parentAttendances.Add(parentAttendance);
-            }
-
-            return parentAttendances;
         }
     }
 }

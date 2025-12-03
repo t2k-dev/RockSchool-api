@@ -3,11 +3,13 @@ using System.Linq;
 using RockSchool.BL.Dtos;
 using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models.Attendances;
+using RockSchool.WebApi.Models.Subscriptions;
 
 namespace RockSchool.WebApi.Helpers
 {
     public static class ModelsMappingHelper
     {
+        // Attendance
         public static AttendanceInfo ToInfo(this AttendanceDto attendanceDto)
         {
             return new AttendanceInfo
@@ -77,6 +79,46 @@ namespace RockSchool.WebApi.Helpers
                 IsTrial = attendanceInfo.IsTrial,
                 GroupId = attendanceInfo.GroupId,
             };
+        }
+
+        // Subscription
+
+        public static SubscriptionInfo ToInfo(this SubscriptionDto subscription)
+        {
+            return new SubscriptionInfo
+            {
+                SubscriptionId = subscription.SubscriptionId,
+                StartDate = subscription.StartDate,
+                Student = subscription.Student,
+                Status = subscription.Status,
+                DisciplineId = subscription.DisciplineId,
+                TrialStatus = subscription.TrialStatus,
+                AttendanceCount = subscription.AttendanceCount,
+            };
+        }
+
+        public static ParentSubscriptionInfo ToParentSubscriptionInfo(this SubscriptionDto subscription)
+        {
+            return new ParentSubscriptionInfo
+            {
+                SubscriptionId = subscription.SubscriptionId,
+                StartDate = subscription.StartDate,
+                Student = subscription.Student,
+                Status = subscription.Status,
+                DisciplineId = subscription.DisciplineId,
+                TrialStatus = subscription.TrialStatus,
+                AttendanceCount = subscription.AttendanceCount,
+            };
+        }
+
+        public static List<ParentSubscriptionInfo> ToParentSubscriptionInfos(this IEnumerable<SubscriptionDto> subscriptionDto)
+        {
+            return subscriptionDto.Select(dto => dto.ToParentSubscriptionInfo()).ToList();
+        }
+
+        public static List<SubscriptionInfo> ToSubscriptionInfos(this IEnumerable<SubscriptionDto> subscriptionDtos)
+        {
+            return subscriptionDtos.Select(dto => dto.ToInfo()).ToList();
         }
     }
 }

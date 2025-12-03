@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
@@ -11,10 +7,15 @@ using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Factories;
+using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -73,47 +74,27 @@ public class TeacherController : Controller
         return Ok(teachers);
     }
 
-    [HttpGet("getTeacherScreenDetails/{id}")]
+    [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetTeacherScreenDetails(Guid id)
     {
         var teacherDto = await _teacherService.GetTeacherByIdAsync(id);
 
-        var attendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
+        var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
             id,
             DateTime.MinValue,
             DateTime.MaxValue);
-        var attendanceInfos = new List<AttendanceInfo>();
-        foreach (var attendance in attendances)
-        {
-            attendanceInfos.Add(new AttendanceInfo
-            {
-                StartDate = attendance.StartDate,
-                EndDate = attendance.EndDate,
-                Status = (int)attendance.Status,
-                Student = attendance.Student,
-                IsTrial = attendance.IsTrial,
-                RoomId = attendance.RoomId,
-                DisciplineId = attendance.DisciplineId,
-            });
-        }
+
+        var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
+        var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
+        attendanceInfos.AddRange(groupAttendanceInfos);
+
 
         var subscriptions = await _subscriptionService.GetSubscriptionsByTeacherId(id);
-        var subscriptionInfos = new List<SubscriptionInfo>();
-        foreach (var subscription in subscriptions)
-        {
-            subscriptionInfos.Add(new SubscriptionInfo
-            {
-                SubscriptionId = subscription.SubscriptionId,
-                StartDate = subscription.StartDate,
-                Student = subscription.Student,
-                Status = subscription.Status,
-                DisciplineId = subscription.DisciplineId,
-                TrialStatus = subscription.TrialStatus,
-                AttendanceCount = subscription.AttendanceCount,
-            });
-        }
+        var subscriptionInfos = subscriptions.Where(a => a.GroupId == null).ToParentSubscriptionInfos();
+        var groupSubscriptionInfos = SubscriptionBuilder.BuildGroupSubscriptionInfos(subscriptions.Where(a => a.GroupId != null));
+        subscriptionInfos.AddRange(groupSubscriptionInfos);
 
-        var teacherScreenDetails = new TeacherScreenDetailsInfo
+        var teacherScreenDetails = new TeacherScreenDetailsResponse
         {
             Teacher = new TeacherInfo
             {
