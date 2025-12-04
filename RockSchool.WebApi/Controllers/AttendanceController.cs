@@ -118,7 +118,7 @@ public class AttendanceController : Controller
     public async Task<ActionResult> Submit(SubmitGroupAttendanceRequest submitGroupAttendanceRequest)
     {
         var attendances = submitGroupAttendanceRequest.ChildAttendances.ToModels();
-        await _attendanceService.UpdateAttendances(attendances);
+        await _attendanceService.SubmitAttendances(attendances);
 
         return Ok();
     }

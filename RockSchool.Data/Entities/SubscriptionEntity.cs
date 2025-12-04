@@ -15,9 +15,9 @@ public class SubscriptionEntity
     [ForeignKey(nameof(StudentId))]
     public virtual StudentEntity Student { get; set; }
 
-    public int? AttendanceCount { get; set; }
+    public int AttendanceCount { get; set; }
 
-    public int? AttendanceLength { get; set; }
+    public int AttendanceLength { get; set; }
 
     public DateOnly StartDate { get; set; }
 

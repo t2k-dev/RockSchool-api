@@ -3,12 +3,13 @@ using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Subscriptions;
 using System.Collections.Generic;
 using System.Linq;
+using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Helpers
 {
     public class SubscriptionBuilder
     {
-        public static List<ParentSubscriptionInfo> BuildGroupSubscriptionInfos(IEnumerable<SubscriptionDto> subscriptions)
+        public static List<ParentSubscriptionInfo> BuildGroupSubscriptionInfos(IEnumerable<Subscription> subscriptions)
         {
             var parentSubscriptions = new List<ParentSubscriptionInfo>();
 

@@ -110,14 +110,15 @@ public class AttendanceService : IAttendanceService
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
 
-    public async Task UpdateAttendances(List<Attendance> attendances)
+    public async Task SubmitAttendances(List<Attendance> attendances)
     {
-        
         foreach (var attendance in attendances)
         {
             var attendanceEntity = await _attendanceRepository.GetAsync(attendance.AttendanceId);
+            
             attendanceEntity.Status = attendance.Status;
             attendanceEntity.StatusReason = attendance.StatusReason;
+            attendanceEntity.IsCompleted = true;
 
             await _attendanceRepository.UpdateAsync(attendanceEntity);
         }

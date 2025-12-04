@@ -10,7 +10,7 @@ public class Attendance
     public Guid StudentId { get; set; }
     public StudentDto Student { get; set; }
     public Guid SubscriptionId { get; set; }
-    public SubscriptionDto Subscription { get; set; }
+    public Subscription Subscription { get; set; }
     public int DisciplineId { get; set; }
     public DisciplineDto Discipline { get; set; }
     public Guid TeacherId { get; set; }

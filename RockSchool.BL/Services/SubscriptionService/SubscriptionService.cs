@@ -30,7 +30,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             _scheduleService = scheduleService;
         }
 
-        public async Task<Guid> AddSubscriptionAsync(SubscriptionDto subscriptionDto)
+        public async Task<Guid> AddSubscriptionAsync(Subscription subscriptionDto)
         {
             var subscriptionEntity = new SubscriptionEntity
             {
@@ -64,7 +64,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             foreach (var studentId in studentIds)
             {
                 // Subscription
-                var subscription = new SubscriptionDto
+                var subscription = new Subscription
                 {
                     TeacherId = subscriptionDetails.TeacherId,
                     DisciplineId = subscriptionDetails.DisciplineId,
@@ -109,25 +109,25 @@ namespace RockSchool.BL.Services.SubscriptionService
             }
         }
 
-        public async Task<SubscriptionDto?> GetAsync(Guid subscriptionId)
+        public async Task<Subscription?> GetAsync(Guid subscriptionId)
         {
             var subscription = await _subscriptionRepository.GetAsync(subscriptionId);
             return subscription?.ToDto();
         }
 
-        public async Task<SubscriptionDto[]> GetSubscriptionsByStudentId(Guid studentId)
+        public async Task<Subscription[]> GetSubscriptionsByStudentId(Guid studentId)
         {
             var subscriptions = await _subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
             return subscriptions.ToDto();
         }
 
-        public async Task<SubscriptionDto[]?> GetSubscriptionByGroupIdAsync(Guid groupId)
+        public async Task<Subscription[]?> GetSubscriptionByGroupIdAsync(Guid groupId)
         {
             var subscriptions = await _subscriptionRepository.GetByGroupIdAsync(groupId);
             return subscriptions.ToDto();
         }
 
-        public async Task<SubscriptionDto[]> GetSubscriptionsByTeacherId(Guid teacherId)
+        public async Task<Subscription[]> GetSubscriptionsByTeacherId(Guid teacherId)
         {
             var subscriptions = await _subscriptionRepository.GetSubscriptionsByTeacherIdAsync(teacherId);
             return subscriptions.ToDto();
@@ -177,7 +177,7 @@ namespace RockSchool.BL.Services.SubscriptionService
 
         public async Task<Guid> AddTrialSubscriptionAsync(TrialRequestDto request)
         {
-            var subscriptionDto = new SubscriptionDto
+            var subscriptionDto = new Subscription
             {
                 DisciplineId = request.DisciplineId,
                 StudentId = request.Student.StudentId,

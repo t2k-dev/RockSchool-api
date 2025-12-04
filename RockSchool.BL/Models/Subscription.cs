@@ -1,16 +1,9 @@
-﻿using RockSchool.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RockSchool.BL.Dtos;
 using RockSchool.Data.Enums;
 
-namespace RockSchool.BL.Dtos
+namespace RockSchool.BL.Models
 {
-    public class SubscriptionDto
+    public class Subscription
     {
         public Guid SubscriptionId { get; set; }
 
@@ -20,9 +13,9 @@ namespace RockSchool.BL.Dtos
 
         public virtual StudentDto Student { get; set; }
 
-        public int? AttendanceCount { get; set; }
+        public int AttendanceCount { get; set; }
 
-        public int? AttendanceLength { get; set; }
+        public int AttendanceLength { get; set; }
 
         public DateOnly StartDate { get; set; }
 

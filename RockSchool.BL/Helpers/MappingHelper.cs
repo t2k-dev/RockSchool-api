@@ -148,11 +148,11 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
-        public static SubscriptionDto ToDto(this SubscriptionEntity entity)
+        public static Subscription ToDto(this SubscriptionEntity entity)
         {
             if (entity == null) return null;
 
-            return new SubscriptionDto
+            return new Subscription
             {
                 SubscriptionId = entity.SubscriptionId,
                 GroupId = entity.GroupId,
@@ -174,7 +174,7 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static SubscriptionDto[] ToDto(this IEnumerable<SubscriptionEntity> entities)
+        public static Subscription[] ToDto(this IEnumerable<SubscriptionEntity> entities)
         {
             return entities.Select(w => w.ToDto())
                 .ToArray();

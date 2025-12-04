@@ -34,5 +34,10 @@ namespace RockSchool.WebApi.Models.Subscriptions
         public TrialStatus? TrialStatus { get; set; }
         public Guid? GroupId { get; set; }
         public ScheduleInfo[] Schedules { get; set; }
+
+        /// <summary>
+        /// Calculate.
+        /// </summary>
+        public int AttendancesLeft { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -88,6 +89,8 @@ public class StudentController : Controller
         var subscriptionsInfos = new List<SubscriptionInfo>();
         foreach (var subscription in subscriptions)
         {
+            var completedAttendancesCount = attendances.Count(a => a.SubscriptionId == subscription.SubscriptionId && a.IsCompleted);
+
             subscriptionsInfos.Add(new SubscriptionInfo
             {
                 StartDate = subscription.StartDate,
@@ -97,6 +100,7 @@ public class StudentController : Controller
                 DisciplineId = subscription.DisciplineId,
                 Teacher = subscription.Teacher,
                 AttendanceCount = subscription.AttendanceCount,
+                AttendancesLeft = subscription.AttendanceCount - completedAttendancesCount,
             });
         }
 

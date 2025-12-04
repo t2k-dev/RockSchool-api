@@ -88,7 +88,7 @@ namespace RockSchool.WebApi.Helpers
 
         // Subscription
 
-        public static SubscriptionInfo ToInfo(this SubscriptionDto subscription)
+        public static SubscriptionInfo ToInfo(this Subscription subscription)
         {
             return new SubscriptionInfo
             {
@@ -102,7 +102,7 @@ namespace RockSchool.WebApi.Helpers
             };
         }
 
-        public static ParentSubscriptionInfo ToParentSubscriptionInfo(this SubscriptionDto subscription)
+        public static ParentSubscriptionInfo ToParentSubscriptionInfo(this Subscription subscription)
         {
             return new ParentSubscriptionInfo
             {
@@ -116,12 +116,12 @@ namespace RockSchool.WebApi.Helpers
             };
         }
 
-        public static List<ParentSubscriptionInfo> ToParentSubscriptionInfos(this IEnumerable<SubscriptionDto> subscriptionDto)
+        public static List<ParentSubscriptionInfo> ToParentSubscriptionInfos(this IEnumerable<Subscription> subscriptionDto)
         {
             return subscriptionDto.Select(dto => dto.ToParentSubscriptionInfo()).ToList();
         }
 
-        public static List<SubscriptionInfo> ToSubscriptionInfos(this IEnumerable<SubscriptionDto> subscriptionDtos)
+        public static List<SubscriptionInfo> ToSubscriptionInfos(this IEnumerable<Subscription> subscriptionDtos)
         {
             return subscriptionDtos.Select(dto => dto.ToInfo()).ToList();
         }
