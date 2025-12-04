@@ -99,6 +99,7 @@ namespace RockSchool.WebApi.Helpers
                 DisciplineId = subscription.DisciplineId,
                 TrialStatus = subscription.TrialStatus,
                 AttendanceCount = subscription.AttendanceCount,
+                AttendancesLeft = subscription.AttendancesLeft,
             };
         }
 
@@ -113,6 +114,7 @@ namespace RockSchool.WebApi.Helpers
                 DisciplineId = subscription.DisciplineId,
                 TrialStatus = subscription.TrialStatus,
                 AttendanceCount = subscription.AttendanceCount,
+                AttendancesLeft = subscription.AttendancesLeft,
             };
         }
 

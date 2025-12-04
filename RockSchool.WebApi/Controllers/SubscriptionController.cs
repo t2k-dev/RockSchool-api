@@ -69,6 +69,7 @@ namespace RockSchool.WebApi.Controllers
             {
                 SubscriptionId = subscription.SubscriptionId,
                 AttendanceCount = subscription.AttendanceCount,
+                AttendancesLeft = subscription.AttendancesLeft,
                 AttendanceLength = subscription.AttendanceLength,
                 DisciplineId = subscription.DisciplineId,
                 Status = subscription.Status,
@@ -134,6 +135,7 @@ namespace RockSchool.WebApi.Controllers
                 Subscription = new SubscriptionInfo{
                     SubscriptionId = subscription.SubscriptionId,
                     AttendanceCount = subscription.AttendanceCount,
+                    AttendancesLeft = subscription.AttendancesLeft,
                     AttendanceLength = subscription.AttendanceLength,
                     DisciplineId = subscription.DisciplineId,
                     Status = subscription.Status,

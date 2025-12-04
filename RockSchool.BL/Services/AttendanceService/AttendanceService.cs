@@ -10,11 +10,13 @@ public class AttendanceService : IAttendanceService
 {
     private readonly AttendanceRepository _attendanceRepository;
     private readonly ScheduleRepository _scheduleRepository;
+    private readonly SubscriptionRepository _subscriptionRepository;
 
-    public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository)
+    public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository, SubscriptionRepository subscriptionRepository)
     {
         _attendanceRepository = attendanceRepository;
         _scheduleRepository = scheduleRepository;
+        _subscriptionRepository = subscriptionRepository;
     }
 
     public async Task<Attendance[]> GetAllAttendancesAsync()
@@ -121,6 +123,11 @@ public class AttendanceService : IAttendanceService
             attendanceEntity.IsCompleted = true;
 
             await _attendanceRepository.UpdateAsync(attendanceEntity);
+
+            // TODO: refactor
+            var subscriptionEntity = await _subscriptionRepository.GetAsync(attendance.SubscriptionId);
+            subscriptionEntity.AttendancesLeft -= 1;
+            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
     }
 

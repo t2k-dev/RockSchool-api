@@ -36,7 +36,7 @@ namespace RockSchool.WebApi.Models.Subscriptions
         public ScheduleInfo[] Schedules { get; set; }
 
         /// <summary>
-        /// Calculate.
+        /// Additional field.
         /// </summary>
         public int AttendancesLeft { get; set; }
     }

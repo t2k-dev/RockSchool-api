@@ -78,34 +78,38 @@ public class TeacherController : Controller
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetTeacherScreenDetails(Guid id)
     {
-        var teacherDto = await _teacherService.GetTeacherByIdAsync(id);
+        var teacher = await _teacherService.GetTeacherByIdAsync(id);
 
-        var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
-            id,
-            DateTime.MinValue,
-            DateTime.MaxValue);
+        var attendanceInfos = new List<ParentAttendanceInfo>();
+        var subscriptionInfos = new List<ParentSubscriptionInfo>();
 
-        var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
-        var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
-        attendanceInfos.AddRange(groupAttendanceInfos);
-
+        var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(id, DateTime.MinValue, DateTime.MaxValue);
+        if (allAttendances != null)
+        {
+            attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
+            var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
+            attendanceInfos.AddRange(groupAttendanceInfos);
+        }
 
         var subscriptions = await _subscriptionService.GetSubscriptionsByTeacherId(id);
-        var subscriptionInfos = subscriptions.Where(a => a.GroupId == null).ToParentSubscriptionInfos();
-        var groupSubscriptionInfos = SubscriptionBuilder.BuildGroupSubscriptionInfos(subscriptions.Where(a => a.GroupId != null));
-        subscriptionInfos.AddRange(groupSubscriptionInfos);
+        if (subscriptions != null)
+        {
+            subscriptionInfos = subscriptions.Where(a => a.GroupId == null).ToParentSubscriptionInfos();
+            var groupSubscriptionInfos = SubscriptionBuilder.BuildGroupSubscriptionInfos(subscriptions.Where(a => a.GroupId != null));
+            subscriptionInfos.AddRange(groupSubscriptionInfos);
+        }
 
         var teacherScreenDetails = new TeacherScreenDetailsResponse
         {
             Teacher = new TeacherInfo
             {
-                TeacherId = teacherDto.TeacherId,
-                FirstName = teacherDto.FirstName,
-                LastName = teacherDto.LastName,
-                WorkingPeriods = teacherDto.WorkingPeriods.ToArray(),
-                ScheduledWorkingPeriods = teacherDto.ScheduledWorkingPeriods.ToArray(),
-                Disciplines = teacherDto.DisciplineIds.ToArray(),
-                IsActive = teacherDto.IsActive,
+                TeacherId = teacher.TeacherId,
+                FirstName = teacher.FirstName,
+                LastName = teacher.LastName,
+                WorkingPeriods = teacher.WorkingPeriods.ToArray(),
+                ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods.ToArray(),
+                Disciplines = teacher.DisciplineIds.ToArray(),
+                IsActive = teacher.IsActive,
             },
             Attendances = attendanceInfos.ToArray(),
             Subscriptions = subscriptionInfos.ToArray(),

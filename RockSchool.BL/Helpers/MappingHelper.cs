@@ -159,6 +159,7 @@ namespace RockSchool.BL.Helpers
                 StudentId = entity.StudentId,
                 Student = entity.Student?.ToDto(),
                 AttendanceCount = entity.AttendanceCount,
+                AttendancesLeft = entity.AttendancesLeft,
                 AttendanceLength = entity.AttendanceLength,
                 StartDate = entity.StartDate,
                 Status = entity.Status,

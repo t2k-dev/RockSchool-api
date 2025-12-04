@@ -100,7 +100,7 @@ public class StudentController : Controller
                 DisciplineId = subscription.DisciplineId,
                 Teacher = subscription.Teacher,
                 AttendanceCount = subscription.AttendanceCount,
-                AttendancesLeft = subscription.AttendanceCount - completedAttendancesCount,
+                AttendancesLeft = subscription.AttendancesLeft,
             });
         }
 

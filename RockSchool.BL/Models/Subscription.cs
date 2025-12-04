@@ -17,6 +17,8 @@ namespace RockSchool.BL.Models
 
         public int AttendanceLength { get; set; }
 
+        public int AttendancesLeft { get; set; }
+
         public DateOnly StartDate { get; set; }
 
         public int Status { get; set; }

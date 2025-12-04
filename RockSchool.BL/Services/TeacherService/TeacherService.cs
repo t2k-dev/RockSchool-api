@@ -1,4 +1,5 @@
-﻿using RockSchool.BL.Dtos;
+﻿using System.Diagnostics.CodeAnalysis;
+using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
 using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.Data.Entities;
