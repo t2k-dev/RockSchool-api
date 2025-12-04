@@ -10,6 +10,7 @@ using RockSchool.WebApi.Models.Attendances;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -48,7 +49,7 @@ public class AttendanceController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var addAttendanceForStudentServiceDto = new AttendanceDto()
+        var addAttendanceForStudentServiceDto = new Attendance()
         {
             StudentId = dto.StudentId,
             TeacherId = dto.TeacherId,
@@ -116,7 +117,7 @@ public class AttendanceController : Controller
     [HttpPost("submit")]
     public async Task<ActionResult> Submit(SubmitGroupAttendanceRequest submitGroupAttendanceRequest)
     {
-        var attendances = submitGroupAttendanceRequest.ChildAttendances.ToDtos();
+        var attendances = submitGroupAttendanceRequest.ChildAttendances.ToModels();
         await _attendanceService.UpdateAttendances(attendances);
 
         return Ok();

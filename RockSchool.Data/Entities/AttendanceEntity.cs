@@ -50,5 +50,8 @@ public class AttendanceEntity
     public virtual RoomEntity Room { get; set; }
 
     public string? Comment { get; set; }
+
     public bool IsTrial { get; set; }
+
+    public bool IsCompleted { get; set; }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Subscriptions;
@@ -10,61 +11,65 @@ namespace RockSchool.WebApi.Helpers
     public static class ModelsMappingHelper
     {
         // Attendance
-        public static AttendanceInfo ToInfo(this AttendanceDto attendanceDto)
+        public static AttendanceInfo ToInfo(this Attendance attendance)
         {
             return new AttendanceInfo
             {
-                AttendanceId = attendanceDto.AttendanceId,
-                SubscriptionId = attendanceDto.SubscriptionId,
-                StartDate = attendanceDto.StartDate,
-                EndDate = attendanceDto.EndDate,
-                Status = (int)attendanceDto.Status,
-                StatusReason = attendanceDto.StatusReason,
-                RoomId = attendanceDto.RoomId,
-                DisciplineId = attendanceDto.DisciplineId,
-                Student = attendanceDto.Student,
-                Teacher = attendanceDto.Teacher,
-                IsTrial = attendanceDto.IsTrial
+                AttendanceId = attendance.AttendanceId,
+                SubscriptionId = attendance.SubscriptionId,
+                StartDate = attendance.StartDate,
+                EndDate = attendance.EndDate,
+                Status = (int) attendance.Status,
+                StatusReason = attendance.StatusReason,
+                RoomId = attendance.RoomId,
+                DisciplineId = attendance.DisciplineId,
+                Student = attendance.Student,
+                Teacher = attendance.Teacher,
+                IsTrial = attendance.IsTrial,
+                IsCompleted = attendance.IsCompleted,
+                GroupId = attendance.GroupId,
+                StudentId = attendance.StudentId,
             };
         }
 
-        public static List<AttendanceInfo> ToAttendanceInfos(this IEnumerable<AttendanceDto> attendanceDtos)
+        public static List<AttendanceInfo> ToAttendanceInfos(this IEnumerable<Attendance> attendances)
         {
-            return attendanceDtos.Select(dto => dto.ToInfo()).ToList();
+            return attendances.Select(dto => dto.ToInfo()).ToList();
         }
 
-        public static ParentAttendanceInfo ToParentAttendanceInfo(this AttendanceDto attendanceDto)
+        public static ParentAttendanceInfo ToParentAttendanceInfo(this Attendance attendance)
         {
             return new ParentAttendanceInfo
             {
-                AttendanceId = attendanceDto.AttendanceId,
-                SubscriptionId = attendanceDto.SubscriptionId,
-                StartDate = attendanceDto.StartDate,
-                EndDate = attendanceDto.EndDate,
-                Status = (int)attendanceDto.Status,
-                StatusReason = attendanceDto.StatusReason,
-                RoomId = attendanceDto.RoomId,
-                DisciplineId = attendanceDto.DisciplineId,
-                Student = attendanceDto.Student,
-                Teacher = attendanceDto.Teacher,
-                IsTrial = attendanceDto.IsTrial,
-                GroupId = attendanceDto.GroupId,
+                AttendanceId = attendance.AttendanceId,
+                SubscriptionId = attendance.SubscriptionId,
+                StartDate = attendance.StartDate,
+                EndDate = attendance.EndDate,
+                Status = (int)attendance.Status,
+                StatusReason = attendance.StatusReason,
+                RoomId = attendance.RoomId,
+                DisciplineId = attendance.DisciplineId,
+                Student = attendance.Student,
+                Teacher = attendance.Teacher,
+                IsTrial = attendance.IsTrial,
+                IsCompleted = attendance.IsCompleted,
+                GroupId = attendance.GroupId,
             };
         }
 
-        public static List<ParentAttendanceInfo> ToParentAttendanceInfos(this IEnumerable<AttendanceDto> attendanceDtos)
+        public static List<ParentAttendanceInfo> ToParentAttendanceInfos(this IEnumerable<Attendance> attendances)
         {
-            return attendanceDtos.Select(dto => dto.ToParentAttendanceInfo()).ToList();
+            return attendances.Select(dto => dto.ToParentAttendanceInfo()).ToList();
         }
 
-        public static List<AttendanceDto> ToDtos(this IEnumerable<AttendanceInfo> attendanceInfos)
+        public static List<Attendance> ToModels(this IEnumerable<AttendanceInfo> attendanceInfos)
         {
-            return attendanceInfos.Select(attendanceInfo => attendanceInfo.ToDto()).ToList();
+            return attendanceInfos.Select(attendanceInfo => attendanceInfo.ToModel()).ToList();
         }
 
-        public static AttendanceDto ToDto(this AttendanceInfo attendanceInfo)
+        public static Attendance ToModel(this AttendanceInfo attendanceInfo)
         {
-            return new AttendanceDto
+            return new Attendance
             {
                 AttendanceId = attendanceInfo.AttendanceId,
                 SubscriptionId = attendanceInfo.SubscriptionId,

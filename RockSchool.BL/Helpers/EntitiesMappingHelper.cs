@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RockSchool.BL.Models;
 
 namespace RockSchool.BL.Helpers
 {
@@ -27,13 +28,13 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static List<AttendanceEntity> ToEntities(this IEnumerable<AttendanceDto> attendances)
+        public static List<AttendanceEntity> ToEntities(this IEnumerable<Attendance> attendances)
         {
             return attendances.Select(a => a.ToEntity())
                 .ToList();
         }
 
-        public static AttendanceEntity ToEntity(this AttendanceDto attendance)
+        public static AttendanceEntity ToEntity(this Attendance attendance)
         {
             return new AttendanceEntity
             {
@@ -50,9 +51,8 @@ namespace RockSchool.BL.Helpers
                 DisciplineId = attendance.DisciplineId,
                 GroupId = attendance.GroupId,
                 IsTrial = attendance.IsTrial,
+                IsCompleted = attendance.IsCompleted,
             };
         }
-
-
     }
 }

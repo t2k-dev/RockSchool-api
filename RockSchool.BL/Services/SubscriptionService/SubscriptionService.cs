@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
+using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
@@ -89,7 +90,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 }
 
                 // Attendances
-                var attendancesByStudent = templateAttendances.Select(templateAttendance => new AttendanceDto
+                var attendancesByStudent = templateAttendances.Select(templateAttendance => new Attendance
                 {
                     DisciplineId = templateAttendance.DisciplineId,
                     BranchId = templateAttendance.BranchId,
@@ -168,7 +169,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
 
-        public Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate)
+        public Task<Attendance> RescheduleAttendance(Guid attendanceId, DateTime startDate)
         {
             //RescheduleAttendanceByStudent
             return null;
@@ -193,7 +194,7 @@ namespace RockSchool.BL.Services.SubscriptionService
 
             var subscriptionId = await AddSubscriptionAsync(subscriptionDto);
 
-            var trialAttendance = new AttendanceDto
+            var trialAttendance = new Attendance
             {
                 StartDate = request.TrialDate,
                 EndDate = request.TrialDate.AddHours(1),

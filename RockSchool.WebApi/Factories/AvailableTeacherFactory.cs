@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Factories;
 
 public static class AvailableTeacherFactory
 {
-    private static object Create(TeacherDto teacher, AttendanceDto[] attendances)
+    private static object Create(TeacherDto teacher, Attendance[] attendances)
     {
         return new
         {
@@ -38,19 +39,19 @@ public static class AvailableTeacherFactory
         };
     }
 
-    private static object[] CreateMany(TeacherDto[] teachers, Dictionary<Guid, AttendanceDto[]> attendanceMap)
+    private static object[] CreateMany(TeacherDto[] teachers, Dictionary<Guid, Attendance[]> attendanceMap)
     {
         return teachers.Select(t =>
         {
             var attendances = attendanceMap.TryGetValue(t.TeacherId, out var a)
                 ? a
-                : Array.Empty<AttendanceDto>();
+                : Array.Empty<Attendance>();
 
             return Create(t, attendances);
         }).ToArray();
     }
 
-    public static object CreateResponse(TeacherDto[] teachers, Dictionary<Guid, AttendanceDto[]> attendanceMap)
+    public static object CreateResponse(TeacherDto[] teachers, Dictionary<Guid, Attendance[]> attendanceMap)
     {
         return new
         {

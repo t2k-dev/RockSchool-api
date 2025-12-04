@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -117,7 +118,7 @@ public class TeacherController : Controller
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
         var teachers = await _teacherService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
-        var attendanceMap = new Dictionary<Guid, AttendanceDto[]>();
+        var attendanceMap = new Dictionary<Guid, Attendance[]>();
 
         foreach (var teacher in teachers)
         {
@@ -126,7 +127,7 @@ public class TeacherController : Controller
                 DateTime.MinValue,
                 DateTime.MaxValue);
 
-            attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<AttendanceDto>();
+            attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<Attendance>();
         }
 
         var response = AvailableTeacherFactory.CreateResponse(teachers, attendanceMap);
@@ -138,14 +139,14 @@ public class TeacherController : Controller
     {
         var teacher = await _teacherService.GetTeacherByIdAsync(id);
 
-        var attendanceMap = new Dictionary<Guid, AttendanceDto[]>();
+        var attendanceMap = new Dictionary<Guid, Attendance[]>();
 
         var attendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
             teacher.TeacherId,
             DateTime.MinValue,
             DateTime.MaxValue);
 
-        attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<AttendanceDto>();
+        attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<Attendance>();
 
         var response = AvailableTeacherFactory.CreateResponse(new[] { teacher }, attendanceMap);
         return Ok(response);

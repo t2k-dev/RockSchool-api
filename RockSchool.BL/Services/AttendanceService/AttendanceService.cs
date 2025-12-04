@@ -1,5 +1,5 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.BL.Helpers;
+﻿using RockSchool.BL.Helpers;
+using RockSchool.BL.Models;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
 using RockSchool.Data.Repositories;
@@ -17,11 +17,11 @@ public class AttendanceService : IAttendanceService
         _scheduleRepository = scheduleRepository;
     }
 
-    public async Task<AttendanceDto[]> GetAllAttendancesAsync()
+    public async Task<Attendance[]> GetAllAttendancesAsync()
     {
         var attendances = await _attendanceRepository.GetAllAsync();
 
-        var attendancesDto = attendances.Select(a => new AttendanceDto
+        var attendancesDto = attendances.Select(a => new Attendance
         {
             AttendanceId = a.AttendanceId,
             StudentId = a.StudentId,
@@ -40,49 +40,34 @@ public class AttendanceService : IAttendanceService
         return attendancesDto;
     }
 
-    public async Task<AttendanceDto?> GetAttendanceAsync(Guid attendanceId)
+    public async Task<Attendance?> GetAttendanceAsync(Guid attendanceId)
     {
         var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
-        return attendanceEntity?.ToDto();
+        return attendanceEntity?.ToModel();
     }
 
-    public async Task<AttendanceDto[]> GetByBranchIdAsync(int branchId)
+    public async Task<Attendance[]> GetByBranchIdAsync(int branchId)
     {
         var attendances = await _attendanceRepository.GetByBranchIdAsync(branchId);
         return attendances.ToDto();
     }
 
-    public async Task AddAttendancesAsync(AttendanceDto[] attendances)
+    public async Task AddAttendancesAsync(Attendance[] attendances)
     {
         var attendanceEntities = attendances.ToEntities();
         await _attendanceRepository.AddRangeAsync(attendanceEntities);
 
     }
 
-    public async Task<Guid> AddAttendanceAsync(AttendanceDto attendanceDto)
+    public async Task<Guid> AddAttendanceAsync(Attendance attendance)
     {
-        var attendanceEntity = new AttendanceEntity
-        {
-            StudentId = attendanceDto.StudentId,
-            TeacherId = attendanceDto.TeacherId,
-            BranchId = attendanceDto.BranchId,
-            StartDate = attendanceDto.StartDate,
-            EndDate = attendanceDto.EndDate,
-            Status = attendanceDto.Status,
-            RoomId = attendanceDto.RoomId,
-            Comment = attendanceDto.Comment,
-            SubscriptionId = attendanceDto.SubscriptionId,
-            StatusReason = attendanceDto.StatusReason,
-            DisciplineId = attendanceDto.DisciplineId,
-            GroupId = attendanceDto.GroupId,
-            IsTrial = attendanceDto.IsTrial,
-        };
+        var attendanceEntity = attendance.ToEntity();
     
         var attendanceId = await _attendanceRepository.AddAsync(attendanceEntity);
         return attendanceId;
     }
 
-    public async Task<AttendanceDto[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
+    public async Task<Attendance[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
     {
         var attendanceEntities = await _attendanceRepository.GetAttendancesByTeacherIdForPeriodOfTimeAsync(
             teacherId,
@@ -93,14 +78,14 @@ public class AttendanceService : IAttendanceService
         return attendanceEntities?.ToDto();
     }
 
-    public async Task<AttendanceDto[]?> GetAttendancesByStudentId(Guid studentId)
+    public async Task<Attendance[]?> GetAttendancesByStudentId(Guid studentId)
     {
         var attendanceEntities = await _attendanceRepository.GetAttendancesByStudentIdAsync(studentId);
 
         return attendanceEntities?.ToDto();
     }
 
-    public async Task UpdateAttendanceAsync(AttendanceDto attendanceDto)
+    public async Task UpdateAttendanceAsync(Attendance attendanceDto)
     {
         var existingEntity = await _attendanceRepository.GetAsync(attendanceDto.AttendanceId);
 
@@ -125,7 +110,7 @@ public class AttendanceService : IAttendanceService
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
 
-    public async Task UpdateAttendances(List<AttendanceDto> attendances)
+    public async Task UpdateAttendances(List<Attendance> attendances)
     {
         
         foreach (var attendance in attendances)
@@ -134,11 +119,11 @@ public class AttendanceService : IAttendanceService
             attendanceEntity.Status = attendance.Status;
             attendanceEntity.StatusReason = attendance.StatusReason;
 
-            _attendanceRepository.UpdateAsync(attendanceEntity);
+            await _attendanceRepository.UpdateAsync(attendanceEntity);
         }
     }
 
-    private static void ModifyAttendanceAttributes(AttendanceDto updatedAttendance,
+    private static void ModifyAttendanceAttributes(Attendance updatedAttendance,
         AttendanceEntity existingEntity)
     {
 

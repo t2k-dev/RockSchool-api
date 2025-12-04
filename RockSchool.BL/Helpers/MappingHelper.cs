@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
 
@@ -60,9 +61,9 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
-        public static AttendanceDto ToDto(this AttendanceEntity entity)
+        public static Attendance ToModel(this AttendanceEntity entity)
         {
-            return new AttendanceDto
+            return new Attendance
             {
                 AttendanceId = entity.AttendanceId,
                 StudentId = entity.StudentId,
@@ -83,6 +84,7 @@ namespace RockSchool.BL.Helpers
                 Room = entity.Room,
                 Comment = entity.Comment,
                 IsTrial = entity.IsTrial,
+                IsCompleted = entity.IsCompleted
             };
         }
 
@@ -119,9 +121,9 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static AttendanceDto[] ToDto(this IEnumerable<AttendanceEntity> entities)
+        public static Attendance[] ToDto(this IEnumerable<AttendanceEntity> entities)
         {
-            return entities.Select(w => w.ToDto())
+            return entities.Select(w => w.ToModel())
                 .ToArray();
         }
 

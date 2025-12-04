@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.Data.Enums;
 
@@ -15,7 +16,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             _subscriptionService = subscriptionService;
         }
 
-        public async Task<AttendanceDto> RescheduleAttendanceByStudent(Guid attendanceId, DateTime startDate)
+        public async Task<Attendance> RescheduleAttendanceByStudent(Guid attendanceId, DateTime startDate)
         {
             // Update current attendance
             var attendance = await _attendanceService.GetAttendanceAsync(attendanceId);
@@ -27,7 +28,7 @@ namespace RockSchool.BL.Services.SubscriptionService
 
             // Create Attendance
             var endDate = startDate.AddMinutes(subscription.AttendanceLength == 1 ? 60 : 90);
-            var newAttendance = new AttendanceDto
+            var newAttendance = new Attendance
             {
                 Status = AttendanceStatus.New,
                 StartDate = startDate,

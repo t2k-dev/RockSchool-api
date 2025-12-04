@@ -1,9 +1,10 @@
-﻿using RockSchool.Data.Entities;
+﻿using RockSchool.BL.Dtos;
+using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
 
-namespace RockSchool.BL.Dtos;
+namespace RockSchool.BL.Models;
 
-public class AttendanceDto
+public class Attendance
 {
     public Guid AttendanceId { get; set; }
     public Guid StudentId { get; set; }
@@ -25,4 +26,5 @@ public class AttendanceDto
     public virtual RoomEntity Room { get; set; }
     public string Comment { get; set; }
     public bool IsTrial { get; set; }
+    public bool IsCompleted { get; set; }
 }

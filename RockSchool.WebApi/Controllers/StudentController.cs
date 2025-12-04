@@ -15,6 +15,7 @@ using RockSchool.WebApi.Models.Subscriptions;
 
 namespace RockSchool.WebApi.Controllers;
 
+[EnableCors("MyPolicy")]
 [Route("api/[controller]")]
 [ApiController]
 public class StudentController : Controller
@@ -24,6 +25,7 @@ public class StudentController : Controller
     private readonly IAttendanceService _attendanceService;
     private readonly ISubscriptionService _subscriptionService;
 
+    
     public StudentController(IStudentService studentService, IBranchService branchService, IAttendanceService attendanceService, ISubscriptionService subscriptionService)
     {
         _studentService = studentService;
@@ -32,7 +34,6 @@ public class StudentController : Controller
         _subscriptionService = subscriptionService;
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet]
     public async Task<ActionResult> Get()
     {
@@ -44,7 +45,6 @@ public class StudentController : Controller
         return Ok(studentsDto);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
@@ -59,8 +59,7 @@ public class StudentController : Controller
     }
 
 
-    [EnableCors("MyPolicy")]
-    [HttpGet("getStudentScreenDetails/{id}")]
+    [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
         var studentDto = await _studentService.GetByIdAsync(id);
@@ -111,7 +110,6 @@ public class StudentController : Controller
         return Ok(studentScreenDetailsDto);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpPost]
     public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
@@ -134,7 +132,6 @@ public class StudentController : Controller
         return Ok(id);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(Guid id, UpdateStudentRequestDto requestDto)
     {

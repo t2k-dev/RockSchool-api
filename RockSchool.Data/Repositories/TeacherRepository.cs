@@ -60,7 +60,8 @@ public class TeacherRepository
             .Include(t => t.Branch)
             .Where(t => t.BranchId == branchId 
                         && t.AgeLimit >= studentAge 
-                        && t.Disciplines.Any(d => d.DisciplineId == disciplineId))
+                        && t.Disciplines.Any(d => d.DisciplineId == disciplineId)
+                        && t.IsActive)
             .AsSplitQuery() 
             .ToArrayAsync();
     }

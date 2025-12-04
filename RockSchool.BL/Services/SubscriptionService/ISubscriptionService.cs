@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
@@ -11,7 +12,7 @@ namespace RockSchool.BL.Services.SubscriptionService
         Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId);
         Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] schedules);
         Task<Guid> AddTrialSubscriptionAsync(TrialRequestDto request);
-        Task<AttendanceDto> RescheduleAttendance(Guid attendanceId, DateTime startDate);
+        Task<Attendance> RescheduleAttendance(Guid attendanceId, DateTime startDate);
         Task AcceptTrialSubscription(Guid subscriptionId, string statusReason);
         Task DeclineTrialSubscription(Guid subscriptionId, string statusReason);
     }

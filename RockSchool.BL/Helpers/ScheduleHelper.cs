@@ -1,13 +1,14 @@
 ﻿using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Helpers;
 
 public static class ScheduleHelper
 {
-    public static List<AttendanceDto> GenerateTemplateAttendances(SubscriptionDetails subscriptionDetails, ScheduleDto[] schedules, bool isGroup)
+    public static List<Attendance> GenerateTemplateAttendances(SubscriptionDetails subscriptionDetails, ScheduleDto[] schedules, bool isGroup)
     {
-        var attendances = new List<AttendanceDto>();
+        var attendances = new List<Attendance>();
 
         var attendancesToAdd = subscriptionDetails.AttendanceCount;
         var lessonMinutes = subscriptionDetails.AttendanceLength == 1 ? 60 : 90;
@@ -22,7 +23,7 @@ public static class ScheduleHelper
             var availableSlot = GetNextAvailableSlot(startDate, orderedSchedules);
             var attendanceStartDate = availableSlot.StartDate;
 
-            var newAttendance = new AttendanceDto
+            var newAttendance = new Attendance
             {
                 Status = AttendanceStatus.New,
                 TeacherId = subscriptionDetails.TeacherId,
