@@ -6,5 +6,5 @@ namespace RockSchool.WebApi.Models;
 public class RegisterTeacherRequestDto
 {
     public TeacherInfo Teacher { get; set; }
-    public WorkingPeriodDto[] WorkingPeriods { get; set; }
+    public WorkingPeriod[] WorkingPeriods { get; set; }
 }

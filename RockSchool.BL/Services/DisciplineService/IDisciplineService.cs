@@ -4,9 +4,9 @@ namespace RockSchool.BL.Services.DisciplineService;
 
 public interface IDisciplineService
 {
-    Task AddDisciplineAsync(DisciplineDto disciplineDto);
-    Task<DisciplineDto[]?> GetAllDisciplinesAsync();
-    Task UpdateDisciplineAsync(DisciplineDto disciplineDto);
+    Task AddDisciplineAsync(Discipline disciplineDto);
+    Task<Discipline[]?> GetAllDisciplinesAsync();
+    Task UpdateDisciplineAsync(Discipline disciplineDto);
     Task DeleteDisciplineAsync(int id);
-    Task<DisciplineDto?> GetDisciplineByIdAsync(int id);
+    Task<Discipline?> GetDisciplineByIdAsync(int id);
 }

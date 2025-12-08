@@ -2,7 +2,7 @@
 
 namespace RockSchool.BL.Models;
 
-public class StudentDto
+public class Student
 {
     public Guid StudentId { get; set; }
     
@@ -13,6 +13,6 @@ public class StudentDto
     public DateTime BirthDate { get; set; }
     public long Phone { get; set; }
     public int? Level { get; set; }
-    public virtual BranchDto? Branch { get; set; }
+    public virtual Branch? Branch { get; set; }
     public int? BranchId { get; set; }
 }

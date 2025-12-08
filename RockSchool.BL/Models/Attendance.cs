@@ -7,11 +7,11 @@ public class Attendance
 {
     public Guid AttendanceId { get; set; }
     public Guid StudentId { get; set; }
-    public StudentDto Student { get; set; }
+    public Student Student { get; set; }
     public Guid SubscriptionId { get; set; }
     public Subscription Subscription { get; set; }
     public int DisciplineId { get; set; }
-    public DisciplineDto Discipline { get; set; }
+    public Discipline Discipline { get; set; }
     public Guid TeacherId { get; set; }
     public Teacher Teacher { get; set; }
     public AttendanceStatus Status { get; set; }
@@ -20,7 +20,7 @@ public class Attendance
     public DateTime EndDate { get; set; }
     public Guid? GroupId { get; set; }
     public int BranchId { get; set; }
-    public virtual BranchDto Branch { get; set; }
+    public virtual Branch Branch { get; set; }
     public int RoomId { get; set; }
     public virtual RoomEntity Room { get; set; }
     public string Comment { get; set; }

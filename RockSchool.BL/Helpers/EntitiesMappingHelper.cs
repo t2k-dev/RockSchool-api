@@ -10,13 +10,13 @@ namespace RockSchool.BL.Helpers
 {
     public static class EntitiesMappingHelper
     {
-        public static List<WorkingPeriodEntity> ToEntities(this IEnumerable<WorkingPeriodDto> workingPeriods)
+        public static List<WorkingPeriodEntity> ToEntities(this IEnumerable<WorkingPeriod> workingPeriods)
         {
             return workingPeriods.Select(w => w.ToEntity())
                 .ToList();
         }
 
-        public static WorkingPeriodEntity ToEntity(this WorkingPeriodDto workingPeriod)
+        public static WorkingPeriodEntity ToEntity(this WorkingPeriod workingPeriod)
         {
             return new WorkingPeriodEntity
             {

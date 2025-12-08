@@ -19,12 +19,14 @@ namespace RockSchool.WebApi.Controllers;
 public class AttendanceController : Controller
 {
     private readonly IAttendanceService _attendanceService;
+    private readonly IAttendanceSubmitService _attendanceSubmitService ;
     private readonly ISubscriptionService _subscriptionService;
 
-    public AttendanceController(IAttendanceService attendanceService, ISubscriptionService subscriptionService)
+    public AttendanceController(IAttendanceService attendanceService, ISubscriptionService subscriptionService, IAttendanceSubmitService attendanceSubmitService)
     {
         _attendanceService = attendanceService;
         _subscriptionService = subscriptionService;
+        _attendanceSubmitService = attendanceSubmitService;
     }
 
     [HttpGet]
@@ -62,31 +64,25 @@ public class AttendanceController : Controller
     }
 
     [HttpPost("{id}/declineTrial")]
-    public async Task<ActionResult> DeclineTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    public async Task<ActionResult> DeclineTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await _attendanceService.SubmitAttendance(id, (int)AttendanceStatus.Attended, declineAttendanceRequest.StatusReason);
-
-        await _subscriptionService.DeclineTrialSubscription(declineAttendanceRequest.SubscriptionId, declineAttendanceRequest.StatusReason);
+        await _attendanceSubmitService.DeclineTrial(id, request.StatusReason, request.Comment);
 
         return Ok();
     }
 
     [HttpPost("{id}/acceptTrial")]
-    public async Task<ActionResult> AcceptTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    public async Task<ActionResult> AcceptTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await _attendanceService.SubmitAttendance(id, (int) AttendanceStatus.Attended, declineAttendanceRequest.StatusReason);
-
-        await _subscriptionService.AcceptTrialSubscription(declineAttendanceRequest.SubscriptionId, declineAttendanceRequest.StatusReason);
+        await _attendanceSubmitService.AcceptTrial(id, request.StatusReason, request.Comment);
 
         return Ok();
     }
 
     [HttpPost("{id}/missedTrial")]
-    public async Task<ActionResult> MissedTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    public async Task<ActionResult> MissedTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await _attendanceService.SubmitAttendance(id, (int)AttendanceStatus.Missed, declineAttendanceRequest.StatusReason);
-        // ??
-        //await _subscriptionService.AcceptTrialSubscription(declineAttendanceRequest.SubscriptionId, declineAttendanceRequest.StatusReason);
+        await _attendanceSubmitService.MissedTrial(id, request.StatusReason, request.Comment);
 
         return Ok();
     }
@@ -94,25 +90,25 @@ public class AttendanceController : Controller
     [HttpPost("{id}/submit")]
     public async Task<ActionResult> Submit(Guid id, AttendanceInfo attendanceInfo)
     {
-        await _attendanceService.SubmitAttendance(id, attendanceInfo.Status, attendanceInfo.StatusReason);
+        await _attendanceSubmitService.SubmitAttendance(id, attendanceInfo.Status, attendanceInfo.StatusReason, attendanceInfo.Comment);
 
         return Ok();
     }
 
     [HttpPost("submit")]
-    public async Task<ActionResult> SubmitGroup(SubmitGroupAttendanceRequest submitGroupAttendanceRequest)
+    public async Task<ActionResult> SubmitGroup(SubmitGroupAttendanceRequest request)
     {
-        var attendanceInfos = submitGroupAttendanceRequest.ChildAttendances;
+        var attendanceInfos = request.ChildAttendances;
         foreach (var attendanceInfo in attendanceInfos)
         {
-            await _attendanceService.SubmitAttendance(attendanceInfo.AttendanceId, attendanceInfo.Status, attendanceInfo.StatusReason);
+            await _attendanceSubmitService.SubmitAttendance(attendanceInfo.AttendanceId, attendanceInfo.Status, attendanceInfo.StatusReason, request.Comment);
         }
 
         return Ok();
     }
 
     [HttpPost("{id}/attend")]
-    public async Task<ActionResult> Attend(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    public async Task<ActionResult> Attend(Guid id, SubmitAttendanceRequest declineAttendanceRequest)
     {
         var attendance = await _attendanceService.GetAttendanceAsync(id);
         attendance.Status = AttendanceStatus.Attended;
@@ -124,7 +120,7 @@ public class AttendanceController : Controller
     }
 
     [HttpPost("{id}/missed")]
-    public async Task<ActionResult> Missed(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    public async Task<ActionResult> Missed(Guid id, SubmitAttendanceRequest declineAttendanceRequest)
     {
         var attendance = await _attendanceService.GetAttendanceAsync(id);
         attendance.Status = AttendanceStatus.Missed;

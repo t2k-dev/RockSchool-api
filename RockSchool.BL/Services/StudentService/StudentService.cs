@@ -16,7 +16,7 @@ public class StudentService : IStudentService
         _branchRepository = branchRepository;
     }
 
-    public async Task<Guid> AddStudentAsync(StudentDto studentDto)
+    public async Task<Guid> AddStudentAsync(Student studentDto)
     {
         if (studentDto.BranchId == null)
             throw new NullReferenceException("BranchId is required.");
@@ -48,7 +48,7 @@ public class StudentService : IStudentService
         return studentEntity.StudentId;
     }
 
-    public async Task UpdateStudentAsync(StudentDto studentDto)
+    public async Task UpdateStudentAsync(Student studentDto)
     {
         // TODO: tempfix
         studentDto.BirthDate = studentDto.BirthDate.ToUniversalTime();
@@ -63,11 +63,11 @@ public class StudentService : IStudentService
         await _studentRepository.UpdateAsync(existingStudent);
     }
 
-    public async Task<StudentDto> GetByIdAsync(Guid studentId)
+    public async Task<Student> GetByIdAsync(Guid studentId)
     {
         var student = await _studentRepository.GetByIdAsync(studentId);
 
-        var studentDto = new StudentDto
+        var studentDto = new Student
         {
             StudentId = student.StudentId,
             LastName = student.LastName,
@@ -81,14 +81,14 @@ public class StudentService : IStudentService
         return studentDto;
     }
 
-    public async Task<StudentDto[]?> GetAllStudentsAsync()
+    public async Task<Student[]?> GetAllStudentsAsync()
     {
         var students = await _studentRepository.GetAllAsync();
 
         if (students == null || !students.Any())
             return null;
 
-        var studentDtos = students.Select(s => new StudentDto
+        var studentDtos = students.Select(s => new Student
         {
             StudentId = s.StudentId,
             LastName = s.LastName,
@@ -113,7 +113,7 @@ public class StudentService : IStudentService
         await _studentRepository.DeleteAsync(existingStudent);
     }
 
-    private static void ModifyStudentAttributes(StudentDto updateStudentServiceRequestDto,
+    private static void ModifyStudentAttributes(Student updateStudentServiceRequestDto,
         StudentEntity existingStudentEntity)
     {
         if (!string.IsNullOrEmpty(updateStudentServiceRequestDto.FirstName))

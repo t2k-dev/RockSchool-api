@@ -20,6 +20,6 @@ public class TeacherInfo
     public bool AllowGroupLessons { get; set; }
     public int AgeLimit { get; set; }
     public bool IsActive { get; set; }
-    public WorkingPeriodDto[] WorkingPeriods { get; set; }
+    public WorkingPeriod[] WorkingPeriods { get; set; }
     public ScheduledWorkingPeriod[] ScheduledWorkingPeriods { get; set; }
 }

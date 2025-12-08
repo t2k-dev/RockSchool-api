@@ -7,7 +7,7 @@
         public Guid TeacherId { get; set; }
         public DateTime TrialDate { get; set; }
         public int RoomId { get; set; }
-        public StudentDto Student { get; set; }
+        public Student Student { get; set; }
 
     }
 }

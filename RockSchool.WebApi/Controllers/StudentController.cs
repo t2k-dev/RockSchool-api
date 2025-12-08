@@ -120,7 +120,7 @@ public class StudentController : Controller
         if (!ModelState.IsValid)
             throw new Exception("Incorrect requestDto for registration.");
 
-        var newStudent = new StudentDto()
+        var newStudent = new Student()
         {
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,
@@ -142,7 +142,7 @@ public class StudentController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var updateStudentDto = new StudentDto()
+        var updateStudentDto = new Student()
         {
             StudentId = id,
             FirstName = requestDto.FirstName,

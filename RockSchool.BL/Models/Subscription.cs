@@ -10,7 +10,7 @@ namespace RockSchool.BL.Models
 
         public Guid StudentId { get; set; }
 
-        public virtual StudentDto Student { get; set; }
+        public virtual Student Student { get; set; }
 
         public int AttendanceCount { get; set; }
 
@@ -24,7 +24,7 @@ namespace RockSchool.BL.Models
 
         public int DisciplineId { get; set; }
 
-        public virtual DisciplineDto Discipline { get; set; }
+        public virtual Discipline Discipline { get; set; }
 
         public int? TransactionId { get; set; }
 
@@ -34,7 +34,7 @@ namespace RockSchool.BL.Models
 
         public int BranchId { get; set; }
 
-        public virtual BranchDto Branch { get; set; }
+        public virtual Branch Branch { get; set; }
 
         public TrialStatus? TrialStatus { get; set; }
 

@@ -2,14 +2,14 @@
 
 namespace RockSchool.BL.Models;
 
-public class RoomDto
+public class Room
 {
     [Key]
     public int RoomId { get; set; }
 
     public int BranchId { get; set; }
 
-    public BranchDto Branch { get; set; }
+    public Branch Branch { get; set; }
 
     public string Name { get; set; }
 

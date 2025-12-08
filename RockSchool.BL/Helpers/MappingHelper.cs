@@ -6,9 +6,9 @@ namespace RockSchool.BL.Helpers
 {
     public static class MappingHelper
     {
-        public static WorkingPeriodDto ToDto(this WorkingPeriodEntity entity)
+        public static WorkingPeriod ToDto(this WorkingPeriodEntity entity)
         {
-            return new WorkingPeriodDto
+            return new WorkingPeriod
             {
                 WorkingPeriodId = entity.WorkingPeriodId,
                 StartTime = entity.StartTime,
@@ -18,15 +18,15 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static WorkingPeriodDto[] ToDto(this IEnumerable<WorkingPeriodEntity> entities)
+        public static WorkingPeriod[] ToDto(this IEnumerable<WorkingPeriodEntity> entities)
         {
             return entities.Select(w => w.ToDto())
                 .ToArray();
         }
 
-        public static ScheduleDto ToDto(this ScheduleEntity entity)
+        public static Schedule ToDto(this ScheduleEntity entity)
         {
-            return new ScheduleDto
+            return new Schedule
             {
                 ScheduleId = entity.ScheduleId,
                 SubscriptionId = entity.SubscriptionId.Value, // DEV
@@ -37,7 +37,7 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static ScheduleDto[] ToDto(this IEnumerable<ScheduleEntity> entities)
+        public static Schedule[] ToDto(this IEnumerable<ScheduleEntity> entities)
         {
             return entities.Select(w => w.ToDto())
                 .ToArray();
@@ -87,11 +87,11 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static StudentDto ToDto(this StudentEntity entity)
+        public static Student ToDto(this StudentEntity entity)
         {
             if (entity == null) return null;
 
-            return new StudentDto
+            return new Student
             {
                 StudentId = entity.StudentId,
                 User = entity.User,
@@ -106,11 +106,11 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static BranchDto ToDto(this BranchEntity entity)
+        public static Branch ToDto(this BranchEntity entity)
         {
             if (entity == null) return null;
 
-            return new BranchDto
+            return new Branch
             {
                 BranchId = entity.BranchId,
                 Name = entity.Name,
@@ -126,11 +126,11 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
-        public static RoomDto ToDto(this RoomEntity entity)
+        public static Room ToDto(this RoomEntity entity)
         {
             if (entity == null) return null;
 
-            return new RoomDto
+            return new Room
             {
                 RoomId = entity.RoomId,
                 BranchId = entity.BranchId,
@@ -141,7 +141,7 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static RoomDto[] ToDto(this IEnumerable<RoomEntity> entities)
+        public static Room[] ToDto(this IEnumerable<RoomEntity> entities)
         {
             return entities.Select(w => w.ToDto())
                 .ToArray();
@@ -180,11 +180,11 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
-        public static DisciplineDto ToDto(this DisciplineEntity entity)
+        public static Discipline ToDto(this DisciplineEntity entity)
         {
             if (entity == null) return null;
 
-            return new DisciplineDto
+            return new Discipline
             {
                 DisciplineId = entity.DisciplineId,
                 Name = entity.Name,
@@ -193,7 +193,7 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static DisciplineDto[] ToDto(this IEnumerable<DisciplineEntity> entities)
+        public static Discipline[] ToDto(this IEnumerable<DisciplineEntity> entities)
         {
             return entities.Select(d => d.ToDto())
                 .ToArray();
@@ -215,13 +215,13 @@ namespace RockSchool.BL.Helpers
                 BranchId = entity.BranchId,
                 Branch = entity.Branch == null
                     ? null
-                    : new BranchDto
+                    : new Branch
                     {
                         BranchId = entity.Branch.BranchId,
                         Name = entity.Branch.Name,
                         Phone = entity.Branch.Phone,
                         Address = entity.Branch.Address,
-                        Rooms = entity.Branch.Rooms?.Select(r => new RoomDto
+                        Rooms = entity.Branch.Rooms?.Select(r => new Room
                         {
                             RoomId = r.RoomId,
                             BranchId = r.BranchId,
@@ -234,7 +234,7 @@ namespace RockSchool.BL.Helpers
                 AgeLimit = entity.AgeLimit,
                 AllowGroupLessons = entity.AllowGroupLessons,
                 IsActive = entity.IsActive,
-                Disciplines = entity.Disciplines?.Select(d => new DisciplineDto
+                Disciplines = entity.Disciplines?.Select(d => new Discipline
                 {
                     DisciplineId = d.DisciplineId,
                     Name = d.Name,
@@ -244,7 +244,7 @@ namespace RockSchool.BL.Helpers
 
                 DisciplineIds = entity.Disciplines?.Select(d => d.DisciplineId).ToArray(),
 
-                WorkingPeriods = entity.WorkingPeriods?.Select(wp => new WorkingPeriodDto
+                WorkingPeriods = entity.WorkingPeriods?.Select(wp => new WorkingPeriod
                 {
                     WorkingPeriodId = wp.WorkingPeriodId,
                     TeacherId = wp.TeacherId,

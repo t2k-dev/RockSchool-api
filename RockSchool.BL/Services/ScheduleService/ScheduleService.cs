@@ -14,11 +14,11 @@ public class ScheduleService : IScheduleService
         _scheduleRepository = scheduleRepository;
     }
 
-    public async Task<ScheduleDto[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
+    public async Task<Schedule[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
     {
         var scheduleEntities = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
 
-        var schedules = scheduleEntities.Select(s => new ScheduleDto
+        var schedules = scheduleEntities.Select(s => new Schedule
         {
             ScheduleId = s.ScheduleId,
             Subscription = s.Subscription.ToDto(),
@@ -32,14 +32,14 @@ public class ScheduleService : IScheduleService
         return schedules;
     }
 
-    public async Task<ScheduleDto[]?> GetAllSchedulesAsync()
+    public async Task<Schedule[]?> GetAllSchedulesAsync()
     {
         var schedules = await _scheduleRepository.GetAllAsync();
 
         if (schedules == null || !schedules.Any())
             return null;
 
-        var scheduleDtos = schedules.Select(s => new ScheduleDto
+        var scheduleDtos = schedules.Select(s => new Schedule
         {
             ScheduleId = s.ScheduleId,
             Subscription = s.Subscription.ToDto(),
@@ -53,7 +53,7 @@ public class ScheduleService : IScheduleService
         return scheduleDtos;
     }
 
-    public async Task<Guid> AddScheduleAsync(ScheduleDto schedule)
+    public async Task<Guid> AddScheduleAsync(Schedule schedule)
     {
         var scheduleEntity = new ScheduleEntity
         {

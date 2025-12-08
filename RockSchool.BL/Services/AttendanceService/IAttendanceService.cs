@@ -14,5 +14,4 @@ public interface IAttendanceService
     Task AddAttendancesAsync(Attendance[] attendances);
     Task UpdateAttendanceAsync(Attendance attendanceDto);
     Task UpdateStatusAsync(Guid attendanceId, int status);
-    Task SubmitAttendance(Guid attendanceId, int status, string statusReason);
 }

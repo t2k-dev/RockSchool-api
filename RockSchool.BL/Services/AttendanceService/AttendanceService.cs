@@ -6,17 +6,16 @@ using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.AttendanceService;
 
+/// <summary>
+/// Low level attendance service.
+/// </summary>
 public class AttendanceService : IAttendanceService
 {
     private readonly AttendanceRepository _attendanceRepository;
-    private readonly ScheduleRepository _scheduleRepository;
-    private readonly SubscriptionRepository _subscriptionRepository;
 
-    public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository, SubscriptionRepository subscriptionRepository)
+    public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository)
     {
         _attendanceRepository = attendanceRepository;
-        _scheduleRepository = scheduleRepository;
-        _subscriptionRepository = subscriptionRepository;
     }
 
     public async Task<Attendance[]> GetAllAttendancesAsync()
@@ -110,22 +109,6 @@ public class AttendanceService : IAttendanceService
         attendanceEntity.Status = (AttendanceStatus)status;
 
         await _attendanceRepository.UpdateAsync(attendanceEntity);
-    }
-
-    public async Task SubmitAttendance(Guid attendanceId, int status, string statusReason)
-    {
-        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
-
-        attendanceEntity.Status = (AttendanceStatus) status;
-        attendanceEntity.StatusReason = statusReason;
-        attendanceEntity.IsCompleted = true;
-
-        await _attendanceRepository.UpdateAsync(attendanceEntity);
-
-        // TODO: refactor
-        var subscriptionEntity = await _subscriptionRepository.GetAsync(attendanceEntity.SubscriptionId);
-        subscriptionEntity.AttendancesLeft -= 1;
-        await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
     }
 
     private static void ModifyAttendanceAttributes(Attendance updatedAttendance,

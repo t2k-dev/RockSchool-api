@@ -40,12 +40,14 @@ public class Startup
         services.AddScoped<IScheduleService, ScheduleService>();
         services.AddScoped<IStudentService, StudentService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
+        services.AddScoped<ITrialSubscriptionService, TrialSubscriptionService>();
         services.AddScoped<IReschedulingService, ReschedulingService>();
         services.AddScoped<IScheduledWorkingPeriodsService, ScheduledWorkingPeriodsService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();
         services.AddScoped<IBranchService, BranchService>();
+        services.AddScoped<IAttendanceSubmitService, AttendanceSubmitService>();
 
         services.AddScoped<SubscriptionRepository>();
         services.AddScoped<BranchRepository>();

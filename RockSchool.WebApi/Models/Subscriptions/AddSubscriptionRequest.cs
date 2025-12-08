@@ -7,5 +7,5 @@ public class AddSubscriptionRequest
 {
     public Guid[] StudentIds { get; set; }
     public SubscriptionDetails Subscription { get; set; }
-    public ScheduleDto[] Schedules { get; set; }
+    public Schedule[] Schedules { get; set; }
 }

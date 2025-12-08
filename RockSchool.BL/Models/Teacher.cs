@@ -13,15 +13,15 @@ public class Teacher
     public virtual UserEntity? User { get; set; }
 
     public int? BranchId { get; set; }
-    public virtual BranchDto? Branch { get; set; }
+    public virtual Branch? Branch { get; set; }
     public int AgeLimit { get; set; }
     public bool AllowGroupLessons { get; set; }
 
     public bool IsActive { get; set; }
 
-    public virtual ICollection<DisciplineDto>? Disciplines { get; set; }
+    public virtual ICollection<Discipline>? Disciplines { get; set; }
 
-    public virtual ICollection<WorkingPeriodDto>? WorkingPeriods { get; set; }
+    public virtual ICollection<WorkingPeriod>? WorkingPeriods { get; set; }
 
     public virtual ICollection<ScheduledWorkingPeriod>? ScheduledWorkingPeriods { get; set; }
 

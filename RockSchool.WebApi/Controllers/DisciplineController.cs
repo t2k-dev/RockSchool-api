@@ -23,7 +23,7 @@ public class DisciplineController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var addDisciplineServiceDto = new DisciplineDto()
+        var addDisciplineServiceDto = new Discipline()
         {
             Name = disciplineName,
             IsActive = true
@@ -43,9 +43,9 @@ public class DisciplineController : Controller
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(int id, [FromBody] DisciplineDto requestDto)
+    public async Task<ActionResult> Put(int id, [FromBody] Discipline requestDto)
     {
-        var updateDisciplineServiceDto = new DisciplineDto()
+        var updateDisciplineServiceDto = new Discipline()
         {
             Name = requestDto.Name,
             IsActive = requestDto.IsActive

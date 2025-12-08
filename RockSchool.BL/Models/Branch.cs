@@ -1,6 +1,6 @@
 ﻿namespace RockSchool.BL.Models;
 
-public class BranchDto
+public class Branch
 {
     public int BranchId { get; set; }
 
@@ -10,5 +10,5 @@ public class BranchDto
 
     public string Address { get; set; }
 
-    public ICollection<RoomDto>? Rooms { get; set; }
+    public ICollection<Room>? Rooms { get; set; }
 }

@@ -4,5 +4,5 @@ namespace RockSchool.BL.Services.BranchService;
 
 public interface IBranchService
 {
-    Task<BranchDto>? GetBranchByIdAsync(int id);
+    Task<Branch>? GetBranchByIdAsync(int id);
 }

@@ -14,7 +14,7 @@ public class DisciplineService : IDisciplineService
         _disciplineRepository = disciplineRepository;
     }
 
-    public async Task AddDisciplineAsync(DisciplineDto disciplineDto)
+    public async Task AddDisciplineAsync(Discipline disciplineDto)
     {
         var discipline = new DisciplineEntity
         {
@@ -27,14 +27,14 @@ public class DisciplineService : IDisciplineService
         await _disciplineRepository.AddAsync(discipline);
     }
 
-    public async Task<DisciplineDto[]?> GetAllDisciplinesAsync()
+    public async Task<Discipline[]?> GetAllDisciplinesAsync()
     {
         var disciplines = await _disciplineRepository.GetAllAsync();
 
         if (disciplines == null || !disciplines.Any())
             return null;
 
-        var disciplineDtos = disciplines.Select(d => new DisciplineDto
+        var disciplineDtos = disciplines.Select(d => new Discipline
         {
             DisciplineId = d.DisciplineId,
             Name = d.Name,
@@ -45,7 +45,7 @@ public class DisciplineService : IDisciplineService
         return disciplineDtos;
     }
 
-    public async Task UpdateDisciplineAsync(DisciplineDto disciplineDto)
+    public async Task UpdateDisciplineAsync(Discipline disciplineDto)
     {
         var discipline = await _disciplineRepository.GetByIdAsync(disciplineDto.DisciplineId);
 
@@ -69,14 +69,14 @@ public class DisciplineService : IDisciplineService
         await _disciplineRepository.DeleteAsync(discipline);
     }
 
-    public async Task<DisciplineDto?> GetDisciplineByIdAsync(int id)
+    public async Task<Discipline?> GetDisciplineByIdAsync(int id)
     {
         var disciplineEntity = await _disciplineRepository.GetByIdAsync(id);
 
         if (disciplineEntity == null)
             return null;
 
-        return new DisciplineDto
+        return new Discipline
         {
             DisciplineId = disciplineEntity.DisciplineId,
             Name = disciplineEntity.Name,

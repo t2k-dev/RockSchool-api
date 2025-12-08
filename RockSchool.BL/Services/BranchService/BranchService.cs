@@ -13,14 +13,14 @@ public class BranchService : IBranchService
         _branchRepository = branchRepository;
     }
 
-    public async Task<BranchDto>? GetBranchByIdAsync(int id)
+    public async Task<Branch>? GetBranchByIdAsync(int id)
     {
         var branchEntity = await _branchRepository.GetByIdAsync(id);
 
         if (branchEntity == null)
             return null;
 
-        return new BranchDto
+        return new Branch
         {
             BranchId = branchEntity.BranchId,
             Name = branchEntity.Name,

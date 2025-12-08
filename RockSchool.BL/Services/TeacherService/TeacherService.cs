@@ -44,7 +44,7 @@ public class TeacherService : ITeacherService
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
         }
 
-        var disciplines = teacherEntity.Disciplines.Select(teacherDiscipline => new DisciplineDto
+        var disciplines = teacherEntity.Disciplines.Select(teacherDiscipline => new Discipline
             {
                 Name = teacherDiscipline.Name, 
                 DisciplineId = teacherDiscipline.DisciplineId, 
@@ -227,7 +227,7 @@ public class TeacherService : ITeacherService
         return scheduledWorkingPeriodEntities;
     }
 
-    private void UpdateTeacherWorkingPeriods(TeacherEntity existingTeacher, List<WorkingPeriodDto> workingPeriods)
+    private void UpdateTeacherWorkingPeriods(TeacherEntity existingTeacher, List<WorkingPeriod> workingPeriods)
     {
         var newWorkingPeriodsEntities = workingPeriods.ToEntities();
 

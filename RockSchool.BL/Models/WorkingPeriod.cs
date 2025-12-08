@@ -1,6 +1,6 @@
 ﻿namespace RockSchool.BL.Models
 {
-    public class WorkingPeriodDto
+    public class WorkingPeriod
     {
         public Guid WorkingPeriodId { get; set; }
 

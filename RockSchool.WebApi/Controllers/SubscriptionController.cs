@@ -26,6 +26,7 @@ namespace RockSchool.WebApi.Controllers
         private readonly ITeacherService _teacherService;
         private readonly IStudentService _studentService;
         private readonly ISubscriptionService _subscriptionService;
+        private readonly ITrialSubscriptionService _taxSubscriptionService;
         private readonly IAttendanceService _attendanceService;
         private readonly IScheduleService _scheduleService;
         private readonly INoteService _noteService;
@@ -33,7 +34,7 @@ namespace RockSchool.WebApi.Controllers
         
 
         public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService,
-            IScheduleService scheduleService, INoteService noteService, IReschedulingService reschedulingService, ITeacherService teacherService)
+            IScheduleService scheduleService, INoteService noteService, IReschedulingService reschedulingService, ITeacherService teacherService, ITrialSubscriptionService taxSubscriptionService)
         {
             _studentService = studentService;
             _subscriptionService = subscriptionService;
@@ -42,6 +43,7 @@ namespace RockSchool.WebApi.Controllers
             _noteService = noteService;
             _reschedulingService = reschedulingService;
             _teacherService = teacherService;
+            _taxSubscriptionService = taxSubscriptionService;
         }
 
         [HttpGet("{id}")]
@@ -94,7 +96,7 @@ namespace RockSchool.WebApi.Controllers
 
             var groupId = subscription.GroupId;
 
-            var students = new List<StudentDto>();
+            var students = new List<Student>();
             if (groupId != null)
             {
                 var subscriptions = await _subscriptionService.GetSubscriptionByGroupIdAsync(groupId.Value);
@@ -176,7 +178,7 @@ namespace RockSchool.WebApi.Controllers
                 Student = student,
             };
 
-            await _subscriptionService.AddTrialSubscriptionAsync(trialRequest);
+            await _taxSubscriptionService.AddTrialSubscription(trialRequest);
 
             return Ok(request.Student.StudentId);
         }

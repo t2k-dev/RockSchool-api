@@ -1,6 +1,6 @@
 ﻿namespace RockSchool.BL.Models;
 
-public class DisciplineDto
+public class Discipline
 {
     public int DisciplineId { get; set; }
     public string Name { get; set; }

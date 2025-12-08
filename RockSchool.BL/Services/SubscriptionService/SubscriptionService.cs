@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using RockSchool.BL.Helpers;
+﻿using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
@@ -54,7 +53,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             return subscriptionEntity.SubscriptionId;
         }
 
-        public async Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] schedules)
+        public async Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, Schedule[] schedules)
         {
             var isGroup = studentIds.Length > 1;
             var groupId = isGroup ? Guid.NewGuid() : (Guid?)null;
@@ -150,74 +149,18 @@ namespace RockSchool.BL.Services.SubscriptionService
             return availableSlot;
         }
 
-        public async Task DeclineTrialSubscription(Guid subscriptionId, string statusReason)
-        {
-            var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
-            subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
-            subscriptionEntity.TrialStatus = (int)TrialStatus.Negative;
-            subscriptionEntity.StatusReason = statusReason;
-
-            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
-        }
-
-        public async Task AcceptTrialSubscription(Guid subscriptionId, string statusReason)
-        {
-            var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
-            subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
-            subscriptionEntity.TrialStatus = (int)TrialStatus.Positive;
-            subscriptionEntity.StatusReason = statusReason;
-
-            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
-        }
-
         public Task<Attendance> RescheduleAttendance(Guid attendanceId, DateTime startDate)
         {
             //RescheduleAttendanceByStudent
             return null;
         }
 
-        public async Task<Guid> AddTrialSubscriptionAsync(TrialRequestDto request)
+        public async Task DecreaseAttendancesLeftCount(Guid subscriptionId)
         {
-            var subscriptionDto = new Subscription
-            {
-                DisciplineId = request.DisciplineId,
-                StudentId = request.Student.StudentId,
-                AttendanceCount = 1,
-                AttendanceLength = 1,
-                AttendancesLeft = 1,
-                BranchId = request.BranchId,
-                GroupId = null,
-                StartDate = DateOnly.FromDateTime(request.TrialDate),
-                TrialStatus = TrialStatus.Created,
-                TransactionId = null,
-                Status = (int)SubscriptionStatus.Active,
-                TeacherId = request.TeacherId
-            };
+            var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
+            subscriptionEntity.AttendancesLeft -= 1;
 
-            var subscriptionId = await AddSubscriptionAsync(subscriptionDto);
-
-            var trialAttendance = new Attendance
-            {
-                StartDate = request.TrialDate,
-                EndDate = request.TrialDate.AddHours(1),
-                RoomId = request.RoomId,
-                BranchId = request.BranchId,
-                Comment = string.Empty,
-                DisciplineId = request.DisciplineId,
-                GroupId = null,
-                Status = AttendanceStatus.New,
-                StatusReason = string.Empty,
-                StudentId = request.Student.StudentId,
-                TeacherId = request.TeacherId,
-                SubscriptionId = subscriptionId,
-                IsTrial = true,
-            };
-
-            await _attendanceService.AddAttendanceAsync(trialAttendance);
-
-            await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
-
-            return subscriptionId;
+            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
     }
 }
