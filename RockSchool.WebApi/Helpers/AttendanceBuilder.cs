@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.WebApi.Models.Attendances;
+﻿using RockSchool.WebApi.Models.Attendances;
 using System.Collections.Generic;
 using System.Linq;
 using RockSchool.BL.Models;

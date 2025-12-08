@@ -1,4 +1,4 @@
-﻿using RockSchool.BL.Dtos;
+﻿using RockSchool.BL.Models;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;

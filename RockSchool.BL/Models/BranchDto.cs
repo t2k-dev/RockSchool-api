@@ -1,6 +1,4 @@
-﻿using RockSchool.Data.Entities;
-
-namespace RockSchool.BL.Dtos;
+﻿namespace RockSchool.BL.Models;
 
 public class BranchDto
 {

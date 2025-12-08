@@ -1,8 +1,8 @@
 ﻿using RockSchool.Data.Entities;
 
-namespace RockSchool.BL.Dtos;
+namespace RockSchool.BL.Models;
 
-public class TeacherDto
+public class Teacher
 {
     public Guid TeacherId { get; set; }
     public string FirstName { get; set; }
@@ -23,7 +23,7 @@ public class TeacherDto
 
     public virtual ICollection<WorkingPeriodDto>? WorkingPeriods { get; set; }
 
-    public virtual ICollection<ScheduledWorkingPeriodDto>? ScheduledWorkingPeriods { get; set; }
+    public virtual ICollection<ScheduledWorkingPeriod>? ScheduledWorkingPeriods { get; set; }
 
     public int[]? DisciplineIds { get; set; }
 }

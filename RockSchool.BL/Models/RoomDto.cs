@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using RockSchool.Data.Entities;
 
-namespace RockSchool.BL.Dtos;
+namespace RockSchool.BL.Models;
 
 public class RoomDto
 {

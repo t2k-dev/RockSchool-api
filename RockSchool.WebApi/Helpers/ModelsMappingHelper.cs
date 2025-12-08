@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RockSchool.BL.Dtos;
 using RockSchool.BL.Models;
 using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Subscriptions;
+using RockSchool.WebApi.Models.Teachers;
 
 namespace RockSchool.WebApi.Helpers
 {
@@ -59,7 +59,7 @@ namespace RockSchool.WebApi.Helpers
 
         public static List<ParentAttendanceInfo> ToParentAttendanceInfos(this IEnumerable<Attendance> attendances)
         {
-            return attendances.Select(dto => dto.ToParentAttendanceInfo()).ToList();
+            return attendances.Select(model => model.ToParentAttendanceInfo()).ToList();
         }
 
         public static List<Attendance> ToModels(this IEnumerable<AttendanceInfo> attendanceInfos)
@@ -123,9 +123,36 @@ namespace RockSchool.WebApi.Helpers
             return subscriptionDto.Select(dto => dto.ToParentSubscriptionInfo()).ToList();
         }
 
-        public static List<SubscriptionInfo> ToSubscriptionInfos(this IEnumerable<Subscription> subscriptionDtos)
+        public static List<SubscriptionInfo> ToSubscriptionInfos(this IEnumerable<Subscription> subscriptions)
         {
-            return subscriptionDtos.Select(dto => dto.ToInfo()).ToList();
+            return subscriptions.Select(model => model.ToInfo()).ToList();
+        }
+
+        // Teacher
+
+        public static TeacherInfo ToInfo(this Teacher teacher)
+        {
+            return new TeacherInfo
+            {
+                FirstName = teacher.FirstName,
+                LastName = teacher.LastName,
+                AgeLimit = teacher.AgeLimit,
+                BirthDate = teacher.BirthDate,
+                IsActive = teacher.IsActive,
+                AllowGroupLessons = teacher.AllowGroupLessons,
+                BranchId = teacher.BranchId,
+                Phone = teacher.Phone,
+                ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?.ToArray(),
+                WorkingPeriods = teacher.WorkingPeriods?.ToArray(),
+                Sex = teacher.Sex,
+                Disciplines = teacher.DisciplineIds,
+                TeacherId = teacher.TeacherId,
+            };
+        }
+
+        public static List<TeacherInfo> ToInfos(this IEnumerable<Teacher> items)
+        {
+            return items.Select(model => model.ToInfo()).ToList();
         }
     }
 }

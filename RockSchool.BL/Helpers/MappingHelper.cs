@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.BL.Models;
+﻿using RockSchool.BL.Models;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
 
@@ -44,9 +43,9 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
-        public static ScheduledWorkingPeriodDto ToDto(this ScheduledWorkingPeriodEntity entity)
+        public static ScheduledWorkingPeriod ToDto(this ScheduledWorkingPeriodEntity entity)
         {
-            return new ScheduledWorkingPeriodDto
+            return new ScheduledWorkingPeriod
             {
                 ScheduledWorkingPeriodId = entity.ScheduledWorkingPeriodId,
                 StartDate = entity.StartDate,
@@ -55,7 +54,7 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static ScheduledWorkingPeriodDto[] ToDto(this IEnumerable<ScheduledWorkingPeriodEntity> entities)
+        public static ScheduledWorkingPeriod[] ToDto(this IEnumerable<ScheduledWorkingPeriodEntity> entities)
         {
             return entities.Select(w => w.ToDto())
                 .ToArray();
@@ -200,11 +199,11 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
-        public static TeacherDto ToDto(this TeacherEntity entity)
+        public static Teacher ToDto(this TeacherEntity entity)
         {
             if (entity == null) return null;
 
-            return new TeacherDto
+            return new Teacher
             {
                 TeacherId = entity.TeacherId,
                 FirstName = entity.FirstName,
@@ -255,7 +254,7 @@ namespace RockSchool.BL.Helpers
                     RoomId = wp.RoomId,
                 }).ToList(),
 
-                ScheduledWorkingPeriods = entity.ScheduledWorkingPeriods?.Select(swp => new ScheduledWorkingPeriodDto
+                ScheduledWorkingPeriods = entity.ScheduledWorkingPeriods?.Select(swp => new ScheduledWorkingPeriod
                 {
                     ScheduledWorkingPeriodId = swp.ScheduledWorkingPeriodId,
                     TeacherId = swp.TeacherId,
@@ -267,7 +266,7 @@ namespace RockSchool.BL.Helpers
         }
 
 
-        public static TeacherDto[] ToDto(this IEnumerable<TeacherEntity> entities)
+        public static Teacher[] ToDto(this IEnumerable<TeacherEntity> entities)
         {
             return entities.Select(t => t.ToDto()).ToArray();
         }

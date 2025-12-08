@@ -1,4 +1,4 @@
-﻿namespace RockSchool.BL.Dtos
+﻿namespace RockSchool.BL.Models
 {
     public class AvailableSlot
     {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 

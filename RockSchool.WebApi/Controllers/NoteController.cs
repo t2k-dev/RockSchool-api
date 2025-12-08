@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;

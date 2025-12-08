@@ -1,5 +1,5 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.BL.Helpers;
+﻿using RockSchool.BL.Helpers;
+using RockSchool.BL.Models;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 

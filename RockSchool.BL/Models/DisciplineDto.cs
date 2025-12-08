@@ -1,11 +1,9 @@
-﻿using RockSchool.Data.Entities;
-
-namespace RockSchool.BL.Dtos;
+﻿namespace RockSchool.BL.Models;
 
 public class DisciplineDto
 {
     public int DisciplineId { get; set; }
     public string Name { get; set; }
     public bool IsActive { get; set; }
-    public ICollection<TeacherDto?> Teachers { get; set; }
+    public ICollection<Teacher?> Teachers { get; set; }
 }

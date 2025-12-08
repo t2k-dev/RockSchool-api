@@ -112,23 +112,20 @@ public class AttendanceService : IAttendanceService
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
 
-    public async Task SubmitAttendances(List<Attendance> attendances)
+    public async Task SubmitAttendance(Guid attendanceId, int status, string statusReason)
     {
-        foreach (var attendance in attendances)
-        {
-            var attendanceEntity = await _attendanceRepository.GetAsync(attendance.AttendanceId);
-            
-            attendanceEntity.Status = attendance.Status;
-            attendanceEntity.StatusReason = attendance.StatusReason;
-            attendanceEntity.IsCompleted = true;
+        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
 
-            await _attendanceRepository.UpdateAsync(attendanceEntity);
+        attendanceEntity.Status = (AttendanceStatus) status;
+        attendanceEntity.StatusReason = statusReason;
+        attendanceEntity.IsCompleted = true;
 
-            // TODO: refactor
-            var subscriptionEntity = await _subscriptionRepository.GetAsync(attendance.SubscriptionId);
-            subscriptionEntity.AttendancesLeft -= 1;
-            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
-        }
+        await _attendanceRepository.UpdateAsync(attendanceEntity);
+
+        // TODO: refactor
+        var subscriptionEntity = await _subscriptionRepository.GetAsync(attendanceEntity.SubscriptionId);
+        subscriptionEntity.AttendancesLeft -= 1;
+        await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
     }
 
     private static void ModifyAttendanceAttributes(Attendance updatedAttendance,

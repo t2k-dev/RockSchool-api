@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using RockSchool.BL.Dtos;
 using RockSchool.BL.Helpers;
+using RockSchool.BL.Models;
 using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
@@ -23,7 +23,7 @@ public class TeacherService : ITeacherService
 
     
 
-    public async Task<TeacherDto[]> GetAllTeachersAsync()
+    public async Task<Teacher[]> GetAllTeachersAsync()
     {
         var teacherEntities = await _teacherRepository.GetAllAsync();
         if (!teacherEntities.Any())
@@ -36,7 +36,7 @@ public class TeacherService : ITeacherService
         return teachers;
     }
 
-    public async Task<TeacherDto> GetTeacherByIdAsync(Guid id)
+    public async Task<Teacher> GetTeacherByIdAsync(Guid id)
     {
         var teacherEntity = await _teacherRepository.GetByIdAsync(id);
         if (teacherEntity == null)
@@ -53,7 +53,7 @@ public class TeacherService : ITeacherService
             })
             .ToList();
         
-        var teacher = new TeacherDto
+        var teacher = new Teacher
         {
             TeacherId = teacherEntity.TeacherId,
             LastName = teacherEntity.LastName,
@@ -75,14 +75,14 @@ public class TeacherService : ITeacherService
         return teacher;
     }
 
-    public async Task<TeacherDto[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
+    public async Task<Teacher[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
     {
         var teacherEntities = await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
 
         return teacherEntities.ToDto();
     }
 
-    public async Task<Guid> AddTeacher(TeacherDto addTeacherDto)
+    public async Task<Guid> AddTeacher(Teacher addTeacherDto)
     {
         var disciplines = await _disciplineRepository.GetByIdsAsync(addTeacherDto.DisciplineIds);
         var workingPeriodEntities = addTeacherDto.WorkingPeriods.ToEntities();
@@ -110,7 +110,7 @@ public class TeacherService : ITeacherService
         return teacherEntity.TeacherId;
     }
 
-    public async Task UpdateTeacherAsync(TeacherDto teacherDto, bool updateDisciplines, bool recalculatePeriods)
+    public async Task UpdateTeacherAsync(Teacher teacherDto, bool updateDisciplines, bool recalculatePeriods)
     {
         var existingTeacher = await _teacherRepository.GetByIdAsync(teacherDto.TeacherId);
         if (existingTeacher == null)
@@ -160,7 +160,7 @@ public class TeacherService : ITeacherService
         await _teacherRepository.DeleteAsync(existingTeacher);
     }
 
-    private static void UpdateTeacherDetails(TeacherDto updateRequest, TeacherEntity existingTeacher)
+    private static void UpdateTeacherDetails(Teacher updateRequest, TeacherEntity existingTeacher)
     {
         if (existingTeacher == null)
             throw new KeyNotFoundException($"TeacherEntity with ID {updateRequest.TeacherId} was not found.");

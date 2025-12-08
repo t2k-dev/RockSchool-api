@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.Data.Enums;
+﻿using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Models
 {
@@ -31,7 +30,7 @@ namespace RockSchool.BL.Models
 
         public Guid TeacherId { get; set; }
 
-        public virtual TeacherDto Teacher { get; set; }
+        public virtual Teacher Teacher { get; set; }
 
         public int BranchId { get; set; }
 

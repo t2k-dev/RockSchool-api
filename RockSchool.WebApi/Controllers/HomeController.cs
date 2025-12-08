@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.NoteService;
@@ -30,7 +29,7 @@ namespace RockSchool.WebApi.Controllers
         }
 
         [EnableCors("MyPolicy")]
-        [HttpGet("getHomeScreenDetails/{branchId}")]
+        [HttpGet("{branchId}")]
         public async Task<ActionResult> Get(int branchId)
         {
             var branch = await _branchService.GetBranchByIdAsync(branchId);

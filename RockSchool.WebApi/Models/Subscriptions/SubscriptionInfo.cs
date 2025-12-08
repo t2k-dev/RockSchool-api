@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.Data.Enums;
+﻿using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models.Attendances;
 using System;
 

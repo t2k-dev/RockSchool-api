@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.Data.Enums;
@@ -65,13 +64,9 @@ public class AttendanceController : Controller
     [HttpPost("{id}/declineTrial")]
     public async Task<ActionResult> DeclineTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
     {
-        var attendance = await _attendanceService.GetAttendanceAsync(id);
-        attendance.Status = AttendanceStatus.Attended;
-        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+        await _attendanceService.SubmitAttendance(id, (int)AttendanceStatus.Attended, declineAttendanceRequest.StatusReason);
 
-        await _attendanceService.UpdateAttendanceAsync(attendance);
-
-        await _subscriptionService.DeclineTrialSubscription(attendance.SubscriptionId, declineAttendanceRequest.StatusReason);
+        await _subscriptionService.DeclineTrialSubscription(declineAttendanceRequest.SubscriptionId, declineAttendanceRequest.StatusReason);
 
         return Ok();
     }
@@ -79,13 +74,39 @@ public class AttendanceController : Controller
     [HttpPost("{id}/acceptTrial")]
     public async Task<ActionResult> AcceptTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
     {
-        var attendance = await _attendanceService.GetAttendanceAsync(id);
-        attendance.Status = AttendanceStatus.Attended;
-        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+        await _attendanceService.SubmitAttendance(id, (int) AttendanceStatus.Attended, declineAttendanceRequest.StatusReason);
 
-        await _attendanceService.UpdateAttendanceAsync(attendance);
+        await _subscriptionService.AcceptTrialSubscription(declineAttendanceRequest.SubscriptionId, declineAttendanceRequest.StatusReason);
 
-        await _subscriptionService.AcceptTrialSubscription(attendance.SubscriptionId, declineAttendanceRequest.StatusReason);
+        return Ok();
+    }
+
+    [HttpPost("{id}/missedTrial")]
+    public async Task<ActionResult> MissedTrial(Guid id, DeclineAttendanceRequest declineAttendanceRequest)
+    {
+        await _attendanceService.SubmitAttendance(id, (int)AttendanceStatus.Missed, declineAttendanceRequest.StatusReason);
+        // ??
+        //await _subscriptionService.AcceptTrialSubscription(declineAttendanceRequest.SubscriptionId, declineAttendanceRequest.StatusReason);
+
+        return Ok();
+    }
+
+    [HttpPost("{id}/submit")]
+    public async Task<ActionResult> Submit(Guid id, AttendanceInfo attendanceInfo)
+    {
+        await _attendanceService.SubmitAttendance(id, attendanceInfo.Status, attendanceInfo.StatusReason);
+
+        return Ok();
+    }
+
+    [HttpPost("submit")]
+    public async Task<ActionResult> SubmitGroup(SubmitGroupAttendanceRequest submitGroupAttendanceRequest)
+    {
+        var attendanceInfos = submitGroupAttendanceRequest.ChildAttendances;
+        foreach (var attendanceInfo in attendanceInfos)
+        {
+            await _attendanceService.SubmitAttendance(attendanceInfo.AttendanceId, attendanceInfo.Status, attendanceInfo.StatusReason);
+        }
 
         return Ok();
     }
@@ -110,15 +131,6 @@ public class AttendanceController : Controller
         attendance.StatusReason = declineAttendanceRequest.StatusReason;
 
         await _attendanceService.UpdateAttendanceAsync(attendance);
-
-        return Ok();
-    }
-
-    [HttpPost("submit")]
-    public async Task<ActionResult> Submit(SubmitGroupAttendanceRequest submitGroupAttendanceRequest)
-    {
-        var attendances = submitGroupAttendanceRequest.ChildAttendances.ToModels();
-        await _attendanceService.SubmitAttendances(attendances);
 
         return Ok();
     }

@@ -1,5 +1,5 @@
 ﻿using System;
-using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Models.Subscriptions;
 

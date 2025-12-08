@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.BL.Models;
+﻿using RockSchool.BL.Models;
 using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Helpers;

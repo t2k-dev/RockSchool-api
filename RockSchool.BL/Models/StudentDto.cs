@@ -1,7 +1,6 @@
 ﻿using RockSchool.Data.Entities;
-using RockSchool.Data.Enums;
 
-namespace RockSchool.BL.Dtos;
+namespace RockSchool.BL.Models;
 
 public class StudentDto
 {

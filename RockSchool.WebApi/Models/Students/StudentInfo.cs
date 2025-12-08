@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.Data.Entities;
+﻿using RockSchool.Data.Entities;
 using System;
 
 namespace RockSchool.WebApi.Models.Students

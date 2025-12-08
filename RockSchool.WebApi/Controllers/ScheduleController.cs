@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.WebApi.Models;
 

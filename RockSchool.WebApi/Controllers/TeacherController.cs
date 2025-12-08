@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.SubscriptionService;
@@ -122,20 +121,47 @@ public class TeacherController : Controller
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
         var teachers = await _teacherService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
-        var attendanceMap = new Dictionary<Guid, Attendance[]>();
-
+        
+        var attendanceMap = new Dictionary<Guid, AttendanceInfo[]>();
+        
+        var availableTeacherDtos = new List<AvailableTeacherDto>();
         foreach (var teacher in teachers)
         {
-            var attendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
+            var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
                 teacher.TeacherId,
                 DateTime.MinValue,
                 DateTime.MaxValue);
 
-            attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<Attendance>();
+            var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
+            var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
+            attendanceInfos.AddRange(groupAttendanceInfos);
+
+            var availableTeacherDto = new AvailableTeacherDto
+            {
+                FirstName = teacher.FirstName,
+                LastName = teacher.LastName,
+                TeacherId = teacher.TeacherId,
+                Workload = Random.Shared.Next(1, 100),
+                ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?
+                    .Select(swp => new ScheduledWorkingPeriodInfo
+                    {
+                        StartDate = swp.StartDate,
+                        EndDate = swp.EndDate,
+                        ScheduledWorkingPeriodId = swp.ScheduledWorkingPeriodId,
+                        RoomId = swp.RoomId
+                    })
+                    .ToList(),
+
+                Attendances = attendanceInfos.ToArray()
+            };
+            availableTeacherDtos.Add(availableTeacherDto);
+
+            //attendanceMap[teacher.TeacherId] = allAttendances ?? [];
         }
 
-        var response = AvailableTeacherFactory.CreateResponse(teachers, attendanceMap);
-        return Ok(response);
+        //var response = AvailableTeacherFactory.CreateResponse(teachers, attendanceMap);
+        
+        return Ok(new { availableTeachers = availableTeacherDtos });
     }
 
     [HttpGet("{id}/workingPeriods")]
@@ -164,7 +190,7 @@ public class TeacherController : Controller
             throw new Exception("Incorrect requestDto for registration.");
         }
 
-        var newTeacher = new TeacherDto
+        var newTeacher = new Teacher
         {
             FirstName = requestDto.Teacher.FirstName,
             LastName = requestDto.Teacher.LastName,
@@ -190,7 +216,7 @@ public class TeacherController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var teacher = new TeacherDto
+        var teacher = new Teacher
         {
             TeacherId = id,
             FirstName = model.Teacher.FirstName,

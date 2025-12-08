@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.WebApi.Models;
 
@@ -23,7 +23,7 @@ public class DisciplineController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var addDisciplineServiceDto = new BL.Dtos.DisciplineDto()
+        var addDisciplineServiceDto = new DisciplineDto()
         {
             Name = disciplineName,
             IsActive = true

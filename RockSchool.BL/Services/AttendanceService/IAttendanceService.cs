@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.BL.Models;
+﻿using RockSchool.BL.Models;
 using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Services.AttendanceService;
@@ -15,5 +14,5 @@ public interface IAttendanceService
     Task AddAttendancesAsync(Attendance[] attendances);
     Task UpdateAttendanceAsync(Attendance attendanceDto);
     Task UpdateStatusAsync(Guid attendanceId, int status);
-    Task SubmitAttendances(List<Attendance> attendances);
+    Task SubmitAttendance(Guid attendanceId, int status, string statusReason);
 }

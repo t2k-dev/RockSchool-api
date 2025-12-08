@@ -1,6 +1,6 @@
-﻿namespace RockSchool.BL.Dtos;
+﻿namespace RockSchool.BL.Models;
 
-public class ScheduledWorkingPeriodDto
+public class ScheduledWorkingPeriod
 {
     public Guid TeacherId { get; set; }
     public Guid ScheduledWorkingPeriodId { get; set; }

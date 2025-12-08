@@ -1,5 +1,5 @@
 ﻿using System;
-using RockSchool.BL.Dtos;
+using RockSchool.BL.Models;
 using RockSchool.Data.Entities;
 
 namespace RockSchool.WebApi.Models.Teachers;
@@ -21,5 +21,5 @@ public class TeacherInfo
     public int AgeLimit { get; set; }
     public bool IsActive { get; set; }
     public WorkingPeriodDto[] WorkingPeriods { get; set; }
-    public ScheduledWorkingPeriodDto[] ScheduledWorkingPeriods { get; set; }
+    public ScheduledWorkingPeriod[] ScheduledWorkingPeriods { get; set; }
 }

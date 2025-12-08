@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using RockSchool.Data.Entities;
+﻿using RockSchool.Data.Entities;
 using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Models;
@@ -14,7 +13,7 @@ public class Attendance
     public int DisciplineId { get; set; }
     public DisciplineDto Discipline { get; set; }
     public Guid TeacherId { get; set; }
-    public TeacherDto Teacher { get; set; }
+    public Teacher Teacher { get; set; }
     public AttendanceStatus Status { get; set; }
     public string StatusReason { get; set; }
     public DateTime StartDate { get; set; }

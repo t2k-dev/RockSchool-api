@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Dtos;
-using System;
+﻿using System;
 
 namespace RockSchool.WebApi.Models
 {

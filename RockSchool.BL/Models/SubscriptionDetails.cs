@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RockSchool.BL.Dtos
+﻿namespace RockSchool.BL.Models
 {
     public class SubscriptionDetails
     {

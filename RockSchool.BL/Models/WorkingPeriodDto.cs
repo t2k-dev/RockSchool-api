@@ -1,12 +1,4 @@
-﻿using RockSchool.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RockSchool.BL.Dtos
+﻿namespace RockSchool.BL.Models
 {
     public class WorkingPeriodDto
     {

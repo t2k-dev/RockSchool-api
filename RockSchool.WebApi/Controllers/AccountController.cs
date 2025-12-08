@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Dtos;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
@@ -8,6 +7,7 @@ using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Account;
 using System;
 using System.Threading.Tasks;
+using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Controllers;
 
