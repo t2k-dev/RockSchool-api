@@ -98,6 +98,18 @@ public class AttendanceService : IAttendanceService
         await _attendanceRepository.UpdateAsync(existingEntity);
     }
 
+    public async Task UpdateCommentAsync(Guid attendanceId, string comment)
+    {
+        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
+
+        if (attendanceEntity == null)
+            throw new NullReferenceException("StudentEntity not found.");
+
+        attendanceEntity.Comment = comment;
+
+        await _attendanceRepository.UpdateAsync(attendanceEntity);
+    }
+
     public async Task UpdateStatusAsync(Guid attendanceId, int status)
     {
         // TODO: discuss implementation

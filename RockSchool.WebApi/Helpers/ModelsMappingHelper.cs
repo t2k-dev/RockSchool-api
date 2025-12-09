@@ -54,6 +54,7 @@ namespace RockSchool.WebApi.Helpers
                 IsTrial = attendance.IsTrial,
                 IsCompleted = attendance.IsCompleted,
                 GroupId = attendance.GroupId,
+                Comment = attendance.Comment,
             };
         }
 

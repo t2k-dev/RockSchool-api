@@ -27,18 +27,16 @@ namespace RockSchool.WebApi.Controllers
         private readonly IStudentService _studentService;
         private readonly ISubscriptionService _subscriptionService;
         private readonly ITrialSubscriptionService _taxSubscriptionService;
-        private readonly IAttendanceService _attendanceService;
         private readonly IScheduleService _scheduleService;
         private readonly INoteService _noteService;
         private readonly IReschedulingService _reschedulingService;
         
 
-        public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService, IAttendanceService attendanceService,
+        public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService,
             IScheduleService scheduleService, INoteService noteService, IReschedulingService reschedulingService, ITeacherService teacherService, ITrialSubscriptionService taxSubscriptionService)
         {
             _studentService = studentService;
             _subscriptionService = subscriptionService;
-            _attendanceService = attendanceService;
             _scheduleService = scheduleService;
             _noteService = noteService;
             _reschedulingService = reschedulingService;

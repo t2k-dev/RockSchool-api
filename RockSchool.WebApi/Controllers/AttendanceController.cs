@@ -107,6 +107,15 @@ public class AttendanceController : Controller
         return Ok();
     }
 
+    [HttpPut("{id}/comment/{comment}")]
+    public async Task<ActionResult> UpdateComment(Guid id, string comment)
+    {
+        // TODO: fix routing
+        await _attendanceService.UpdateCommentAsync(id, comment);
+
+        return Ok();
+    }
+
     [HttpPost("{id}/attend")]
     public async Task<ActionResult> Attend(Guid id, SubmitAttendanceRequest declineAttendanceRequest)
     {
