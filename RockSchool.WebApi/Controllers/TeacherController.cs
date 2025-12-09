@@ -117,50 +117,18 @@ public class TeacherController : Controller
         return Ok(teacherScreenDetails);
     }
 
-    [HttpGet("getAvailableTeachers")]
+    [HttpGet("available")]
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
         var teachers = await _teacherService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
-        
-        var attendanceMap = new Dictionary<Guid, AttendanceInfo[]>();
-        
+
         var availableTeacherDtos = new List<AvailableTeacherDto>();
         foreach (var teacher in teachers)
         {
-            var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
-                teacher.TeacherId,
-                DateTime.MinValue,
-                DateTime.MaxValue);
-
-            var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
-            var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
-            attendanceInfos.AddRange(groupAttendanceInfos);
-
-            var availableTeacherDto = new AvailableTeacherDto
-            {
-                FirstName = teacher.FirstName,
-                LastName = teacher.LastName,
-                TeacherId = teacher.TeacherId,
-                Workload = Random.Shared.Next(1, 100),
-                ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?
-                    .Select(swp => new ScheduledWorkingPeriodInfo
-                    {
-                        StartDate = swp.StartDate,
-                        EndDate = swp.EndDate,
-                        ScheduledWorkingPeriodId = swp.ScheduledWorkingPeriodId,
-                        RoomId = swp.RoomId
-                    })
-                    .ToList(),
-
-                Attendances = attendanceInfos.ToArray()
-            };
+            var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
             availableTeacherDtos.Add(availableTeacherDto);
-
-            //attendanceMap[teacher.TeacherId] = allAttendances ?? [];
         }
 
-        //var response = AvailableTeacherFactory.CreateResponse(teachers, attendanceMap);
-        
         return Ok(new { availableTeachers = availableTeacherDtos });
     }
 
@@ -169,17 +137,9 @@ public class TeacherController : Controller
     {
         var teacher = await _teacherService.GetTeacherByIdAsync(id);
 
-        var attendanceMap = new Dictionary<Guid, Attendance[]>();
+        var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
 
-        var attendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
-            teacher.TeacherId,
-            DateTime.MinValue,
-            DateTime.MaxValue);
-
-        attendanceMap[teacher.TeacherId] = attendances ?? Array.Empty<Attendance>();
-
-        var response = AvailableTeacherFactory.CreateResponse(new[] { teacher }, attendanceMap);
-        return Ok(response);
+        return Ok(new { teacher = availableTeacherDto });
     }
 
     [HttpPost]
@@ -249,5 +209,40 @@ public class TeacherController : Controller
         await _teacherService.SetTeacherActiveAsync(id, false);
 
         return Ok();
+    }
+
+    private async Task<AvailableTeacherDto> BuildAvailableTeacherDto(Teacher teacher)
+    {
+
+
+        var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
+            teacher.TeacherId,
+            DateTime.MinValue,
+            DateTime.MaxValue);
+
+        var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
+        var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
+        attendanceInfos.AddRange(groupAttendanceInfos);
+
+        var availableTeacherDto = new AvailableTeacherDto
+        {
+            FirstName = teacher.FirstName,
+            LastName = teacher.LastName,
+            TeacherId = teacher.TeacherId,
+            Workload = Random.Shared.Next(1, 100),
+            ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?
+                .Select(swp => new ScheduledWorkingPeriodInfo
+                {
+                    StartDate = swp.StartDate,
+                    EndDate = swp.EndDate,
+                    ScheduledWorkingPeriodId = swp.ScheduledWorkingPeriodId,
+                    RoomId = swp.RoomId
+                })
+                .ToList(),
+
+            Attendances = attendanceInfos.ToArray()
+        };
+
+        return availableTeacherDto;
     }
 }
