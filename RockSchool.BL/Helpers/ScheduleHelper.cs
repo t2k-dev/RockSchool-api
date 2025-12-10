@@ -44,17 +44,19 @@ public static class ScheduleHelper
         return attendances;
     }
 
-    public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, Schedule[] orderedSchedules)
+    public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, Schedule[] orderedSchedules, int lengthInMinutes = 60)
     {
         const int timeZone = 5; // DEV move somewhere
         var schedule = GetNextSchedule(startingFrom, orderedSchedules);
         var date = GetNextDate(startingFrom, schedule);
 
         var startDate = new DateTime(date.Year, date.Month, date.Day, schedule.StartTime.Hours - timeZone, schedule.StartTime.Minutes, 0, DateTimeKind.Utc);
+        var endDate = startDate.AddMinutes(lengthInMinutes);
 
         return new AvailableSlot
         {
             StartDate = startDate,
+            EndDate = endDate,
             RoomId = schedule.RoomId,
         };
     }

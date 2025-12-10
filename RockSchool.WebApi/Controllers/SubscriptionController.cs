@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
@@ -10,11 +11,12 @@ using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
+using RockSchool.WebApi.Models.Teachers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RockSchool.BL.Models;
+using RockSchool.WebApi.Helpers;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -54,16 +56,7 @@ namespace RockSchool.WebApi.Controllers
             }
 
             var schedules = await _scheduleService.GetAllBySubscriptionIdAsync(id);
-            var scheduleInfos = schedules?.Select(schedule => new ScheduleInfo
-                {
-                    ScheduleId = schedule.ScheduleId,
-                    SubscriptionId = schedule.SubscriptionId,
-                    RoomId = schedule.RoomId,
-                    WeekDay = schedule.WeekDay,
-                    StartTime = schedule.StartTime.ToString(@"hh\:mm"),
-                    EndTime = schedule.EndTime.ToString(@"hh\:mm"),
-                })
-                .ToArray();
+            var scheduleInfos = schedules?.ToInfos().ToArray();
 
             var response = new SubscriptionInfo
             {
@@ -74,7 +67,7 @@ namespace RockSchool.WebApi.Controllers
                 DisciplineId = subscription.DisciplineId,
                 Status = subscription.Status,
                 StartDate = subscription.StartDate,
-                //IsTrial = 
+                TrialStatus = subscription.TrialStatus,
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
                 Schedules = scheduleInfos,
@@ -189,11 +182,20 @@ namespace RockSchool.WebApi.Controllers
         }
 
         [HttpPost("rescheduleAttendance")]
-        public async Task<ActionResult> RescheduleAttendance(RescheduleAttendanceRequestDto request)
+        public async Task<ActionResult> RescheduleAttendance(RescheduleAttendanceRequest request)
         {
             var attendance = await _reschedulingService.RescheduleAttendanceByStudent(request.AttendanceId, request.NewStartDate);
 
             return Ok(attendance);
+        }
+
+        [HttpPut("{id}/schedules")]
+        public async Task<ActionResult> UpdateSchedules(Guid id, [FromBody] UpdateSchedulesRequest request)
+        {
+            var newSchedules = request.Schedules.ToModel(id).ToArray();
+            await _reschedulingService.UpdateSchedules(id, DateTime.Now, newSchedules);
+
+            return Ok();
         }
     }
 }

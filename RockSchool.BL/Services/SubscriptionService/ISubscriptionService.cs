@@ -12,7 +12,6 @@ namespace RockSchool.BL.Services.SubscriptionService
         Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId);
         Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, Schedule[] schedules);
         Task<Guid> AddSubscriptionAsync(Subscription subscription);
-        Task<Attendance> RescheduleAttendance(Guid attendanceId, DateTime startDate);
         Task DecreaseAttendancesLeftCount(Guid subscriptionId);
     }
 }

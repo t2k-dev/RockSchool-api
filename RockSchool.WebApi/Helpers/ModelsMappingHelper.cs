@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RockSchool.BL.Models;
 using RockSchool.Data.Enums;
+using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
@@ -127,6 +129,46 @@ namespace RockSchool.WebApi.Helpers
         public static List<SubscriptionInfo> ToSubscriptionInfos(this IEnumerable<Subscription> subscriptions)
         {
             return subscriptions.Select(model => model.ToInfo()).ToList();
+        }
+
+        // Schedule
+
+        public static ScheduleInfo ToInfo(this Schedule schedule)
+        {
+            var scheduleInfo = new ScheduleInfo
+                {
+                    ScheduleId = schedule.ScheduleId,
+                    SubscriptionId = schedule.SubscriptionId,
+                    RoomId = schedule.RoomId,
+                    WeekDay = schedule.WeekDay,
+                    StartTime = schedule.StartTime.ToString(@"hh\:mm"),
+                    EndTime = schedule.EndTime.ToString(@"hh\:mm"),
+                };
+            return scheduleInfo;
+        }
+
+        public static List<ScheduleInfo> ToInfos(this IEnumerable<Schedule> schedules)
+        {
+            return schedules.Select(model => model.ToInfo()).ToList();
+        }
+
+        public static Schedule ToModel(this ScheduleInfo scheduleInfo, Guid subscriptionId)
+        {
+            var schedule = new Schedule
+            {
+                ScheduleId = scheduleInfo.ScheduleId,
+                SubscriptionId = subscriptionId,
+                RoomId = scheduleInfo.RoomId,
+                WeekDay = scheduleInfo.WeekDay,
+                StartTime =  TimeSpan.Parse(scheduleInfo.StartTime),
+                EndTime = TimeSpan.Parse(scheduleInfo.EndTime),
+            };
+            return schedule;
+        }
+
+        public static List<Schedule> ToModel(this IEnumerable<ScheduleInfo> scheduleInfos, Guid subscriptionId)
+        {
+            return scheduleInfos.Select(model => model.ToModel(subscriptionId)).ToList();
         }
 
         // Teacher

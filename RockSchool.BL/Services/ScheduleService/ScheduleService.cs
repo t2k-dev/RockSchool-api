@@ -55,15 +55,19 @@ public class ScheduleService : IScheduleService
 
     public async Task<Guid> AddScheduleAsync(Schedule schedule)
     {
-        var scheduleEntity = new ScheduleEntity
-        {
-            SubscriptionId = schedule.SubscriptionId,
-            WeekDay = schedule.WeekDay,
-            StartTime = schedule.StartTime,
-            EndTime = schedule.EndTime,
-            RoomId = schedule.RoomId,
-        };
-
+        var scheduleEntity = schedule.ToEntity();
         return await _scheduleRepository.AddAsync(scheduleEntity);
+    }
+
+    public async Task AddSchedulesAsync(Schedule[] schedules)
+    {
+        var scheduleEntities = schedules.ToEntities().ToArray();
+
+        await _scheduleRepository.AddManyAsync(scheduleEntities);
+    }
+
+    public async Task DeleteBySubscriptionAsync(Guid subscriptionId)
+    {
+        await _scheduleRepository.DeleteBySubscriptionAsync(subscriptionId);
     }
 }

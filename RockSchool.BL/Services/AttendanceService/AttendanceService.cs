@@ -53,6 +53,31 @@ public class AttendanceService : IAttendanceService
         return attendances.ToDto();
     }
 
+    public async Task<Attendance[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
+    {
+        var attendanceEntities = await _attendanceRepository.GetByTeacherIdForPeriodOfTimeAsync(
+            teacherId,
+            DateTime.UtcNow.AddMonths(-1),
+            DateTime.UtcNow.AddMonths(1)
+        );
+
+        return attendanceEntities?.ToDto();
+    }
+
+    public async Task<Attendance[]?> GetAttendancesByStudentId(Guid studentId)
+    {
+        var attendanceEntities = await _attendanceRepository.GetByStudentIdAsync(studentId);
+
+        return attendanceEntities?.ToDto();
+    }
+
+    public async Task<Attendance[]?> GetAttendancesBySubscriptionId(Guid subscriptionId)
+    {
+        var attendanceEntities = await _attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
+
+        return attendanceEntities?.ToDto();
+    }
+
     public async Task AddAttendancesAsync(Attendance[] attendances)
     {
         var attendanceEntities = attendances.ToEntities();
@@ -68,32 +93,14 @@ public class AttendanceService : IAttendanceService
         return attendanceId;
     }
 
-    public async Task<Attendance[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
+    public async Task UpdateAttendanceAsync(Attendance attendance)
     {
-        var attendanceEntities = await _attendanceRepository.GetAttendancesByTeacherIdForPeriodOfTimeAsync(
-            teacherId,
-            DateTime.UtcNow.AddMonths(-1),
-            DateTime.UtcNow.AddMonths(1)
-        );
-
-        return attendanceEntities?.ToDto();
-    }
-
-    public async Task<Attendance[]?> GetAttendancesByStudentId(Guid studentId)
-    {
-        var attendanceEntities = await _attendanceRepository.GetAttendancesByStudentIdAsync(studentId);
-
-        return attendanceEntities?.ToDto();
-    }
-
-    public async Task UpdateAttendanceAsync(Attendance attendanceDto)
-    {
-        var existingEntity = await _attendanceRepository.GetAsync(attendanceDto.AttendanceId);
+        var existingEntity = await _attendanceRepository.GetAsync(attendance.AttendanceId);
 
         if (existingEntity == null)
-            throw new NullReferenceException("StudentEntity not found.");
+            throw new NullReferenceException("AttendanceEntity not found.");
 
-        ModifyAttendanceAttributes(attendanceDto, existingEntity);
+        ModifyAttendanceAttributes(attendance, existingEntity);
 
         await _attendanceRepository.UpdateAsync(existingEntity);
     }
@@ -103,9 +110,23 @@ public class AttendanceService : IAttendanceService
         var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
 
         if (attendanceEntity == null)
-            throw new NullReferenceException("StudentEntity not found.");
+            throw new NullReferenceException("AttendanceEntity not found.");
 
         attendanceEntity.Comment = comment;
+
+        await _attendanceRepository.UpdateAsync(attendanceEntity);
+    }
+
+    public async Task UpdateDateAndLocationAsync(Guid attendanceId, DateTime startDate, DateTime endDate, int roomId)
+    {
+        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
+
+        if (attendanceEntity == null)
+            throw new NullReferenceException("AttendanceEntity not found.");
+
+        attendanceEntity.StartDate = startDate;
+        attendanceEntity.EndDate = endDate;
+        attendanceEntity.RoomId = roomId;
 
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
@@ -116,21 +137,28 @@ public class AttendanceService : IAttendanceService
         var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
 
         if (attendanceEntity == null)
-            throw new NullReferenceException("StudentEntity not found.");
+            throw new NullReferenceException("AttendanceEntity not found.");
 
         attendanceEntity.Status = (AttendanceStatus)status;
 
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
 
-    private static void ModifyAttendanceAttributes(Attendance updatedAttendance,
-        AttendanceEntity existingEntity)
+    private static void ModifyAttendanceAttributes(Attendance updatedAttendance, AttendanceEntity existingEntity)
     {
-
         if (updatedAttendance.Status != default)
             existingEntity.Status = updatedAttendance.Status;
-        
+
         if (updatedAttendance.StatusReason != default)
             existingEntity.StatusReason = updatedAttendance.StatusReason;
+
+        if (updatedAttendance.StartDate != default)
+            existingEntity.StartDate = updatedAttendance.StartDate;
+
+        if (updatedAttendance.EndDate != default)
+            existingEntity.EndDate = updatedAttendance.EndDate;
+
+        if (updatedAttendance.RoomId != default)
+            existingEntity.RoomId = updatedAttendance.RoomId;
     }
 }

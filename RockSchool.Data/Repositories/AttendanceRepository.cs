@@ -36,7 +36,7 @@ public class AttendanceRepository
             .ToArrayAsync();
     }
 
-    public async Task<AttendanceEntity[]?> GetAttendancesByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate)
+    public async Task<AttendanceEntity[]?> GetByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate)
     {
         return await _rockSchoolContext.Attendances
             .Where(a => a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate)
@@ -44,7 +44,7 @@ public class AttendanceRepository
             .ToArrayAsync();
     }
 
-    public async Task<AttendanceEntity[]?> GetAttendancesByStudentIdAsync(Guid studentId)
+    public async Task<AttendanceEntity[]?> GetByStudentIdAsync(Guid studentId)
     {
         return await _rockSchoolContext.Attendances
             .Where(a => a.StudentId == studentId)
@@ -52,7 +52,7 @@ public class AttendanceRepository
             .ToArrayAsync();
     }
 
-    public async Task<AttendanceEntity[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
+    public async Task<AttendanceEntity[]?> GetBySubscriptionIdAsync(Guid subscriptionId)
     {
         return await _rockSchoolContext.Attendances
             .Where(a => a.SubscriptionId == subscriptionId)

@@ -135,7 +135,7 @@ namespace RockSchool.BL.Services.SubscriptionService
 
         public async Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId)
         {
-            var attendances = await _attendanceRepository.GetAllBySubscriptionIdAsync(subscriptionId);
+            var attendances = await _attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
             var lastAttendance = attendances.MaxBy(a => a.StartDate);
 
             var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
@@ -147,12 +147,6 @@ namespace RockSchool.BL.Services.SubscriptionService
             var availableSlot = ScheduleHelper.GetNextAvailableSlot(lastAttendance.StartDate, orderedSchedules);
             
             return availableSlot;
-        }
-
-        public Task<Attendance> RescheduleAttendance(Guid attendanceId, DateTime startDate)
-        {
-            //RescheduleAttendanceByStudent
-            return null;
         }
 
         public async Task DecreaseAttendancesLeftCount(Guid subscriptionId)

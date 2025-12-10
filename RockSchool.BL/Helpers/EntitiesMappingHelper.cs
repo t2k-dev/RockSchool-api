@@ -1,10 +1,11 @@
-﻿using RockSchool.Data.Entities;
+﻿using RockSchool.BL.Models;
+using RockSchool.Data.Entities;
+using RockSchool.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RockSchool.BL.Models;
 
 namespace RockSchool.BL.Helpers
 {
@@ -51,6 +52,24 @@ namespace RockSchool.BL.Helpers
                 GroupId = attendance.GroupId,
                 IsTrial = attendance.IsTrial,
                 IsCompleted = attendance.IsCompleted,
+            };
+        }
+
+        public static List<ScheduleEntity> ToEntities(this IEnumerable<Schedule> schedules)
+        {
+            return schedules.Select(a => a.ToEntity())
+                .ToList();
+        }
+
+        public static ScheduleEntity ToEntity(this Schedule schedule)
+        {
+            return new ScheduleEntity
+            {
+                SubscriptionId = schedule.SubscriptionId,
+                WeekDay = schedule.WeekDay,
+                StartTime = schedule.StartTime,
+                EndTime = schedule.EndTime,
+                RoomId = schedule.RoomId,
             };
         }
     }

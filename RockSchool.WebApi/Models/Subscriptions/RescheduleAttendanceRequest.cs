@@ -2,7 +2,7 @@
 
 namespace RockSchool.WebApi.Models.Subscriptions
 {
-    public class RescheduleAttendanceRequestDto
+    public class RescheduleAttendanceRequest
     {
         public Guid AttendanceId { get; set; }
         public DateTime NewStartDate { get; set; }

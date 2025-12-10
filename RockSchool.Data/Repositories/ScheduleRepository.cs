@@ -32,6 +32,12 @@ public class ScheduleRepository : BaseRepository
         return scheduleEntity.ScheduleId;
     }
 
+    public async Task AddManyAsync(ScheduleEntity[] scheduleEntities)
+    {
+        await RockSchoolContext.Schedules.AddRangeAsync(scheduleEntities);
+        await RockSchoolContext.SaveChangesAsync();
+    }
+
     public async Task UpdateAsync(ScheduleEntity scheduleEntity)
     {
         RockSchoolContext.Schedules.Update(scheduleEntity);
@@ -48,5 +54,11 @@ public class ScheduleRepository : BaseRepository
         }
     }
 
+    public async Task DeleteBySubscriptionAsync(Guid subscriptionId)
+    {
+        var schedules = await RockSchoolContext.Schedules.Where(s => s.SubscriptionId == subscriptionId).ToArrayAsync();
 
+        RockSchoolContext.Schedules.RemoveRange(schedules);
+        await RockSchoolContext.SaveChangesAsync();
+    }
 }
