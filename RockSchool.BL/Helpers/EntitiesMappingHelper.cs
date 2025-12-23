@@ -55,6 +55,26 @@ namespace RockSchool.BL.Helpers
             };
         }
 
+        public static SubscriptionEntity ToEntity(this Subscription subscription)
+        {
+            return new SubscriptionEntity
+            {
+                AttendanceCount = subscription.AttendanceCount,
+                AttendancesLeft = subscription.AttendancesLeft,
+                AttendanceLength = subscription.AttendanceLength,
+                BranchId = subscription.BranchId,
+                DisciplineId = subscription.DisciplineId,
+                GroupId = subscription.GroupId,
+                StartDate = subscription.StartDate,
+                Status = subscription.Status,
+                StudentId = subscription.StudentId,
+                TeacherId = subscription.TeacherId,
+                PaymentId = subscription.PaymentId,
+                TrialStatus = (int?)subscription.TrialStatus,
+                StatusReason = subscription.StatusReason,
+            };
+        }
+
         public static List<ScheduleEntity> ToEntities(this IEnumerable<Schedule> schedules)
         {
             return schedules.Select(a => a.ToEntity())
@@ -70,6 +90,17 @@ namespace RockSchool.BL.Helpers
                 StartTime = schedule.StartTime,
                 EndTime = schedule.EndTime,
                 RoomId = schedule.RoomId,
+            };
+        }
+
+        public static PaymentEntity ToEntity(this Payment payment)
+        {
+            return new PaymentEntity
+            {
+                PaymentId = payment.PaymentId,
+                Amount = payment.Amount,
+                PaidOn = payment.PaidOn,
+                PaymentType = payment.PaymentType,
             };
         }
     }

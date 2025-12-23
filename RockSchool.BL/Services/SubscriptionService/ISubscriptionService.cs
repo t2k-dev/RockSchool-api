@@ -13,5 +13,6 @@ namespace RockSchool.BL.Services.SubscriptionService
         Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, Schedule[] schedules);
         Task<Guid> AddSubscriptionAsync(Subscription subscription);
         Task DecreaseAttendancesLeftCount(Guid subscriptionId);
+        Task LinkPaymentToSubscription(Guid subscriptionId, Guid paymentId);
     }
 }

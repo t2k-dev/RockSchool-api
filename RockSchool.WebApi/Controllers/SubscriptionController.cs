@@ -23,39 +23,30 @@ namespace RockSchool.WebApi.Controllers
     [EnableCors("MyPolicy")]
     [ApiController]
     [Route("api/[controller]")]
-    public class SubscriptionController : Controller
+    public class SubscriptionController(
+        IStudentService studentService,
+        ISubscriptionService subscriptionService,
+        IScheduleService scheduleService,
+        INoteService noteService,
+        IReschedulingService reschedulingService,
+        ITeacherService teacherService,
+        ITrialSubscriptionService taxSubscriptionService,
+        IPaymentService paymentService)
+        : Controller
     {
-        private readonly ITeacherService _teacherService;
-        private readonly IStudentService _studentService;
-        private readonly ISubscriptionService _subscriptionService;
-        private readonly ITrialSubscriptionService _taxSubscriptionService;
-        private readonly IScheduleService _scheduleService;
-        private readonly INoteService _noteService;
-        private readonly IReschedulingService _reschedulingService;
-        
+        private readonly INoteService _noteService = noteService;
 
-        public SubscriptionController(IStudentService studentService, ISubscriptionService subscriptionService,
-            IScheduleService scheduleService, INoteService noteService, IReschedulingService reschedulingService, ITeacherService teacherService, ITrialSubscriptionService taxSubscriptionService)
-        {
-            _studentService = studentService;
-            _subscriptionService = subscriptionService;
-            _scheduleService = scheduleService;
-            _noteService = noteService;
-            _reschedulingService = reschedulingService;
-            _teacherService = teacherService;
-            _taxSubscriptionService = taxSubscriptionService;
-        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(Guid id)
         {
-            var subscription = await _subscriptionService.GetAsync(id);
+            var subscription = await subscriptionService.GetAsync(id);
             if (subscription == null)
             {
                 return NotFound();
             }
 
-            var schedules = await _scheduleService.GetAllBySubscriptionIdAsync(id);
+            var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
             var scheduleInfos = schedules?.ToInfos().ToArray();
 
             var response = new SubscriptionInfo
@@ -79,7 +70,7 @@ namespace RockSchool.WebApi.Controllers
         [HttpGet("{id}/form-data")]
         public async Task<ActionResult> GetSubscriptionFormData(Guid id)
         {
-            var subscription = await _subscriptionService.GetAsync(id);
+            var subscription = await subscriptionService.GetAsync(id);
             if (subscription == null)
             {
                 return NotFound();
@@ -90,20 +81,20 @@ namespace RockSchool.WebApi.Controllers
             var students = new List<Student>();
             if (groupId != null)
             {
-                var subscriptions = await _subscriptionService.GetSubscriptionByGroupIdAsync(groupId.Value);
+                var subscriptions = await subscriptionService.GetSubscriptionByGroupIdAsync(groupId.Value);
                 foreach (var groupSubscription in subscriptions)
                 {
-                    var student = await _studentService.GetByIdAsync(groupSubscription.StudentId);
+                    var student = await studentService.GetByIdAsync(groupSubscription.StudentId);
                     students.Add(student);
                 }
             }
             else
             {
-                var student = await _studentService.GetByIdAsync(subscription.StudentId);
+                var student = await studentService.GetByIdAsync(subscription.StudentId);
                 students.Add(student);
             }
 
-            var schedules = await _scheduleService.GetAllBySubscriptionIdAsync(id);
+            var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
             var scheduleInfos = schedules?.Select(schedule => new ScheduleInfo
                 {
                     ScheduleId = schedule.ScheduleId,
@@ -115,7 +106,7 @@ namespace RockSchool.WebApi.Controllers
                 })
                 .ToArray();
 
-            var teacher = await _teacherService.GetTeacherByIdAsync(subscription.TeacherId);
+            var teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId);
             var studentInfos = students.Select(s => new StudentInfo
             {
                 StudentId = s.StudentId, 
@@ -151,14 +142,14 @@ namespace RockSchool.WebApi.Controllers
         [HttpGet("{id}/getNextAvailableSlot")]
         public async Task<ActionResult> GetNextAvailableSlot(Guid id)
         {
-            var availableSlot = await _subscriptionService.GetNextAvailableSlotAsync(id);
+            var availableSlot = await subscriptionService.GetNextAvailableSlotAsync(id);
             return Ok(availableSlot);
         }
 
         [HttpPost("addTrial")]
         public async Task<ActionResult> AddTrial(AddTrialRequest request)
         {
-            var student = await _studentService.GetByIdAsync(request.Student.StudentId);
+            var student = await studentService.GetByIdAsync(request.Student.StudentId);
             var trialRequest = new TrialRequestDto
             {
                 RoomId = request.RoomId,
@@ -169,7 +160,7 @@ namespace RockSchool.WebApi.Controllers
                 Student = student,
             };
 
-            await _taxSubscriptionService.AddTrialSubscription(trialRequest);
+            await taxSubscriptionService.AddTrialSubscription(trialRequest);
 
             return Ok(request.Student.StudentId);
         }
@@ -177,14 +168,14 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSubscription(AddSubscriptionRequest request)
         {
-            await _subscriptionService.AddSubscriptionAsync(request.Subscription, request.StudentIds, request.Schedules);
+            await subscriptionService.AddSubscriptionAsync(request.Subscription, request.StudentIds, request.Schedules);
             return Ok();
         }
 
         [HttpPost("rescheduleAttendance")]
         public async Task<ActionResult> RescheduleAttendance(RescheduleAttendanceRequest request)
         {
-            var attendance = await _reschedulingService.RescheduleAttendanceByStudent(request.AttendanceId, request.NewStartDate);
+            var attendance = await reschedulingService.RescheduleAttendanceByStudent(request.AttendanceId, request.NewStartDate);
 
             return Ok(attendance);
         }
@@ -193,7 +184,22 @@ namespace RockSchool.WebApi.Controllers
         public async Task<ActionResult> UpdateSchedules(Guid id, [FromBody] UpdateSchedulesRequest request)
         {
             var newSchedules = request.Schedules.ToModel(id).ToArray();
-            await _reschedulingService.UpdateSchedules(id, DateTime.Now, newSchedules);
+            await reschedulingService.UpdateSchedules(id, DateTime.Now, newSchedules);
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/pay")]
+        public async Task<ActionResult> Pay(Guid id, PaymentRequest request)
+        {
+            var payment = new Payment
+            {
+                Amount = request.Amount,
+                PaidOn = request.PaidOn.ToUniversalTime(),
+                PaymentType = (PaymentType)request.PaymentType,
+            };
+
+            await paymentService.Pay(id, payment);
 
             return Ok();
         }

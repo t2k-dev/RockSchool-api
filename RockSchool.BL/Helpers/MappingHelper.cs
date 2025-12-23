@@ -265,7 +265,6 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-
         public static Teacher[] ToDto(this IEnumerable<TeacherEntity> entities)
         {
             return entities.Select(t => t.ToDto()).ToArray();

@@ -48,6 +48,7 @@ public class Startup
         services.AddScoped<INoteService, NoteService>();
         services.AddScoped<IBranchService, BranchService>();
         services.AddScoped<IAttendanceSubmitService, AttendanceSubmitService>();
+        services.AddScoped<IPaymentService, PaymentService>();
 
         services.AddScoped<SubscriptionRepository>();
         services.AddScoped<BranchRepository>();
@@ -60,6 +61,7 @@ public class Startup
         services.AddScoped<NoteRepository>();
         services.AddScoped<WorkingPeriodsRepository>();
         services.AddScoped<ScheduledWorkingPeriodsRepository>();
+        services.AddScoped<PaymentRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         // services.AddControllers();

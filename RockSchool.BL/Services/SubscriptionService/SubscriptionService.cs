@@ -9,46 +9,20 @@ using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
-    public class SubscriptionService : ISubscriptionService
+    public class SubscriptionService(
+        SubscriptionRepository subscriptionRepository,
+        ScheduleRepository scheduleRepository,
+        AttendanceRepository attendanceRepository,
+        IAttendanceService attendanceService,
+        INoteService noteService,
+        IScheduleService scheduleService)
+        : ISubscriptionService
     {
-        private readonly SubscriptionRepository _subscriptionRepository;
-        private readonly ScheduleRepository _scheduleRepository;
-        private readonly AttendanceRepository _attendanceRepository;
-        private readonly IAttendanceService _attendanceService;
-        private readonly IScheduleService _scheduleService;
-        private readonly INoteService _noteService;
-
-        public SubscriptionService(SubscriptionRepository subscriptionRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository, IAttendanceService attendanceService, INoteService noteService, IScheduleService scheduleService)
-        {
-            _subscriptionRepository = subscriptionRepository;
-            _scheduleRepository = scheduleRepository;
-            _attendanceRepository = attendanceRepository;
-            _attendanceService = attendanceService;
-            _noteService = noteService;
-            _scheduleService = scheduleService;
-        }
-
         public async Task<Guid> AddSubscriptionAsync(Subscription subscription)
         {
-            var subscriptionEntity = new SubscriptionEntity
-            {
-                AttendanceCount = subscription.AttendanceCount,
-                AttendancesLeft = subscription.AttendancesLeft,
-                AttendanceLength = subscription.AttendanceLength,
-                BranchId = subscription.BranchId,
-                DisciplineId = subscription.DisciplineId,
-                GroupId = subscription.GroupId,
-                StartDate = subscription.StartDate,
-                Status = subscription.Status,
-                StudentId = subscription.StudentId,
-                TeacherId = subscription.TeacherId,
-                PaymentId = subscription.PaymentId,
-                TrialStatus = (int?)subscription.TrialStatus,
-                StatusReason = subscription.StatusReason,
-                
-            };
+            var subscriptionEntity = subscription.ToEntity();
 
-            await _subscriptionRepository.AddSubscriptionAsync(subscriptionEntity);
+            await subscriptionRepository.AddSubscriptionAsync(subscriptionEntity);
 
             return subscriptionEntity.SubscriptionId;
         }
@@ -76,7 +50,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                     GroupId = groupId,
                     PaymentId = null,
                     TrialStatus = null,
-                    Status = (int)SubscriptionStatus.Active,
+                    Status = (int)SubscriptionStatus.Draft,
                     StatusReason = null,
                 };
 
@@ -86,7 +60,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 foreach (var schedule in schedules)
                 {
                     schedule.SubscriptionId = newSubscriptionId;
-                    await _scheduleService.AddScheduleAsync(schedule);
+                    await scheduleService.AddScheduleAsync(schedule);
                 }
 
                 // Attendances
@@ -105,40 +79,40 @@ namespace RockSchool.BL.Services.SubscriptionService
                     RoomId = templateAttendance.RoomId,
                 }).ToArray();
 
-                await _attendanceService.AddAttendancesAsync(attendancesByStudent);
+                await attendanceService.AddAttendancesAsync(attendancesByStudent);
             }
         }
 
         public async Task<Subscription?> GetAsync(Guid subscriptionId)
         {
-            var subscription = await _subscriptionRepository.GetAsync(subscriptionId);
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
             return subscription?.ToDto();
         }
 
         public async Task<Subscription[]> GetSubscriptionsByStudentId(Guid studentId)
         {
-            var subscriptions = await _subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
+            var subscriptions = await subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
             return subscriptions.ToDto();
         }
 
         public async Task<Subscription[]?> GetSubscriptionByGroupIdAsync(Guid groupId)
         {
-            var subscriptions = await _subscriptionRepository.GetByGroupIdAsync(groupId);
+            var subscriptions = await subscriptionRepository.GetByGroupIdAsync(groupId);
             return subscriptions.ToDto();
         }
 
         public async Task<Subscription[]?> GetSubscriptionsByTeacherId(Guid teacherId)
         {
-            var subscriptions = await _subscriptionRepository.GetSubscriptionsByTeacherIdAsync(teacherId);
+            var subscriptions = await subscriptionRepository.GetSubscriptionsByTeacherIdAsync(teacherId);
             return subscriptions?.ToDto();
         }
 
         public async Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId)
         {
-            var attendances = await _attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
+            var attendances = await attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
             var lastAttendance = attendances.MaxBy(a => a.StartDate);
 
-            var schedules = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
+            var schedules = await scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
             var orderedSchedules = schedules.ToDto()
                 .OrderBy(s => s.WeekDay)
                 .ThenBy(s => s.StartTime)
@@ -151,7 +125,7 @@ namespace RockSchool.BL.Services.SubscriptionService
 
         public async Task DecreaseAttendancesLeftCount(Guid subscriptionId)
         {
-            var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
+            var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
             subscriptionEntity.AttendancesLeft -= 1;
 
             if (subscriptionEntity.AttendancesLeft == 0)
@@ -159,7 +133,17 @@ namespace RockSchool.BL.Services.SubscriptionService
                 subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
             }
 
-            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+        }
+
+        public async Task LinkPaymentToSubscription(Guid subscriptionId, Guid paymentId)
+        {
+            var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
+
+            subscriptionEntity.PaymentId = paymentId;
+            subscriptionEntity.Status = (int)SubscriptionStatus.Active;
+
+            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
     }
 }
