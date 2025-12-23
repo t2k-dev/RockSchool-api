@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RockSchool.Data.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace RockSchool.Data.Entities
 {
@@ -11,6 +12,6 @@ namespace RockSchool.Data.Entities
 
         public DateTime PaidOn { get; set; }
 
-        public int PaymentType { get; set; }
+        public PaymentType PaymentType { get; set; }
     }
 }

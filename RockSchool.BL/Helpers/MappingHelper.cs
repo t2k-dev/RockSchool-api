@@ -165,7 +165,7 @@ namespace RockSchool.BL.Helpers
                 StatusReason = entity.StatusReason,
                 DisciplineId = entity.DisciplineId,
                 Discipline = entity.Discipline?.ToDto(),
-                TransactionId = entity.TransactionId,
+                PaymentId = entity.PaymentId,
                 TeacherId = entity.TeacherId,
                 Teacher = entity.Teacher?.ToDto(),
                 BranchId = entity.BranchId,

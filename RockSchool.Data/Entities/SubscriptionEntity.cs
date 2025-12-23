@@ -32,7 +32,8 @@ public class SubscriptionEntity
     [ForeignKey(nameof(DisciplineId))]
     public virtual DisciplineEntity Discipline { get; set; }
 
-    public int? TransactionId { get; set; }
+    [ForeignKey(nameof(PaymentId))]
+    public Guid? PaymentId { get; set; }
 
     public Guid TeacherId { get; set; }
 

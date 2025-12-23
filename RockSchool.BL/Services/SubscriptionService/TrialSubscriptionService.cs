@@ -46,7 +46,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 GroupId = null,
                 StartDate = DateOnly.FromDateTime(request.TrialDate),
                 TrialStatus = TrialStatus.Created,
-                TransactionId = null,
+                PaymentId = null,
                 Status = (int)SubscriptionStatus.Active,
                 TeacherId = request.TeacherId
             };

@@ -26,7 +26,7 @@ namespace RockSchool.BL.Models
 
         public virtual Discipline Discipline { get; set; }
 
-        public int? TransactionId { get; set; }
+        public Guid? PaymentId { get; set; }
 
         public Guid TeacherId { get; set; }
 

@@ -42,7 +42,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 Status = subscription.Status,
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
-                TransactionId = subscription.TransactionId,
+                PaymentId = subscription.PaymentId,
                 TrialStatus = (int?)subscription.TrialStatus,
                 StatusReason = subscription.StatusReason,
                 
@@ -74,7 +74,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                     AttendanceLength = subscriptionDetails.AttendanceLength,
                     BranchId = subscriptionDetails.BranchId,
                     GroupId = groupId,
-                    TransactionId = null,
+                    PaymentId = null,
                     TrialStatus = null,
                     Status = (int)SubscriptionStatus.Active,
                     StatusReason = null,
