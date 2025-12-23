@@ -78,6 +78,7 @@ public class StudentController : Controller
                 Teacher = attendance.Teacher,
                 StudentId = attendance.StudentId,
                 Student = attendance.Student,
+                IsCompleted = attendance.IsCompleted,
                 IsTrial = attendance.IsTrial,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,

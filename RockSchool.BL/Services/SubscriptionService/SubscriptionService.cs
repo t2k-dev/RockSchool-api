@@ -154,6 +154,11 @@ namespace RockSchool.BL.Services.SubscriptionService
             var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
             subscriptionEntity.AttendancesLeft -= 1;
 
+            if (subscriptionEntity.AttendancesLeft == 0)
+            {
+                subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
+            }
+
             await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
     }
