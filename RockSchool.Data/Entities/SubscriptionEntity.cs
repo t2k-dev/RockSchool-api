@@ -46,4 +46,5 @@ public class SubscriptionEntity
     public virtual BranchEntity Branch { get; set; }
 
     public int? TrialStatus { get; set; }
+
 }

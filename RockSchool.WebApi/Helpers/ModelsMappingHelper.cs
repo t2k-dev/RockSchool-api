@@ -102,7 +102,9 @@ namespace RockSchool.WebApi.Helpers
                 DisciplineId = subscription.DisciplineId,
                 TrialStatus = subscription.TrialStatus,
                 AttendanceCount = subscription.AttendanceCount,
+                AttendanceLength = subscription.AttendanceLength,
                 AttendancesLeft = subscription.AttendancesLeft,
+                Teacher = subscription.Teacher,
             };
         }
 

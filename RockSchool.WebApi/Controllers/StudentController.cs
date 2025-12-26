@@ -9,6 +9,7 @@ using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Students;
@@ -87,23 +88,7 @@ public class StudentController : Controller
         }
 
         var subscriptions = await _subscriptionService.GetSubscriptionsByStudentId(id);
-        var subscriptionsInfos = new List<SubscriptionInfo>();
-        foreach (var subscription in subscriptions)
-        {
-            var completedAttendancesCount = attendances.Count(a => a.SubscriptionId == subscription.SubscriptionId && a.IsCompleted);
-
-            subscriptionsInfos.Add(new SubscriptionInfo
-            {
-                StartDate = subscription.StartDate,
-                SubscriptionId = subscription.SubscriptionId,
-                Status = subscription.Status,
-                TrialStatus = subscription.TrialStatus,
-                DisciplineId = subscription.DisciplineId,
-                Teacher = subscription.Teacher,
-                AttendanceCount = subscription.AttendanceCount,
-                AttendancesLeft = subscription.AttendancesLeft,
-            });
-        }
+        var subscriptionsInfos = subscriptions.Select(subscription => subscription.ToInfo());
 
         var studentScreenDetailsDto = new StudentScreenDetailsInfo
         {
