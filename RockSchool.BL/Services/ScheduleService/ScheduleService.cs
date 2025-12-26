@@ -21,7 +21,7 @@ public class ScheduleService : IScheduleService
         var schedules = scheduleEntities.Select(s => new Schedule
         {
             ScheduleId = s.ScheduleId,
-            Subscription = s.Subscription.ToDto(),
+            Subscription = s.Subscription.ToModel(),
             WeekDay = s.WeekDay,
             StartTime = s.StartTime,
             EndTime = s.EndTime,
@@ -42,7 +42,7 @@ public class ScheduleService : IScheduleService
         var scheduleDtos = schedules.Select(s => new Schedule
         {
             ScheduleId = s.ScheduleId,
-            Subscription = s.Subscription.ToDto(),
+            Subscription = s.Subscription.ToModel(),
             WeekDay = s.WeekDay,
             StartTime = s.StartTime,
             EndTime = s.EndTime,

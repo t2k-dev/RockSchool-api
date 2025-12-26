@@ -31,6 +31,7 @@ public class SubscriptionRepository : BaseRepository
         return await RockSchoolContext.Subscriptions
             .Where(a => a.StudentId == studentId)
             .Include(s => s.Teacher)
+            .Include(s => s.Schedules)
             .ToArrayAsync();
     }
 

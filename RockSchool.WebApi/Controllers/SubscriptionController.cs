@@ -34,8 +34,6 @@ namespace RockSchool.WebApi.Controllers
         IPaymentService paymentService)
         : Controller
     {
-        private readonly INoteService _noteService = noteService;
-
 
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(Guid id)
@@ -47,7 +45,7 @@ namespace RockSchool.WebApi.Controllers
             }
 
             var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
-            var scheduleInfos = schedules?.ToInfos().ToArray();
+            var scheduleInfos = schedules?.ToInfos();
 
             var response = new SubscriptionInfo
             {

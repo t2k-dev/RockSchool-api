@@ -39,5 +39,7 @@ namespace RockSchool.BL.Models
         public TrialStatus? TrialStatus { get; set; }
 
         public string? StatusReason { get; set; }
+
+        public virtual ICollection<Schedule>? Schedules { get; set; }
     }
 }

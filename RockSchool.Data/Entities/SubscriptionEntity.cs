@@ -47,4 +47,5 @@ public class SubscriptionEntity
 
     public int? TrialStatus { get; set; }
 
+    public virtual ICollection<ScheduleEntity> Schedules { get; set; }
 }

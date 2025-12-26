@@ -90,7 +90,6 @@ namespace RockSchool.WebApi.Helpers
         }
 
         // Subscription
-
         public static SubscriptionInfo ToInfo(this Subscription subscription)
         {
             return new SubscriptionInfo
@@ -105,6 +104,7 @@ namespace RockSchool.WebApi.Helpers
                 AttendanceLength = subscription.AttendanceLength,
                 AttendancesLeft = subscription.AttendancesLeft,
                 Teacher = subscription.Teacher,
+                Schedules = subscription.Schedules?.ToInfos(),
             };
         }
 
@@ -149,9 +149,9 @@ namespace RockSchool.WebApi.Helpers
             return scheduleInfo;
         }
 
-        public static List<ScheduleInfo> ToInfos(this IEnumerable<Schedule> schedules)
+        public static ScheduleInfo[] ToInfos(this IEnumerable<Schedule> schedules)
         {
-            return schedules.Select(model => model.ToInfo()).ToList();
+            return schedules.Select(model => model.ToInfo()).ToArray();
         }
 
         public static Schedule ToModel(this ScheduleInfo scheduleInfo, Guid subscriptionId)

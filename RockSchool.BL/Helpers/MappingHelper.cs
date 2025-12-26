@@ -6,60 +6,7 @@ namespace RockSchool.BL.Helpers
 {
     public static class MappingHelper
     {
-        public static WorkingPeriod ToDto(this WorkingPeriodEntity entity)
-        {
-            return new WorkingPeriod
-            {
-                WorkingPeriodId = entity.WorkingPeriodId,
-                StartTime = entity.StartTime,
-                EndTime = entity.EndTime,
-                WeekDay = entity.WeekDay,
-                RoomId = entity.RoomId,
-            };
-        }
-
-        public static WorkingPeriod[] ToDto(this IEnumerable<WorkingPeriodEntity> entities)
-        {
-            return entities.Select(w => w.ToDto())
-                .ToArray();
-        }
-
-        public static Schedule ToDto(this ScheduleEntity entity)
-        {
-            return new Schedule
-            {
-                ScheduleId = entity.ScheduleId,
-                SubscriptionId = entity.SubscriptionId.Value, // DEV
-                StartTime = entity.StartTime,
-                EndTime = entity.EndTime,
-                WeekDay = entity.WeekDay,
-                RoomId = entity.RoomId,
-            };
-        }
-
-        public static Schedule[] ToDto(this IEnumerable<ScheduleEntity> entities)
-        {
-            return entities.Select(w => w.ToDto())
-                .ToArray();
-        }
-
-        public static ScheduledWorkingPeriod ToDto(this ScheduledWorkingPeriodEntity entity)
-        {
-            return new ScheduledWorkingPeriod
-            {
-                ScheduledWorkingPeriodId = entity.ScheduledWorkingPeriodId,
-                StartDate = entity.StartDate,
-                EndDate = entity.EndDate,
-                RoomId = entity.RoomId,
-            };
-        }
-
-        public static ScheduledWorkingPeriod[] ToDto(this IEnumerable<ScheduledWorkingPeriodEntity> entities)
-        {
-            return entities.Select(w => w.ToDto())
-                .ToArray();
-        }
-
+        // Attendance
         public static Attendance ToModel(this AttendanceEntity entity)
         {
             return new Attendance
@@ -68,7 +15,7 @@ namespace RockSchool.BL.Helpers
                 StudentId = entity.StudentId,
                 Student = entity.Student?.ToDto(),
                 SubscriptionId = entity.SubscriptionId,
-                Subscription = entity.Subscription?.ToDto(),
+                Subscription = entity.Subscription?.ToModel(),
                 DisciplineId = entity.DisciplineId,
                 Discipline = entity.Discipline?.ToDto(),
                 TeacherId = entity.TeacherId,
@@ -87,6 +34,66 @@ namespace RockSchool.BL.Helpers
             };
         }
 
+        public static Attendance[] ToDto(this IEnumerable<AttendanceEntity> entities)
+        {
+            return entities.Select(w => w.ToModel())
+                .ToArray();
+        }
+
+        // Branch
+        public static Branch ToDto(this BranchEntity entity)
+        {
+            if (entity == null) return null;
+
+            return new Branch
+            {
+                BranchId = entity.BranchId,
+                Name = entity.Name,
+                Phone = entity.Phone,
+                Address = entity.Address,
+                Rooms = entity.Rooms?.ToDto()
+            };
+        }
+
+        // Schedule
+        public static Schedule ToModel(this ScheduleEntity entity)
+        {
+            return new Schedule
+            {
+                ScheduleId = entity.ScheduleId,
+                SubscriptionId = entity.SubscriptionId.Value, // DEV
+                StartTime = entity.StartTime,
+                EndTime = entity.EndTime,
+                WeekDay = entity.WeekDay,
+                RoomId = entity.RoomId,
+            };
+        }
+
+        public static Schedule[] ToModel(this IEnumerable<ScheduleEntity> entities)
+        {
+            return entities.Select(w => w.ToModel())
+                .ToArray();
+        }
+
+        // ScheduledWorkingPeriod
+        public static ScheduledWorkingPeriod ToDto(this ScheduledWorkingPeriodEntity entity)
+        {
+            return new ScheduledWorkingPeriod
+            {
+                ScheduledWorkingPeriodId = entity.ScheduledWorkingPeriodId,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
+                RoomId = entity.RoomId,
+            };
+        }
+
+        public static ScheduledWorkingPeriod[] ToDto(this IEnumerable<ScheduledWorkingPeriodEntity> entities)
+        {
+            return entities.Select(w => w.ToDto())
+                .ToArray();
+        }
+
+        // Student
         public static Student ToDto(this StudentEntity entity)
         {
             if (entity == null) return null;
@@ -106,48 +113,10 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static Branch ToDto(this BranchEntity entity)
-        {
-            if (entity == null) return null;
 
-            return new Branch
-            {
-                BranchId = entity.BranchId,
-                Name = entity.Name,
-                Phone = entity.Phone,
-                Address = entity.Address,
-                Rooms = entity.Rooms?.ToDto()
-            };
-        }
 
-        public static Attendance[] ToDto(this IEnumerable<AttendanceEntity> entities)
-        {
-            return entities.Select(w => w.ToModel())
-                .ToArray();
-        }
-
-        public static Room ToDto(this RoomEntity entity)
-        {
-            if (entity == null) return null;
-
-            return new Room
-            {
-                RoomId = entity.RoomId,
-                BranchId = entity.BranchId,
-                Branch = entity.Branch?.ToDto(),
-                Name = entity.Name,
-                Status = entity.Status,
-                IsActive = entity.IsActive
-            };
-        }
-
-        public static Room[] ToDto(this IEnumerable<RoomEntity> entities)
-        {
-            return entities.Select(w => w.ToDto())
-                .ToArray();
-        }
-
-        public static Subscription ToDto(this SubscriptionEntity entity)
+        // Subscription
+        public static Subscription ToModel(this SubscriptionEntity entity)
         {
             if (entity == null) return null;
 
@@ -170,11 +139,34 @@ namespace RockSchool.BL.Helpers
                 Teacher = entity.Teacher?.ToDto(),
                 BranchId = entity.BranchId,
                 Branch = entity.Branch?.ToDto(),
-                TrialStatus = (TrialStatus?)entity.TrialStatus
+                TrialStatus = (TrialStatus?)entity.TrialStatus,
+                Schedules = entity.Schedules?.ToModel(),
             };
         }
 
         public static Subscription[] ToDto(this IEnumerable<SubscriptionEntity> entities)
+        {
+            return entities.Select(w => w.ToModel())
+                .ToArray();
+        }
+
+        // Room
+        public static Room ToDto(this RoomEntity entity)
+        {
+            if (entity == null) return null;
+
+            return new Room
+            {
+                RoomId = entity.RoomId,
+                BranchId = entity.BranchId,
+                Branch = entity.Branch?.ToDto(),
+                Name = entity.Name,
+                Status = entity.Status,
+                IsActive = entity.IsActive
+            };
+        }
+
+        public static Room[] ToDto(this IEnumerable<RoomEntity> entities)
         {
             return entities.Select(w => w.ToDto())
                 .ToArray();
@@ -268,6 +260,25 @@ namespace RockSchool.BL.Helpers
         public static Teacher[] ToDto(this IEnumerable<TeacherEntity> entities)
         {
             return entities.Select(t => t.ToDto()).ToArray();
+        }
+
+        // WorkingPeriod
+        public static WorkingPeriod ToDto(this WorkingPeriodEntity entity)
+        {
+            return new WorkingPeriod
+            {
+                WorkingPeriodId = entity.WorkingPeriodId,
+                StartTime = entity.StartTime,
+                EndTime = entity.EndTime,
+                WeekDay = entity.WeekDay,
+                RoomId = entity.RoomId,
+            };
+        }
+
+        public static WorkingPeriod[] ToDto(this IEnumerable<WorkingPeriodEntity> entities)
+        {
+            return entities.Select(w => w.ToDto())
+                .ToArray();
         }
     }
 }

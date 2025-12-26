@@ -86,7 +86,7 @@ namespace RockSchool.BL.Services.SubscriptionService
         public async Task<Subscription?> GetAsync(Guid subscriptionId)
         {
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
-            return subscription?.ToDto();
+            return subscription?.ToModel();
         }
 
         public async Task<Subscription[]> GetSubscriptionsByStudentId(Guid studentId)
@@ -113,7 +113,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             var lastAttendance = attendances.MaxBy(a => a.StartDate);
 
             var schedules = await scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
-            var orderedSchedules = schedules.ToDto()
+            var orderedSchedules = schedules.ToModel()
                 .OrderBy(s => s.WeekDay)
                 .ThenBy(s => s.StartTime)
                 .ToArray();
