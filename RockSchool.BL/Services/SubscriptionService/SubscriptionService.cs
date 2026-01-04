@@ -1,4 +1,5 @@
-﻿using RockSchool.BL.Helpers;
+﻿using Azure.Core;
+using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
@@ -50,7 +51,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                     GroupId = groupId,
                     PaymentId = null,
                     TrialStatus = null,
-                    Status = (int)SubscriptionStatus.Draft,
+                    Status = SubscriptionStatus.Draft,
                     StatusReason = null,
                 };
 
@@ -92,19 +93,19 @@ namespace RockSchool.BL.Services.SubscriptionService
         public async Task<Subscription[]> GetSubscriptionsByStudentId(Guid studentId)
         {
             var subscriptions = await subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
-            return subscriptions.ToDto();
+            return subscriptions.ToModel();
         }
 
         public async Task<Subscription[]?> GetSubscriptionByGroupIdAsync(Guid groupId)
         {
             var subscriptions = await subscriptionRepository.GetByGroupIdAsync(groupId);
-            return subscriptions.ToDto();
+            return subscriptions.ToModel();
         }
 
         public async Task<Subscription[]?> GetSubscriptionsByTeacherId(Guid teacherId)
         {
             var subscriptions = await subscriptionRepository.GetSubscriptionsByTeacherIdAsync(teacherId);
-            return subscriptions?.ToDto();
+            return subscriptions?.ToModel();
         }
 
         public async Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId)
@@ -130,7 +131,12 @@ namespace RockSchool.BL.Services.SubscriptionService
 
             if (subscriptionEntity.AttendancesLeft == 0)
             {
-                subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
+                subscriptionEntity.Status = SubscriptionStatus.Completed;
+            }
+
+            if (subscriptionEntity.AttendancesLeft == 1)
+            {
+                await noteService.AddNoteAsync(subscriptionEntity.BranchId, $"Последнее занятие для ", null);
             }
 
             await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
@@ -141,7 +147,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
 
             subscriptionEntity.PaymentId = paymentId;
-            subscriptionEntity.Status = (int)SubscriptionStatus.Active;
+            subscriptionEntity.Status = SubscriptionStatus.Active;
 
             await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }

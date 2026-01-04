@@ -20,26 +20,17 @@ namespace RockSchool.WebApi.Controllers;
 [EnableCors("MyPolicy")]
 [Route("api/[controller]")]
 [ApiController]
-public class StudentController : Controller
+public class StudentController(
+    IStudentService studentService,
+    IAttendanceService attendanceService,
+    ISubscriptionService subscriptionService)
+    : Controller
 {
-    private readonly IStudentService _studentService;
-    private readonly IBranchService _branchService;
-    private readonly IAttendanceService _attendanceService;
-    private readonly ISubscriptionService _subscriptionService;
-
-    
-    public StudentController(IStudentService studentService, IBranchService branchService, IAttendanceService attendanceService, ISubscriptionService subscriptionService)
-    {
-        _studentService = studentService;
-        _branchService = branchService;
-        _attendanceService = attendanceService;
-        _subscriptionService = subscriptionService;
-    }
 
     [HttpGet]
     public async Task<ActionResult> Get()
     {
-        var studentsDto = await _studentService.GetAllStudentsAsync();
+        var studentsDto = await studentService.GetAllStudentsAsync();
 
         if (studentsDto?.Length == 0)
             return NotFound();
@@ -50,7 +41,7 @@ public class StudentController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
-        var student = await _studentService.GetByIdAsync(id);
+        var student = await studentService.GetByIdAsync(id);
 
         if (student == null)
         {
@@ -64,8 +55,8 @@ public class StudentController : Controller
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
-        var studentDto = await _studentService.GetByIdAsync(id);
-        var attendances = await _attendanceService.GetAttendancesByStudentId(id);
+        var studentDto = await studentService.GetByIdAsync(id);
+        var attendances = await attendanceService.GetAttendancesByStudentId(id);
 
         var attendanceInfos = new List<AttendanceInfo>();
         foreach (var attendance in attendances)
@@ -87,7 +78,7 @@ public class StudentController : Controller
             });
         }
 
-        var subscriptions = await _subscriptionService.GetSubscriptionsByStudentId(id);
+        var subscriptions = await subscriptionService.GetSubscriptionsByStudentId(id);
         var subscriptionsInfos = subscriptions.Select(subscription => subscription.ToInfo());
 
         var studentScreenDetailsDto = new StudentScreenDetailsInfo
@@ -117,7 +108,7 @@ public class StudentController : Controller
             BranchId = requestDto.BranchId
         };
 
-        var id = await _studentService.AddStudentAsync(newStudent);
+        var id = await studentService.AddStudentAsync(newStudent);
 
         return Ok(id);
     }
@@ -138,7 +129,7 @@ public class StudentController : Controller
             Phone = requestDto.Phone,
             Level = requestDto.Level
         };
-        await _studentService.UpdateStudentAsync(updateStudentDto);
+        await studentService.UpdateStudentAsync(updateStudentDto);
 
         return Ok(id);
     }
@@ -146,7 +137,7 @@ public class StudentController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {
-        await _studentService.DeleteStudentAsync(id);
+        await studentService.DeleteStudentAsync(id);
 
         return Ok();
     }

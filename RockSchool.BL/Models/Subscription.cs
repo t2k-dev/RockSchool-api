@@ -20,7 +20,7 @@ namespace RockSchool.BL.Models
 
         public DateOnly StartDate { get; set; }
 
-        public int Status { get; set; }
+        public SubscriptionStatus Status { get; set; }
 
         public int DisciplineId { get; set; }
 

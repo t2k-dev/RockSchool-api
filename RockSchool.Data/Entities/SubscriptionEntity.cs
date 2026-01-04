@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RockSchool.Data.Enums;
 
 namespace RockSchool.Data.Entities;
 
@@ -23,7 +24,7 @@ public class SubscriptionEntity
 
     public DateOnly StartDate { get; set; }
 
-    public int Status { get; set; }
+    public SubscriptionStatus Status { get; set; }
 
     public string? StatusReason { get; set; }
 

@@ -144,7 +144,7 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static Subscription[] ToDto(this IEnumerable<SubscriptionEntity> entities)
+        public static Subscription[] ToModel(this IEnumerable<SubscriptionEntity> entities)
         {
             return entities.Select(w => w.ToModel())
                 .ToArray();

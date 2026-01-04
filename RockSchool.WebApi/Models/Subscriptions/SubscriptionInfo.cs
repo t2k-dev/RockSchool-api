@@ -38,5 +38,7 @@ namespace RockSchool.WebApi.Models.Subscriptions
         /// Additional field.
         /// </summary>
         public int AttendancesLeft { get; set; }
+
+        public Guid? PaymentId { get; set; }
     }
 }

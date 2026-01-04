@@ -31,7 +31,8 @@ namespace RockSchool.WebApi.Controllers
         IReschedulingService reschedulingService,
         ITeacherService teacherService,
         ITrialSubscriptionService taxSubscriptionService,
-        IPaymentService paymentService)
+        IPaymentService paymentService,
+        ICancelSubscriptionService cancelSubscriptionService)
         : Controller
     {
 
@@ -54,7 +55,7 @@ namespace RockSchool.WebApi.Controllers
                 AttendancesLeft = subscription.AttendancesLeft,
                 AttendanceLength = subscription.AttendanceLength,
                 DisciplineId = subscription.DisciplineId,
-                Status = subscription.Status,
+                Status = (int)subscription.Status,
                 StartDate = subscription.StartDate,
                 TrialStatus = subscription.TrialStatus,
                 StudentId = subscription.StudentId,
@@ -120,7 +121,7 @@ namespace RockSchool.WebApi.Controllers
                     AttendancesLeft = subscription.AttendancesLeft,
                     AttendanceLength = subscription.AttendanceLength,
                     DisciplineId = subscription.DisciplineId,
-                    Status = subscription.Status,
+                    Status = (int)subscription.Status,
                     StartDate = subscription.StartDate,
                     Schedules = scheduleInfos,
                     GroupId = subscription.GroupId,
@@ -198,6 +199,14 @@ namespace RockSchool.WebApi.Controllers
             };
 
             await paymentService.Pay(id, payment);
+
+            return Ok();
+        }
+
+        [HttpPut("{subscriptionId}/cancel")]
+        public async Task<ActionResult> Cancel(Guid subscriptionId, CancelRequest request)
+        {
+            await cancelSubscriptionService.Cancel(subscriptionId, request.CancelDate, request.CancelReason);
 
             return Ok();
         }

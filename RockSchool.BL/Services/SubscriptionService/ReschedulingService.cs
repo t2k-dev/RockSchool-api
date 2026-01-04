@@ -7,28 +7,21 @@ using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
-    public class ReschedulingService : IReschedulingService
+    public class ReschedulingService(
+        IAttendanceService attendanceService,
+        ISubscriptionService subscriptionService,
+        IScheduleService scheduleService)
+        : IReschedulingService
     {
-        private readonly IAttendanceService _attendanceService;
-        private readonly ISubscriptionService _subscriptionService;
-        private readonly IScheduleService _scheduleService;
-
-        public ReschedulingService(IAttendanceService attendanceService, ISubscriptionService subscriptionService, IScheduleService scheduleService)
-        {
-            _attendanceService = attendanceService;
-            _subscriptionService = subscriptionService;
-            _scheduleService = scheduleService;
-        }
-
         public async Task<Attendance> RescheduleAttendanceByStudent(Guid attendanceId, DateTime startDate)
         {
             // Update current attendance
-            var attendance = await _attendanceService.GetAttendanceAsync(attendanceId);
+            var attendance = await attendanceService.GetAttendanceAsync(attendanceId);
             attendance.Status = AttendanceStatus.CanceledByStudent;
 
-            var subscription = await _subscriptionService.GetAsync(attendance.SubscriptionId);
+            var subscription = await subscriptionService.GetAsync(attendance.SubscriptionId);
 
-            await _attendanceService.UpdateAttendanceAsync(attendance);
+            await attendanceService.UpdateAttendanceAsync(attendance);
 
             // Create Attendance
             var endDate = startDate.AddMinutes(subscription.AttendanceLength == 1 ? 60 : 90);
@@ -48,7 +41,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 IsTrial = attendance.IsTrial,
             };
 
-            await _attendanceService.AddAttendanceAsync(newAttendance);
+            await attendanceService.AddAttendanceAsync(newAttendance);
 
             return newAttendance;
         }
@@ -56,13 +49,13 @@ namespace RockSchool.BL.Services.SubscriptionService
         public async Task UpdateSchedules(Guid subscriptionId, DateTime startingDate, Schedule[] newSchedules)
         {
             // Update Schedules
-            await _scheduleService.DeleteBySubscriptionAsync(subscriptionId);
+            await scheduleService.DeleteBySubscriptionAsync(subscriptionId);
 
             foreach (var schedule in newSchedules)
             {
                 schedule.SubscriptionId = subscriptionId;
             }
-            await _scheduleService.AddSchedulesAsync(newSchedules);
+            await scheduleService.AddSchedulesAsync(newSchedules);
 
             // Update Attendances
             var orderedSchedules = newSchedules
@@ -70,7 +63,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 .ThenBy(s => s.StartTime)
                 .ToArray();
 
-            var attendances = await _attendanceService.GetAttendancesBySubscriptionId(subscriptionId);
+            var attendances = await attendanceService.GetAttendancesBySubscriptionId(subscriptionId);
             if (attendances != null)
             {
                 var attendancesToUpdate = attendances.Where(a => a.StartDate > startingDate);
@@ -79,7 +72,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 {
                     var slot = ScheduleHelper.GetNextAvailableSlot(startingDate, orderedSchedules);
 
-                    await _attendanceService.UpdateDateAndLocationAsync(attendance.AttendanceId, slot.StartDate, slot.EndDate, slot.RoomId);
+                    await attendanceService.UpdateDateAndLocationAsync(attendance.AttendanceId, slot.StartDate, slot.EndDate, slot.RoomId);
 
                     startingDate = slot.EndDate;
                 }

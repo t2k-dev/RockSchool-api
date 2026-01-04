@@ -1,5 +1,4 @@
 ﻿using RockSchool.BL.Models;
-using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Services.AttendanceService;
 
@@ -17,4 +16,5 @@ public interface IAttendanceService
     Task UpdateStatusAsync(Guid attendanceId, int status);
     Task UpdateCommentAsync(Guid attendanceId, string comment);
     Task UpdateDateAndLocationAsync(Guid attendanceId, DateTime startDate, DateTime endDate, int roomId);
+    Task CancelFromDate(Guid subscriptionId, DateTime cancelDate);
 }

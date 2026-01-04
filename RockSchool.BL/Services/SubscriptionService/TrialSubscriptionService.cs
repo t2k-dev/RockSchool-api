@@ -26,7 +26,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
 
             subscriptionEntity.AttendancesLeft -= 1;
-            subscriptionEntity.Status = (int)SubscriptionStatus.Completed;
+            subscriptionEntity.Status = SubscriptionStatus.Completed;
             subscriptionEntity.TrialStatus = (int)trialStatus;
             subscriptionEntity.StatusReason = statusReason;
 
@@ -47,7 +47,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 StartDate = DateOnly.FromDateTime(request.TrialDate),
                 TrialStatus = TrialStatus.Created,
                 PaymentId = null,
-                Status = (int)SubscriptionStatus.Active,
+                Status = SubscriptionStatus.Active,
                 TeacherId = request.TeacherId
             };
             

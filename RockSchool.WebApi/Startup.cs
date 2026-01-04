@@ -49,6 +49,7 @@ public class Startup
         services.AddScoped<IBranchService, BranchService>();
         services.AddScoped<IAttendanceSubmitService, AttendanceSubmitService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<ICancelSubscriptionService, CancelSubscriptionService>();
 
         services.AddScoped<SubscriptionRepository>();
         services.AddScoped<BranchRepository>();

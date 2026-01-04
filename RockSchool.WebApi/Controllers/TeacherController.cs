@@ -22,28 +22,18 @@ namespace RockSchool.WebApi.Controllers;
 [EnableCors("MyPolicy")]
 [Route("api/[controller]")]
 [ApiController]
-public class TeacherController : Controller
+public class TeacherController(
+    ITeacherService teacherService,
+    IUserService userService,
+    IDisciplineService disciplineService,
+    IAttendanceService attendanceService,
+    ISubscriptionService subscriptionService)
+    : Controller
 {
-    private readonly ITeacherService _teacherService;
-    private readonly IUserService _userService;
-    private readonly IDisciplineService _disciplineService;
-    private readonly IAttendanceService _attendanceService;
-    private readonly ISubscriptionService _subscriptionService;
-
-    public TeacherController(ITeacherService teacherService, IUserService userService,
-        IDisciplineService disciplineService, IAttendanceService attendanceService, ISubscriptionService subscriptionService)
-    {
-        _userService = userService;
-        _disciplineService = disciplineService;
-        _attendanceService = attendanceService;
-        _subscriptionService = subscriptionService;
-        _teacherService = teacherService;
-    }
-
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
-        var teacher = await _teacherService.GetTeacherByIdAsync(id);
+        var teacher = await teacherService.GetTeacherByIdAsync(id);
 
         var result = new TeacherInfo
         {
@@ -58,7 +48,8 @@ public class TeacherController : Controller
             AllowGroupLessons = teacher.AllowGroupLessons,
             AgeLimit = teacher.AgeLimit,
             BranchId = teacher.BranchId,
-            WorkingPeriods = teacher.WorkingPeriods?.OrderBy(p => p.WeekDay).ToArray()
+            WorkingPeriods = teacher.WorkingPeriods?.OrderBy(p => p.WeekDay).ToArray(),
+            IsActive = teacher.IsActive,
         };
 
         return Ok(result);
@@ -67,7 +58,7 @@ public class TeacherController : Controller
     [HttpGet]
     public async Task<ActionResult> Get()
     {
-        var teachers = await _teacherService.GetAllTeachersAsync();
+        var teachers = await teacherService.GetAllTeachersAsync();
 
         if (teachers.Length == 0) return NotFound();
 
@@ -77,12 +68,12 @@ public class TeacherController : Controller
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetTeacherScreenDetails(Guid id)
     {
-        var teacher = await _teacherService.GetTeacherByIdAsync(id);
+        var teacher = await teacherService.GetTeacherByIdAsync(id);
 
         var attendanceInfos = new List<ParentAttendanceInfo>();
         var subscriptionInfos = new List<ParentSubscriptionInfo>();
 
-        var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(id, DateTime.MinValue, DateTime.MaxValue);
+        var allAttendances = await attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(id, DateTime.MinValue, DateTime.MaxValue);
         if (allAttendances != null)
         {
             attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
@@ -90,7 +81,7 @@ public class TeacherController : Controller
             attendanceInfos.AddRange(groupAttendanceInfos);
         }
 
-        var subscriptions = await _subscriptionService.GetSubscriptionsByTeacherId(id);
+        var subscriptions = await subscriptionService.GetSubscriptionsByTeacherId(id);
         if (subscriptions != null)
         {
             subscriptionInfos = subscriptions.Where(a => a.GroupId == null).ToParentSubscriptionInfos();
@@ -120,7 +111,7 @@ public class TeacherController : Controller
     [HttpGet("available")]
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
-        var teachers = await _teacherService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
+        var teachers = await teacherService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
 
         var availableTeacherDtos = new List<AvailableTeacherDto>();
         foreach (var teacher in teachers)
@@ -135,7 +126,7 @@ public class TeacherController : Controller
     [HttpGet("{id}/workingPeriods")]
     public async Task<ActionResult> GetTeacherWorkingPeriods(Guid id)
     {
-        var teacher = await _teacherService.GetTeacherByIdAsync(id);
+        var teacher = await teacherService.GetTeacherByIdAsync(id);
 
         var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
 
@@ -165,7 +156,7 @@ public class TeacherController : Controller
             IsActive = true,
         };
 
-        var teacherId = await _teacherService.AddTeacher(newTeacher);
+        var teacherId = await teacherService.AddTeacher(newTeacher);
 
         return Ok(teacherId);
     }
@@ -190,7 +181,7 @@ public class TeacherController : Controller
             WorkingPeriods = model.WorkingPeriods,
         };
 
-        await _teacherService.UpdateTeacherAsync(teacher, model.DisciplinesChanged, model.PeriodsChanged);
+        await teacherService.UpdateTeacherAsync(teacher, model.DisciplinesChanged, model.PeriodsChanged);
 
         return Ok();
     }
@@ -198,7 +189,7 @@ public class TeacherController : Controller
     [HttpPost("{id}/activate")]
     public async Task<ActionResult> Activate(Guid id)
     {
-        await _teacherService.SetTeacherActiveAsync(id, true);
+        await teacherService.SetTeacherActiveAsync(id, true);
 
         return Ok();
     }
@@ -206,7 +197,7 @@ public class TeacherController : Controller
     [HttpPost("{id}/deactivate")]
     public async Task<ActionResult> Deactivate(Guid id)
     {
-        await _teacherService.SetTeacherActiveAsync(id, false);
+        await teacherService.SetTeacherActiveAsync(id, false);
 
         return Ok();
     }
@@ -215,7 +206,7 @@ public class TeacherController : Controller
     {
 
 
-        var allAttendances = await _attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
+        var allAttendances = await attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
             teacher.TeacherId,
             DateTime.MinValue,
             DateTime.MaxValue);

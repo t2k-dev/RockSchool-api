@@ -235,7 +235,7 @@ public class TeacherService : ITeacherService
         // Exclude future scheduled periods that are not actual and add new ones.
         var scheduledWorkingPeriods = existingTeacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < DateTime.Now.ToUniversalTime()).ToList();
 
-        var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, existingTeacher.TeacherId, DateTime.Now, 3);
+        var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, existingTeacher.TeacherId, DateTime.Now, 12);
         scheduledWorkingPeriods.AddRange(newScheduledWorkingPeriods);
 
         existingTeacher.WorkingPeriods.Clear();
