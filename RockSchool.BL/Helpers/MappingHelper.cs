@@ -34,7 +34,7 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static Attendance[] ToDto(this IEnumerable<AttendanceEntity> entities)
+        public static Attendance[] ToModel(this IEnumerable<AttendanceEntity> entities)
         {
             return entities.Select(w => w.ToModel())
                 .ToArray();
@@ -139,8 +139,9 @@ namespace RockSchool.BL.Helpers
                 Teacher = entity.Teacher?.ToDto(),
                 BranchId = entity.BranchId,
                 Branch = entity.Branch?.ToDto(),
-                TrialStatus = (TrialStatus?)entity.TrialStatus,
+                TrialStatus = entity.TrialStatus,
                 Schedules = entity.Schedules?.ToModel(),
+                SubscriptionType = entity.SubscriptionType,
             };
         }
 

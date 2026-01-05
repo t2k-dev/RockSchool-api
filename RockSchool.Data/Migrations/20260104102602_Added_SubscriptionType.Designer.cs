@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20260104102602_Added_SubscriptionType")]
+    partial class Added_SubscriptionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,9 +324,6 @@ namespace RockSchool.Data.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("CanBeRented")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -345,7 +345,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 1,
                             BranchId = 1,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Гитарная",
                             Status = 1
@@ -354,7 +353,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 2,
                             BranchId = 1,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Вокальная",
                             Status = 1
@@ -363,7 +361,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 4,
                             BranchId = 1,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Барабанная",
                             Status = 1
@@ -372,7 +369,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 5,
                             BranchId = 1,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Желтая",
                             Status = 1
@@ -381,7 +377,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 6,
                             BranchId = 1,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Зелёная",
                             Status = 1
@@ -390,7 +385,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 10,
                             BranchId = 2,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Гитарная",
                             Status = 1
@@ -399,7 +393,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 11,
                             BranchId = 2,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Вокальная",
                             Status = 1
@@ -408,7 +401,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 12,
                             BranchId = 2,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Барабанная",
                             Status = 1
@@ -417,7 +409,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 13,
                             BranchId = 2,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Плакатная",
                             Status = 1
@@ -426,7 +417,6 @@ namespace RockSchool.Data.Migrations
                         {
                             RoomId = 14,
                             BranchId = 2,
-                            CanBeRented = false,
                             IsActive = true,
                             Name = "Желтая",
                             Status = 1

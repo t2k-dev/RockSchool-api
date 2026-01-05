@@ -40,6 +40,8 @@ namespace RockSchool.BL.Models
 
         public string? StatusReason { get; set; }
 
+        public SubscriptionType SubscriptionType { get; set; }
+
         public virtual ICollection<Schedule>? Schedules { get; set; }
     }
 }

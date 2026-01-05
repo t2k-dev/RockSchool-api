@@ -53,6 +53,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                     TrialStatus = null,
                     Status = SubscriptionStatus.Draft,
                     StatusReason = null,
+                    SubscriptionType = !isGroup ? SubscriptionType.Lesson : SubscriptionType.GroupLesson,
                 };
 
                 var newSubscriptionId = await AddSubscriptionAsync(subscription);

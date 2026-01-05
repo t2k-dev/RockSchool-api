@@ -50,7 +50,7 @@ public class AttendanceService : IAttendanceService
     public async Task<Attendance[]> GetByBranchIdAsync(int branchId)
     {
         var attendances = await _attendanceRepository.GetByBranchIdAsync(branchId);
-        return attendances.ToDto();
+        return attendances.ToModel();
     }
 
     public async Task<Attendance[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
@@ -61,21 +61,21 @@ public class AttendanceService : IAttendanceService
             DateTime.UtcNow.AddMonths(1)
         );
 
-        return attendanceEntities?.ToDto();
+        return attendanceEntities?.ToModel();
     }
 
     public async Task<Attendance[]?> GetAttendancesByStudentId(Guid studentId)
     {
         var attendanceEntities = await _attendanceRepository.GetByStudentIdAsync(studentId);
 
-        return attendanceEntities?.ToDto();
+        return attendanceEntities?.ToModel();
     }
 
     public async Task<Attendance[]?> GetAttendancesBySubscriptionId(Guid subscriptionId)
     {
         var attendanceEntities = await _attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
 
-        return attendanceEntities?.ToDto();
+        return attendanceEntities?.ToModel();
     }
 
     public async Task AddAttendancesAsync(Attendance[] attendances)

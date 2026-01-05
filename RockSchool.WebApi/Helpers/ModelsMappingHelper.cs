@@ -106,6 +106,7 @@ namespace RockSchool.WebApi.Helpers
                 Teacher = subscription.Teacher,
                 Schedules = subscription.Schedules?.ToInfos(),
                 PaymentId = subscription.PaymentId,
+                SubscriptionType = (int)subscription.SubscriptionType,
             };
         }
 

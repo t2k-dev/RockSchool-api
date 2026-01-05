@@ -46,7 +46,9 @@ public class SubscriptionEntity
     [ForeignKey(nameof(BranchId))]
     public virtual BranchEntity Branch { get; set; }
 
-    public int? TrialStatus { get; set; }
+    public TrialStatus? TrialStatus { get; set; }
+
+    public SubscriptionType SubscriptionType { get; set; }
 
     public virtual ICollection<ScheduleEntity> Schedules { get; set; }
 }

@@ -70,8 +70,9 @@ namespace RockSchool.BL.Helpers
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
                 PaymentId = subscription.PaymentId,
-                TrialStatus = (int?)subscription.TrialStatus,
+                TrialStatus = subscription.TrialStatus,
                 StatusReason = subscription.StatusReason,
+                SubscriptionType = subscription.SubscriptionType,
             };
         }
 

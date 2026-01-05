@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace RockSchool.BL.Models;
+﻿namespace RockSchool.BL.Models;
 
 public class Room
 {
-    [Key]
     public int RoomId { get; set; }
 
     public int BranchId { get; set; }
@@ -16,4 +13,6 @@ public class Room
     public int Status { get; set; }
 
     public bool IsActive { get; set; }
+
+    public bool CanBeRented { get; set; }
 }

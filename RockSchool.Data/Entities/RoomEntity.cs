@@ -11,4 +11,5 @@ public class RoomEntity
     public string Name { get; set; }
     public int Status { get; set; }
     public bool IsActive { get; set; }
+    public bool CanBeRented { get; set; }
 }
