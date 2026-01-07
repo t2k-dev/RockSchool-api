@@ -34,9 +34,9 @@ namespace RockSchool.WebApi.Helpers
             };
         }
 
-        public static List<AttendanceInfo> ToAttendanceInfos(this IEnumerable<Attendance> attendances)
+        public static AttendanceInfo[] ToInfos(this IEnumerable<Attendance> attendances)
         {
-            return attendances.Select(dto => dto.ToInfo()).ToList();
+            return attendances.Select(dto => dto.ToInfo()).ToArray();
         }
 
         public static ParentAttendanceInfo ToParentAttendanceInfo(this Attendance attendance)

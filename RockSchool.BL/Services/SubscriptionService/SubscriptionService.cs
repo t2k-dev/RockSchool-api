@@ -33,7 +33,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             var isGroup = studentIds.Length > 1;
             var groupId = isGroup ? Guid.NewGuid() : (Guid?)null;
 
-            var templateAttendances = ScheduleHelper.GenerateTemplateAttendances(subscriptionDetails, schedules, isGroup);
+            var templateAttendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, schedules, isGroup);
 
             foreach (var studentId in studentIds)
             {

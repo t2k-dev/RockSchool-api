@@ -26,7 +26,7 @@ public class BranchService : IBranchService
             Name = branchEntity.Name,
             Phone = branchEntity.Phone,
             Address = branchEntity.Address,
-            Rooms = branchEntity.Rooms?.ToDto()
+            Rooms = branchEntity.Rooms?.ToModel()
         };
     }
 }

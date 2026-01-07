@@ -14,11 +14,11 @@ namespace RockSchool.WebApi.Models.Subscriptions
 
         public bool IsTrial { get; set; }
 
-        public int DisciplineId { get; set; }
+        public int? DisciplineId { get; set; }
 
         //TODO: Fix type
-        public Guid TeacherId { get; set; }
-        public object Teacher { get; set; }
+        public Guid? TeacherId { get; set; }
+        public object? Teacher { get; set; }
 
         public Guid StudentId { get; set; }
 

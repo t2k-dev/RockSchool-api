@@ -19,15 +19,15 @@ public class AttendanceEntity
     [ForeignKey(nameof(SubscriptionId))] 
     public virtual SubscriptionEntity Subscription { get; set; }
     
-    public int DisciplineId { get; set; }
+    public int? DisciplineId { get; set; }
     
     [ForeignKey(nameof(DisciplineId))]
-    public virtual DisciplineEntity Discipline { get; set; }
+    public virtual DisciplineEntity? Discipline { get; set; }
     
-    public Guid TeacherId { get; set; }
+    public Guid? TeacherId { get; set; }
 
     [ForeignKey(nameof(TeacherId))]
-    public virtual TeacherEntity Teacher { get; set; }
+    public virtual TeacherEntity? Teacher { get; set; }
 
     public AttendanceStatus Status { get; set; }
 

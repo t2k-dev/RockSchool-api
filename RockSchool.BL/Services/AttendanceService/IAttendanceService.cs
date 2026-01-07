@@ -10,6 +10,7 @@ public interface IAttendanceService
     Task<Attendance[]?> GetAttendancesByStudentId(Guid studentId);
     Task<Attendance[]?> GetAttendancesBySubscriptionId(Guid subscriptionId);
     Task<Attendance[]> GetByBranchIdAsync(int branchId);
+    Task<Attendance[]> GetByRoomIdAsync(int roomId);
     Task<Guid> AddAttendanceAsync(Attendance attendanceDto);
     Task AddAttendancesAsync(Attendance[] attendances);
     Task UpdateAttendanceAsync(Attendance attendanceDto);

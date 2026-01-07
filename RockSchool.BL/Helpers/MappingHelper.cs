@@ -27,7 +27,7 @@ namespace RockSchool.BL.Helpers
                 GroupId = entity.GroupId,
                 RoomId = entity.RoomId,
                 BranchId = entity.BranchId,
-                Room = entity.Room,
+                Room = entity.Room?.ToModel(),
                 Comment = entity.Comment,
                 IsTrial = entity.IsTrial,
                 IsCompleted = entity.IsCompleted
@@ -51,7 +51,7 @@ namespace RockSchool.BL.Helpers
                 Name = entity.Name,
                 Phone = entity.Phone,
                 Address = entity.Address,
-                Rooms = entity.Rooms?.ToDto()
+                Rooms = entity.Rooms?.ToModel()
             };
         }
 
@@ -152,7 +152,7 @@ namespace RockSchool.BL.Helpers
         }
 
         // Room
-        public static Room ToDto(this RoomEntity entity)
+        public static Room ToModel(this RoomEntity entity)
         {
             if (entity == null) return null;
 
@@ -163,13 +163,14 @@ namespace RockSchool.BL.Helpers
                 Branch = entity.Branch?.ToDto(),
                 Name = entity.Name,
                 Status = entity.Status,
-                IsActive = entity.IsActive
+                IsActive = entity.IsActive,
+                CanBeRented = entity.CanBeRented,
             };
         }
 
-        public static Room[] ToDto(this IEnumerable<RoomEntity> entities)
+        public static Room[] ToModel(this IEnumerable<RoomEntity> entities)
         {
-            return entities.Select(w => w.ToDto())
+            return entities.Select(w => w.ToModel())
                 .ToArray();
         }
 

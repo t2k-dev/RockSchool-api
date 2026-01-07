@@ -22,15 +22,15 @@ namespace RockSchool.BL.Models
 
         public SubscriptionStatus Status { get; set; }
 
-        public int DisciplineId { get; set; }
+        public int? DisciplineId { get; set; }
 
-        public virtual Discipline Discipline { get; set; }
+        public virtual Discipline? Discipline { get; set; }
 
         public Guid? PaymentId { get; set; }
 
-        public Guid TeacherId { get; set; }
+        public Guid? TeacherId { get; set; }
 
-        public virtual Teacher Teacher { get; set; }
+        public virtual Teacher? Teacher { get; set; }
 
         public int BranchId { get; set; }
 

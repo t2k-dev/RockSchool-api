@@ -28,18 +28,18 @@ public class SubscriptionEntity
 
     public string? StatusReason { get; set; }
 
-    public int DisciplineId { get; set; }
+    public int? DisciplineId { get; set; }
 
     [ForeignKey(nameof(DisciplineId))]
-    public virtual DisciplineEntity Discipline { get; set; }
+    public virtual DisciplineEntity? Discipline { get; set; }
 
     [ForeignKey(nameof(PaymentId))]
     public Guid? PaymentId { get; set; }
 
-    public Guid TeacherId { get; set; }
+    public Guid? TeacherId { get; set; }
 
     [ForeignKey(nameof(TeacherId))]
-    public virtual TeacherEntity Teacher { get; set; }
+    public virtual TeacherEntity? Teacher { get; set; }
 
     public int BranchId { get; set; }
 

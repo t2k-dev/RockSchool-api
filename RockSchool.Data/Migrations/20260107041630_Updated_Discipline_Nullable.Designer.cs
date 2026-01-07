@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20260107041630_Updated_Discipline_Nullable")]
+    partial class Updated_Discipline_Nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace RockSchool.Data.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<int?>("DisciplineId")
+                    b.Property<int>("DisciplineId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("EndDate")
@@ -82,7 +85,7 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid>("SubscriptionId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("TeacherId")
+                    b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
                     b.HasKey("AttendanceId");
@@ -789,7 +792,9 @@ namespace RockSchool.Data.Migrations
 
                     b.HasOne("RockSchool.Data.Entities.DisciplineEntity", "Discipline")
                         .WithMany()
-                        .HasForeignKey("DisciplineId");
+                        .HasForeignKey("DisciplineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RockSchool.Data.Entities.RoomEntity", "Room")
                         .WithMany()
@@ -811,7 +816,9 @@ namespace RockSchool.Data.Migrations
 
                     b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
                         .WithMany()
-                        .HasForeignKey("TeacherId");
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Branch");
 

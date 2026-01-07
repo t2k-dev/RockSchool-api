@@ -11,7 +11,7 @@ namespace RockSchool.WebApi.Models.Attendances
         public int Status { get; set; }
         public string StatusReason { get; set; }
         public int RoomId { get; set; }
-        public int DisciplineId { get; set; }
+        public int? DisciplineId { get; set; }
         public Guid StudentId { get; set; }
         public object Student { get; set; }
         public object Teacher { get; set; }

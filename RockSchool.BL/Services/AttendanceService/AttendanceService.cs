@@ -32,7 +32,7 @@ public class AttendanceService : IAttendanceService
             StartDate = a.StartDate,
             Status = a.Status,
             RoomId = a.RoomId,
-            Room = a.Room,
+            Room = a.Room.ToModel(),
             EndDate = a.EndDate,
             Comment = a.Comment,
             DisciplineId = a.DisciplineId,
@@ -52,6 +52,13 @@ public class AttendanceService : IAttendanceService
         var attendances = await _attendanceRepository.GetByBranchIdAsync(branchId);
         return attendances.ToModel();
     }
+
+    public async Task<Attendance[]> GetByRoomIdAsync(int roomId)
+    {
+        var attendances = await _attendanceRepository.GetByRoomIdAsync(roomId);
+        return attendances.ToModel();
+    }
+    
 
     public async Task<Attendance[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
     {

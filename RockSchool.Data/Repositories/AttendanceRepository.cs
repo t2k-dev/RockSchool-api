@@ -5,18 +5,11 @@ using RockSchool.Data.Enums;
 
 namespace RockSchool.Data.Repositories;
 
-public class AttendanceRepository
+public class AttendanceRepository(RockSchoolContext rockSchoolContext)
 {
-    private readonly RockSchoolContext _rockSchoolContext;
-
-    public AttendanceRepository(RockSchoolContext rockSchoolContext)
-    {
-        _rockSchoolContext = rockSchoolContext;
-    }
-
     public async Task<AttendanceEntity[]> GetAllAsync()
     {
-        return await _rockSchoolContext.Attendances
+        return await rockSchoolContext.Attendances
             .Include(a => a.Teacher)
             .Include(a => a.Student)
             .ToArrayAsync();
@@ -24,13 +17,23 @@ public class AttendanceRepository
 
     public async Task<AttendanceEntity?> GetAsync(Guid attendanceId)
     {
-        return await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == attendanceId);
+        return await rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == attendanceId);
     }
 
     public async Task<AttendanceEntity[]> GetByBranchIdAsync(int branchId)
     {
-        return await _rockSchoolContext.Attendances
+        return await rockSchoolContext.Attendances
             .Where(a => a.BranchId == branchId) 
+            .Include(a => a.Teacher)
+            .Include(a => a.Student)
+            //.Include(a => a.Room)
+            .ToArrayAsync();
+    }
+
+    public async Task<AttendanceEntity[]> GetByRoomIdAsync(int roomId)
+    {
+        return await rockSchoolContext.Attendances
+            .Where(a => a.RoomId == roomId)
             .Include(a => a.Teacher)
             .Include(a => a.Student)
             .ToArrayAsync();
@@ -38,7 +41,7 @@ public class AttendanceRepository
 
     public async Task<AttendanceEntity[]?> GetByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate)
     {
-        return await _rockSchoolContext.Attendances
+        return await rockSchoolContext.Attendances
             .Where(a => a.TeacherId == teacherId && a.StartDate >= startDate && a.EndDate <= endDate)
             .Include(a => a.Student)
             .ToArrayAsync();
@@ -46,7 +49,7 @@ public class AttendanceRepository
 
     public async Task<AttendanceEntity[]?> GetByStudentIdAsync(Guid studentId)
     {
-        return await _rockSchoolContext.Attendances
+        return await rockSchoolContext.Attendances
             .Where(a => a.StudentId == studentId)
             .Include(a => a.Teacher)
             .ToArrayAsync();
@@ -54,37 +57,37 @@ public class AttendanceRepository
 
     public async Task<AttendanceEntity[]?> GetBySubscriptionIdAsync(Guid subscriptionId)
     {
-        return await _rockSchoolContext.Attendances
+        return await rockSchoolContext.Attendances
             .Where(a => a.SubscriptionId == subscriptionId)
             .ToArrayAsync();
     }
 
     public async Task<Guid> AddAsync(AttendanceEntity attendanceEntity)
     {
-        await _rockSchoolContext.Attendances.AddAsync(attendanceEntity);
-        await _rockSchoolContext.SaveChangesAsync();
+        await rockSchoolContext.Attendances.AddAsync(attendanceEntity);
+        await rockSchoolContext.SaveChangesAsync();
         return attendanceEntity.AttendanceId;
     }
 
     public async Task UpdateAsync(AttendanceEntity attendanceEntity)
     {
-        _rockSchoolContext.Attendances.Update(attendanceEntity);
-        await _rockSchoolContext.SaveChangesAsync();
+        rockSchoolContext.Attendances.Update(attendanceEntity);
+        await rockSchoolContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var attendance = await _rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == id);
+        var attendance = await rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == id);
         if (attendance != null)
         {
-            _rockSchoolContext.Attendances.Remove(attendance);
-            await _rockSchoolContext.SaveChangesAsync();
+            rockSchoolContext.Attendances.Remove(attendance);
+            await rockSchoolContext.SaveChangesAsync();
         }
     }
 
     public async Task AddRangeAsync(List<AttendanceEntity> attendances)
     {
-        await _rockSchoolContext.Attendances.AddRangeAsync(attendances);
-        await _rockSchoolContext.SaveChangesAsync();
+        await rockSchoolContext.Attendances.AddRangeAsync(attendances);
+        await rockSchoolContext.SaveChangesAsync();
     }
 }

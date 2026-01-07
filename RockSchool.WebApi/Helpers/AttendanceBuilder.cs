@@ -17,7 +17,7 @@ namespace RockSchool.WebApi.Helpers
             {
                 var currentGroupAttendances = attendances.Where(a => a.GroupId == groupId);
                 var parentAttendance = currentGroupAttendances.First().ToParentAttendanceInfo();
-                parentAttendance.ChildAttendances = currentGroupAttendances.ToAttendanceInfos().ToArray();
+                parentAttendance.ChildAttendances = currentGroupAttendances.ToInfos();
 
                 parentAttendances.Add(parentAttendance);
             }

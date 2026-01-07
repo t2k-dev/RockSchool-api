@@ -105,7 +105,7 @@ namespace RockSchool.WebApi.Controllers
                 })
                 .ToArray();
 
-            var teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId);
+            var teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
             var studentInfos = students.Select(s => new StudentInfo
             {
                 StudentId = s.StudentId, 

@@ -2,8 +2,8 @@
 {
     public class SubscriptionDetails
     {
-        public int DisciplineId { get; set; }
-        public Guid TeacherId { get; set; }
+        public int? DisciplineId { get; set; }
+        public Guid? TeacherId { get; set; }
         
         // DEV?
         public Guid StudentId { get; set; }
