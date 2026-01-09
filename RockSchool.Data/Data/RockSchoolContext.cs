@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Entities;
 
 namespace RockSchool.Data.Data;
 
-public class RockSchoolContext : DbContext
+public class RockSchoolContext : IdentityDbContext<UserEntity, RoleEntity, Guid>
 {
     public RockSchoolContext(DbContextOptions<RockSchoolContext> options) : base(options)
     {
@@ -28,10 +30,70 @@ public class RockSchoolContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        // Configure Identity table names to avoid conflicts
+        modelBuilder.Entity<UserEntity>().ToTable("Users");
+        modelBuilder.Entity<RoleEntity>().ToTable("Roles");
+
+        // Configure the relationship between UserEntity and RoleEntity using custom RoleId
+        modelBuilder.Entity<UserEntity>()
+            .HasOne(u => u.Role)
+            .WithMany()
+            .HasForeignKey(u => u.RoleId)
+            .HasPrincipalKey(r => r.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure RoleId as an alternate key for RoleEntity
+        modelBuilder.Entity<RoleEntity>()
+            .HasAlternateKey(r => r.RoleId);
+
+        var superAdminRoleId = Guid.NewGuid();
+        var adminRoleId = Guid.NewGuid();
+        var teacherRoleId = Guid.NewGuid();
+        var studentRoleId = Guid.NewGuid();
+
         modelBuilder.Entity<RoleEntity>().HasData(
-            new RoleEntity { RoleId = 1, RoleName = "Admin" },
-            new RoleEntity { RoleId = 2, RoleName = "Teacher" },
-            new RoleEntity { RoleId = 3, RoleName = "Student" });
+            new RoleEntity
+            {
+                Id = superAdminRoleId,
+                RoleId = 0,
+                RoleName = "SuperAdmin",
+                Name = "SuperAdmin",
+                NormalizedName = "SUPERADMIN",
+                IsActive = true,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            },
+            new RoleEntity
+            {
+                Id = adminRoleId,
+                RoleId = 1,
+                RoleName = "Admin",
+                Name = "Admin",
+                NormalizedName = "ADMIN",
+                IsActive = true,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            },
+            new RoleEntity
+            {
+                Id = teacherRoleId,
+                RoleId = 2,
+                RoleName = "Teacher",
+                Name = "Teacher",
+                NormalizedName = "TEACHER",
+                IsActive = true,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            },
+            new RoleEntity
+            {
+                Id = studentRoleId,
+                RoleId = 3,
+                RoleName = "Student",
+                Name = "Student",
+                NormalizedName = "STUDENT",
+                IsActive = true,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            });
 
         modelBuilder.Entity<DisciplineEntity>().HasData(
             new DisciplineEntity { Name = "Guitar", IsActive = true, DisciplineId = 1 },

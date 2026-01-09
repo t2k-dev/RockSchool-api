@@ -1,10 +1,14 @@
 using System;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
@@ -17,6 +21,7 @@ using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
+using RockSchool.Data.Data;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Extensions;
 using RockSchool.Data.Repositories;
@@ -86,7 +91,73 @@ public class Startup
                 });
         });
 
-        services.AddSwaggerGen();
+        // Configure Identity
+        services.AddIdentity<UserEntity, RoleEntity>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
+            .AddEntityFrameworkStores<RockSchoolContext>()
+            .AddDefaultTokenProviders();
+
+        // Configure JWT Authentication
+        var jwtKey = Configuration["Jwt:Key"];
+        var jwtIssuer = Configuration["Jwt:Issuer"];
+        var jwtAudience = Configuration["Jwt:Audience"];
+
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtIssuer,
+                    ValidAudience = jwtAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+                };
+            });
+
+        services.AddAuthorization();
+
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "RockSchool API", Version = "v1" });
+
+            // Add JWT Authentication to Swagger
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,9 +178,11 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseAuthorization();
-
         app.UseCors();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }

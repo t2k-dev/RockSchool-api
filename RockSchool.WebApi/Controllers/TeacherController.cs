@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
@@ -19,6 +20,7 @@ using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Controllers;
 
+[Authorize]
 [EnableCors("MyPolicy")]
 [Route("api/[controller]")]
 [ApiController]

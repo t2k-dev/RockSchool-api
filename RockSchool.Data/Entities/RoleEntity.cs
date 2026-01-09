@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace RockSchool.Data.Entities;
 
-public class RoleEntity
+public class RoleEntity : IdentityRole<Guid>
 {
     [Key] public int RoleId { get; set; }
 
