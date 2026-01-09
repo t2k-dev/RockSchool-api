@@ -412,8 +412,8 @@ namespace RockSchool.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("03cfb348-5216-4e4c-b5f3-bf14fbae80e0"),
-                            ConcurrencyStamp = "9c737d99-c2b1-4848-acd9-f6dd19805629",
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            ConcurrencyStamp = "superadmin-stamp-001",
                             IsActive = true,
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN",
@@ -422,8 +422,8 @@ namespace RockSchool.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("010d7fc5-45e8-4b72-8bed-9ab45aed9a72"),
-                            ConcurrencyStamp = "6be6b3e3-c387-4190-9cf3-e6c7e0dea578",
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            ConcurrencyStamp = "admin-stamp-001",
                             IsActive = true,
                             Name = "Admin",
                             NormalizedName = "ADMIN",
@@ -432,8 +432,8 @@ namespace RockSchool.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("42aac121-17bd-4ba6-9594-d70f129cd6bf"),
-                            ConcurrencyStamp = "ed28b6ed-cb15-4ca9-8a65-ad30493dfdd5",
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            ConcurrencyStamp = "teacher-stamp-001",
                             IsActive = true,
                             Name = "Teacher",
                             NormalizedName = "TEACHER",
@@ -442,8 +442,8 @@ namespace RockSchool.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d533e9a9-5b56-4391-90b0-60eec10d0ec1"),
-                            ConcurrencyStamp = "5428acfa-8972-498e-92b7-c9d568137e73",
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            ConcurrencyStamp = "student-stamp-001",
                             IsActive = true,
                             Name = "Student",
                             NormalizedName = "STUDENT",

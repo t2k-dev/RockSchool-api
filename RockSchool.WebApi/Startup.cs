@@ -85,7 +85,7 @@ public class Startup
             options.AddPolicy("MyPolicy",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
+                    builder.AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -175,7 +175,6 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
-
         app.UseRouting();
 
         app.UseCors();

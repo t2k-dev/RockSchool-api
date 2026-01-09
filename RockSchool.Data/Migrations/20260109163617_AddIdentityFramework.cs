@@ -313,10 +313,10 @@ namespace RockSchool.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "IsActive", "Name", "NormalizedName", "RoleId", "RoleName" },
                 values: new object[,]
                 {
-                    { new Guid("010d7fc5-45e8-4b72-8bed-9ab45aed9a72"), "6be6b3e3-c387-4190-9cf3-e6c7e0dea578", true, "Admin", "ADMIN", 1, "Admin" },
-                    { new Guid("03cfb348-5216-4e4c-b5f3-bf14fbae80e0"), "9c737d99-c2b1-4848-acd9-f6dd19805629", true, "SuperAdmin", "SUPERADMIN", 0, "SuperAdmin" },
-                    { new Guid("42aac121-17bd-4ba6-9594-d70f129cd6bf"), "ed28b6ed-cb15-4ca9-8a65-ad30493dfdd5", true, "Teacher", "TEACHER", 2, "Teacher" },
-                    { new Guid("d533e9a9-5b56-4391-90b0-60eec10d0ec1"), "5428acfa-8972-498e-92b7-c9d568137e73", true, "Student", "STUDENT", 3, "Student" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), "superadmin-stamp-001", true, "SuperAdmin", "SUPERADMIN", 0, "SuperAdmin" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), "admin-stamp-001", true, "Admin", "ADMIN", 1, "Admin" },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), "teacher-stamp-001", true, "Teacher", "TEACHER", 2, "Teacher" },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), "student-stamp-001", true, "Student", "STUDENT", 3, "Student" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -437,25 +437,25 @@ namespace RockSchool.Data.Migrations
                 table: "Roles",
                 keyColumn: "Id",
                 keyColumnType: "uuid",
-                keyValue: new Guid("010d7fc5-45e8-4b72-8bed-9ab45aed9a72"));
+                keyValue: new Guid("00000000-0000-0000-0000-000000000001"));
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyColumnType: "uuid",
-                keyValue: new Guid("03cfb348-5216-4e4c-b5f3-bf14fbae80e0"));
+                keyValue: new Guid("00000000-0000-0000-0000-000000000002"));
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyColumnType: "uuid",
-                keyValue: new Guid("42aac121-17bd-4ba6-9594-d70f129cd6bf"));
+                keyValue: new Guid("00000000-0000-0000-0000-000000000003"));
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyColumnType: "uuid",
-                keyValue: new Guid("d533e9a9-5b56-4391-90b0-60eec10d0ec1"));
+                keyValue: new Guid("00000000-0000-0000-0000-000000000004"));
 
             migrationBuilder.DropColumn(
                 name: "Id",

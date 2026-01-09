@@ -48,51 +48,47 @@ public class RockSchoolContext : IdentityDbContext<UserEntity, RoleEntity, Guid>
         modelBuilder.Entity<RoleEntity>()
             .HasAlternateKey(r => r.RoleId);
 
-        var superAdminRoleId = Guid.NewGuid();
-        var adminRoleId = Guid.NewGuid();
-        var teacherRoleId = Guid.NewGuid();
-        var studentRoleId = Guid.NewGuid();
-
+        // Use hardcoded GUIDs for seeding roles
         modelBuilder.Entity<RoleEntity>().HasData(
             new RoleEntity
             {
-                Id = superAdminRoleId,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 RoleId = 0,
                 RoleName = "SuperAdmin",
                 Name = "SuperAdmin",
                 NormalizedName = "SUPERADMIN",
                 IsActive = true,
-                ConcurrencyStamp = Guid.NewGuid().ToString()
+                ConcurrencyStamp = "superadmin-stamp-001"
             },
             new RoleEntity
             {
-                Id = adminRoleId,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
                 RoleId = 1,
                 RoleName = "Admin",
                 Name = "Admin",
                 NormalizedName = "ADMIN",
                 IsActive = true,
-                ConcurrencyStamp = Guid.NewGuid().ToString()
+                ConcurrencyStamp = "admin-stamp-001"
             },
             new RoleEntity
             {
-                Id = teacherRoleId,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
                 RoleId = 2,
                 RoleName = "Teacher",
                 Name = "Teacher",
                 NormalizedName = "TEACHER",
                 IsActive = true,
-                ConcurrencyStamp = Guid.NewGuid().ToString()
+                ConcurrencyStamp = "teacher-stamp-001"
             },
             new RoleEntity
             {
-                Id = studentRoleId,
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
                 RoleId = 3,
                 RoleName = "Student",
                 Name = "Student",
                 NormalizedName = "STUDENT",
                 IsActive = true,
-                ConcurrencyStamp = Guid.NewGuid().ToString()
+                ConcurrencyStamp = "student-stamp-001"
             });
 
         modelBuilder.Entity<DisciplineEntity>().HasData(
