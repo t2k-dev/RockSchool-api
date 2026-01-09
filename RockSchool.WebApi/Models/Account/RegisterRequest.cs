@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace RockSchool.WebApi.Models.Auth;
+namespace RockSchool.WebApi.Models.Account;
 
 public class RegisterRequest
 {
