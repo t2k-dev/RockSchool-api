@@ -31,6 +31,7 @@ namespace RockSchool.WebApi.Helpers
                 IsCompleted = attendance.IsCompleted,
                 GroupId = attendance.GroupId,
                 StudentId = attendance.StudentId,
+                Subscription = attendance.Subscription?.ToInfo(),
             };
         }
 
@@ -45,6 +46,7 @@ namespace RockSchool.WebApi.Helpers
             {
                 AttendanceId = attendance.AttendanceId,
                 SubscriptionId = attendance.SubscriptionId,
+                Subscription = attendance.Subscription?.ToInfo(),
                 StartDate = attendance.StartDate,
                 EndDate = attendance.EndDate,
                 Status = (int)attendance.Status,

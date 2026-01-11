@@ -1,4 +1,5 @@
 ﻿using System;
+using RockSchool.WebApi.Models.Subscriptions;
 
 namespace RockSchool.WebApi.Models.Attendances
 {
@@ -6,6 +7,7 @@ namespace RockSchool.WebApi.Models.Attendances
     {
         public Guid AttendanceId { get; set; }
         public Guid SubscriptionId { get; set; }
+        public SubscriptionInfo Subscription { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int Status { get; set; }

@@ -36,7 +36,7 @@ namespace RockSchool.BL.Helpers
 
         public static Attendance[] ToModel(this IEnumerable<AttendanceEntity> entities)
         {
-            return entities.Select(w => w.ToModel())
+            return entities.Select(a => a.ToModel())
                 .ToArray();
         }
 
