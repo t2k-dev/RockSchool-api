@@ -26,6 +26,7 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext)
             .Where(a => a.BranchId == branchId) 
             .Include(a => a.Teacher)
             .Include(a => a.Student)
+            .Include(a => a.Subscription)
             //.Include(a => a.Room)
             .ToArrayAsync();
     }
@@ -52,6 +53,7 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext)
         return await rockSchoolContext.Attendances
             .Where(a => a.StudentId == studentId)
             .Include(a => a.Teacher)
+            .Include(a => a.Subscription)
             .ToArrayAsync();
     }
 
