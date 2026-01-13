@@ -105,13 +105,11 @@ namespace RockSchool.WebApi.Controllers
                 })
                 .ToArray();
 
-            var teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
-            var studentInfos = students.Select(s => new StudentInfo
+            Teacher teacher = null;
+            if (subscription.TeacherId != null)
             {
-                StudentId = s.StudentId, 
-                FirstName = s.FirstName, 
-                LastName = s.LastName
-            }).ToArray();
+                teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
+            }
 
             var response = new 
             {
@@ -125,14 +123,22 @@ namespace RockSchool.WebApi.Controllers
                     StartDate = subscription.StartDate,
                     Schedules = scheduleInfos,
                     GroupId = subscription.GroupId,
+                    SubscriptionType = (int)subscription.SubscriptionType,
                 },
-                Teacher = new
+                Teacher = teacher == null 
+                    ? null
+                    : new
                 {
                     teacher.TeacherId,
                     teacher.FirstName,
                     teacher.LastName,
                 },
-                Students = studentInfos
+                Students = students.Select(s => new StudentInfo
+                    {
+                        StudentId = s.StudentId,
+                        FirstName = s.FirstName,
+                        LastName = s.LastName
+                    }).ToArray()
             };
 
             return Ok(response);
