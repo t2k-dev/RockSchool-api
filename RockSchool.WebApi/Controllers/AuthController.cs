@@ -64,7 +64,6 @@ public class AuthController : ControllerBase
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        // Find role by custom RoleId field
         var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.RoleId);
         if (role != null)
         {
@@ -87,7 +86,6 @@ public class AuthController : ControllerBase
         if (!user.IsActive)
             return Unauthorized(new { message = "User account is inactive" });
 
-        // Find role by custom RoleId field
         var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == user.RoleId);
         var token = GenerateJwtToken(user, role?.RoleName);
 
