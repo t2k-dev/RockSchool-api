@@ -164,7 +164,8 @@ namespace RockSchool.BL.Helpers
                 Name = entity.Name,
                 Status = entity.Status,
                 IsActive = entity.IsActive,
-                CanBeRented = entity.CanBeRented,
+                SupportsRent = entity.SupportsRent,
+                SupportsRehearsal = entity.SupportsRehearsal,
             };
         }
 
