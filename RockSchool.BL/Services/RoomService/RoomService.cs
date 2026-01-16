@@ -11,5 +11,11 @@ namespace RockSchool.BL.Services.RoomService
             var rooms = await roomRepository.GetRentableRooms(branchId);
             return rooms.ToModel();
         }
+
+        public async Task<Room[]> GetRehearsableRooms(int branchId)
+        {
+            var rooms = await roomRepository.GetRehearsableRooms(branchId);
+            return rooms.ToModel();
+        }
     }
 }

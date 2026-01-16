@@ -14,5 +14,7 @@ public class Room
 
     public bool IsActive { get; set; }
 
-    public bool CanBeRented { get; set; }
+    public bool SupportsRent { get; set; }
+
+    public bool SupportsRehearsal { get; set; }
 }
