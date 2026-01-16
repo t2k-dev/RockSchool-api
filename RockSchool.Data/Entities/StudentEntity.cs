@@ -9,11 +9,10 @@ public class StudentEntity
     [Key]
     public Guid StudentId { get; set; }
 
-    [Required]
     [ForeignKey(nameof(User))]
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public virtual UserEntity User { get; set; }
+    public virtual UserEntity? User { get; set; }
 
     public string FirstName { get; set; }
     public string? LastName { get; set; }

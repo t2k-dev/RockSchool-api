@@ -7,11 +7,10 @@ public class TeacherEntity
 {
     [Key] public Guid TeacherId { get; set; }
 
-    [Required]
     [ForeignKey(nameof(User))]
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public virtual UserEntity User { get; set; }
+    public virtual UserEntity? User { get; set; }
 
     [Required] [MaxLength(100)] public string FirstName { get; set; }
 
