@@ -90,7 +90,6 @@ public class TeacherService : ITeacherService
 
     public async Task<RegisterTeacherResponseDto> AddTeacher(Teacher addTeacherDto, string email)
     {
-        // Step 1: Create User account first (RoleId 2 = Teacher)
         var userResult = await _userService.RegisterUserAsync(email, roleId: 2);
 
         if (!userResult.Success || !userResult.UserId.HasValue)
@@ -104,7 +103,6 @@ public class TeacherService : ITeacherService
             };
         }
 
-        // Step 2: Create Teacher linked to User
         var disciplines = await _disciplineRepository.GetByIdsAsync(addTeacherDto.DisciplineIds);
         var workingPeriodEntities = addTeacherDto.WorkingPeriods.ToEntities();
         var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities, addTeacherDto.TeacherId, DateTime.Now.ToUniversalTime(), 3);

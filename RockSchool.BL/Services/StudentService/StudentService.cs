@@ -48,7 +48,6 @@ public class StudentService : IStudentService
             };
         }
 
-        // Step 1: Create User account first (RoleId 3 = Student)
         var userResult = await _userService.RegisterUserAsync(email, roleId: 3);
 
         if (!userResult.Success || !userResult.UserId.HasValue)
@@ -62,7 +61,6 @@ public class StudentService : IStudentService
             };
         }
 
-        // Step 2: Create Student linked to User
         var studentEntity = new StudentEntity
         {
             UserId = userResult.UserId.Value,
