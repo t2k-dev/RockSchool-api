@@ -10,12 +10,12 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<UserEntity> _userManager;
     private readonly RockSchoolContext _context;
-    private readonly JwtTokenService _jwtTokenService;
+    private readonly IJwtTokenService _jwtTokenService;
 
     public AuthService(
         UserManager<UserEntity> userManager,
         RockSchoolContext context,
-        JwtTokenService jwtTokenService)
+        IJwtTokenService jwtTokenService)
     {
         _userManager = userManager;
         _context = context;

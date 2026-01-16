@@ -20,7 +20,7 @@ using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin, SuperAdmin")]
 [EnableCors("MyPolicy")]
 [Route("api/[controller]")]
 [ApiController]

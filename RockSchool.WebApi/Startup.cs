@@ -11,8 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.AuthorizationService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.DisciplineService;
+using RockSchool.BL.Services.EmailService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.RoomService;
 using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
@@ -42,6 +44,8 @@ public class Startup
     {
         services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
         services.AddScoped<IAttendanceService, AttendanceService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IDisciplineService, DisciplineService>();
         services.AddScoped<IScheduleService, ScheduleService>();
         services.AddScoped<IStudentService, StudentService>();
@@ -58,6 +62,7 @@ public class Startup
         services.AddScoped<ICancelSubscriptionService, CancelSubscriptionService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IRentalSubscriptionService, RentalSubscriptionService>();
+        services.AddScoped<IEmailService, EmailService>();
 
         services.AddScoped<RoomRepository>();
         services.AddScoped<SubscriptionRepository>();

@@ -1,12 +1,8 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RockSchool.BL.Services.AuthorizationService;
-using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models.Account;
 
 namespace RockSchool.WebApi.Controllers;
@@ -16,18 +12,15 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<UserEntity> _userManager;
-    private readonly RockSchoolContext _context;
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
     public AuthController(
-        UserManager<UserEntity> userManager,
-        RockSchoolContext context,
-        AuthService authService)
+        IAuthService authService,
+        IUserService userService)
     {
-        _userManager = userManager;
-        _context = context;
         _authService = authService;
+        _userService = userService;
     }
 
     [HttpPost("register")]
@@ -36,32 +29,15 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var existingUser = await _userManager.FindByEmailAsync(request.Email);
-        if (existingUser != null)
-            return BadRequest(new { message = "User with this email already exists" });
+        var result = await _userService.RegisterUserAsync(
+            email: request.Email,
+            roleId: request.RoleId
+        );
 
-        var user = new UserEntity
-        {
-            UserId = Guid.NewGuid(),
-            UserName = request.Email,
-            Email = request.Email,
-            Login = request.Email,
-            RoleId = request.RoleId,
-            IsActive = true
-        };
+        if (!result.Success)
+            return BadRequest(new { message = result.Message });
 
-        var result = await _userManager.CreateAsync(user, request.Password);
-
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.RoleId);
-        if (role != null)
-        {
-            await _userManager.AddToRoleAsync(user, role.Name);
-        }
-
-        return Ok(new { message = "User registered successfully", userId = user.UserId });
+        return Ok(new { message = result.Message, userId = result.UserId });
     }
 
     [HttpPost("login")]
