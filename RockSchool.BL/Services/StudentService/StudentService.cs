@@ -1,5 +1,6 @@
 ﻿using RockSchool.BL.Models;
 using RockSchool.BL.Services.BranchService;
+using RockSchool.BL.Services.UserService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -9,25 +10,62 @@ public class StudentService : IStudentService
 {
     private readonly StudentRepository _studentRepository;
     private readonly BranchRepository _branchRepository;
+    private readonly IUserService _userService;
 
-    public StudentService(StudentRepository studentRepository, BranchRepository branchRepository)
+    public StudentService(
+        StudentRepository studentRepository,
+        BranchRepository branchRepository,
+        IUserService userService)
     {
         _studentRepository = studentRepository;
         _branchRepository = branchRepository;
+        _userService = userService;
     }
 
-    public async Task<Guid> AddStudentAsync(Student studentDto)
+    public async Task<RegisterStudentResponseDto> AddStudentAsync(Student studentDto, string email)
     {
         if (studentDto.BranchId == null)
-            throw new NullReferenceException("BranchId is required.");
+        {
+            return new RegisterStudentResponseDto
+            {
+                Success = false,
+                Message = "BranchId is required",
+                StudentId = null,
+                UserId = null
+            };
+        }
 
         var branchEntity = await _branchRepository.GetByIdAsync(studentDto.BranchId.Value)!;
 
         if (branchEntity == null)
-            throw new NullReferenceException($"Branch with id {studentDto.BranchId} was not found.");
+        {
+            return new RegisterStudentResponseDto
+            {
+                Success = false,
+                Message = $"Branch with id {studentDto.BranchId} was not found",
+                StudentId = null,
+                UserId = null
+            };
+        }
 
+        // Step 1: Create User account first (RoleId 3 = Student)
+        var userResult = await _userService.RegisterUserAsync(email, roleId: 3);
+
+        if (!userResult.Success || !userResult.UserId.HasValue)
+        {
+            return new RegisterStudentResponseDto
+            {
+                Success = false,
+                Message = $"Failed to create user account: {userResult.Message}",
+                StudentId = null,
+                UserId = null
+            };
+        }
+
+        // Step 2: Create Student linked to User
         var studentEntity = new StudentEntity
         {
+            UserId = userResult.UserId.Value,
             LastName = studentDto.LastName,
             FirstName = studentDto.FirstName,
             BirthDate = studentDto.BirthDate,
@@ -35,7 +73,6 @@ public class StudentService : IStudentService
             Sex = studentDto.Sex,
             Level = studentDto.Level,
             Branch = branchEntity
-            // UserId = addStudentServiceRequestDto.UserId
         };
 
         await _studentRepository.AddAsync(studentEntity);
@@ -43,9 +80,23 @@ public class StudentService : IStudentService
         var savedStudent = await _studentRepository.GetByIdAsync(studentEntity.StudentId);
 
         if (savedStudent == null)
-            throw new InvalidOperationException("Failed to add student.");
+        {
+            return new RegisterStudentResponseDto
+            {
+                Success = false,
+                Message = "Failed to save student",
+                StudentId = null,
+                UserId = userResult.UserId
+            };
+        }
 
-        return studentEntity.StudentId;
+        return new RegisterStudentResponseDto
+        {
+            Success = true,
+            Message = "Student registered successfully. Welcome email sent with login credentials.",
+            StudentId = studentEntity.StudentId,
+            UserId = userResult.UserId.Value
+        };
     }
 
     public async Task UpdateStudentAsync(Student studentDto)

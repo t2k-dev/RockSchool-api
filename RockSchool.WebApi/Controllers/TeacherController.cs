@@ -139,9 +139,7 @@ public class TeacherController(
     public async Task<ActionResult> AddTeacher([FromBody] RegisterTeacherRequestDto requestDto)
     {
         if (!ModelState.IsValid)
-        {
-            throw new Exception("Incorrect requestDto for registration.");
-        }
+            return BadRequest(ModelState);
 
         var newTeacher = new Teacher
         {
@@ -158,9 +156,17 @@ public class TeacherController(
             IsActive = true,
         };
 
-        var teacherId = await teacherService.AddTeacher(newTeacher);
+        var result = await teacherService.AddTeacher(newTeacher, requestDto.Teacher.Email);
 
-        return Ok(teacherId);
+        if (!result.Success)
+            return BadRequest(new { message = result.Message });
+
+        return Ok(new
+        {
+            message = result.Message,
+            teacherId = result.TeacherId,
+            userId = result.UserId
+        });
     }
 
     [HttpPut("{id}")]

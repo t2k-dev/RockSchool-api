@@ -2,6 +2,7 @@
 using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
+using RockSchool.BL.Services.UserService;
 using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 
@@ -12,13 +13,18 @@ public class TeacherService : ITeacherService
     private readonly DisciplineRepository _disciplineRepository;
     private readonly TeacherRepository _teacherRepository;
     private readonly IScheduledWorkingPeriodsService _scheduledWorkingPeriodsService;
+    private readonly IUserService _userService;
 
-    public TeacherService(TeacherRepository teacherRepository, DisciplineRepository disciplineRepository,
-        IScheduledWorkingPeriodsService scheduledWorkingPeriodsService)
+    public TeacherService(
+        TeacherRepository teacherRepository,
+        DisciplineRepository disciplineRepository,
+        IScheduledWorkingPeriodsService scheduledWorkingPeriodsService,
+        IUserService userService)
     {
         _teacherRepository = teacherRepository;
         _disciplineRepository = disciplineRepository;
         _scheduledWorkingPeriodsService = scheduledWorkingPeriodsService;
+        _userService = userService;
     }
 
     
@@ -82,15 +88,30 @@ public class TeacherService : ITeacherService
         return teacherEntities.ToDto();
     }
 
-    public async Task<Guid> AddTeacher(Teacher addTeacherDto)
+    public async Task<RegisterTeacherResponseDto> AddTeacher(Teacher addTeacherDto, string email)
     {
+        // Step 1: Create User account first (RoleId 2 = Teacher)
+        var userResult = await _userService.RegisterUserAsync(email, roleId: 2);
+
+        if (!userResult.Success || !userResult.UserId.HasValue)
+        {
+            return new RegisterTeacherResponseDto
+            {
+                Success = false,
+                Message = $"Failed to create user account: {userResult.Message}",
+                TeacherId = null,
+                UserId = null
+            };
+        }
+
+        // Step 2: Create Teacher linked to User
         var disciplines = await _disciplineRepository.GetByIdsAsync(addTeacherDto.DisciplineIds);
         var workingPeriodEntities = addTeacherDto.WorkingPeriods.ToEntities();
         var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities, addTeacherDto.TeacherId, DateTime.Now.ToUniversalTime(), 3);
 
-        // Teacher
         var teacherEntity = new TeacherEntity
         {
+            UserId = userResult.UserId.Value,
             LastName = addTeacherDto.LastName,
             FirstName = addTeacherDto.FirstName,
             BirthDate = addTeacherDto.BirthDate,
@@ -107,7 +128,13 @@ public class TeacherService : ITeacherService
 
         await _teacherRepository.AddAsync(teacherEntity);
 
-        return teacherEntity.TeacherId;
+        return new RegisterTeacherResponseDto
+        {
+            Success = true,
+            Message = "Teacher registered successfully. Welcome email sent with login credentials.",
+            TeacherId = teacherEntity.TeacherId,
+            UserId = userResult.UserId.Value
+        };
     }
 
     public async Task UpdateTeacherAsync(Teacher teacherDto, bool updateDisciplines, bool recalculatePeriods)

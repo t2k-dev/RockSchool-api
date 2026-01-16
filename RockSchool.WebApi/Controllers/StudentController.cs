@@ -95,7 +95,7 @@ public class StudentController(
     public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
         if (!ModelState.IsValid)
-            throw new Exception("Incorrect requestDto for registration.");
+            return BadRequest(ModelState);
 
         var newStudent = new Student()
         {
@@ -103,14 +103,22 @@ public class StudentController(
             LastName = requestDto.LastName,
             BirthDate = requestDto.BirthDate.ToUniversalTime(),
             Sex = requestDto.Sex,
-            Phone = requestDto.Phone ?? 0, //TODO: fix
+            Phone = requestDto.Phone ?? 0,
             Level = requestDto.Level,
             BranchId = requestDto.BranchId
         };
 
-        var id = await studentService.AddStudentAsync(newStudent);
+        var result = await studentService.AddStudentAsync(newStudent, requestDto.Email);
 
-        return Ok(id);
+        if (!result.Success)
+            return BadRequest(new { message = result.Message });
+
+        return Ok(new
+        {
+            message = result.Message,
+            studentId = result.StudentId,
+            userId = result.UserId
+        });
     }
 
     [HttpPut("{id}")]

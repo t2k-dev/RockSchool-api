@@ -5,6 +5,7 @@ namespace RockSchool.BL.Models;
 public class Teacher
 {
     public Guid TeacherId { get; set; }
+    public Guid UserId { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public DateTime BirthDate { get; set; }

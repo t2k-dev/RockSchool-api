@@ -7,6 +7,12 @@ public class TeacherEntity
 {
     [Key] public Guid TeacherId { get; set; }
 
+    [Required]
+    [ForeignKey(nameof(User))]
+    public Guid UserId { get; set; }
+
+    public virtual UserEntity User { get; set; }
+
     [Required] [MaxLength(100)] public string FirstName { get; set; }
 
     [Required] [MaxLength(100)] public string LastName { get; set; }
@@ -16,8 +22,6 @@ public class TeacherEntity
     public int Sex { get; set; }
 
     public long Phone { get; set; }
-
-    public virtual UserEntity? User { get; set; }
 
     public int BranchId { get; set; }
     

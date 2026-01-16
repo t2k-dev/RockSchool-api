@@ -5,7 +5,7 @@ namespace RockSchool.BL.Models;
 public class Student
 {
     public Guid StudentId { get; set; }
-    
+    public Guid UserId { get; set; }
     public virtual UserEntity? User { get; set; }
     public string FirstName { get; set; }
     public string? LastName { get; set; }

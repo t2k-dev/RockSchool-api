@@ -8,7 +8,13 @@ public class StudentEntity
 {
     [Key]
     public Guid StudentId { get; set; }
-    public virtual UserEntity? User { get; set; }
+
+    [Required]
+    [ForeignKey(nameof(User))]
+    public Guid UserId { get; set; }
+
+    public virtual UserEntity User { get; set; }
+
     public string FirstName { get; set; }
     public string? LastName { get; set; }
     public short Sex { get; set; }
