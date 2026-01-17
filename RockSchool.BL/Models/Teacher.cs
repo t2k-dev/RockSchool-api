@@ -16,6 +16,7 @@ public class Teacher
     public virtual Branch? Branch { get; set; }
     public int AgeLimit { get; set; }
     public bool AllowGroupLessons { get; set; }
+    public bool AllowBands { get; set; }
 
     public bool IsActive { get; set; }
 

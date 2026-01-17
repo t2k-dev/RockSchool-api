@@ -46,6 +46,7 @@ public class TeacherController(
             Phone = teacher.Phone,
             Disciplines = teacher.Disciplines?.Select(d => d.DisciplineId).ToArray(),
             AllowGroupLessons = teacher.AllowGroupLessons,
+            AllowBands = teacher.AllowBands,
             AgeLimit = teacher.AgeLimit,
             BranchId = teacher.BranchId,
             WorkingPeriods = teacher.WorkingPeriods?.OrderBy(p => p.WeekDay).ToArray(),
@@ -152,6 +153,7 @@ public class TeacherController(
             DisciplineIds = requestDto.Teacher.Disciplines,
             WorkingPeriods = requestDto.WorkingPeriods,
             AllowGroupLessons = requestDto.Teacher.AllowGroupLessons,
+            AllowBands = requestDto.Teacher.AllowBands,
             AgeLimit = requestDto.Teacher.AgeLimit,
             IsActive = true,
         };
@@ -177,6 +179,7 @@ public class TeacherController(
             Phone = model.Teacher.Phone,
             AgeLimit = model.Teacher.AgeLimit,
             AllowGroupLessons = model.Teacher.AllowGroupLessons,
+            AllowBands = model.Teacher.AllowBands,
             DisciplineIds = model.Teacher.Disciplines,
             WorkingPeriods = model.WorkingPeriods,
         };

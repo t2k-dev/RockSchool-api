@@ -27,6 +27,8 @@ public class TeacherEntity
 
     public bool AllowGroupLessons { get; set; }
 
+    public bool AllowBands { get; set; }
+
     public bool IsActive { get; set; }
 
     public virtual ICollection<DisciplineEntity> Disciplines { get; set; }

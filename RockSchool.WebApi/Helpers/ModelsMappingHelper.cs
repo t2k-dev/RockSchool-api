@@ -190,6 +190,7 @@ namespace RockSchool.WebApi.Helpers
                 BirthDate = teacher.BirthDate,
                 IsActive = teacher.IsActive,
                 AllowGroupLessons = teacher.AllowGroupLessons,
+                AllowBands = teacher.AllowBands,
                 BranchId = teacher.BranchId,
                 Phone = teacher.Phone,
                 ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?.ToArray(),

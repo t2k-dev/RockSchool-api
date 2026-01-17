@@ -65,6 +65,7 @@ public class TeacherService : ITeacherService
             Disciplines = disciplines,
             DisciplineIds = disciplines.Select(d => d.DisciplineId).ToArray(),
             AllowGroupLessons = teacherEntity.AllowGroupLessons,
+            AllowBands = teacherEntity.AllowBands,
             AgeLimit = teacherEntity.AgeLimit,
             IsActive = teacherEntity.IsActive,
             BranchId = teacherEntity.BranchId,
@@ -101,6 +102,7 @@ public class TeacherService : ITeacherService
             ScheduledWorkingPeriods = scheduledWorkingPeriods,
             Sex = addTeacherDto.Sex,
             AllowGroupLessons = addTeacherDto.AllowGroupLessons,
+            AllowBands = addTeacherDto.AllowBands,
             AgeLimit = addTeacherDto.AgeLimit,
             IsActive = addTeacherDto.IsActive,
         };
@@ -185,6 +187,9 @@ public class TeacherService : ITeacherService
 
         if (updateRequest.AllowGroupLessons != default)
             existingTeacher.AllowGroupLessons = updateRequest.AllowGroupLessons;
+        
+        if (updateRequest.AllowBands != default)
+            existingTeacher.AllowBands = updateRequest.AllowBands;
 
         // if (updateRequest.User != null)
         //     existingTeacher.UserId = updateRequest.User.UserId;
