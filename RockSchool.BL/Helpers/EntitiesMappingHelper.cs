@@ -104,5 +104,22 @@ namespace RockSchool.BL.Helpers
                 SubscriptionId = payment.SubscriptionId,
             };
         }
+
+        public static Tender ToModel(this TenderEntity tenderEntity)
+        {
+            return new Tender
+            {
+                TenderId = tenderEntity.TenderId,
+                Amount = (int)tenderEntity.Amount,
+                PaidOn = tenderEntity.PaidOn,
+                TenderType = tenderEntity.TenderType,
+                SubscriptionId = tenderEntity.SubscriptionId,
+            };
+        }
+
+        public static Tender[] ToModel(this TenderEntity[] tenderEntities)
+        {
+            return tenderEntities.Select(t => t.ToModel()).ToArray();
+        }
     }
 }

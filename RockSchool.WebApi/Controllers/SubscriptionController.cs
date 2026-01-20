@@ -33,7 +33,8 @@ namespace RockSchool.WebApi.Controllers
         ITrialSubscriptionService taxSubscriptionService,
         IPaymentService paymentService,
         ICancelSubscriptionService cancelSubscriptionService,
-        IAttendanceService attendanceService)
+        IAttendanceService attendanceService,
+        ITenderService tenderService)
         : Controller
     {
 
@@ -49,6 +50,9 @@ namespace RockSchool.WebApi.Controllers
             var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
             var scheduleInfos = schedules?.ToInfos();
 
+            var tenders = await tenderService.GetTendersBySubscriptionIdAsync(id);
+            var tenderInfos = tenders?.ToInfos();
+
             var response = new SubscriptionInfo
             {
                 SubscriptionId = subscription.SubscriptionId,
@@ -63,6 +67,7 @@ namespace RockSchool.WebApi.Controllers
                 TeacherId = subscription.TeacherId,
                 AmountOutstanding = subscription.AmountOutstanding,
                 Schedules = scheduleInfos,
+                Tenders = tenderInfos,
             };
 
             return Ok(response);
@@ -113,6 +118,9 @@ namespace RockSchool.WebApi.Controllers
                 teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
             }
 
+            var tenders = await tenderService.GetTendersBySubscriptionIdAsync(id);
+            var tenderInfos = tenders?.ToInfos();
+
             var response = new 
             {
                 Subscription = new SubscriptionInfo{
@@ -127,6 +135,7 @@ namespace RockSchool.WebApi.Controllers
                     GroupId = subscription.GroupId,
                     SubscriptionType = (int)subscription.SubscriptionType,
                     AmountOutstanding = subscription.AmountOutstanding,
+                    Tenders = tenderInfos,
                 },
                 Teacher = teacher == null 
                     ? null
@@ -170,6 +179,10 @@ namespace RockSchool.WebApi.Controllers
             // Get schedules
             var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
             var scheduleInfos = schedules?.ToInfos();
+
+            // Get tenders
+            var tenders = await tenderService.GetTendersBySubscriptionIdAsync(id);
+            var tenderInfos = tenders.ToInfos();
 
             // Get student information
             var student = await studentService.GetByIdAsync(subscription.StudentId);
@@ -225,7 +238,8 @@ namespace RockSchool.WebApi.Controllers
                     SubscriptionType = (int)subscription.SubscriptionType,
                     Attendances = attendanceInfos,
                     Student = studentInfo,
-                    Teacher = teacherInfo
+                    Teacher = teacherInfo,
+                    Tenders = tenderInfos
                 }
             };
 
@@ -283,6 +297,7 @@ namespace RockSchool.WebApi.Controllers
                 Amount = request.Amount,
                 PaidOn = request.PaidOn.ToUniversalTime(),
                 TenderType = (TenderType)request.PaymentType,
+                SubscriptionId = id,
             };
 
             await paymentService.Pay(id, payment);

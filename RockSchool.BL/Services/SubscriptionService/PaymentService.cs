@@ -11,7 +11,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             var tenderEntity = tender.ToEntity();
             var tenderId = await tenderRepository.AddAsync(tenderEntity);
 
-            await subscriptionService.LinkPaymentToSubscription(subscriptionId, tenderId);
+            //await subscriptionService.LinkPaymentToSubscription(subscriptionId, tenderId);
         }
     }
 }

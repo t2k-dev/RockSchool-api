@@ -1,4 +1,5 @@
-﻿using RockSchool.Data.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RockSchool.Data.Data;
 using RockSchool.Data.Entities;
 
 namespace RockSchool.Data.Repositories
@@ -10,6 +11,13 @@ namespace RockSchool.Data.Repositories
             await RockSchoolContext.Tenders.AddAsync(tenderEntity);
             await RockSchoolContext.SaveChangesAsync();
             return tenderEntity.TenderId;
+        }
+
+        public async Task<TenderEntity[]> GetBySubscriptionIdAsync(Guid subscriptionId)
+        {
+            return await RockSchoolContext.Tenders
+                .Where(t => t.SubscriptionId == subscriptionId)
+                .ToArrayAsync();
         }
     }
 }

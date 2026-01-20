@@ -53,6 +53,7 @@ public class Startup
         services.AddScoped<ICancelSubscriptionService, CancelSubscriptionService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IRentalSubscriptionService, RentalSubscriptionService>();
+        services.AddScoped<ITenderService, TenderService>();
 
         services.AddScoped<RoomRepository>();
         services.AddScoped<SubscriptionRepository>();

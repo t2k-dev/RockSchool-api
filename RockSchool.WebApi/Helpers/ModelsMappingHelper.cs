@@ -205,5 +205,23 @@ namespace RockSchool.WebApi.Helpers
         {
             return items.Select(model => model.ToInfo()).ToList();
         }
+
+        // Tender
+        public static TenderInfo ToInfo(this Tender tender)
+        {
+            return new TenderInfo
+            {
+                TenderId = tender.TenderId,
+                Amount = tender.Amount,
+                PaidOn = tender.PaidOn,
+                TenderType = (int)tender.TenderType,
+                SubscriptionId = tender.SubscriptionId,
+            };
+        }
+
+        public static TenderInfo[] ToInfos(this Tender[] tenders)
+        {
+            return tenders.Select(t => t.ToInfo()).ToArray();
+        }
     }
 }
