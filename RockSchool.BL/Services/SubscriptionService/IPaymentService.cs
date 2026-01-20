@@ -4,6 +4,6 @@ namespace RockSchool.BL.Services.SubscriptionService
 {
     public interface IPaymentService
     {
-        Task Pay(Guid subscriptionId, Payment payment);
+        Task Pay(Guid subscriptionId, Tender payment);
     }
 }

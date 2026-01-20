@@ -33,9 +33,6 @@ public class SubscriptionEntity
     [ForeignKey(nameof(DisciplineId))]
     public virtual DisciplineEntity? Discipline { get; set; }
 
-    [ForeignKey(nameof(PaymentId))]
-    public Guid? PaymentId { get; set; }
-
     public Guid? TeacherId { get; set; }
 
     [ForeignKey(nameof(TeacherId))]
@@ -50,5 +47,8 @@ public class SubscriptionEntity
 
     public SubscriptionType SubscriptionType { get; set; }
 
-    public virtual ICollection<ScheduleEntity> Schedules { get; set; }
+    public decimal AmountOutstanding { get; set; }
+
+    public virtual ICollection<ScheduleEntity>? Schedules { get; set; }
+    public virtual ICollection<TenderEntity>? Tenders { get; set; }
 }

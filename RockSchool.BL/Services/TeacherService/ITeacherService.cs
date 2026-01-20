@@ -11,4 +11,5 @@ public interface ITeacherService
     Task SetTeacherActiveAsync(Guid id, bool isActive);
     Task DeleteTeacherAsync(Guid id);
     Task<Teacher[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge);
+    Task<Teacher[]?> GetRehearsableTeachersAsync(int branchId);
 }

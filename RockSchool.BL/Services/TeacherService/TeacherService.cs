@@ -83,6 +83,13 @@ public class TeacherService : ITeacherService
         return teacherEntities.ToDto();
     }
 
+    public async Task<Teacher[]?> GetRehearsableTeachersAsync(int branchId)
+    {
+        var teacherEntities = await _teacherRepository.GetRehearsableTeachersAsync(branchId);
+
+        return teacherEntities.ToDto();
+    }
+
     public async Task<Guid> AddTeacher(Teacher addTeacherDto)
     {
         var disciplines = await _disciplineRepository.GetByIdsAsync(addTeacherDto.DisciplineIds);

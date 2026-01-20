@@ -124,6 +124,21 @@ public class TeacherController(
         return Ok(new { availableTeachers = availableTeacherDtos });
     }
 
+    [HttpGet("rehearsable")]
+    public async Task<ActionResult> GetRehearsableTeachers(int branchId)
+    {
+        var teachers = await teacherService.GetRehearsableTeachersAsync(branchId);
+
+        var availableTeacherDtos = new List<AvailableTeacherDto>();
+        foreach (var teacher in teachers)
+        {
+            var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
+            availableTeacherDtos.Add(availableTeacherDto);
+        }
+
+        return Ok(new { teachers = availableTeacherDtos });
+    }
+
     [HttpGet("{id}/workingPeriods")]
     public async Task<ActionResult> GetTeacherWorkingPeriods(Guid id)
     {

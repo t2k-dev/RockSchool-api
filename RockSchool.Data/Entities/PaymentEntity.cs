@@ -12,6 +12,6 @@ namespace RockSchool.Data.Entities
 
         public DateTime PaidOn { get; set; }
 
-        public PaymentType PaymentType { get; set; }
+        public TenderType PaymentType { get; set; }
     }
 }

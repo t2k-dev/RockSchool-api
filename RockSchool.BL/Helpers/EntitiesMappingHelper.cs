@@ -69,7 +69,6 @@ namespace RockSchool.BL.Helpers
                 Status = subscription.Status,
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
-                PaymentId = subscription.PaymentId,
                 TrialStatus = subscription.TrialStatus,
                 StatusReason = subscription.StatusReason,
                 SubscriptionType = subscription.SubscriptionType,
@@ -94,14 +93,15 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static PaymentEntity ToEntity(this Payment payment)
+        public static TenderEntity ToEntity(this Tender payment)
         {
-            return new PaymentEntity
+            return new TenderEntity
             {
-                PaymentId = payment.PaymentId,
+                TenderId = payment.TenderId,
                 Amount = payment.Amount,
                 PaidOn = payment.PaidOn,
-                PaymentType = payment.PaymentType,
+                TenderType = payment.TenderType,
+                SubscriptionId = payment.SubscriptionId,
             };
         }
     }

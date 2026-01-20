@@ -65,4 +65,18 @@ public class TeacherRepository
             .AsSplitQuery() 
             .ToArrayAsync();
     }
+
+    public async Task<TeacherEntity[]> GetRehearsableTeachersAsync(int branchId)
+    {
+        return await _context.Teachers
+            .Include(t => t.WorkingPeriods)
+            .ThenInclude(w => w.ScheduledWorkingPeriods)
+            .Include(t => t.Disciplines)
+            .Include(t => t.Branch)
+            .Where(t => t.BranchId == branchId
+                        && t.AllowBands
+                        && t.IsActive)
+            .AsSplitQuery()
+            .ToArrayAsync();
+    }
 }

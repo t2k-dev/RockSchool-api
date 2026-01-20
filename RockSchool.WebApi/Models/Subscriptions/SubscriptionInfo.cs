@@ -43,6 +43,8 @@ namespace RockSchool.WebApi.Models.Subscriptions
         /// </summary>
         public int AttendancesLeft { get; set; }
 
+        public decimal AmountOutstanding { get; set; }
+
         public Guid? PaymentId { get; set; }
     }
 }

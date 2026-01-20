@@ -60,6 +60,7 @@ namespace RockSchool.WebApi.Controllers
                 TrialStatus = subscription.TrialStatus,
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
+                AmountOutstanding = subscription.AmountOutstanding,
                 Schedules = scheduleInfos,
             };
 
@@ -124,6 +125,7 @@ namespace RockSchool.WebApi.Controllers
                     Schedules = scheduleInfos,
                     GroupId = subscription.GroupId,
                     SubscriptionType = (int)subscription.SubscriptionType,
+                    AmountOutstanding = subscription.AmountOutstanding,
                 },
                 Teacher = teacher == null 
                     ? null
@@ -197,11 +199,11 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost("{id}/pay")]
         public async Task<ActionResult> Pay(Guid id, PaymentRequest request)
         {
-            var payment = new Payment
+            var payment = new Tender()
             {
                 Amount = request.Amount,
                 PaidOn = request.PaidOn.ToUniversalTime(),
-                PaymentType = (PaymentType)request.PaymentType,
+                TenderType = (TenderType)request.PaymentType,
             };
 
             await paymentService.Pay(id, payment);

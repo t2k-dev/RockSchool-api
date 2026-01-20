@@ -145,12 +145,12 @@ namespace RockSchool.BL.Services.SubscriptionService
 
         public async Task LinkPaymentToSubscription(Guid subscriptionId, Guid paymentId)
         {
-            var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
+            /*var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
 
-            subscriptionEntity.PaymentId = paymentId;
+            subscriptionEntity.Ten = paymentId;
             subscriptionEntity.Status = SubscriptionStatus.Active;
 
-            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);*/
         }
     }
 }
