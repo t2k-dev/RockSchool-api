@@ -32,7 +32,8 @@ namespace RockSchool.WebApi.Controllers
         ITeacherService teacherService,
         ITrialSubscriptionService taxSubscriptionService,
         IPaymentService paymentService,
-        ICancelSubscriptionService cancelSubscriptionService)
+        ICancelSubscriptionService cancelSubscriptionService,
+        IAttendanceService attendanceService)
         : Controller
     {
 
@@ -151,6 +152,84 @@ namespace RockSchool.WebApi.Controllers
         {
             var availableSlot = await subscriptionService.GetNextAvailableSlotAsync(id);
             return Ok(availableSlot);
+        }
+
+        [HttpGet("{id}/screen-data")]
+        public async Task<ActionResult> GetSubscriptionScreenData(Guid id)
+        {
+            var subscription = await subscriptionService.GetAsync(id);
+            if (subscription == null)
+            {
+                return NotFound();
+            }
+
+            // Get related attendances
+            var attendances = await attendanceService.GetAttendancesBySubscriptionId(id);
+            var attendanceInfos = attendances?.ToInfos();
+
+            // Get schedules
+            var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
+            var scheduleInfos = schedules?.ToInfos();
+
+            // Get student information
+            var student = await studentService.GetByIdAsync(subscription.StudentId);
+            var studentInfo = student == null
+                ? null
+                : new StudentInfo
+                {
+                    StudentId = student.StudentId,
+                    FirstName = student.FirstName,
+                    LastName = student.LastName
+                };
+
+            // Get teacher information
+            Teacher teacher = null;
+            if (subscription.TeacherId != null)
+            {
+                teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
+            }
+
+            var teacherInfo = teacher == null
+                ? null
+                : new
+                {
+                    teacher.TeacherId,
+                    teacher.FirstName,
+                    teacher.LastName,
+                };
+
+            // Fix this mess
+            foreach (var attendanceInfo in attendanceInfos)
+            {
+                attendanceInfo.Student = studentInfo;
+                attendanceInfo.Teacher = teacherInfo;
+            }
+
+            var response = new
+            {
+                Subscription = new
+                {
+                    SubscriptionId = subscription.SubscriptionId,
+                    AttendanceCount = subscription.AttendanceCount,
+                    AttendancesLeft = subscription.AttendancesLeft,
+                    AttendanceLength = subscription.AttendanceLength,
+                    DisciplineId = subscription.DisciplineId,
+                    Status = (int)subscription.Status,
+                    StartDate = subscription.StartDate,
+                    TrialStatus = subscription.TrialStatus,
+                    StudentId = subscription.StudentId,
+                    TeacherId = subscription.TeacherId,
+                    AmountOutstanding = subscription.AmountOutstanding,
+                    Schedules = scheduleInfos,
+                    GroupId = subscription.GroupId,
+                    SubscriptionType = (int)subscription.SubscriptionType,
+                    Attendances = attendanceInfos,
+                    Student = studentInfo,
+                    Teacher = teacherInfo
+                }
+            };
+
+            return Ok(response);
         }
 
         [HttpPost("addTrial")]
