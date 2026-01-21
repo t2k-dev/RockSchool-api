@@ -34,8 +34,8 @@ namespace RockSchool.WebApi.Controllers
         IPaymentService paymentService,
         ICancelSubscriptionService cancelSubscriptionService,
         IAttendanceService attendanceService,
-        ITenderService tenderService)
-        : Controller
+        ITenderService tenderService
+        ) : Controller
     {
 
         [HttpGet("{id}")]
@@ -66,6 +66,8 @@ namespace RockSchool.WebApi.Controllers
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
                 AmountOutstanding = subscription.AmountOutstanding,
+                Price = subscription.Price,
+                FinalPrice = subscription.FinalPrice,
                 Schedules = scheduleInfos,
                 Tenders = tenderInfos,
             };
@@ -135,6 +137,8 @@ namespace RockSchool.WebApi.Controllers
                     GroupId = subscription.GroupId,
                     SubscriptionType = (int)subscription.SubscriptionType,
                     AmountOutstanding = subscription.AmountOutstanding,
+                    Price = subscription.Price,
+                    FinalPrice = subscription.FinalPrice,
                     Tenders = tenderInfos,
                 },
                 Teacher = teacher == null 
@@ -233,6 +237,8 @@ namespace RockSchool.WebApi.Controllers
                     StudentId = subscription.StudentId,
                     TeacherId = subscription.TeacherId,
                     AmountOutstanding = subscription.AmountOutstanding,
+                    Price = subscription.Price,
+                    FinalPrice = subscription.FinalPrice,
                     Schedules = scheduleInfos,
                     GroupId = subscription.GroupId,
                     SubscriptionType = (int)subscription.SubscriptionType,

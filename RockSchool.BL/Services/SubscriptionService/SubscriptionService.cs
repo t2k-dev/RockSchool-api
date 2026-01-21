@@ -54,6 +54,9 @@ namespace RockSchool.BL.Services.SubscriptionService
                     Status = SubscriptionStatus.Draft,
                     StatusReason = null,
                     SubscriptionType = !isGroup ? SubscriptionType.Lesson : SubscriptionType.GroupLesson,
+                    Price = subscriptionDetails.Price,
+                    FinalPrice = subscriptionDetails.FinalPrice,
+                    AmountOutstanding = subscriptionDetails.FinalPrice,
                 };
 
                 var newSubscriptionId = await AddSubscriptionAsync(subscription);
@@ -141,6 +144,33 @@ namespace RockSchool.BL.Services.SubscriptionService
             }
 
             await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+        }
+
+        public async Task UpdateSubscriptionAsync(Subscription subscription)
+        {
+            var existingEntity = await subscriptionRepository.GetAsync(subscription.SubscriptionId);
+
+            if (existingEntity == null)
+                throw new NullReferenceException("SubscriptionEntity not found.");
+
+            ModifySubscriptionAttributes(subscription, existingEntity);
+
+            await subscriptionRepository.UpdateSubscriptionAsync(existingEntity);
+        }
+
+        private static void ModifySubscriptionAttributes(Subscription updatedSubscription, SubscriptionEntity existingEntity)
+        {
+            if (updatedSubscription.Status != default)
+                existingEntity.Status = updatedSubscription.Status;
+
+            if (updatedSubscription.StatusReason != default)
+                existingEntity.StatusReason = updatedSubscription.StatusReason;
+
+            if (updatedSubscription.StartDate != default)
+                existingEntity.StartDate = updatedSubscription.StartDate;
+
+            if (updatedSubscription.AmountOutstanding != default)
+                existingEntity.AmountOutstanding = updatedSubscription.AmountOutstanding;
         }
 
         public async Task LinkPaymentToSubscription(Guid subscriptionId, Guid paymentId)

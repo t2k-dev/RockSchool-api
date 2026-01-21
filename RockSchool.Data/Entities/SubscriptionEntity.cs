@@ -47,6 +47,10 @@ public class SubscriptionEntity
 
     public SubscriptionType SubscriptionType { get; set; }
 
+    public decimal Price { get; set; }
+
+    public decimal FinalPrice { get; set; }
+
     public decimal AmountOutstanding { get; set; }
 
     public virtual ICollection<ScheduleEntity>? Schedules { get; set; }

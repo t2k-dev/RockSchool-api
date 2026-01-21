@@ -1,6 +1,7 @@
-﻿using RockSchool.BL.Models;
+﻿using RockSchool.BL.Helpers;
+using RockSchool.BL.Models;
+using RockSchool.Data.Enums;
 using RockSchool.Data.Repositories;
-using RockSchool.BL.Helpers;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
@@ -8,10 +9,22 @@ namespace RockSchool.BL.Services.SubscriptionService
     {
         public async Task Pay(Guid subscriptionId, Tender tender)
         {
+            // Add tender
             var tenderEntity = tender.ToEntity();
-            var tenderId = await tenderRepository.AddAsync(tenderEntity);
+            await tenderRepository.AddAsync(tenderEntity);
 
-            //await subscriptionService.LinkPaymentToSubscription(subscriptionId, tenderId);
+            // Update subscription
+            var subscription = await subscriptionService.GetAsync(subscriptionId);
+            var newAmountOutstanding = subscription.AmountOutstanding - tender.Amount;
+
+            if (newAmountOutstanding == 0)
+            {
+                subscription.Status = SubscriptionStatus.Active;
+            }
+
+            subscription.AmountOutstanding = newAmountOutstanding;
+
+            await subscriptionService.UpdateSubscriptionAsync(subscription);
         }
     }
 }

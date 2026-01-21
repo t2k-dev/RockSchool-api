@@ -11,5 +11,7 @@
         public DateOnly StartDate { get; set; }
         public int AttendanceCount { get; set; }
         public int AttendanceLength { get; set; }
+        public decimal Price { get; set; }
+        public decimal FinalPrice { get; set; }
     }
 }

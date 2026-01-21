@@ -42,6 +42,10 @@ namespace RockSchool.BL.Models
 
         public SubscriptionType SubscriptionType { get; set; }
 
+        public decimal Price { get; set; }
+
+        public decimal FinalPrice { get; set; }
+
         public decimal AmountOutstanding { get; set; }
 
         public virtual ICollection<Schedule>? Schedules { get; set; }

@@ -72,6 +72,9 @@ namespace RockSchool.BL.Helpers
                 TrialStatus = subscription.TrialStatus,
                 StatusReason = subscription.StatusReason,
                 SubscriptionType = subscription.SubscriptionType,
+                Price = subscription.Price,
+                FinalPrice = subscription.FinalPrice,
+                AmountOutstanding = subscription.AmountOutstanding,
             };
         }
 

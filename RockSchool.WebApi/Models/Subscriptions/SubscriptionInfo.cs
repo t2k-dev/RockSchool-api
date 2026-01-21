@@ -45,6 +45,10 @@ namespace RockSchool.WebApi.Models.Subscriptions
 
         public decimal AmountOutstanding { get; set; }
 
+        public decimal Price { get; set; }
+
+        public decimal FinalPrice { get; set; }
+
         public TenderInfo[] Tenders { get; set; }
 
         public Guid? PaymentId { get; set; }

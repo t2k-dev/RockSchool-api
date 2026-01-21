@@ -141,6 +141,9 @@ namespace RockSchool.BL.Helpers
                 TrialStatus = entity.TrialStatus,
                 Schedules = entity.Schedules?.ToModel(),
                 SubscriptionType = entity.SubscriptionType,
+                Price = entity.Price,
+                FinalPrice = entity.FinalPrice,
+                AmountOutstanding = entity.AmountOutstanding,
             };
         }
 
