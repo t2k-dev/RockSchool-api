@@ -15,6 +15,7 @@ using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Services.TariffService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.Data.Entities;
@@ -54,6 +55,7 @@ public class Startup
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IRentalSubscriptionService, RentalSubscriptionService>();
         services.AddScoped<ITenderService, TenderService>();
+        services.AddScoped<ITariffService, TariffService>();
 
         services.AddScoped<RoomRepository>();
         services.AddScoped<SubscriptionRepository>();
@@ -68,6 +70,7 @@ public class Startup
         services.AddScoped<WorkingPeriodsRepository>();
         services.AddScoped<ScheduledWorkingPeriodsRepository>();
         services.AddScoped<TenderRepository>();
+        services.AddScoped<TariffRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         // services.AddControllers();

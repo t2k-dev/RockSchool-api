@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20260121184426_Added_Tariff_Entity")]
+    partial class Added_Tariff_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -579,9 +582,6 @@ namespace RockSchool.Data.Migrations
                     b.Property<int>("SubscriptionType")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("TariffId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("TeacherId")
                         .HasColumnType("uuid");
 
@@ -595,8 +595,6 @@ namespace RockSchool.Data.Migrations
                     b.HasIndex("DisciplineId");
 
                     b.HasIndex("StudentId");
-
-                    b.HasIndex("TariffId");
 
                     b.HasIndex("TeacherId");
 
@@ -989,10 +987,6 @@ namespace RockSchool.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.TariffEntity", "Tariff")
-                        .WithMany()
-                        .HasForeignKey("TariffId");
-
                     b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
@@ -1002,8 +996,6 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Discipline");
 
                     b.Navigation("Student");
-
-                    b.Navigation("Tariff");
 
                     b.Navigation("Teacher");
                 });

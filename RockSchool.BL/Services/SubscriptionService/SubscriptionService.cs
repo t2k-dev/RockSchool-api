@@ -169,8 +169,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             if (updatedSubscription.StartDate != default)
                 existingEntity.StartDate = updatedSubscription.StartDate;
 
-            if (updatedSubscription.AmountOutstanding != default)
-                existingEntity.AmountOutstanding = updatedSubscription.AmountOutstanding;
+            existingEntity.AmountOutstanding = updatedSubscription.AmountOutstanding;
         }
 
         public async Task LinkPaymentToSubscription(Guid subscriptionId, Guid paymentId)

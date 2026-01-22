@@ -45,6 +45,11 @@ public class SubscriptionEntity
 
     public TrialStatus? TrialStatus { get; set; }
 
+    public Guid? TariffId { get; set; }
+
+    [ForeignKey(nameof(TariffId))]
+    public virtual TariffEntity? Tariff { get; set; }
+
     public SubscriptionType SubscriptionType { get; set; }
 
     public decimal Price { get; set; }

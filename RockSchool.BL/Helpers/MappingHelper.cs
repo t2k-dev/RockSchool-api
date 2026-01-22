@@ -139,6 +139,8 @@ namespace RockSchool.BL.Helpers
                 BranchId = entity.BranchId,
                 Branch = entity.Branch?.ToDto(),
                 TrialStatus = entity.TrialStatus,
+                TariffId = entity.TariffId,
+                Tariff = entity.Tariff?.ToModel(),
                 Schedules = entity.Schedules?.ToModel(),
                 SubscriptionType = entity.SubscriptionType,
                 Price = entity.Price,
@@ -284,6 +286,47 @@ namespace RockSchool.BL.Helpers
         public static WorkingPeriod[] ToDto(this IEnumerable<WorkingPeriodEntity> entities)
         {
             return entities.Select(w => w.ToDto())
+                .ToArray();
+        }
+
+        // Tenders
+        public static Tender ToModel(this TenderEntity tenderEntity)
+        {
+            return new Tender
+            {
+                TenderId = tenderEntity.TenderId,
+                Amount = (int)tenderEntity.Amount,
+                PaidOn = tenderEntity.PaidOn,
+                TenderType = tenderEntity.TenderType,
+                SubscriptionId = tenderEntity.SubscriptionId,
+            };
+        }
+
+        public static Tender[] ToModel(this TenderEntity[] tenderEntities)
+        {
+            return tenderEntities.Select(t => t.ToModel()).ToArray();
+        }
+
+        // Tariff
+        public static Tariff ToModel(this TariffEntity entity)
+        {
+            return new Tariff
+            {
+                TariffId = entity.TariffId,
+                Amount = entity.Amount,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
+                DisciplineId = entity.DisciplineId,
+                Discipline = entity.Discipline?.ToDto(),
+                AttendanceLength = entity.AttendanceLength,
+                AttendanceCount = entity.AttendanceCount,
+                SubscriptionType = entity.SubscriptionType
+            };
+        }
+
+        public static Tariff[] ToModel(this IEnumerable<TariffEntity> entities)
+        {
+            return entities.Select(t => t.ToModel())
                 .ToArray();
         }
     }

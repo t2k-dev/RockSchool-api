@@ -40,6 +40,10 @@ namespace RockSchool.BL.Models
 
         public string? StatusReason { get; set; }
 
+    public Guid? TariffId { get; set; }
+
+    public virtual Tariff? Tariff { get; set; }
+
         public SubscriptionType SubscriptionType { get; set; }
 
         public decimal Price { get; set; }

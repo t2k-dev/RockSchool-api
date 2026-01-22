@@ -108,21 +108,19 @@ namespace RockSchool.BL.Helpers
             };
         }
 
-        public static Tender ToModel(this TenderEntity tenderEntity)
+        public static TariffEntity ToEntity(this Tariff model)
         {
-            return new Tender
+            return new TariffEntity
             {
-                TenderId = tenderEntity.TenderId,
-                Amount = (int)tenderEntity.Amount,
-                PaidOn = tenderEntity.PaidOn,
-                TenderType = tenderEntity.TenderType,
-                SubscriptionId = tenderEntity.SubscriptionId,
+                TariffId = model.TariffId,
+                Amount = model.Amount,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                DisciplineId = model.DisciplineId,
+                AttendanceLength = model.AttendanceLength,
+                AttendanceCount = model.AttendanceCount,
+                SubscriptionType = model.SubscriptionType
             };
-        }
-
-        public static Tender[] ToModel(this TenderEntity[] tenderEntities)
-        {
-            return tenderEntities.Select(t => t.ToModel()).ToArray();
         }
     }
 }
