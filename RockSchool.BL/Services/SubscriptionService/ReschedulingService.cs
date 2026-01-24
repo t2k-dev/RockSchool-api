@@ -38,7 +38,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 RoomId = attendance.RoomId,
                 BranchId = attendance.BranchId,
                 GroupId = attendance.GroupId,
-                IsTrial = attendance.IsTrial,
+                AttendanceType = attendance.AttendanceType,
             };
 
             await attendanceService.AddAttendanceAsync(newAttendance);

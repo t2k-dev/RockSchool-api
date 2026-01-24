@@ -71,10 +71,10 @@ public class StudentController(
                 StudentId = attendance.StudentId,
                 Student = attendance.Student,
                 IsCompleted = attendance.IsCompleted,
-                IsTrial = attendance.IsTrial,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,
                 SubscriptionId = attendance.SubscriptionId,
+                AttendanceType = (int)attendance.AttendanceType,
             });
         }
 

@@ -29,7 +29,7 @@ public static class ScheduleHelper
                 StudentId = subscriptionDetails.StudentId,
                 StartDate = attendanceStartDate,
                 EndDate = attendanceStartDate.AddMinutes(lessonMinutes),
-                IsTrial = false,
+                AttendanceType = AttendanceType.Lesson,
                 BranchId = subscriptionDetails.BranchId,
                 RoomId = availableSlot.RoomId,
                 DisciplineId = subscriptionDetails.DisciplineId,

@@ -17,9 +17,9 @@ namespace RockSchool.WebApi.Models.Attendances
         public Guid StudentId { get; set; }
         public object Student { get; set; }
         public object Teacher { get; set; }
-        public bool IsTrial { get; set; }
         public bool IsCompleted { get; set; }
         public Guid? GroupId { get; set; }
         public string Comment { get; set; }
+        public int AttendanceType { get; set; }
     }
 }

@@ -24,6 +24,7 @@ public class Attendance
     public int RoomId { get; set; }
     public virtual Room Room { get; set; }
     public string Comment { get; set; }
-    public bool IsTrial { get; set; }
     public bool IsCompleted { get; set; }
+
+    public AttendanceType AttendanceType { get; set; }
 }

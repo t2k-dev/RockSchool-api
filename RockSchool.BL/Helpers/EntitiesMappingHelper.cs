@@ -50,7 +50,7 @@ namespace RockSchool.BL.Helpers
                 StatusReason = attendance.StatusReason,
                 DisciplineId = attendance.DisciplineId,
                 GroupId = attendance.GroupId,
-                IsTrial = attendance.IsTrial,
+                AttendanceType = attendance.AttendanceType,
                 IsCompleted = attendance.IsCompleted,
             };
         }

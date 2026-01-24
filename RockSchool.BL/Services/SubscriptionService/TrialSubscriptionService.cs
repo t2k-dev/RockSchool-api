@@ -73,7 +73,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                 StudentId = request.Student.StudentId,
                 TeacherId = request.TeacherId,
                 SubscriptionId = subscriptionId,
-                IsTrial = true,
+                AttendanceType = AttendanceType.TrialLesson,
             };
 
             await attendanceService.AddAttendanceAsync(trialAttendance);

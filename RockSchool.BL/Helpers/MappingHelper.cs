@@ -29,8 +29,8 @@ namespace RockSchool.BL.Helpers
                 BranchId = entity.BranchId,
                 Room = entity.Room?.ToModel(),
                 Comment = entity.Comment,
-                IsTrial = entity.IsTrial,
-                IsCompleted = entity.IsCompleted
+                IsCompleted = entity.IsCompleted,
+                AttendanceType = entity.AttendanceType,
             };
         }
 

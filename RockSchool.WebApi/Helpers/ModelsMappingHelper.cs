@@ -27,11 +27,11 @@ namespace RockSchool.WebApi.Helpers
                 DisciplineId = attendance.DisciplineId,
                 Student = attendance.Student,
                 Teacher = attendance.Teacher,
-                IsTrial = attendance.IsTrial,
                 IsCompleted = attendance.IsCompleted,
                 GroupId = attendance.GroupId,
                 StudentId = attendance.StudentId,
                 Subscription = attendance.Subscription?.ToInfo(),
+                AttendanceType = (int)attendance.AttendanceType,
             };
         }
 
@@ -55,7 +55,7 @@ namespace RockSchool.WebApi.Helpers
                 DisciplineId = attendance.DisciplineId,
                 Student = attendance.Student,
                 Teacher = attendance.Teacher,
-                IsTrial = attendance.IsTrial,
+                AttendanceType = (int)attendance.AttendanceType,
                 IsCompleted = attendance.IsCompleted,
                 GroupId = attendance.GroupId,
                 Comment = attendance.Comment,
@@ -86,7 +86,7 @@ namespace RockSchool.WebApi.Helpers
                 DisciplineId = attendanceInfo.DisciplineId,
                 //Student = attendanceInfo.Student, DEV
                 //Teacher = attendanceInfo.Teacher,
-                IsTrial = attendanceInfo.IsTrial,
+                AttendanceType = (AttendanceType)attendanceInfo.AttendanceType,
                 GroupId = attendanceInfo.GroupId,
             };
         }
