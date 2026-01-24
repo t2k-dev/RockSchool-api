@@ -107,7 +107,6 @@ namespace RockSchool.WebApi.Helpers
                 AttendancesLeft = subscription.AttendancesLeft,
                 Teacher = subscription.Teacher,
                 Schedules = subscription.Schedules?.ToInfos(),
-                PaymentId = subscription.PaymentId,
                 SubscriptionType = (int)subscription.SubscriptionType,
             };
         }
@@ -124,7 +123,6 @@ namespace RockSchool.WebApi.Helpers
                 TrialStatus = subscription.TrialStatus,
                 AttendanceCount = subscription.AttendanceCount,
                 AttendancesLeft = subscription.AttendancesLeft,
-                PaymentId = subscription.PaymentId,
             };
         }
 

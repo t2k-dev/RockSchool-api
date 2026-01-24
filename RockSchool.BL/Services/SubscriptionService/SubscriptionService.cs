@@ -49,7 +49,6 @@ namespace RockSchool.BL.Services.SubscriptionService
                     AttendanceLength = subscriptionDetails.AttendanceLength,
                     BranchId = subscriptionDetails.BranchId,
                     GroupId = groupId,
-                    PaymentId = null,
                     TrialStatus = null,
                     Status = SubscriptionStatus.Draft,
                     StatusReason = null,

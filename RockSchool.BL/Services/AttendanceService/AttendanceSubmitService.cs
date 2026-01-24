@@ -39,7 +39,9 @@ namespace RockSchool.BL.Services.AttendanceService
 
         public async Task MissedTrial(Guid attendanceId, string statusReason, string comment)
         {
-            throw new NotImplementedException("MissedTrial");
+            var submittedAttendance = await SubmitSingleAttendance(attendanceId, (int)AttendanceStatus.Missed, statusReason, comment);
+            
+            await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Missed, statusReason);
         }
 
         private async Task<Attendance> SubmitSingleAttendance(Guid attendanceId, int status, string statusReason, string comment)

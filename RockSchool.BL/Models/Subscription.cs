@@ -26,8 +26,6 @@ namespace RockSchool.BL.Models
 
         public virtual Discipline? Discipline { get; set; }
 
-        public Guid? PaymentId { get; set; }
-
         public Guid? TeacherId { get; set; }
 
         public virtual Teacher? Teacher { get; set; }
@@ -40,9 +38,9 @@ namespace RockSchool.BL.Models
 
         public string? StatusReason { get; set; }
 
-    public Guid? TariffId { get; set; }
+        public Guid? TariffId { get; set; }
 
-    public virtual Tariff? Tariff { get; set; }
+        public virtual Tariff? Tariff { get; set; }
 
         public SubscriptionType SubscriptionType { get; set; }
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.TariffService;
+using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers;
@@ -27,6 +28,42 @@ public class TariffController : ControllerBase
         {
             var tariffs = await _tariffService.GetAllTariffsAsync();
             return Ok(tariffs);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("{subscriptionType}")]
+    public async Task<ActionResult> GetTariff(int subscriptionType, int? disciplineId)
+    {
+        try
+        {
+            var trialTariff = await _tariffService.GetTariffAsync((SubscriptionType)subscriptionType, disciplineId);
+            if (trialTariff == null)
+            {
+                return NotFound(new { message = "Trial tariff not found" });
+            }
+            return Ok(trialTariff);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("trial")]
+    public async Task<ActionResult> GetTrialTariff()
+    {
+        try
+        {
+            var trialTariff = await _tariffService.GetTrialTariffAsync();
+            if (trialTariff == null)
+            {
+                return NotFound(new { message = "Trial tariff not found" });
+            }
+            return Ok(trialTariff);
         }
         catch (Exception ex)
         {

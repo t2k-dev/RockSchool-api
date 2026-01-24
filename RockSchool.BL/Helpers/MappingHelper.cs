@@ -317,7 +317,7 @@ namespace RockSchool.BL.Helpers
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
                 DisciplineId = entity.DisciplineId,
-                Discipline = entity.Discipline?.ToDto(),
+                //Discipline = entity.Discipline?.ToDto(),
                 AttendanceLength = entity.AttendanceLength,
                 AttendanceCount = entity.AttendanceCount,
                 SubscriptionType = entity.SubscriptionType
@@ -326,8 +326,7 @@ namespace RockSchool.BL.Helpers
 
         public static Tariff[] ToModel(this IEnumerable<TariffEntity> entities)
         {
-            return entities.Select(t => t.ToModel())
-                .ToArray();
+            return entities?.Select(t => t.ToModel()).ToArray() ?? [];
         }
     }
 }

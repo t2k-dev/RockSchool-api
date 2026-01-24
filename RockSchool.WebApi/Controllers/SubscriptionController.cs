@@ -263,6 +263,7 @@ namespace RockSchool.WebApi.Controllers
                 DisciplineId = request.DisciplineId,
                 TeacherId = request.TeacherId,
                 TrialDate = request.TrialDate,
+                TariffId = request.TariffId,
                 Student = student,
             };
 

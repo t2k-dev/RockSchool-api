@@ -1,58 +1,63 @@
 ﻿using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
+using RockSchool.BL.Services.TariffService;
 using RockSchool.Data.Enums;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
-    public class TrialSubscriptionService : ITrialSubscriptionService
+    public class TrialSubscriptionService(
+        SubscriptionRepository subscriptionRepository,
+        IAttendanceService attendanceService,
+        INoteService noteService,
+        ISubscriptionService subscriptionService,
+        ITariffService tariffService
+        ) : ITrialSubscriptionService
     {
-        private readonly SubscriptionRepository _subscriptionRepository;
-        private readonly IAttendanceService _attendanceService;
-        private readonly INoteService _noteService;
-        private readonly ISubscriptionService _subscriptionService;
-
-        public TrialSubscriptionService(SubscriptionRepository subscriptionRepository, IAttendanceService attendanceService, INoteService noteService, ISubscriptionService subscriptionService)
-        {
-            _subscriptionRepository = subscriptionRepository;
-            _attendanceService = attendanceService;
-            _noteService = noteService;
-            _subscriptionService = subscriptionService;
-        }
-
         public async Task CompleteTrial(Guid subscriptionId, TrialStatus trialStatus, string statusReason)
         {
-            var subscriptionEntity = await _subscriptionRepository.GetAsync(subscriptionId);
+            var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
 
             subscriptionEntity.AttendancesLeft -= 1;
             subscriptionEntity.Status = SubscriptionStatus.Completed;
             subscriptionEntity.TrialStatus = trialStatus;
             subscriptionEntity.StatusReason = statusReason;
 
-            await _subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
         }
 
         public async Task<Guid> AddTrialSubscription(TrialRequestDto request)
         {
-            var subscriptionDto = new Subscription
+            var tariff = await tariffService.GetTariffAsync(request.TariffId);
+            if (tariff == null)
             {
+                throw new InvalidOperationException("Tariff is not found");
+            }
+
+            var subscription = new Subscription
+            {
+                SubscriptionType = SubscriptionType.TrialLesson,
+                Status = SubscriptionStatus.Draft,
+                TrialStatus = TrialStatus.Created,
+
                 DisciplineId = request.DisciplineId,
                 StudentId = request.Student.StudentId,
-                AttendanceCount = 1,
-                AttendanceLength = 1,
+                TeacherId = request.TeacherId,
                 AttendancesLeft = 1,
                 BranchId = request.BranchId,
                 GroupId = null,
                 StartDate = DateOnly.FromDateTime(request.TrialDate),
-                TrialStatus = TrialStatus.Created,
-                PaymentId = null,
-                Status = SubscriptionStatus.Active,
-                TeacherId = request.TeacherId,
-                SubscriptionType = SubscriptionType.TrialLesson,
+
+                TariffId = request.TariffId,
+                AttendanceCount = tariff.AttendanceCount,
+                AttendanceLength = tariff.AttendanceLength,
+                Price = tariff.Amount,
+                AmountOutstanding = tariff.Amount,
+                FinalPrice = tariff.Amount,
             };
             
-            var subscriptionId = await _subscriptionService.AddSubscriptionAsync(subscriptionDto);
+            var subscriptionId = await subscriptionService.AddSubscriptionAsync(subscription);
 
             var trialAttendance = new Attendance
             {
@@ -71,9 +76,9 @@ namespace RockSchool.BL.Services.SubscriptionService
                 IsTrial = true,
             };
 
-            await _attendanceService.AddAttendanceAsync(trialAttendance);
+            await attendanceService.AddAttendanceAsync(trialAttendance);
 
-            await _noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
+            await noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
 
             return subscriptionId;
         }

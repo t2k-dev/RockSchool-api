@@ -75,6 +75,7 @@ namespace RockSchool.BL.Helpers
                 Price = subscription.Price,
                 FinalPrice = subscription.FinalPrice,
                 AmountOutstanding = subscription.AmountOutstanding,
+                TariffId = subscription.TariffId,
             };
         }
 
