@@ -24,6 +24,19 @@ public class TariffService(TariffRepository tariffRepository) : ITariffService
         return tariffEntity?.ToModel();
     }
 
+    public async Task<Tariff[]?> GetTariffsAsync(SubscriptionType subscriptionType)
+    {
+        var currentDate = DateTime.UtcNow;
+
+        var tariffEntities = await tariffRepository.GetTariffsByTypeAsync(subscriptionType, currentDate);
+        if (tariffEntities == null)
+        {
+            throw new InvalidOperationException("No tariffs found");
+        }
+
+        return tariffEntities.ToModel();
+    }
+
     public async Task<Tariff?> GetTariffAsync(SubscriptionType subscriptionType, int? disciplineId)
     {
         var currentDate = DateTime.UtcNow;

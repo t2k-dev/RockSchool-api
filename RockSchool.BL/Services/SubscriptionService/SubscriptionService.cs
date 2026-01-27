@@ -53,6 +53,8 @@ namespace RockSchool.BL.Services.SubscriptionService
                     Status = SubscriptionStatus.Draft,
                     StatusReason = null,
                     SubscriptionType = !isGroup ? SubscriptionType.Lesson : SubscriptionType.GroupLesson,
+
+                    TariffId = subscriptionDetails.TariffId,
                     Price = subscriptionDetails.Price,
                     FinalPrice = subscriptionDetails.FinalPrice,
                     AmountOutstanding = subscriptionDetails.FinalPrice,

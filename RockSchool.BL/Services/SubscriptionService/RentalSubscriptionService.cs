@@ -17,6 +17,8 @@ namespace RockSchool.BL.Services.SubscriptionService
             // Subscription
             var subscription = new Subscription
             {
+                SubscriptionType = SubscriptionType.Rent,
+                Status = SubscriptionStatus.Draft,
                 StudentId = details.StudentId,
                 AttendanceCount = details.AttendanceCount,
                 AttendanceLength = details.AttendanceLength,
@@ -24,8 +26,11 @@ namespace RockSchool.BL.Services.SubscriptionService
                 BranchId = details.BranchId,
                 GroupId = null,
                 StartDate = details.StartDate,
-                Status = SubscriptionStatus.Draft,
-                SubscriptionType = SubscriptionType.Rent,
+                
+                TariffId = details.TariffId,
+                Price = details.Price,
+                FinalPrice = details.FinalPrice,
+                AmountOutstanding = details.FinalPrice,
             };
 
             var newSubscriptionId = await subscriptionService.AddSubscriptionAsync(subscription);
