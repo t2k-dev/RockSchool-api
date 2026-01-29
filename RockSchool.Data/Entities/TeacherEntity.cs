@@ -36,4 +36,6 @@ public class TeacherEntity
     public virtual ICollection<WorkingPeriodEntity> WorkingPeriods { get; set; }
 
     public virtual ICollection<ScheduledWorkingPeriodEntity> ScheduledWorkingPeriods { get; set; }
+
+    public virtual ICollection<BandEntity>? Bands { get; set; }
 }

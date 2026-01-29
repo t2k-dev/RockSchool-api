@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.BandStudentService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
+using RockSchool.WebApi.Models.Bands;
 using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
 
@@ -23,7 +25,8 @@ namespace RockSchool.WebApi.Controllers;
 public class StudentController(
     IStudentService studentService,
     IAttendanceService attendanceService,
-    ISubscriptionService subscriptionService)
+    ISubscriptionService subscriptionService,
+    IBandStudentService bandStudentService)
     : Controller
 {
 
@@ -81,11 +84,16 @@ public class StudentController(
         var subscriptions = await subscriptionService.GetSubscriptionsByStudentId(id);
         var subscriptionsInfos = subscriptions.Select(subscription => subscription.ToInfo());
 
+        var bandStudents = await bandStudentService.GetByStudentIdAsync(id);
+        var bands = bandStudents.Select(bs => bs.Band).Where(b => b != null).ToArray();
+        var bandsInfos = bands.ToInfos();
+
         var studentScreenDetailsDto = new StudentScreenDetailsInfo
         {
             Student = studentDto,
             Subscriptions = subscriptionsInfos.ToArray(),
             Attendances = attendanceInfos.ToArray(),
+            Bands = bandsInfos,
         };
 
         return Ok(studentScreenDetailsDto);

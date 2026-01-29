@@ -17,4 +17,5 @@ public class StudentEntity
     public int? Level { get; set; }
     public virtual BranchEntity? Branch { get; set; }
     public bool IsWaiting { get; set; }
+    public virtual ICollection<BandStudentEntity>? BandStudents { get; set; }
 }

@@ -61,7 +61,8 @@ namespace RockSchool.BL.Helpers
             return new Schedule
             {
                 ScheduleId = entity.ScheduleId,
-                SubscriptionId = entity.SubscriptionId.Value, // DEV
+                SubscriptionId = entity.SubscriptionId,
+                BandId = entity.BandId,
                 StartTime = entity.StartTime,
                 EndTime = entity.EndTime,
                 WeekDay = entity.WeekDay,
@@ -327,6 +328,45 @@ namespace RockSchool.BL.Helpers
         public static Tariff[] ToModel(this IEnumerable<TariffEntity> entities)
         {
             return entities?.Select(t => t.ToModel()).ToArray() ?? [];
+        }
+
+        // Band
+        public static Band ToModel(this BandEntity entity)
+        {
+            return new Band
+            {
+                BandId = entity.BandId,
+                Name = entity.Name,
+                TeacherId = entity.TeacherId,
+                Teacher = entity.Teacher?.ToDto(),
+                Status = entity.Status,
+                // Remove BandStudents to prevent circular reference when called from BandStudent.ToModel()
+                // BandStudents = entity.BandStudents?.Select(bs => bs.ToModel()).ToList()
+            };
+        }
+
+        public static Band[] ToModel(this IEnumerable<BandEntity> entities)
+        {
+            return entities?.Select(b => b.ToModel()).ToArray() ?? [];
+        }
+
+        // BandStudent
+        public static BandStudent ToModel(this BandStudentEntity entity)
+        {
+            return new BandStudent
+            {
+                BandStudentId = entity.BandStudentId,
+                BandId = entity.BandId,
+                Band = entity.Band?.ToModel(),
+                StudentId = entity.StudentId,
+                Student = entity.Student?.ToDto(),
+                BandRoleId = entity.BandRoleId
+            };
+        }
+
+        public static BandStudent[] ToModel(this IEnumerable<BandStudentEntity> entities)
+        {
+            return entities?.Select(bs => bs.ToModel()).ToArray() ?? [];
         }
     }
 }

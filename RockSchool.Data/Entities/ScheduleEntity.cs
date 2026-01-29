@@ -13,6 +13,11 @@ public class ScheduleEntity
     [ForeignKey(nameof(SubscriptionId))]
     public SubscriptionEntity? Subscription { get; set; }
 
+    public Guid? BandId { get; set; }
+
+    [ForeignKey(nameof(BandId))]
+    public BandEntity? Band { get; set; }
+
     public int RoomId { get; set; }
 
     [ForeignKey(nameof(RoomId))]

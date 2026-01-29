@@ -90,6 +90,7 @@ namespace RockSchool.BL.Helpers
             return new ScheduleEntity
             {
                 SubscriptionId = schedule.SubscriptionId,
+                BandId = schedule.BandId,
                 WeekDay = schedule.WeekDay,
                 StartTime = schedule.StartTime,
                 EndTime = schedule.EndTime,
@@ -121,6 +122,28 @@ namespace RockSchool.BL.Helpers
                 AttendanceLength = model.AttendanceLength,
                 AttendanceCount = model.AttendanceCount,
                 SubscriptionType = model.SubscriptionType
+            };
+        }
+
+        public static BandEntity ToEntity(this Band model)
+        {
+            return new BandEntity
+            {
+                BandId = model.BandId,
+                Name = model.Name,
+                TeacherId = model.TeacherId,
+                Status = model.Status
+            };
+        }
+
+        public static BandStudentEntity ToEntity(this BandStudent model)
+        {
+            return new BandStudentEntity
+            {
+                BandStudentId = model.BandStudentId,
+                BandId = model.BandId,
+                StudentId = model.StudentId,
+                BandRoleId = model.BandRoleId
             };
         }
     }

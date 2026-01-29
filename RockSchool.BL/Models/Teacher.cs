@@ -26,5 +26,7 @@ public class Teacher
 
     public virtual ICollection<ScheduledWorkingPeriod>? ScheduledWorkingPeriods { get; set; }
 
+    public virtual ICollection<Band>? Bands { get; set; }
+
     public int[]? DisciplineIds { get; set; }
 }

@@ -15,4 +15,5 @@ public class Student
     public int? Level { get; set; }
     public virtual Branch? Branch { get; set; }
     public int? BranchId { get; set; }
+    public virtual ICollection<BandStudent>? BandStudents { get; set; }
 }

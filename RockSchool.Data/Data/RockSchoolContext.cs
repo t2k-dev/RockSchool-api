@@ -27,6 +27,8 @@ public class RockSchoolContext : DbContext
     public DbSet<WaitingScheduleEntity> WaitingSchedules { get; set; }
     public DbSet<TenderEntity> Tenders { get; set; } = null!;
     public DbSet<TariffEntity> Tariffs { get; set; }
+    public DbSet<BandEntity> Bands { get; set; }
+    public DbSet<BandStudentEntity> BandStudents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

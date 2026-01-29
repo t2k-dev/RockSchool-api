@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20260127064539_Added_Band")]
+    partial class Added_Band
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -480,9 +483,6 @@ namespace RockSchool.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BandId")
-                        .HasColumnType("uuid");
-
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
 
@@ -499,8 +499,6 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("ScheduleId");
-
-                    b.HasIndex("BandId");
 
                     b.HasIndex("RoomId");
 
@@ -1187,10 +1185,6 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Data.Entities.ScheduleEntity", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BandEntity", "Band")
-                        .WithMany("Schedules")
-                        .HasForeignKey("BandId");
-
                     b.HasOne("RockSchool.Data.Entities.RoomEntity", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
@@ -1200,8 +1194,6 @@ namespace RockSchool.Data.Migrations
                     b.HasOne("RockSchool.Data.Entities.SubscriptionEntity", "Subscription")
                         .WithMany("Schedules")
                         .HasForeignKey("SubscriptionId");
-
-                    b.Navigation("Band");
 
                     b.Navigation("Room");
 
@@ -1401,8 +1393,6 @@ namespace RockSchool.Data.Migrations
             modelBuilder.Entity("RockSchool.Data.Entities.BandEntity", b =>
                 {
                     b.Navigation("BandStudents");
-
-                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("RockSchool.Data.Entities.BranchEntity", b =>

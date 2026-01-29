@@ -5,6 +5,7 @@ using RockSchool.BL.Models;
 using RockSchool.Data.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
+using RockSchool.WebApi.Models.Bands;
 using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
 
@@ -223,6 +224,53 @@ namespace RockSchool.WebApi.Helpers
         public static TenderInfo[] ToInfos(this Tender[] tenders)
         {
             return tenders.Select(t => t.ToInfo()).ToArray();
+        }
+
+        // Band
+        public static BandInfo ToInfo(this Band band)
+        {
+            return new BandInfo
+            {
+                BandId = band.BandId,
+                Name = band.Name,
+                TeacherId = band.TeacherId,
+                Teacher = band.Teacher,
+                Status = band.Status,
+                BandStudents = band.BandStudents?.Select(bs => bs.ToInfo()).ToArray()
+            };
+        }
+
+        public static BandInfo[] ToInfos(this Band[] bands)
+        {
+            return bands.Select(b => b.ToInfo()).ToArray();
+        }
+
+        // BandStudent
+        public static BandStudentInfo ToInfo(this BandStudent bandStudent)
+        {
+            return new BandStudentInfo
+            {
+                BandStudentId = bandStudent.BandStudentId,
+                BandId = bandStudent.BandId,
+                StudentId = bandStudent.StudentId,
+                Student = bandStudent.Student,
+                BandRoleId = bandStudent.BandRoleId
+            };
+        }
+
+        public static BandStudentInfo[] ToInfos(this BandStudent[] bandStudents)
+        {
+            return bandStudents.Select(bs => bs.ToInfo()).ToArray();
+        }
+
+        public static BandStudent ToModel(this AddStudentToBandDto dto)
+        {
+            return new BandStudent
+            {
+                BandId = dto.BandId,
+                StudentId = dto.StudentId,
+                BandRoleId = dto.BandRoleId
+            };
         }
     }
 }
