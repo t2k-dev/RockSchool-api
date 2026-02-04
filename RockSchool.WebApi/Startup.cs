@@ -20,9 +20,9 @@ using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TariffService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
-using RockSchool.Data.Entities;
 using RockSchool.Data.Extensions;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.WebApi;
 
@@ -38,7 +38,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IBandService, BandService>();
         services.AddScoped<IBandStudentService, BandStudentService>();
@@ -65,6 +65,7 @@ public class Startup
         services.AddScoped<BandRepository>();
         services.AddScoped<BandStudentRepository>();
         services.AddScoped<SubscriptionRepository>();
+        services.AddScoped<SubscriptionsAttendancesRepository>();
         services.AddScoped<BranchRepository>();
         services.AddScoped<AttendanceRepository>();
         services.AddScoped<DisciplineRepository>();

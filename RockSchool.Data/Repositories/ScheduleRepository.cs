@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
@@ -10,37 +10,37 @@ public class ScheduleRepository : BaseRepository
     {
     }
 
-    public async Task<ScheduleEntity[]> GetAllAsync()
+    public async Task<Schedule[]> GetAllAsync()
     {
         return await RockSchoolContext.Schedules.ToArrayAsync();
     }
 
-    public async Task<ScheduleEntity[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
+    public async Task<Schedule[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
     {
         return await RockSchoolContext.Schedules.Where(s => s.SubscriptionId == subscriptionId).ToArrayAsync();
     }
 
-    public async Task<ScheduleEntity?> GetByIdAsync(Guid scheduleId)
+    public async Task<Schedule?> GetByIdAsync(Guid scheduleId)
     {
         return await RockSchoolContext.Schedules.FirstOrDefaultAsync(s => s.ScheduleId == scheduleId);
     }
 
-    public async Task<Guid> AddAsync(ScheduleEntity scheduleEntity)
+    public async Task<Guid> AddAsync(Schedule schedule)
     {
-        await RockSchoolContext.Schedules.AddAsync(scheduleEntity);
+        await RockSchoolContext.Schedules.AddAsync(schedule);
         await RockSchoolContext.SaveChangesAsync();
-        return scheduleEntity.ScheduleId;
+        return schedule.ScheduleId;
     }
 
-    public async Task AddManyAsync(ScheduleEntity[] scheduleEntities)
+    public async Task AddManyAsync(Schedule[] schedules)
     {
-        await RockSchoolContext.Schedules.AddRangeAsync(scheduleEntities);
+        await RockSchoolContext.Schedules.AddRangeAsync(schedules);
         await RockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(ScheduleEntity scheduleEntity)
+    public async Task UpdateAsync(Schedule schedule)
     {
-        RockSchoolContext.Schedules.Update(scheduleEntity);
+        RockSchoolContext.Schedules.Update(schedule);
         await RockSchoolContext.SaveChangesAsync();
     }
 

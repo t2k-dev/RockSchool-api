@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RockSchool.BL.Models;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Entities;
+using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Bands;
@@ -19,19 +19,15 @@ namespace RockSchool.WebApi.Helpers
             return new AttendanceInfo
             {
                 AttendanceId = attendance.AttendanceId,
-                SubscriptionId = attendance.SubscriptionId,
                 StartDate = attendance.StartDate,
                 EndDate = attendance.EndDate,
                 Status = (int) attendance.Status,
                 StatusReason = attendance.StatusReason,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,
-                Student = attendance.Student,
                 Teacher = attendance.Teacher,
                 IsCompleted = attendance.IsCompleted,
                 GroupId = attendance.GroupId,
-                StudentId = attendance.StudentId,
-                Subscription = attendance.Subscription?.ToInfo(),
                 AttendanceType = (int)attendance.AttendanceType,
             };
         }
@@ -46,15 +42,12 @@ namespace RockSchool.WebApi.Helpers
             return new ParentAttendanceInfo
             {
                 AttendanceId = attendance.AttendanceId,
-                SubscriptionId = attendance.SubscriptionId,
-                Subscription = attendance.Subscription?.ToInfo(),
                 StartDate = attendance.StartDate,
                 EndDate = attendance.EndDate,
                 Status = (int)attendance.Status,
                 StatusReason = attendance.StatusReason,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,
-                Student = attendance.Student,
                 Teacher = attendance.Teacher,
                 AttendanceType = (int)attendance.AttendanceType,
                 IsCompleted = attendance.IsCompleted,
@@ -75,10 +68,11 @@ namespace RockSchool.WebApi.Helpers
 
         public static Attendance ToModel(this AttendanceInfo attendanceInfo)
         {
+            throw new NotImplementedException();
+            /*
             return new Attendance
             {
                 AttendanceId = attendanceInfo.AttendanceId,
-                SubscriptionId = attendanceInfo.SubscriptionId,
                 StartDate = attendanceInfo.StartDate,
                 EndDate = attendanceInfo.EndDate,
                 Status = (AttendanceStatus)attendanceInfo.Status,
@@ -89,7 +83,7 @@ namespace RockSchool.WebApi.Helpers
                 //Teacher = attendanceInfo.Teacher,
                 AttendanceType = (AttendanceType)attendanceInfo.AttendanceType,
                 GroupId = attendanceInfo.GroupId,
-            };
+            };*/
         }
 
         // Subscription
@@ -163,6 +157,8 @@ namespace RockSchool.WebApi.Helpers
 
         public static Schedule ToModel(this ScheduleInfo scheduleInfo, Guid subscriptionId)
         {
+            throw new NotImplementedException();
+            /*
             var schedule = new Schedule
             {
                 ScheduleId = scheduleInfo.ScheduleId,
@@ -172,7 +168,7 @@ namespace RockSchool.WebApi.Helpers
                 StartTime =  TimeSpan.Parse(scheduleInfo.StartTime),
                 EndTime = TimeSpan.Parse(scheduleInfo.EndTime),
             };
-            return schedule;
+            return schedule;*/
         }
 
         public static List<Schedule> ToModel(this IEnumerable<ScheduleInfo> scheduleInfos, Guid subscriptionId)
@@ -184,6 +180,8 @@ namespace RockSchool.WebApi.Helpers
 
         public static TeacherInfo ToInfo(this Teacher teacher)
         {
+            throw new NotImplementedException();
+            /*
             return new TeacherInfo
             {
                 FirstName = teacher.FirstName,
@@ -200,7 +198,7 @@ namespace RockSchool.WebApi.Helpers
                 Sex = teacher.Sex,
                 Disciplines = teacher.DisciplineIds,
                 TeacherId = teacher.TeacherId,
-            };
+            };*/
         }
 
         public static List<TeacherInfo> ToInfos(this IEnumerable<Teacher> items)
@@ -211,6 +209,7 @@ namespace RockSchool.WebApi.Helpers
         // Tender
         public static TenderInfo ToInfo(this Tender tender)
         {
+
             return new TenderInfo
             {
                 TenderId = tender.TenderId,
@@ -265,12 +264,14 @@ namespace RockSchool.WebApi.Helpers
 
         public static BandStudent ToModel(this AddStudentToBandDto dto)
         {
+            throw new NotImplementedException();
+            /*
             return new BandStudent
             {
                 BandId = dto.BandId,
                 StudentId = dto.StudentId,
                 BandRoleId = dto.BandRoleId
-            };
+            };*/
         }
     }
 }

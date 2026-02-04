@@ -1,21 +1,16 @@
 ﻿using RockSchool.BL.Models;
-using RockSchool.Data.Entities;
-using RockSchool.Data.Enums;
 
 namespace RockSchool.BL.Helpers
 {
     public static class MappingHelper
     {
+        /*
         // Attendance
         public static Attendance ToModel(this AttendanceEntity entity)
         {
             return new Attendance
             {
                 AttendanceId = entity.AttendanceId,
-                StudentId = entity.StudentId,
-                Student = entity.Student?.ToDto(),
-                SubscriptionId = entity.SubscriptionId,
-                Subscription = entity.Subscription?.ToModel(),
                 DisciplineId = entity.DisciplineId,
                 Discipline = entity.Discipline?.ToDto(),
                 TeacherId = entity.TeacherId,
@@ -31,6 +26,8 @@ namespace RockSchool.BL.Helpers
                 Comment = entity.Comment,
                 IsCompleted = entity.IsCompleted,
                 AttendanceType = entity.AttendanceType,
+                // Remove Attendees to prevent circular reference
+                SubscriptionsAttendances = entity.SubscriptionsAttendances?.ToModel()?.ToList()
             };
         }
 
@@ -147,6 +144,8 @@ namespace RockSchool.BL.Helpers
                 Price = entity.Price,
                 FinalPrice = entity.FinalPrice,
                 AmountOutstanding = entity.AmountOutstanding,
+                // Remove Attendees to prevent circular reference
+                // Attendees = entity.Attendees?.ToModel()?.ToList()
             };
         }
 
@@ -368,5 +367,27 @@ namespace RockSchool.BL.Helpers
         {
             return entities?.Select(bs => bs.ToModel()).ToArray() ?? [];
         }
+
+        // Attendees
+        public static SubscriptionAttendance ToModel(this AttendeeEntity entity)
+        {
+            return new SubscriptionAttendance
+            {
+                SubscriptionAttendanceId = entity.SubscriptionAttendanceId,
+                SubscriptionId = entity.SubscriptionId,
+                // Remove navigation properties to prevent circular reference
+                // Subscription = entity.Subscription?.ToModel(),
+                AttendanceId = entity.AttendanceId,
+                // Attendance = entity.Attendance?.ToModel(),
+                Status = entity.Status,
+                StatusReason = entity.StatusReason
+            };
+        }
+
+        public static SubscriptionAttendance[] ToModel(this IEnumerable<AttendeeEntity> entities)
+        {
+            return entities?.Select(sa => sa.ToModel()).ToArray() ?? [];
+        }
+        */
     }
 }

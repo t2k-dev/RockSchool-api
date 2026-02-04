@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RockSchool.BL.Models;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -69,6 +70,8 @@ public class TeacherController(
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetTeacherScreenDetails(Guid id)
     {
+        throw new NotImplementedException();
+        /*
         var teacher = await teacherService.GetTeacherByIdAsync(id);
 
         var attendanceInfos = new List<ParentAttendanceInfo>();
@@ -106,7 +109,7 @@ public class TeacherController(
             Subscriptions = subscriptionInfos.ToArray(),
         };
 
-        return Ok(teacherScreenDetails);
+        return Ok(teacherScreenDetails);*/
     }
 
     [HttpGet("available")]
@@ -157,6 +160,8 @@ public class TeacherController(
             throw new Exception("Incorrect requestDto for registration.");
         }
 
+        throw new NotImplementedException();
+        /*
         var newTeacher = new Teacher
         {
             FirstName = requestDto.Teacher.FirstName,
@@ -175,7 +180,7 @@ public class TeacherController(
 
         var teacherId = await teacherService.AddTeacher(newTeacher);
 
-        return Ok(teacherId);
+        return Ok(teacherId);*/
     }
 
     [HttpPut("{id}")]
@@ -184,7 +189,9 @@ public class TeacherController(
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var teacher = new Teacher
+        throw new NotImplementedException();
+        
+        /*var teacher = new Teacher
         {
             TeacherId = id,
             FirstName = model.Teacher.FirstName,
@@ -201,7 +208,7 @@ public class TeacherController(
 
         await teacherService.UpdateTeacherAsync(teacher, model.DisciplinesChanged, model.PeriodsChanged);
 
-        return Ok();
+        return Ok();*/
     }
 
     [HttpPost("{id}/activate")]

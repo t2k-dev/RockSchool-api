@@ -1,7 +1,8 @@
 ﻿using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
@@ -9,9 +10,10 @@ namespace RockSchool.BL.Services.SubscriptionService
     {
         public async Task Pay(Guid subscriptionId, Tender tender)
         {
+            throw new NotImplementedException();
+            /*
             // Add tender
-            var tenderEntity = tender.ToEntity();
-            await tenderRepository.AddAsync(tenderEntity);
+            await tenderRepository.AddAsync(tender);
 
             // Update subscription
             var subscription = await subscriptionService.GetAsync(subscriptionId);
@@ -24,7 +26,7 @@ namespace RockSchool.BL.Services.SubscriptionService
 
             subscription.AmountOutstanding = newAmountOutstanding;
 
-            await subscriptionService.UpdateSubscriptionAsync(subscription);
+            await subscriptionService.UpdateSubscriptionAsync(subscription);*/
         }
     }
 }

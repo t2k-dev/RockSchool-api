@@ -1,6 +1,5 @@
-using RockSchool.BL.Helpers;
-using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
@@ -8,8 +7,7 @@ namespace RockSchool.BL.Services.SubscriptionService
     {
         public async Task<Tender[]> GetTendersBySubscriptionIdAsync(Guid subscriptionId)
         {
-            var tenderEntities = await tenderRepository.GetBySubscriptionIdAsync(subscriptionId);
-            return tenderEntities.ToModel();
+            return await tenderRepository.GetBySubscriptionIdAsync(subscriptionId);
         }
     }
 }

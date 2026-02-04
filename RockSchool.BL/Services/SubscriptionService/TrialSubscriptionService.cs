@@ -2,13 +2,15 @@
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.TariffService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
     public class TrialSubscriptionService(
         SubscriptionRepository subscriptionRepository,
+        SubscriptionsAttendancesRepository subscriptionsAttendancesRepository,
         IAttendanceService attendanceService,
         INoteService noteService,
         ISubscriptionService subscriptionService,
@@ -18,13 +20,14 @@ namespace RockSchool.BL.Services.SubscriptionService
         public async Task CompleteTrial(Guid subscriptionId, TrialStatus trialStatus, string statusReason)
         {
             var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
-
+            throw new NotImplementedException();
+            /*
             subscriptionEntity.AttendancesLeft -= 1;
             subscriptionEntity.Status = SubscriptionStatus.Completed;
             subscriptionEntity.TrialStatus = trialStatus;
             subscriptionEntity.StatusReason = statusReason;
 
-            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);*/
         }
 
         public async Task<Guid> AddTrialSubscription(TrialRequestDto request)
@@ -35,6 +38,9 @@ namespace RockSchool.BL.Services.SubscriptionService
                 throw new InvalidOperationException("Tariff is not found");
             }
 
+            throw new NotImplementedException();
+            /*
+            // Add Subscription
             var subscription = new Subscription
             {
                 SubscriptionType = SubscriptionType.TrialLesson,
@@ -59,6 +65,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             
             var subscriptionId = await subscriptionService.AddSubscriptionAsync(subscription);
 
+            // Add Attendance
             var trialAttendance = new Attendance
             {
                 StartDate = request.TrialDate,
@@ -70,17 +77,26 @@ namespace RockSchool.BL.Services.SubscriptionService
                 GroupId = null,
                 Status = AttendanceStatus.New,
                 StatusReason = string.Empty,
-                StudentId = request.Student.StudentId,
                 TeacherId = request.TeacherId,
-                SubscriptionId = subscriptionId,
                 AttendanceType = AttendanceType.TrialLesson,
             };
 
-            await attendanceService.AddAttendanceAsync(trialAttendance);
+            // Add SubscriptionAttendance
+            var attendanceId = await attendanceService.AddAttendanceAsync(trialAttendance);
 
+            var subscriptionAttendance = new AttendeeEntity
+            {
+                SubscriptionId = subscriptionId,
+                AttendanceId = attendanceId,
+                Status = AttendanceStatus.New,
+            };
+
+            await subscriptionsAttendancesRepository.AddAsync(subscriptionAttendance);
+
+            // Add note
             await noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
 
-            return subscriptionId;
+            return subscriptionId;*/
         }
     }
 }

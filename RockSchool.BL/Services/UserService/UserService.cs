@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using RockSchool.BL.Models;
-using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.UserService;
 
 public class UserService : IUserService
 {
-    private readonly IPasswordHasher<UserEntity> _passwordHasher;
+    private readonly IPasswordHasher<User> _passwordHasher;
     private readonly UserRepository _userRepository;
 
-    public UserService(UserRepository userRepository, IPasswordHasher<UserEntity> passwordHasher)
+    public UserService(UserRepository userRepository, IPasswordHasher<User> passwordHasher)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
@@ -18,6 +18,8 @@ public class UserService : IUserService
 
     public async Task<Guid> AddUserAsync(UserDto userDto)
     {
+        throw new NotImplementedException();
+        /*
         var passwordValidationResult = ValidateAndGetFinalPassword(string.Empty, string.Empty);
 
         if (!passwordValidationResult.IsSuccess)
@@ -33,7 +35,7 @@ public class UserService : IUserService
         if (savedUser == null)
             throw new InvalidOperationException("Failed to add UserService.");
 
-        return savedUser.UserId;
+        return savedUser.UserId;*/
     }
 
     public async Task<UserDto?> GetUserByIdAsync(Guid userId)
@@ -80,12 +82,15 @@ public class UserService : IUserService
         return (true, password, string.Empty);
     }
 
-    private UserEntity CreateUserEntity(UserDto userDto)
+    private User CreateUserEntity(UserDto userDto)
     {
-        return new UserEntity
+        throw new NotImplementedException();
+        /*
+        return new User
         {
             Login = userDto.Login,
             RoleId = userDto.RoleId
         };
+        */
     }
 }

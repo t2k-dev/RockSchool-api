@@ -1,6 +1,7 @@
 ﻿using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BranchService;
 
@@ -15,18 +16,6 @@ public class BranchService : IBranchService
 
     public async Task<Branch>? GetBranchByIdAsync(int id)
     {
-        var branchEntity = await _branchRepository.GetByIdAsync(id);
-
-        if (branchEntity == null)
-            return null;
-
-        return new Branch
-        {
-            BranchId = branchEntity.BranchId,
-            Name = branchEntity.Name,
-            Phone = branchEntity.Phone,
-            Address = branchEntity.Address,
-            Rooms = branchEntity.Rooms?.ToModel()
-        };
+        return await _branchRepository.GetByIdAsync(id);
     }
 }

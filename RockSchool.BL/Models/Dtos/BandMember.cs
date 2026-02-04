@@ -1,4 +1,4 @@
-﻿using RockSchool.Data.Enums;
+﻿using RockSchool.Domain.Enums;
 
 namespace RockSchool.BL.Models.Dtos
 {

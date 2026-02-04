@@ -22,22 +22,7 @@ namespace RockSchool.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DisciplineEntityTeacherEntity", b =>
-                {
-                    b.Property<int>("DisciplinesDisciplineId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("TeachersTeacherId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("DisciplinesDisciplineId", "TeachersTeacherId");
-
-                    b.HasIndex("TeachersTeacherId");
-
-                    b.ToTable("DisciplineEntityTeacherEntity");
-                });
-
-            modelBuilder.Entity("RockSchool.Data.Entities.AttendanceEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Attendance", b =>
                 {
                     b.Property<Guid>("AttendanceId")
                         .ValueGeneratedOnAdd()
@@ -50,7 +35,8 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<int?>("DisciplineId")
                         .HasColumnType("integer");
@@ -74,13 +60,8 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("StatusReason")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("SubscriptionId")
-                        .HasColumnType("uuid");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<Guid?>("TeacherId")
                         .HasColumnType("uuid");
@@ -93,16 +74,36 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Attendances", (string)null);
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Attendee", b =>
+                {
+                    b.Property<Guid>("SubscriptionAttendanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AttendanceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("SubscriptionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("SubscriptionAttendanceId");
+
+                    b.HasIndex("AttendanceId");
 
                     b.HasIndex("SubscriptionId");
 
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("Attendances");
+                    b.ToTable("Attendees", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.BandEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Band", b =>
                 {
                     b.Property<Guid>("BandId")
                         .ValueGeneratedOnAdd()
@@ -119,14 +120,19 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("TeacherId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("BandId");
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Bands");
+                    b.HasIndex("TeacherId1");
+
+                    b.ToTable("Bands", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.BandStudentEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.BandStudent", b =>
                 {
                     b.Property<Guid>("BandStudentId")
                         .ValueGeneratedOnAdd()
@@ -147,10 +153,10 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("BandStudents");
+                    b.ToTable("BandStudents", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.BranchEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Branch", b =>
                 {
                     b.Property<int>("BranchId")
                         .ValueGeneratedOnAdd()
@@ -160,38 +166,34 @@ namespace RockSchool.Data.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("BranchId");
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branches", (string)null);
 
                     b.HasData(
                         new
                         {
                             BranchId = 1,
                             Address = "Абая 137",
-                            Name = "На Абая",
-                            Phone = "77471237896"
+                            Name = "На Абая"
                         },
                         new
                         {
                             BranchId = 2,
                             Address = "Аль-Фараби 15",
-                            Name = "На Аль-Фараби",
-                            Phone = "77471237896"
+                            Name = "На Аль-Фараби"
                         });
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.DisciplineEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Discipline", b =>
                 {
                     b.Property<int>("DisciplineId")
                         .ValueGeneratedOnAdd()
@@ -204,11 +206,17 @@ namespace RockSchool.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("TeacherId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("DisciplineId");
 
-                    b.ToTable("Disciplines");
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Disciplines", (string)null);
 
                     b.HasData(
                         new
@@ -267,7 +275,7 @@ namespace RockSchool.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.NoteEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Note", b =>
                 {
                     b.Property<Guid>("NoteId")
                         .ValueGeneratedOnAdd()
@@ -280,13 +288,17 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<DateTime?>("CompleteDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -295,10 +307,30 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Notes");
+                    b.ToTable("Notes", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.RoleEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Payment", b =>
+                {
+                    b.Property<Guid>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("PaidOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PaymentId");
+
+                    b.ToTable("Payments", (string)null);
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
@@ -311,34 +343,35 @@ namespace RockSchool.Data.Migrations
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
                         {
                             RoleId = 1,
-                            IsActive = false,
+                            IsActive = true,
                             RoleName = "Admin"
                         },
                         new
                         {
                             RoleId = 2,
-                            IsActive = false,
+                            IsActive = true,
                             RoleName = "Teacher"
                         },
                         new
                         {
                             RoleId = 3,
-                            IsActive = false,
+                            IsActive = true,
                             RoleName = "Student"
                         });
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.RoomEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Room", b =>
                 {
                     b.Property<int>("RoomId")
                         .ValueGeneratedOnAdd()
@@ -349,14 +382,18 @@ namespace RockSchool.Data.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("BranchId1")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("Status")
                         .HasColumnType("integer");
 
                     b.Property<bool>("SupportsRehearsal")
@@ -369,7 +406,9 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Rooms");
+                    b.HasIndex("BranchId1");
+
+                    b.ToTable("Rooms", (string)null);
 
                     b.HasData(
                         new
@@ -378,9 +417,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 1,
                             IsActive = true,
                             Name = "Гитарная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -388,9 +426,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 1,
                             IsActive = true,
                             Name = "Вокальная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -398,9 +435,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 1,
                             IsActive = true,
                             Name = "Барабанная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -408,9 +444,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 1,
                             IsActive = true,
                             Name = "Желтая",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -418,9 +453,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 1,
                             IsActive = true,
                             Name = "Зелёная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -428,9 +462,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 2,
                             IsActive = true,
                             Name = "Гитарная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -438,9 +471,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 2,
                             IsActive = true,
                             Name = "Вокальная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -448,9 +480,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 2,
                             IsActive = true,
                             Name = "Барабанная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -458,9 +489,8 @@ namespace RockSchool.Data.Migrations
                             BranchId = 2,
                             IsActive = true,
                             Name = "Плакатная",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         },
                         new
                         {
@@ -468,13 +498,27 @@ namespace RockSchool.Data.Migrations
                             BranchId = 2,
                             IsActive = true,
                             Name = "Желтая",
-                            Status = 1,
-                            SupportsRehearsal = false,
-                            SupportsRent = false
+                            SupportsRehearsal = true,
+                            SupportsRent = true
                         });
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.ScheduleEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.RoomDiscipline", b =>
+                {
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DisciplineId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("RoomId", "DisciplineId");
+
+                    b.HasIndex("DisciplineId");
+
+                    b.ToTable("RoomDisciplines", (string)null);
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Schedule", b =>
                 {
                     b.Property<Guid>("ScheduleId")
                         .ValueGeneratedOnAdd()
@@ -484,13 +528,16 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
+                        .HasColumnType("interval");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("RoomId1")
+                        .HasColumnType("integer");
+
                     b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
+                        .HasColumnType("interval");
 
                     b.Property<Guid?>("SubscriptionId")
                         .HasColumnType("uuid");
@@ -504,12 +551,14 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("RoomId");
 
+                    b.HasIndex("RoomId1");
+
                     b.HasIndex("SubscriptionId");
 
-                    b.ToTable("Schedules");
+                    b.ToTable("Schedules", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.ScheduledWorkingPeriodEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.ScheduledWorkingPeriod", b =>
                 {
                     b.Property<Guid>("ScheduledWorkingPeriodId")
                         .ValueGeneratedOnAdd()
@@ -527,6 +576,9 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("TeacherId1")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("WorkingPeriodId")
                         .HasColumnType("uuid");
 
@@ -536,12 +588,14 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
+                    b.HasIndex("TeacherId1");
+
                     b.HasIndex("WorkingPeriodId");
 
-                    b.ToTable("ScheduledWorkingPeriods");
+                    b.ToTable("ScheduledWorkingPeriods", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.StudentEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Student", b =>
                 {
                     b.Property<Guid>("StudentId")
                         .ValueGeneratedOnAdd()
@@ -555,13 +609,17 @@ namespace RockSchool.Data.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<bool>("IsWaiting")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int?>("Level")
                         .HasColumnType("integer");
@@ -581,17 +639,17 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.SubscriptionEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Subscription", b =>
                 {
                     b.Property<Guid>("SubscriptionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("AmountOutstanding")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("AttendanceCount")
                         .HasColumnType("integer");
@@ -609,13 +667,13 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("FinalPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("GroupId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -624,7 +682,8 @@ namespace RockSchool.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("StatusReason")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uuid");
@@ -653,17 +712,17 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Subscriptions", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.TariffEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Tariff", b =>
                 {
                     b.Property<Guid>("TariffId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("AttendanceCount")
                         .HasColumnType("integer");
@@ -687,7 +746,7 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("DisciplineId");
 
-                    b.ToTable("Tariffs");
+                    b.ToTable("Tariffs", (string)null);
 
                     b.HasData(
                         new
@@ -878,28 +937,7 @@ namespace RockSchool.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.TeacherDisciplineEntity", b =>
-                {
-                    b.Property<Guid>("TeacherDisciplineId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("DisciplineId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("TeacherDisciplineId");
-
-                    b.HasIndex("DisciplineId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherDisciplines");
-                });
-
-            modelBuilder.Entity("RockSchool.Data.Entities.TeacherEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Teacher", b =>
                 {
                     b.Property<Guid>("TeacherId")
                         .ValueGeneratedOnAdd()
@@ -920,18 +958,21 @@ namespace RockSchool.Data.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("BranchId1")
+                        .HasColumnType("integer");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<long>("Phone")
                         .HasColumnType("bigint");
@@ -946,19 +987,36 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("BranchId");
 
+                    b.HasIndex("BranchId1");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teachers", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.TenderEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.TeacherDiscipline", b =>
+                {
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("DisciplineId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("TeacherId", "DisciplineId");
+
+                    b.HasIndex("DisciplineId");
+
+                    b.ToTable("TeacherDisciplines", (string)null);
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Tender", b =>
                 {
                     b.Property<Guid>("TenderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("PaidOn")
                         .HasColumnType("timestamp with time zone");
@@ -973,10 +1031,10 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("SubscriptionId");
 
-                    b.ToTable("Tenders");
+                    b.ToTable("Tenders", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -987,11 +1045,13 @@ namespace RockSchool.Data.Migrations
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
@@ -1000,10 +1060,10 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.WaitingScheduleEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.WaitingSchedule", b =>
                 {
                     b.Property<Guid>("ScheduleId")
                         .ValueGeneratedOnAdd()
@@ -1038,10 +1098,10 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("WaitingSchedules");
+                    b.ToTable("WaitingSchedules", (string)null);
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.WorkingPeriodEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.WorkingPeriod", b =>
                 {
                     b.Property<Guid>("WorkingPeriodId")
                         .ValueGeneratedOnAdd()
@@ -1059,6 +1119,9 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("TeacherId1")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("WeekDay")
                         .HasColumnType("integer");
 
@@ -1068,55 +1131,30 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("WorkingPeriods");
+                    b.HasIndex("TeacherId1");
+
+                    b.ToTable("WorkingPeriods", (string)null);
                 });
 
-            modelBuilder.Entity("DisciplineEntityTeacherEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Attendance", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.DisciplineEntity", null)
-                        .WithMany()
-                        .HasForeignKey("DisciplinesDisciplineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", null)
-                        .WithMany()
-                        .HasForeignKey("TeachersTeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RockSchool.Data.Entities.AttendanceEntity", b =>
-                {
-                    b.HasOne("RockSchool.Data.Entities.BranchEntity", "Branch")
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.DisciplineEntity", "Discipline")
+                    b.HasOne("RockSchool.Domain.Entities.Discipline", "Discipline")
                         .WithMany()
                         .HasForeignKey("DisciplineId");
 
-                    b.HasOne("RockSchool.Data.Entities.RoomEntity", "Room")
+                    b.HasOne("RockSchool.Domain.Entities.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.StudentEntity", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RockSchool.Data.Entities.SubscriptionEntity", "Subscription")
-                        .WithMany()
-                        .HasForeignKey("SubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
 
@@ -1126,33 +1164,52 @@ namespace RockSchool.Data.Migrations
 
                     b.Navigation("Room");
 
-                    b.Navigation("Student");
-
-                    b.Navigation("Subscription");
-
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.BandEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Attendee", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
-                        .WithMany("Bands")
+                    b.HasOne("RockSchool.Domain.Entities.Attendance", "Attendance")
+                        .WithMany("Attendees")
+                        .HasForeignKey("AttendanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RockSchool.Domain.Entities.Subscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attendance");
+
+                    b.Navigation("Subscription");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Band", b =>
+                {
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                        .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
+                        .WithMany("Bands")
+                        .HasForeignKey("TeacherId1");
+
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.BandStudentEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.BandStudent", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BandEntity", "Band")
+                    b.HasOne("RockSchool.Domain.Entities.Band", "Band")
                         .WithMany("BandStudents")
                         .HasForeignKey("BandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.StudentEntity", "Student")
+                    b.HasOne("RockSchool.Domain.Entities.Student", "Student")
                         .WithMany("BandStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1163,9 +1220,16 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.NoteEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Discipline", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BranchEntity", "Branch")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
+                        .WithMany("Disciplines")
+                        .HasForeignKey("TeacherId");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Note", b =>
+                {
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1174,30 +1238,57 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.RoomEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Room", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BranchEntity", "Branch")
-                        .WithMany("Rooms")
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
+                        .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RockSchool.Domain.Entities.Branch", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("BranchId1");
+
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.ScheduleEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.RoomDiscipline", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BandEntity", "Band")
+                    b.HasOne("RockSchool.Domain.Entities.Discipline", "Discipline")
+                        .WithMany("RoomDisciplines")
+                        .HasForeignKey("DisciplineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RockSchool.Domain.Entities.Room", "Room")
+                        .WithMany("RoomDisciplines")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Discipline");
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Schedule", b =>
+                {
+                    b.HasOne("RockSchool.Domain.Entities.Band", "Band")
                         .WithMany("Schedules")
                         .HasForeignKey("BandId");
 
-                    b.HasOne("RockSchool.Data.Entities.RoomEntity", "Room")
+                    b.HasOne("RockSchool.Domain.Entities.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.SubscriptionEntity", "Subscription")
+                    b.HasOne("RockSchool.Domain.Entities.Room", null)
+                        .WithMany("Schedules")
+                        .HasForeignKey("RoomId1");
+
+                    b.HasOne("RockSchool.Domain.Entities.Subscription", "Subscription")
                         .WithMany("Schedules")
                         .HasForeignKey("SubscriptionId");
 
@@ -1208,21 +1299,25 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Subscription");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.ScheduledWorkingPeriodEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.ScheduledWorkingPeriod", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.RoomEntity", "Room")
+                    b.HasOne("RockSchool.Domain.Entities.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
-                        .WithMany("ScheduledWorkingPeriods")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                        .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.WorkingPeriodEntity", "WorkingPeriod")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
+                        .WithMany("ScheduledWorkingPeriods")
+                        .HasForeignKey("TeacherId1");
+
+                    b.HasOne("RockSchool.Domain.Entities.WorkingPeriod", "WorkingPeriod")
                         .WithMany("ScheduledWorkingPeriods")
                         .HasForeignKey("WorkingPeriodId");
 
@@ -1233,13 +1328,13 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("WorkingPeriod");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.StudentEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Student", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BranchEntity", "Branch")
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId");
 
-                    b.HasOne("RockSchool.Data.Entities.UserEntity", "User")
+                    b.HasOne("RockSchool.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
@@ -1248,29 +1343,29 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.SubscriptionEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Subscription", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BranchEntity", "Branch")
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.DisciplineEntity", "Discipline")
+                    b.HasOne("RockSchool.Domain.Entities.Discipline", "Discipline")
                         .WithMany()
                         .HasForeignKey("DisciplineId");
 
-                    b.HasOne("RockSchool.Data.Entities.StudentEntity", "Student")
+                    b.HasOne("RockSchool.Domain.Entities.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.TariffEntity", "Tariff")
+                    b.HasOne("RockSchool.Domain.Entities.Tariff", "Tariff")
                         .WithMany()
                         .HasForeignKey("TariffId");
 
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
 
@@ -1285,24 +1380,45 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.TariffEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Tariff", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.DisciplineEntity", "Discipline")
+                    b.HasOne("RockSchool.Domain.Entities.Discipline", "Discipline")
                         .WithMany()
                         .HasForeignKey("DisciplineId");
 
                     b.Navigation("Discipline");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.TeacherDisciplineEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Teacher", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.DisciplineEntity", "Discipline")
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
                         .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RockSchool.Domain.Entities.Branch", null)
+                        .WithMany("Teachers")
+                        .HasForeignKey("BranchId1");
+
+                    b.HasOne("RockSchool.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.TeacherDiscipline", b =>
+                {
+                    b.HasOne("RockSchool.Domain.Entities.Discipline", "Discipline")
+                        .WithMany("TeacherDisciplines")
                         .HasForeignKey("DisciplineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1313,26 +1429,9 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.TeacherEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Tender", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.BranchEntity", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RockSchool.Data.Entities.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Branch");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("RockSchool.Data.Entities.TenderEntity", b =>
-                {
-                    b.HasOne("RockSchool.Data.Entities.SubscriptionEntity", "Subscription")
+                    b.HasOne("RockSchool.Domain.Entities.Subscription", "Subscription")
                         .WithMany("Tenders")
                         .HasForeignKey("SubscriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1341,9 +1440,9 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Subscription");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.User", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.RoleEntity", "Role")
+                    b.HasOne("RockSchool.Domain.Entities.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1352,21 +1451,21 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.WaitingScheduleEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.WaitingSchedule", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.DisciplineEntity", "Discipline")
+                    b.HasOne("RockSchool.Domain.Entities.Discipline", "Discipline")
                         .WithMany()
                         .HasForeignKey("DisciplineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.StudentEntity", "Student")
+                    b.HasOne("RockSchool.Domain.Entities.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1379,59 +1478,86 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.WorkingPeriodEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.WorkingPeriod", b =>
                 {
-                    b.HasOne("RockSchool.Data.Entities.RoomEntity", "Room")
+                    b.HasOne("RockSchool.Domain.Entities.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Data.Entities.TeacherEntity", "Teacher")
-                        .WithMany("WorkingPeriods")
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                        .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
+                        .WithMany("WorkingPeriods")
+                        .HasForeignKey("TeacherId1");
 
                     b.Navigation("Room");
 
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.BandEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Attendance", b =>
+                {
+                    b.Navigation("Attendees");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Band", b =>
                 {
                     b.Navigation("BandStudents");
 
                     b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.BranchEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Branch", b =>
                 {
                     b.Navigation("Rooms");
+
+                    b.Navigation("Teachers");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.StudentEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Discipline", b =>
+                {
+                    b.Navigation("RoomDisciplines");
+
+                    b.Navigation("TeacherDisciplines");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Room", b =>
+                {
+                    b.Navigation("RoomDisciplines");
+
+                    b.Navigation("Schedules");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Entities.Student", b =>
                 {
                     b.Navigation("BandStudents");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.SubscriptionEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Subscription", b =>
                 {
                     b.Navigation("Schedules");
 
                     b.Navigation("Tenders");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.TeacherEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.Teacher", b =>
                 {
                     b.Navigation("Bands");
+
+                    b.Navigation("Disciplines");
 
                     b.Navigation("ScheduledWorkingPeriods");
 
                     b.Navigation("WorkingPeriods");
                 });
 
-            modelBuilder.Entity("RockSchool.Data.Entities.WorkingPeriodEntity", b =>
+            modelBuilder.Entity("RockSchool.Domain.Entities.WorkingPeriod", b =>
                 {
                     b.Navigation("ScheduledWorkingPeriods");
                 });

@@ -1,4 +1,6 @@
-﻿namespace RockSchool.BL.Models
+﻿using RockSchool.Domain.Entities;
+
+namespace RockSchool.BL.Models
 {
     public class TrialRequestDto
     {

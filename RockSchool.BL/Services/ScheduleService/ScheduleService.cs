@@ -1,7 +1,5 @@
-﻿using RockSchool.BL.Helpers;
-using RockSchool.BL.Models;
-using RockSchool.Data.Entities;
-using RockSchool.Data.Repositories;
+﻿using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.ScheduleService;
 
@@ -16,20 +14,7 @@ public class ScheduleService : IScheduleService
 
     public async Task<Schedule[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
     {
-        var scheduleEntities = await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
-
-        var schedules = scheduleEntities.Select(s => new Schedule
-        {
-            ScheduleId = s.ScheduleId,
-            Subscription = s.Subscription.ToModel(),
-            WeekDay = s.WeekDay,
-            StartTime = s.StartTime,
-            EndTime = s.EndTime,
-            RoomId = s.RoomId,
-
-        }).ToArray();
-
-        return schedules;
+        return await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
     }
 
     public async Task<Schedule[]?> GetAllSchedulesAsync()
@@ -38,32 +23,18 @@ public class ScheduleService : IScheduleService
 
         if (schedules == null || !schedules.Any())
             return null;
-
-        var scheduleDtos = schedules.Select(s => new Schedule
-        {
-            ScheduleId = s.ScheduleId,
-            Subscription = s.Subscription.ToModel(),
-            WeekDay = s.WeekDay,
-            StartTime = s.StartTime,
-            EndTime = s.EndTime,
-            RoomId = s.RoomId,
-
-        }).ToArray();
         
-        return scheduleDtos;
+        return schedules;
     }
 
     public async Task<Guid> AddScheduleAsync(Schedule schedule)
     {
-        var scheduleEntity = schedule.ToEntity();
-        return await _scheduleRepository.AddAsync(scheduleEntity);
+        return await _scheduleRepository.AddAsync(schedule);
     }
 
     public async Task AddSchedulesAsync(Schedule[] schedules)
     {
-        var scheduleEntities = schedules.ToEntities().ToArray();
-
-        await _scheduleRepository.AddManyAsync(scheduleEntities);
+        await _scheduleRepository.AddManyAsync(schedules);
     }
 
     public async Task DeleteBySubscriptionAsync(Guid subscriptionId)

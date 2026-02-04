@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
@@ -13,32 +13,32 @@ public class StudentRepository
         _context = context;
     }
 
-    public async Task AddAsync(StudentEntity studentEntity)
+    public async Task AddAsync(Student student)
     {
-        await _context.Students.AddAsync(studentEntity);
+        await _context.Students.AddAsync(student);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<StudentEntity?> GetByIdAsync(Guid studentId)
+    public async Task<Student?> GetByIdAsync(Guid studentId)
     {
         return await _context.Students
             .Include(s => s.Branch)
             .SingleOrDefaultAsync(s => s.StudentId == studentId);
     }
 
-    public async Task UpdateAsync(StudentEntity studentEntity)
+    public async Task UpdateAsync(Student student)
     {
-        _context.Students.Update(studentEntity);
+        _context.Students.Update(student);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(StudentEntity studentEntity)
+    public async Task DeleteAsync(Student student)
     {
-        _context.Students.Remove(studentEntity);
+        _context.Students.Remove(student);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<StudentEntity[]> GetAllAsync()
+    public async Task<Student[]> GetAllAsync()
     {
         return await _context.Students.ToArrayAsync();
     }

@@ -1,7 +1,6 @@
-using RockSchool.BL.Helpers;
-using RockSchool.BL.Models;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.TariffService;
 
@@ -14,14 +13,14 @@ public class TariffService(TariffRepository tariffRepository) : ITariffService
         if (tariffEntities == null || tariffEntities.Length == 0)
             return [];
 
-        return tariffEntities.ToModel();
+        return tariffEntities;
     }
 
     public async Task<Tariff?> GetTrialTariffAsync()
     {
         var currentDate = DateTime.UtcNow;
         var tariffEntity = await tariffRepository.GetTrialTariffAsync(currentDate);
-        return tariffEntity?.ToModel();
+        return tariffEntity;
     }
 
     public async Task<Tariff[]?> GetTariffsAsync(SubscriptionType subscriptionType)
@@ -34,7 +33,7 @@ public class TariffService(TariffRepository tariffRepository) : ITariffService
             throw new InvalidOperationException("No tariffs found");
         }
 
-        return tariffEntities.ToModel();
+        return tariffEntities;
     }
 
     public async Task<Tariff?> GetTariffAsync(SubscriptionType subscriptionType, int? disciplineId)
@@ -49,7 +48,7 @@ public class TariffService(TariffRepository tariffRepository) : ITariffService
         
         if (tariffEntities.Length == 1)
         {
-            return tariffEntities[0].ToModel();
+            return tariffEntities[0];
         }
 
         if (disciplineId != null)
@@ -62,19 +61,18 @@ public class TariffService(TariffRepository tariffRepository) : ITariffService
             throw new InvalidOperationException("Unable to find tariffs");
         }
 
-        return tariffEntities[0].ToModel();
+        return tariffEntities[0];
     }
 
     public async Task<Tariff?> GetTariffAsync(Guid tariffId)
     {
         var tariff = await tariffRepository.GetByIdAsync(tariffId);
-        return tariff?.ToModel();
+        return tariff;
     }
 
     public async Task<Guid> AddTariffAsync(Tariff tariff)
     {
-        var tariffEntity = tariff.ToEntity();
-        await tariffRepository.AddAsync(tariffEntity);
-        return tariffEntity.TariffId;
+        await tariffRepository.AddAsync(tariff);
+        return tariff.TariffId;
     }
 }

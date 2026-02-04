@@ -46,7 +46,7 @@ namespace RockSchool.WebApi.Controllers
             {
                 Branch = branch,
                 Attendances = attendanceInfos.ToArray(),
-                Notes = notes,
+                //Notes = notes.To,
             };
 
             return Ok(result);

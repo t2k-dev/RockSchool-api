@@ -1,5 +1,5 @@
 ﻿using System;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 
 namespace RockSchool.WebApi.Models;
 

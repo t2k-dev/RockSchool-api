@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
@@ -10,7 +10,7 @@ public class BandStudentRepository : BaseRepository
     {
     }
 
-    public async Task<BandStudentEntity?> GetByIdAsync(Guid id)
+    public async Task<BandStudent?> GetByIdAsync(Guid id)
     {
         return await RockSchoolContext.BandStudents
             .Include(bs => bs.Band)
@@ -18,7 +18,7 @@ public class BandStudentRepository : BaseRepository
             .FirstOrDefaultAsync(bs => bs.BandStudentId == id);
     }
 
-    public async Task<BandStudentEntity[]> GetByBandIdAsync(Guid bandId)
+    public async Task<BandStudent[]> GetByBandIdAsync(Guid bandId)
     {
         return await RockSchoolContext.BandStudents
             .Where(bs => bs.BandId == bandId)
@@ -26,7 +26,7 @@ public class BandStudentRepository : BaseRepository
             .ToArrayAsync();
     }
 
-    public async Task<BandStudentEntity[]> GetByStudentIdAsync(Guid studentId)
+    public async Task<BandStudent[]> GetByStudentIdAsync(Guid studentId)
     {
         return await RockSchoolContext.BandStudents
             .Where(bs => bs.StudentId == studentId)
@@ -35,14 +35,14 @@ public class BandStudentRepository : BaseRepository
             .ToArrayAsync();
     }
 
-    public async Task<Guid> AddAsync(BandStudentEntity bandStudent)
+    public async Task<Guid> AddAsync(BandStudent bandStudent)
     {
         RockSchoolContext.BandStudents.Add(bandStudent);
         await RockSchoolContext.SaveChangesAsync();
         return bandStudent.BandStudentId;
     }
 
-    public async Task UpdateAsync(BandStudentEntity bandStudent)
+    public async Task UpdateAsync(BandStudent bandStudent)
     {
         RockSchoolContext.BandStudents.Update(bandStudent);
         await RockSchoolContext.SaveChangesAsync();

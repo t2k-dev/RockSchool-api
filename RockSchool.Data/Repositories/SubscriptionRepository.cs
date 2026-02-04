@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
@@ -10,23 +10,23 @@ public class SubscriptionRepository : BaseRepository
     {
     }
 
-    public async Task AddSubscriptionAsync(SubscriptionEntity subscriptionEntity)
+    public async Task AddSubscriptionAsync(Subscription subscription)
     {
-        await RockSchoolContext.Subscriptions.AddAsync(subscriptionEntity);
+        await RockSchoolContext.Subscriptions.AddAsync(subscription);
         await RockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task<SubscriptionEntity?> GetAsync(Guid id)
+    public async Task<Subscription?> GetAsync(Guid id)
     {
         return await RockSchoolContext.Subscriptions.FindAsync(id);
     }
 
-    public async Task<SubscriptionEntity[]> GetAllSubscriptionsAsync()
+    public async Task<Subscription[]> GetAllSubscriptionsAsync()
     {
         return await RockSchoolContext.Subscriptions.ToArrayAsync();
     }
 
-    public async Task<SubscriptionEntity[]?> GetSubscriptionsByStudentIdAsync(Guid studentId)
+    public async Task<Subscription[]?> GetSubscriptionsByStudentIdAsync(Guid studentId)
     {
         return await RockSchoolContext.Subscriptions
             .Where(a => a.StudentId == studentId)
@@ -35,7 +35,7 @@ public class SubscriptionRepository : BaseRepository
             .ToArrayAsync();
     }
 
-    public async Task<SubscriptionEntity[]?> GetSubscriptionsByTeacherIdAsync(Guid teacherId)
+    public async Task<Subscription[]?> GetSubscriptionsByTeacherIdAsync(Guid teacherId)
     {
         return await RockSchoolContext.Subscriptions
             .Where(s => s.TeacherId == teacherId)
@@ -43,22 +43,22 @@ public class SubscriptionRepository : BaseRepository
             .ToArrayAsync();
     }
 
-    public async Task<SubscriptionEntity[]?> GetByGroupIdAsync(Guid groupId)
+    public async Task<Subscription[]?> GetByGroupIdAsync(Guid groupId)
     {
         return await RockSchoolContext.Subscriptions
             .Where(a => a.GroupId == groupId)
             .ToArrayAsync();
     }
 
-    public async Task UpdateSubscriptionAsync(SubscriptionEntity subscriptionEntity)
+    public async Task UpdateSubscriptionAsync(Subscription subscription)
     {
-        RockSchoolContext.Subscriptions.Update(subscriptionEntity);
+        RockSchoolContext.Subscriptions.Update(subscription);
         await RockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task DeleteSubscriptionAsync(SubscriptionEntity subscriptionEntity)
+    public async Task DeleteSubscriptionAsync(Subscription subscription)
     {
-        RockSchoolContext.Subscriptions.Remove(subscriptionEntity);
+        RockSchoolContext.Subscriptions.Remove(subscription);
         await RockSchoolContext.SaveChangesAsync();
     }
 }

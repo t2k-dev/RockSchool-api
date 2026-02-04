@@ -1,8 +1,9 @@
 ﻿using RockSchool.BL.Models;
 using RockSchool.BL.Services.SubscriptionService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.BL.Helpers;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.AttendanceService
 {
@@ -16,7 +17,7 @@ namespace RockSchool.BL.Services.AttendanceService
         {
             var submittedAttendance = await SubmitSingleAttendance(attendanceId, status, statusReason, comment);
 
-            await subscriptionService.DecreaseAttendancesLeftCount(submittedAttendance.SubscriptionId);
+            //await subscriptionService.DecreaseAttendancesLeftCount(submittedAttendance.SubscriptionId);
         }
 
         public async Task AcceptTrial(Guid attendanceId, string statusReason, string comment)
@@ -25,7 +26,7 @@ namespace RockSchool.BL.Services.AttendanceService
             var submittedAttendance = await SubmitSingleAttendance(attendanceId, (int)AttendanceStatus.Attended, statusReason, comment);
 
             // Update subscription
-            await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Positive, statusReason);
+            //await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Positive, statusReason);
         }
 
         public async Task DeclineTrial(Guid attendanceId, string statusReason, string comment)
@@ -34,20 +35,22 @@ namespace RockSchool.BL.Services.AttendanceService
             var submittedAttendance = await SubmitSingleAttendance(attendanceId, (int)AttendanceStatus.Attended, statusReason, comment);
 
             // Update subscription
-            await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Negative, statusReason);
+            //await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Negative, statusReason);
         }
 
         public async Task MissedTrial(Guid attendanceId, string statusReason, string comment)
         {
             var submittedAttendance = await SubmitSingleAttendance(attendanceId, (int)AttendanceStatus.Missed, statusReason, comment);
             
-            await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Missed, statusReason);
+            //await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Missed, statusReason);
         }
 
         private async Task<Attendance> SubmitSingleAttendance(Guid attendanceId, int status, string statusReason, string comment)
         {
             var attendanceEntity = await attendanceRepository.GetAsync(attendanceId);
 
+            throw new NotImplementedException();
+            /*
             attendanceEntity.Status = (AttendanceStatus)status;
             attendanceEntity.StatusReason = statusReason;
             attendanceEntity.IsCompleted = true;
@@ -55,7 +58,7 @@ namespace RockSchool.BL.Services.AttendanceService
 
             await attendanceRepository.UpdateAsync(attendanceEntity);
 
-            return attendanceEntity.ToModel();
+            return attendanceEntity;*/
         }
 
     }

@@ -1,5 +1,5 @@
 ﻿using RockSchool.BL.Services.AttendanceService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
@@ -12,12 +12,11 @@ namespace RockSchool.BL.Services.SubscriptionService
         public async Task Cancel(Guid subscriptionId, DateTime cancelDate, string cancelReason)
         {
             // Update subscription
-            var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            subscriptionEntity.StatusReason = cancelReason;
-            subscriptionEntity.Status = SubscriptionStatus.Cancelled;
+            subscription.Cancel(cancelReason);
 
-            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);
+            await subscriptionRepository.UpdateSubscriptionAsync(subscription);
 
 
             // Cancel attendances

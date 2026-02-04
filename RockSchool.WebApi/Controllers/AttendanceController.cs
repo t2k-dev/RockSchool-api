@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.SubscriptionService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RockSchool.BL.Models;
+using RockSchool.Domain.Entities;
+
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -36,24 +37,6 @@ public class AttendanceController(
     {
         var attendance = await attendanceService.GetAttendanceAsync(id);
         return Ok(attendance);
-    }
-
-    [HttpPost("addLessons")]
-    public async Task<ActionResult> AddForStudent(AddAttendancesDto dto)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        var addAttendanceForStudentServiceDto = new Attendance()
-        {
-            StudentId = dto.StudentId,
-            TeacherId = dto.TeacherId,
-            DisciplineId = dto.DisciplineId,
-            StartDate = dto.StartingDate
-        };
-
-        //await _attendanceService.AddAttendancesToStudent(addAttendanceForStudentServiceDto);
-
-        return Ok();
     }
 
     [HttpPost("{id}/declineTrial")]
@@ -113,8 +96,8 @@ public class AttendanceController(
     public async Task<ActionResult> Attend(Guid id, SubmitAttendanceRequest declineAttendanceRequest)
     {
         var attendance = await attendanceService.GetAttendanceAsync(id);
-        attendance.Status = AttendanceStatus.Attended;
-        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+
+        attendance.MarkAsAttended(declineAttendanceRequest.StatusReason);
 
         await attendanceService.UpdateAttendanceAsync(attendance);
 
@@ -125,18 +108,11 @@ public class AttendanceController(
     public async Task<ActionResult> Missed(Guid id, SubmitAttendanceRequest declineAttendanceRequest)
     {
         var attendance = await attendanceService.GetAttendanceAsync(id);
-        attendance.Status = AttendanceStatus.Missed;
-        attendance.StatusReason = declineAttendanceRequest.StatusReason;
+
+        attendance.MarkAsMissed(declineAttendanceRequest.StatusReason);
 
         await attendanceService.UpdateAttendanceAsync(attendance);
 
-        return Ok();
-    }
-
-    [HttpPost("{id}/updateStatus/{status}")]
-    public async Task<ActionResult> UpdateStatus(Guid id, int status)
-    {
-        await attendanceService.UpdateStatusAsync(id, status);
         return Ok();
     }
 }

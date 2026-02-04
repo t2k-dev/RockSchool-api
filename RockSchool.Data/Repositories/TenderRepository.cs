@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories
 {
     public class TenderRepository(RockSchoolContext rockSchoolContext) : BaseRepository(rockSchoolContext)
     {
-        public async Task<Guid> AddAsync(TenderEntity tenderEntity)
+        public async Task<Guid> AddAsync(Tender tender)
         {
-            await RockSchoolContext.Tenders.AddAsync(tenderEntity);
+            await RockSchoolContext.Tenders.AddAsync(tender);
             await RockSchoolContext.SaveChangesAsync();
-            return tenderEntity.TenderId;
+            return tender.TenderId;
         }
 
-        public async Task<TenderEntity[]> GetBySubscriptionIdAsync(Guid subscriptionId)
+        public async Task<Tender[]> GetBySubscriptionIdAsync(Guid subscriptionId)
         {
             return await RockSchoolContext.Tenders
                 .Where(t => t.SubscriptionId == subscriptionId)

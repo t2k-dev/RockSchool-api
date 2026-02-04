@@ -1,4 +1,4 @@
-﻿using RockSchool.BL.Models;
+﻿using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Models.Attendances;
 
 namespace RockSchool.WebApi.Models

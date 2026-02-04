@@ -2,7 +2,8 @@
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.ScheduleService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Entities;
+using RockSchool.Domain.Enums;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
@@ -14,6 +15,7 @@ namespace RockSchool.BL.Services.SubscriptionService
     {
         public async Task<Guid> AddRentalSubscription(SubscriptionDetails details, Schedule[] schedules)
         {
+            throw new NotImplementedException();/*
             // Subscription
             var subscription = new Subscription
             {
@@ -46,7 +48,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             var attendances = ScheduleHelper.GenerateAttendances(details, schedules, false, newSubscriptionId);
             await attendanceService.AddAttendancesAsync(attendances.ToArray());
 
-            return newSubscriptionId;
+            return newSubscriptionId;*/
         }
     }
 }

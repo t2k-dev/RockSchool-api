@@ -1,5 +1,5 @@
-using RockSchool.BL.Models;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Entities;
+using RockSchool.Domain.Enums;
 
 namespace RockSchool.BL.Services.TariffService;
 

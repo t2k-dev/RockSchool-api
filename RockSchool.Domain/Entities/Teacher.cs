@@ -1,0 +1,85 @@
+namespace RockSchool.Domain.Entities;
+
+public class Teacher
+{
+    public Guid TeacherId { get; private set; }
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+    public DateTime BirthDate { get; private set; }
+    public int Sex { get; private set; }
+    public long Phone { get; private set; }
+    public User? User { get; private set; }
+    public int BranchId { get; private set; }
+    public Branch? Branch { get; private set; }
+    public int AgeLimit { get; private set; }
+    public bool AllowGroupLessons { get; private set; }
+    public bool AllowBands { get; private set; }
+    public bool IsActive { get; private set; }
+
+    private readonly List<Discipline> _disciplines = new();
+    public IReadOnlyCollection<Discipline> Disciplines => _disciplines.AsReadOnly();
+
+    private readonly List<WorkingPeriod> _workingPeriods = new();
+    public IReadOnlyCollection<WorkingPeriod> WorkingPeriods => _workingPeriods.AsReadOnly();
+
+    private readonly List<ScheduledWorkingPeriod> _scheduledWorkingPeriods = new();
+    public IReadOnlyCollection<ScheduledWorkingPeriod> ScheduledWorkingPeriods => _scheduledWorkingPeriods.AsReadOnly();
+
+    private readonly List<Band> _bands = new();
+    public IReadOnlyCollection<Band> Bands => _bands.AsReadOnly();
+
+    private Teacher() { }
+
+    public static Teacher Create(
+        string firstName,
+        string lastName,
+        DateTime birthDate,
+        int sex,
+        long phone,
+        int branchId,
+        int ageLimit,
+        bool allowGroupLessons = false,
+        bool allowBands = false)
+    {
+        return new Teacher
+        {
+            TeacherId = Guid.NewGuid(),
+            FirstName = firstName,
+            LastName = lastName,
+            BirthDate = birthDate,
+            Sex = sex,
+            Phone = phone,
+            BranchId = branchId,
+            AgeLimit = ageLimit,
+            AllowGroupLessons = allowGroupLessons,
+            AllowBands = allowBands,
+            IsActive = true
+        };
+    }
+
+    public void UpdateInfo(string firstName, string lastName, DateTime birthDate, int sex, long phone, int ageLimit)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        BirthDate = birthDate;
+        Sex = sex;
+        Phone = phone;
+        AgeLimit = ageLimit;
+    }
+
+    public void SetActiveStatus(bool isActive)
+    {
+        IsActive = isActive;
+    }
+
+    public void AddDiscipline(Discipline discipline)
+    {
+        if (!_disciplines.Contains(discipline))
+            _disciplines.Add(discipline);
+    }
+
+    public void RemoveDiscipline(Discipline discipline)
+    {
+        _disciplines.Remove(discipline);
+    }
+}

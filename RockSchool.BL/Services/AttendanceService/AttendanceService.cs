@@ -1,8 +1,6 @@
-﻿using RockSchool.BL.Helpers;
-using RockSchool.BL.Models;
-using RockSchool.Data.Entities;
-using RockSchool.Data.Enums;
+﻿using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.AttendanceService;
 
@@ -20,43 +18,22 @@ public class AttendanceService : IAttendanceService
 
     public async Task<Attendance[]> GetAllAttendancesAsync()
     {
-        var attendances = await _attendanceRepository.GetAllAsync();
-
-        var attendancesDto = attendances.Select(a => new Attendance
-        {
-            AttendanceId = a.AttendanceId,
-            StudentId = a.StudentId,
-            Student = a.Student.ToDto(),
-            TeacherId = a.TeacherId,
-            Teacher = a.Teacher.ToDto(),
-            StartDate = a.StartDate,
-            Status = a.Status,
-            RoomId = a.RoomId,
-            Room = a.Room.ToModel(),
-            EndDate = a.EndDate,
-            Comment = a.Comment,
-            DisciplineId = a.DisciplineId,
-        }).ToArray();
-
-        return attendancesDto;
+        return await _attendanceRepository.GetAllAsync();
     }
 
     public async Task<Attendance?> GetAttendanceAsync(Guid attendanceId)
     {
-        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
-        return attendanceEntity?.ToModel();
+        return await _attendanceRepository.GetAsync(attendanceId);
     }
 
     public async Task<Attendance[]> GetByBranchIdAsync(int branchId)
     {
-        var attendances = await _attendanceRepository.GetByBranchIdAsync(branchId);
-        return attendances.ToModel();
+        return await _attendanceRepository.GetByBranchIdAsync(branchId);
     }
 
     public async Task<Attendance[]> GetByRoomIdAsync(int roomId)
     {
-        var attendances = await _attendanceRepository.GetByRoomIdAsync(roomId);
-        return attendances.ToModel();
+        return await _attendanceRepository.GetByRoomIdAsync(roomId);
     }
     
 
@@ -68,46 +45,38 @@ public class AttendanceService : IAttendanceService
             DateTime.UtcNow.AddMonths(1)
         );
 
-        return attendanceEntities?.ToModel();
+        return attendanceEntities;
     }
 
     public async Task<Attendance[]?> GetAttendancesByStudentId(Guid studentId)
     {
-        var attendanceEntities = await _attendanceRepository.GetByStudentIdAsync(studentId);
-
-        return attendanceEntities?.ToModel();
+        return await _attendanceRepository.GetByStudentIdAsync(studentId);
     }
 
     public async Task<Attendance[]?> GetAttendancesBySubscriptionId(Guid subscriptionId)
     {
-        var attendanceEntities = await _attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
-
-        return attendanceEntities?.ToModel();
+        return await _attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
     }
 
     public async Task AddAttendancesAsync(Attendance[] attendances)
     {
-        var attendanceEntities = attendances.ToEntities();
-        await _attendanceRepository.AddRangeAsync(attendanceEntities);
-
+        await _attendanceRepository.AddRangeAsync(attendances.ToList());
     }
 
     public async Task<Guid> AddAttendanceAsync(Attendance attendance)
     {
-        var attendanceEntity = attendance.ToEntity();
-    
-        var attendanceId = await _attendanceRepository.AddAsync(attendanceEntity);
+        var attendanceId = await _attendanceRepository.AddAsync(attendance);
         return attendanceId;
     }
 
     public async Task UpdateAttendanceAsync(Attendance attendance)
     {
+        throw new NullReferenceException("Not Implemented.");
         var existingEntity = await _attendanceRepository.GetAsync(attendance.AttendanceId);
 
         if (existingEntity == null)
             throw new NullReferenceException("AttendanceEntity not found.");
 
-        ModifyAttendanceAttributes(attendance, existingEntity);
 
         await _attendanceRepository.UpdateAsync(existingEntity);
     }
@@ -119,7 +88,7 @@ public class AttendanceService : IAttendanceService
         if (attendanceEntity == null)
             throw new NullReferenceException("AttendanceEntity not found.");
 
-        attendanceEntity.Comment = comment;
+        attendanceEntity.AddComment(comment);
 
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
@@ -131,22 +100,7 @@ public class AttendanceService : IAttendanceService
         if (attendanceEntity == null)
             throw new NullReferenceException("AttendanceEntity not found.");
 
-        attendanceEntity.StartDate = startDate;
-        attendanceEntity.EndDate = endDate;
-        attendanceEntity.RoomId = roomId;
-
-        await _attendanceRepository.UpdateAsync(attendanceEntity);
-    }
-
-    public async Task UpdateStatusAsync(Guid attendanceId, int status)
-    {
-        // TODO: discuss implementation
-        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
-
-        if (attendanceEntity == null)
-            throw new NullReferenceException("AttendanceEntity not found.");
-
-        attendanceEntity.Status = (AttendanceStatus)status;
+        attendanceEntity.UpdateSchedule(startDate, endDate, roomId);
 
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
@@ -164,23 +118,5 @@ public class AttendanceService : IAttendanceService
         {
             await _attendanceRepository.DeleteAsync(attendance.AttendanceId);
         }
-    }
-
-    private static void ModifyAttendanceAttributes(Attendance updatedAttendance, AttendanceEntity existingEntity)
-    {
-        if (updatedAttendance.Status != default)
-            existingEntity.Status = updatedAttendance.Status;
-
-        if (updatedAttendance.StatusReason != default)
-            existingEntity.StatusReason = updatedAttendance.StatusReason;
-
-        if (updatedAttendance.StartDate != default)
-            existingEntity.StartDate = updatedAttendance.StartDate;
-
-        if (updatedAttendance.EndDate != default)
-            existingEntity.EndDate = updatedAttendance.EndDate;
-
-        if (updatedAttendance.RoomId != default)
-            existingEntity.RoomId = updatedAttendance.RoomId;
     }
 }

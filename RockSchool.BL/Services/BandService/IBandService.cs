@@ -1,5 +1,5 @@
-using RockSchool.BL.Models;
 using RockSchool.BL.Models.Dtos;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BandService;
 

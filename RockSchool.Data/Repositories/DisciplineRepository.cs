@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
@@ -13,40 +13,40 @@ public class DisciplineRepository
         _rockSchoolContext = rockSchoolContext;
     }
 
-    public async Task<DisciplineEntity[]> GetAllAsync()
+    public async Task<Discipline[]> GetAllAsync()
     {
         return await _rockSchoolContext.Disciplines.ToArrayAsync();
     }
 
-    public async Task<DisciplineEntity?> GetByIdAsync(int id)
+    public async Task<Discipline?> GetByIdAsync(int id)
     {
         return await _rockSchoolContext.Disciplines
-            .Include(d => d.Teachers)
+            //.Include(d => d.Teachers)
             .FirstOrDefaultAsync(d => d.DisciplineId == id);
     }
 
-    public async Task<DisciplineEntity[]?> GetByIdsAsync(int[] ids)
+    public async Task<Discipline[]?> GetByIdsAsync(int[] ids)
     {
         return await _rockSchoolContext.Disciplines
                 .Where(d => ids.Contains(d.DisciplineId))
                 .ToArrayAsync();
     }
 
-    public async Task AddAsync(DisciplineEntity disciplineEntity)
+    public async Task AddAsync(Discipline discipline)
     {
-        await _rockSchoolContext.Disciplines.AddAsync(disciplineEntity);
+        await _rockSchoolContext.Disciplines.AddAsync(discipline);
         await _rockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(DisciplineEntity disciplineEntity)
+    public async Task UpdateAsync(Discipline discipline)
     {
-        _rockSchoolContext.Disciplines.Update(disciplineEntity);
+        _rockSchoolContext.Disciplines.Update(discipline);
         await _rockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(DisciplineEntity disciplineEntity)
+    public async Task DeleteAsync(Discipline discipline)
     {
-        _rockSchoolContext.Disciplines.Remove(disciplineEntity);
+        _rockSchoolContext.Disciplines.Remove(discipline);
         await _rockSchoolContext.SaveChangesAsync();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories
 {
@@ -10,26 +10,26 @@ namespace RockSchool.Data.Repositories
         {
         }
 
-        public async Task<NoteEntity[]?> GetNotes(int branchId)
+        public async Task<Note[]?> GetNotes(int branchId)
         {
             return await RockSchoolContext.Notes.Where(n => n.Branch.BranchId == branchId).ToArrayAsync();
         }
 
-        public async Task<NoteEntity?> GetByIdAsync(Guid noteId)
+        public async Task<Note?> GetByIdAsync(Guid noteId)
         {
             return await RockSchoolContext.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId);
         }
 
-        public async Task<bool> AddNote(NoteEntity noteEntity)
+        public async Task<bool> AddNoteAsync(Note note)
         {
-            await RockSchoolContext.Notes.AddAsync(noteEntity);
+            await RockSchoolContext.Notes.AddAsync(note);
             await RockSchoolContext.SaveChangesAsync();
             return true;
         }
 
-        public async Task UpdateAsync(NoteEntity noteEntity)
+        public async Task UpdateAsync(Note note)
         {
-            RockSchoolContext.Notes.Update(noteEntity);
+            RockSchoolContext.Notes.Update(note);
             await RockSchoolContext.SaveChangesAsync();
         }
     }

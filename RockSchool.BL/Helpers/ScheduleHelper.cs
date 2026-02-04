@@ -1,5 +1,6 @@
 ﻿using RockSchool.BL.Models;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Entities;
+using RockSchool.Domain.Enums;
 
 namespace RockSchool.BL.Helpers;
 
@@ -7,10 +8,12 @@ public static class ScheduleHelper
 {
     public static List<Attendance> GenerateAttendances(SubscriptionDetails subscriptionDetails, Schedule[] schedules, bool isGroup, Guid? subscriptionId = null)
     {
+        throw new NotImplementedException();
+        /*
         var attendances = new List<Attendance>();
 
         var attendancesToAdd = subscriptionDetails.AttendanceCount;
-        var lessonMinutes = subscriptionDetails.AttendanceLength == 1 ? 60 : 90;
+        var lessonMinutes = subscriptionDetails.AttendanceLength;
         var startDate = subscriptionDetails.StartDate.ToDateTime(TimeOnly.MinValue);
         var orderedSchedules = schedules
             .OrderBy(s => s.WeekDay)
@@ -26,20 +29,14 @@ public static class ScheduleHelper
             {
                 Status = AttendanceStatus.New,
                 TeacherId = subscriptionDetails.TeacherId,
-                StudentId = subscriptionDetails.StudentId,
                 StartDate = attendanceStartDate,
                 EndDate = attendanceStartDate.AddMinutes(lessonMinutes),
-                AttendanceType = AttendanceType.Lesson,
+                AttendanceType = isGroup ? AttendanceType.GroupLesson : AttendanceType.Lesson,
                 BranchId = subscriptionDetails.BranchId,
                 RoomId = availableSlot.RoomId,
                 DisciplineId = subscriptionDetails.DisciplineId,
                 GroupId = isGroup ? Guid.NewGuid() : null,
             };
-
-            if (subscriptionId != null)
-            {
-                newAttendance.SubscriptionId = subscriptionId.Value;
-            }
 
             attendances.Add(newAttendance);
 
@@ -48,6 +45,7 @@ public static class ScheduleHelper
         }
 
         return attendances;
+        */
     }
 
     public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, Schedule[] orderedSchedules, int lengthInMinutes = 60)

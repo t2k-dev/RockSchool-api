@@ -1,5 +1,5 @@
 ﻿using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
@@ -9,9 +9,9 @@ public class ScheduledWorkingPeriodsRepository : BaseRepository
     {
     }
 
-    public async Task AddRangeAsync(List<ScheduledWorkingPeriodEntity> scheduledWorkingPeriodEntities)
+    public async Task AddRangeAsync(List<ScheduledWorkingPeriod> scheduledWorkingPeriods)
     {
-        await RockSchoolContext.AddRangeAsync(scheduledWorkingPeriodEntities);
+        await RockSchoolContext.AddRangeAsync(scheduledWorkingPeriods);
         await RockSchoolContext.SaveChangesAsync();
     }
 }

@@ -1,20 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Entities;
+using RockSchool.Domain.Enums;
 
 namespace RockSchool.Data.Repositories;
 
 public class TariffRepository(RockSchoolContext rockSchoolContext) : BaseRepository(rockSchoolContext)
 {
-    public async Task<TariffEntity[]> GetAllTariffsAsync()
+    public async Task<Tariff[]> GetAllTariffsAsync()
     {
         return await RockSchoolContext.Tariffs
             .Include(t => t.Discipline)
             .ToArrayAsync();
     }
 
-    public async Task<TariffEntity[]?> GetTariffsByTypeAsync(SubscriptionType type, DateTime date)
+    public async Task<Tariff[]?> GetTariffsByTypeAsync(SubscriptionType type, DateTime date)
     {
         return await RockSchoolContext.Tariffs
             .Where(t => t.SubscriptionType == type
@@ -23,7 +23,7 @@ public class TariffRepository(RockSchoolContext rockSchoolContext) : BaseReposit
             .ToArrayAsync();
     }
 
-    public async Task<TariffEntity?> GetTrialTariffAsync(DateTime date)
+    public async Task<Tariff?> GetTrialTariffAsync(DateTime date)
     {
         return await RockSchoolContext.Tariffs
             .FirstOrDefaultAsync(t => t.SubscriptionType == SubscriptionType.TrialLesson 
@@ -31,28 +31,28 @@ public class TariffRepository(RockSchoolContext rockSchoolContext) : BaseReposit
                                    && t.EndDate >= date);
     }
 
-    public async Task<TariffEntity?> GetByIdAsync(Guid id)
+    public async Task<Tariff?> GetByIdAsync(Guid id)
     {
         return await RockSchoolContext.Tariffs
             .Include(t => t.Discipline)
             .FirstOrDefaultAsync(t => t.TariffId == id);
     }
 
-    public async Task AddAsync(TariffEntity tariffEntity)
+    public async Task AddAsync(Tariff tariff)
     {
-        await RockSchoolContext.Tariffs.AddAsync(tariffEntity);
+        await RockSchoolContext.Tariffs.AddAsync(tariff);
         await RockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(TariffEntity tariffEntity)
+    public async Task UpdateAsync(Tariff tariff)
     {
-        RockSchoolContext.Tariffs.Update(tariffEntity);
+        RockSchoolContext.Tariffs.Update(tariff);
         await RockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(TariffEntity tariffEntity)
+    public async Task DeleteAsync(Tariff tariff)
     {
-        RockSchoolContext.Tariffs.Remove(tariffEntity);
+        RockSchoolContext.Tariffs.Remove(tariff);
         await RockSchoolContext.SaveChangesAsync();
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.DisciplineService;
+using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers;
@@ -23,13 +24,7 @@ public class DisciplineController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var addDisciplineServiceDto = new Discipline()
-        {
-            Name = disciplineName,
-            IsActive = true
-        };
-
-        await _disciplineService.AddDisciplineAsync(addDisciplineServiceDto);
+        await _disciplineService.AddDisciplineAsync(disciplineName);
 
         return Ok();
     }
@@ -40,20 +35,6 @@ public class DisciplineController : Controller
         var disciplines = await _disciplineService.GetAllDisciplinesAsync();
 
         return Ok(disciplines);
-    }
-
-    [HttpPut("{id}")]
-    public async Task<ActionResult> Put(int id, [FromBody] Discipline requestDto)
-    {
-        var updateDisciplineServiceDto = new Discipline()
-        {
-            Name = requestDto.Name,
-            IsActive = requestDto.IsActive
-        };
-
-        await _disciplineService.UpdateDisciplineAsync(updateDisciplineServiceDto);
-
-        return Ok();
     }
 
     [HttpDelete("{id}")]

@@ -1,6 +1,5 @@
-﻿using RockSchool.BL.Helpers;
-using RockSchool.BL.Models;
-using RockSchool.Data.Repositories;
+﻿using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.RoomService
 {
@@ -8,14 +7,12 @@ namespace RockSchool.BL.Services.RoomService
     {
         public async Task<Room[]> GetRentableRooms(int branchId)
         {
-            var rooms = await roomRepository.GetRentableRooms(branchId);
-            return rooms.ToModel();
+            return await roomRepository.GetRentableRooms(branchId);
         }
 
         public async Task<Room[]> GetRehearsableRooms(int branchId)
         {
-            var rooms = await roomRepository.GetRehearsableRooms(branchId);
-            return rooms.ToModel();
+            return await roomRepository.GetRehearsableRooms(branchId);
         }
     }
 }

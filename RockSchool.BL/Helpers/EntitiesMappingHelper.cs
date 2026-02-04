@@ -1,5 +1,4 @@
 ﻿using RockSchool.BL.Models;
-using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ namespace RockSchool.BL.Helpers
 {
     public static class EntitiesMappingHelper
     {
-        public static List<WorkingPeriodEntity> ToEntities(this IEnumerable<WorkingPeriod> workingPeriods)
+        /*public static List<WorkingPeriodEntity> ToEntities(this IEnumerable<WorkingPeriod> workingPeriods)
         {
             return workingPeriods.Select(w => w.ToEntity())
                 .ToList();
@@ -38,16 +37,16 @@ namespace RockSchool.BL.Helpers
         {
             return new AttendanceEntity
             {
-                StudentId = attendance.StudentId,
                 TeacherId = attendance.TeacherId,
                 BranchId = attendance.BranchId,
                 StartDate = attendance.StartDate,
                 EndDate = attendance.EndDate,
                 Status = attendance.Status,
+                StatusReason = attendance.StatusReason,
                 RoomId = attendance.RoomId,
                 Comment = attendance.Comment,
-                SubscriptionId = attendance.SubscriptionId,
-                StatusReason = attendance.StatusReason,
+                // SubscriptionId removed - now handled via many-to-many
+                // SubscriptionId = attendance.SubscriptionId,
                 DisciplineId = attendance.DisciplineId,
                 GroupId = attendance.GroupId,
                 AttendanceType = attendance.AttendanceType,
@@ -146,5 +145,17 @@ namespace RockSchool.BL.Helpers
                 BandRoleId = model.BandRoleId
             };
         }
+
+        public static AttendeeEntity ToEntity(this SubscriptionAttendance model)
+        {
+            return new AttendeeEntity
+            {
+                SubscriptionAttendanceId = model.SubscriptionAttendanceId,
+                SubscriptionId = model.SubscriptionId,
+                AttendanceId = model.AttendanceId,
+                Status = model.Status,
+                StatusReason = model.StatusReason
+            };
+        }*/
     }
 }

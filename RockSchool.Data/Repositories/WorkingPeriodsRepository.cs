@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Data.Entities;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories
 {
@@ -10,7 +10,7 @@ namespace RockSchool.Data.Repositories
         {
         }
 
-        public async Task<WorkingPeriodEntity[]?> GetWorkingPeriods(Guid teacherId)
+        public async Task<WorkingPeriod[]?> GetWorkingPeriods(Guid teacherId)
         {
             return await RockSchoolContext.WorkingPeriods.Where(wp => wp.TeacherId == teacherId).ToArrayAsync();
         }

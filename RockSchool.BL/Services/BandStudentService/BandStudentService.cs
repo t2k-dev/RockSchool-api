@@ -1,6 +1,7 @@
 using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BandStudentService;
 
@@ -15,33 +16,31 @@ public class BandStudentService : IBandStudentService
 
     public async Task<BandStudent?> GetByIdAsync(Guid id)
     {
-        var entity = await _bandStudentRepository.GetByIdAsync(id);
-        return entity?.ToModel();
+        return await _bandStudentRepository.GetByIdAsync(id);
     }
 
     public async Task<BandStudent[]> GetByBandIdAsync(Guid bandId)
     {
-        var entities = await _bandStudentRepository.GetByBandIdAsync(bandId);
-        return entities.ToModel();
+        return await _bandStudentRepository.GetByBandIdAsync(bandId);
     }
 
     public async Task<BandStudent[]> GetByStudentIdAsync(Guid studentId)
     {
-        var entities = await _bandStudentRepository.GetByStudentIdAsync(studentId);
-        return entities.ToModel();
+        return await _bandStudentRepository.GetByStudentIdAsync(studentId);
     }
 
     public async Task<Guid> AddStudentToBandAsync(BandStudent bandStudent)
     {
+        throw new NotImplementedException();
+        /*
         bandStudent.BandStudentId = Guid.NewGuid();
         var entity = bandStudent.ToEntity();
-        return await _bandStudentRepository.AddAsync(entity);
+        return await _bandStudentRepository.AddAsync(entity);*/
     }
 
     public async Task UpdateBandStudentAsync(BandStudent bandStudent)
     {
-        var entity = bandStudent.ToEntity();
-        await _bandStudentRepository.UpdateAsync(entity);
+        await _bandStudentRepository.UpdateAsync(bandStudent);
     }
 
     public async Task RemoveStudentFromBandAsync(Guid bandId, Guid studentId)

@@ -1,5 +1,5 @@
 ﻿using RockSchool.BL.Models;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {

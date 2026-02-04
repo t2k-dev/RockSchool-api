@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Models;
 using RockSchool.BL.Services.TariffService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Entities;
+using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers;
@@ -97,17 +97,14 @@ public class TariffController : ControllerBase
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var newTariff = new Tariff
-            {
-                TariffId = Guid.NewGuid(),
-                Amount = requestDto.Amount,
-                AttendanceCount = requestDto.AttendanceCount,
-                AttendanceLength = requestDto.AttendanceLength,
-                DisciplineId = requestDto.DisciplineId,
-                EndDate = requestDto.EndDate.ToUniversalTime(),
-                StartDate = requestDto.StartDate.ToUniversalTime(),
-                SubscriptionType = requestDto.SubscriptionType
-            };
+            var newTariff = Tariff.Create(
+                requestDto.Amount,
+                requestDto.StartDate.ToUniversalTime(),
+                requestDto.EndDate.ToUniversalTime(),
+                requestDto.AttendanceLength,
+                requestDto.AttendanceCount,
+                requestDto.SubscriptionType,
+                requestDto.DisciplineId);
 
             var id = await _tariffService.AddTariffAsync(newTariff);
 

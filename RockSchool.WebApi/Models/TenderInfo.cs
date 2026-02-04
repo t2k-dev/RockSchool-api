@@ -6,7 +6,7 @@ namespace RockSchool.WebApi.Models
     {
         public Guid TenderId { get; set; }
 
-        public int Amount { get; set; }
+        public Decimal Amount { get; set; }
 
         public DateTime PaidOn { get; set; }
 

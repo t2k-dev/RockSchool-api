@@ -1,10 +1,9 @@
 using AutoMapper.Execution;
 using RockSchool.BL.Helpers;
-using RockSchool.BL.Models;
 using RockSchool.BL.Models.Dtos;
 using RockSchool.BL.Services.ScheduleService;
-using RockSchool.Data.Entities;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BandService;
 
@@ -14,36 +13,31 @@ public class BandService(BandRepository bandRepository, BandStudentRepository ba
     public async Task<Band?> GetByIdAsync(Guid id)
     {
         var entity = await bandRepository.GetByIdAsync(id);
-        return entity?.ToModel();
+        return entity;
     }
 
     public async Task<Band[]> GetAllAsync()
     {
-        var entities = await bandRepository.GetAllAsync();
-        return entities.ToModel();
+        return await bandRepository.GetAllAsync();
     }
 
     public async Task<Band[]> GetByTeacherIdAsync(Guid teacherId)
     {
-        var entities = await bandRepository.GetByTeacherIdAsync(teacherId);
-        return entities.ToModel();
+        return await bandRepository.GetByTeacherIdAsync(teacherId);
     }
 
     public async Task<Guid> AddBandAsync(string name, Guid teacherId, BandMember[] members, Schedule[] schedules)
     {
-        var band = new Band()
-        {
-            Name = name,
-            TeacherId = teacherId,
-            Status = 0, // DEV
-        };
-        var bandEntity = band.ToEntity();
-        var bandId = await bandRepository.AddAsync(bandEntity);
+        throw new NotImplementedException();
+        /*
+
+        var band = Band.Create(name, teacherId);
+        var bandId = await bandRepository.AddAsync(band);
 
         // BandsStudents - Save each member to database
         foreach (var member in members)
         {
-            var newMember = new BandStudentEntity
+            var newMember = new BandStudent
             {
                 BandStudentId = Guid.NewGuid(),
                 BandId = bandId,
@@ -61,13 +55,12 @@ public class BandService(BandRepository bandRepository, BandStudentRepository ba
             await scheduleService.AddScheduleAsync(schedule);
         }
 
-        return bandId;
+        return bandId;*/
     }
 
     public async Task UpdateBandAsync(Band band)
     {
-        var entity = band.ToEntity();
-        await bandRepository.UpdateAsync(entity);
+        await bandRepository.UpdateAsync(band);
     }
 
     public async Task DeleteBandAsync(Guid id)

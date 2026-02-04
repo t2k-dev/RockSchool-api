@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RockSchool.BL.Models;
+﻿using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.NoteService
 {

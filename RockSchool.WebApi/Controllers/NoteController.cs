@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.NoteService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
@@ -33,18 +33,7 @@ namespace RockSchool.WebApi.Controllers
         [HttpPut("{noteId}/edit")]
         public async Task<ActionResult> Update(Guid noteId, NoteInfo noteInfo)
         {
-            var note = new Note
-            {
-                Status = (NoteStatus)noteInfo.Status,
-                Description = noteInfo.Description,
-                Comment = noteInfo.Comment,
-                BranchId = noteInfo.BranchId,
-                CompleteDate = noteInfo.CompleteDate?.ToUniversalTime(),
-                ActualCompleteDate = noteInfo.ActualCompleteDate?.ToUniversalTime(),
-                NoteId = noteId,
-            };
-
-            await _noteService.UpdateNoteAsync(note);
+            throw new NotImplementedException();
 
             return Ok();
         }

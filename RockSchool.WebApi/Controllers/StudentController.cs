@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BandStudentService;
-using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
-using RockSchool.WebApi.Models.Bands;
 using RockSchool.WebApi.Models.Students;
-using RockSchool.WebApi.Models.Subscriptions;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -58,12 +55,14 @@ public class StudentController(
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
-        var studentDto = await studentService.GetByIdAsync(id);
+        var student = await studentService.GetByIdAsync(id);
         var attendances = await attendanceService.GetAttendancesByStudentId(id);
 
         var attendanceInfos = new List<AttendanceInfo>();
         foreach (var attendance in attendances)
         {
+            var subscription = attendance.Attendees;
+
             attendanceInfos.Add(new AttendanceInfo
             {
                 AttendanceId = attendance.AttendanceId,
@@ -71,13 +70,13 @@ public class StudentController(
                 EndDate = attendance.EndDate,
                 Status = (int)attendance.Status,
                 Teacher = attendance.Teacher,
-                StudentId = attendance.StudentId,
-                Student = attendance.Student,
                 IsCompleted = attendance.IsCompleted,
                 RoomId = attendance.RoomId,
                 DisciplineId = attendance.DisciplineId,
-                SubscriptionId = attendance.SubscriptionId,
                 AttendanceType = (int)attendance.AttendanceType,
+                Comment = attendance.Comment,
+                GroupId = attendance.GroupId,
+                //Students = 
             });
         }
 
@@ -90,7 +89,7 @@ public class StudentController(
 
         var studentScreenDetailsDto = new StudentScreenDetailsInfo
         {
-            Student = studentDto,
+            Student = student,
             Subscriptions = subscriptionsInfos.ToArray(),
             Attendances = attendanceInfos.ToArray(),
             Bands = bandsInfos,
@@ -102,6 +101,8 @@ public class StudentController(
     [HttpPost]
     public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
+        throw new NotImplementedException();
+        /*
         if (!ModelState.IsValid)
             throw new Exception("Incorrect requestDto for registration.");
 
@@ -118,7 +119,7 @@ public class StudentController(
 
         var id = await studentService.AddStudentAsync(newStudent);
 
-        return Ok(id);
+        return Ok(id);*/
     }
 
     [HttpPut("{id}")]
@@ -127,6 +128,8 @@ public class StudentController(
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        throw new AbandonedMutexException();
+        /*
         var updateStudentDto = new Student()
         {
             StudentId = id,
@@ -139,7 +142,7 @@ public class StudentController(
         };
         await studentService.UpdateStudentAsync(updateStudentDto);
 
-        return Ok(id);
+        return Ok(id);*/
     }
 
     [HttpDelete("{id}")]

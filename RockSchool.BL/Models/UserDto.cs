@@ -1,4 +1,5 @@
-﻿using RockSchool.Data.Entities;
+﻿
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Models;
 
@@ -8,6 +9,6 @@ public class UserDto
     public string Login { get; set; }
     public string PasswordHash { get; set; }
     public int RoleId { get; set; }
-    public RoleEntity Role { get; set; }
+    public Role Role { get; set; }
     public bool IsActive { get; set; }
 }

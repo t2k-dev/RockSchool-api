@@ -7,7 +7,7 @@ using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TeacherService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Helpers;
 
 namespace RockSchool.WebApi.Controllers
@@ -218,7 +219,7 @@ namespace RockSchool.WebApi.Controllers
             // Fix this mess
             foreach (var attendanceInfo in attendanceInfos)
             {
-                attendanceInfo.Student = studentInfo;
+                //attendanceInfo.Student = studentInfo;
                 attendanceInfo.Teacher = teacherInfo;
             }
 
@@ -299,13 +300,12 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost("{id}/pay")]
         public async Task<ActionResult> Pay(Guid id, PaymentRequest request)
         {
-            var payment = new Tender()
-            {
-                Amount = request.Amount,
-                PaidOn = request.PaidOn.ToUniversalTime(),
-                TenderType = (TenderType)request.PaymentType,
-                SubscriptionId = id,
-            };
+
+            var payment = Tender.Create(
+                request.Amount,
+                request.PaidOn.ToUniversalTime(),
+                (TenderType)request.PaymentType,
+                id);
 
             await paymentService.Pay(id, payment);
 

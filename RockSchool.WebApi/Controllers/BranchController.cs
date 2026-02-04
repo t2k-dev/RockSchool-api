@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.RoomService;
-using RockSchool.Data.Enums;
+using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 using System.Collections.Generic;
 using System.Linq;
