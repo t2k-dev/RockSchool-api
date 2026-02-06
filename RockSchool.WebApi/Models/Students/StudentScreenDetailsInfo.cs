@@ -1,7 +1,7 @@
-﻿using RockSchool.Domain.Entities;
-using RockSchool.WebApi.Models.Attendances;
+﻿using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Bands;
+using RockSchool.Domain.Students;
 
 namespace RockSchool.WebApi.Models.Students
 {

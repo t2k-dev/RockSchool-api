@@ -5,15 +5,18 @@ using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Attendances;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Schedules;
+using RockSchool.Domain.Subscriptions;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
     public class SubscriptionService(
-        SubscriptionRepository subscriptionRepository,
-        ScheduleRepository scheduleRepository,
-        AttendanceRepository attendanceRepository,
-        SubscriptionsAttendancesRepository subscriptionsAttendancesRepository,
+        ISubscriptionRepository subscriptionRepository,
+        IScheduleRepository scheduleRepository,
+        IAttendanceRepository attendanceRepository,
+        ISubscriptionsAttendancesRepository subscriptionsAttendancesRepository,
         IAttendanceService attendanceService,
         INoteService noteService,
         IScheduleService scheduleService)

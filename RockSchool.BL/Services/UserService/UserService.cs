@@ -2,15 +2,16 @@
 using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Users;
 
 namespace RockSchool.BL.Services.UserService;
 
 public class UserService : IUserService
 {
     private readonly IPasswordHasher<User> _passwordHasher;
-    private readonly UserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
-    public UserService(UserRepository userRepository, IPasswordHasher<User> passwordHasher)
+    public UserService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;

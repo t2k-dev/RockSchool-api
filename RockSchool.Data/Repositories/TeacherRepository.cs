@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Domain.Entities;
+using RockSchool.Domain.Teachers;
 
 namespace RockSchool.Data.Repositories;
 
-public class TeacherRepository
+public class TeacherRepository : ITeacherRepository
 {
     private readonly RockSchoolContext _context;
 
@@ -55,7 +55,7 @@ public class TeacherRepository
     {
         return await _context.Teachers
             .Include(t => t.WorkingPeriods)
-            .ThenInclude(w => w.ScheduledWorkingPeriods)
+            .Include(t => t.ScheduledWorkingPeriods)
             .Include(t => t.Disciplines)
             .Include(t => t.Branch)
             .Where(t => t.BranchId == branchId 
@@ -70,7 +70,7 @@ public class TeacherRepository
     {
         return await _context.Teachers
             .Include(t => t.WorkingPeriods)
-            .ThenInclude(w => w.ScheduledWorkingPeriods)
+            .Include(t => t.ScheduledWorkingPeriods)
             .Include(t => t.Disciplines)
             .Include(t => t.Branch)
             .Where(t => t.BranchId == branchId

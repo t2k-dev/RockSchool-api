@@ -18,6 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Helpers;
+using RockSchool.Domain.Students;
+using RockSchool.Domain.Teachers;
 
 namespace RockSchool.WebApi.Controllers
 {

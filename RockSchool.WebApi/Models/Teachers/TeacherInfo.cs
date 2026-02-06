@@ -14,7 +14,7 @@ public class TeacherInfo
     public int Sex { get; set; }
     public int[] Disciplines { get; set; }
     public int? UserId { get; set; }
-    public int? BranchId { get; set; }
+    public int BranchId { get; set; }
     public bool AllowGroupLessons { get; set; }
     public bool AllowBands { get; set; }
     public int AgeLimit { get; set; }

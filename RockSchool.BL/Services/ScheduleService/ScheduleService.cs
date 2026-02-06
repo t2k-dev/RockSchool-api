@@ -1,13 +1,14 @@
 ﻿using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Schedules;
 
 namespace RockSchool.BL.Services.ScheduleService;
 
 public class ScheduleService : IScheduleService
 {
-    private readonly ScheduleRepository _scheduleRepository;
+    private readonly IScheduleRepository _scheduleRepository;
 
-    public ScheduleService(ScheduleRepository scheduleRepository)
+    public ScheduleService(IScheduleRepository scheduleRepository)
     {
         _scheduleRepository = scheduleRepository;
     }

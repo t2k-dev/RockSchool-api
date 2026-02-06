@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Notes;
 
 namespace RockSchool.Data.Repositories
 {
-    public class NoteRepository : BaseRepository
+    public class NoteRepository : BaseRepository, INoteRepository
     {
         public NoteRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
         {

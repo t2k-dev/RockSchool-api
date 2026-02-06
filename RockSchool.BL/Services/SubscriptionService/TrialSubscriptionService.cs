@@ -5,12 +5,13 @@ using RockSchool.BL.Services.TariffService;
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Subscriptions;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
     public class TrialSubscriptionService(
-        SubscriptionRepository subscriptionRepository,
-        SubscriptionsAttendancesRepository subscriptionsAttendancesRepository,
+        ISubscriptionRepository subscriptionRepository,
+        ISubscriptionsAttendancesRepository subscriptionsAttendancesRepository,
         IAttendanceService attendanceService,
         INoteService noteService,
         ISubscriptionService subscriptionService,

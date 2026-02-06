@@ -1,12 +1,13 @@
 ﻿using RockSchool.BL.Services.AttendanceService;
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Subscriptions;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
     public class CancelSubscriptionService(
         IAttendanceService attendanceService,
-        SubscriptionRepository subscriptionRepository
+        ISubscriptionRepository subscriptionRepository
         ) : ICancelSubscriptionService
     {
         public async Task Cancel(Guid subscriptionId, DateTime cancelDate, string cancelReason)

@@ -1,14 +1,15 @@
 ﻿using RockSchool.Data.Repositories;
-using RockSchool.Domain.Entities;
+using RockSchool.Domain.Branches;
+using RockSchool.Domain.Students;
 
 namespace RockSchool.BL.Services.StudentService;
 
 public class StudentService : IStudentService
 {
-    private readonly StudentRepository _studentRepository;
-    private readonly BranchRepository _branchRepository;
+    private readonly IStudentRepository _studentRepository;
+    private readonly IBranchRepository _branchRepository;
 
-    public StudentService(StudentRepository studentRepository, BranchRepository branchRepository)
+    public StudentService(IStudentRepository studentRepository, IBranchRepository branchRepository)
     {
         _studentRepository = studentRepository;
         _branchRepository = branchRepository;

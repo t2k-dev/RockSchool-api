@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RockSchool.BL.Models;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Teachers;
 
 namespace RockSchool.WebApi.Factories;
 

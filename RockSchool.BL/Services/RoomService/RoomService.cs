@@ -1,9 +1,10 @@
 ﻿using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Rooms;
 
 namespace RockSchool.BL.Services.RoomService
 {
-    public class RoomService(RoomRepository roomRepository) : IRoomService
+    public class RoomService(IRoomRepository roomRepository) : IRoomService
     {
         public async Task<Room[]> GetRentableRooms(int branchId)
         {

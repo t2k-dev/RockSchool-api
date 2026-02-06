@@ -1,14 +1,15 @@
 ﻿using RockSchool.Data.Migrations;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Schedules;
 
 namespace RockSchool.BL.Services.ScheduledWorkingPeriodsService
 {
     public class ScheduledWorkingPeriodsService : IScheduledWorkingPeriodsService
     {
-        private readonly ScheduledWorkingPeriodsRepository _scheduledWorkingPeriodsRepository;
+        private readonly IScheduledWorkingPeriodsRepository _scheduledWorkingPeriodsRepository;
 
-        public ScheduledWorkingPeriodsService(ScheduledWorkingPeriodsRepository scheduledWorkingPeriodsRepository)
+        public ScheduledWorkingPeriodsService(IScheduledWorkingPeriodsRepository scheduledWorkingPeriodsRepository)
         {
             _scheduledWorkingPeriodsRepository = scheduledWorkingPeriodsRepository;
         }

@@ -3,10 +3,11 @@ using RockSchool.BL.Models;
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Tenders;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
-    public class PaymentService(TenderRepository tenderRepository, ISubscriptionService subscriptionService) : IPaymentService
+    public class PaymentService(ITenderRepository tenderRepository, ISubscriptionService subscriptionService) : IPaymentService
     {
         public async Task Pay(Guid subscriptionId, Tender tender)
         {

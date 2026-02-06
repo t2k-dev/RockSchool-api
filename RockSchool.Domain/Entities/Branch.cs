@@ -1,3 +1,5 @@
+using RockSchool.Domain.Teachers;
+
 namespace RockSchool.Domain.Entities;
 
 public class Branch

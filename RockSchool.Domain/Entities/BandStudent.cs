@@ -1,4 +1,5 @@
 using RockSchool.Domain.Enums;
+using RockSchool.Domain.Students;
 
 namespace RockSchool.Domain.Entities;
 

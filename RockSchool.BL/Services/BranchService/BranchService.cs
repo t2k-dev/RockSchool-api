@@ -1,15 +1,16 @@
 ﻿using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Branches;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BranchService;
 
 public class BranchService : IBranchService
 {
-    private readonly BranchRepository _branchRepository;
+    private readonly IBranchRepository _branchRepository;
 
-    public BranchService(BranchRepository branchRepository)
+    public BranchService(IBranchRepository branchRepository)
     {
         _branchRepository = branchRepository;
     }

@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Subscriptions;
 
 namespace RockSchool.Data.Repositories;
 
-public class SubscriptionRepository : BaseRepository
+public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
 {
     public SubscriptionRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
     {

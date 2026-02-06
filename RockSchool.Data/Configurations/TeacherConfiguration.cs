@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RockSchool.Domain.Entities;
+using RockSchool.Domain.Teachers;
 
 namespace RockSchool.Data.Configurations;
 

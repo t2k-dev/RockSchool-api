@@ -1,4 +1,6 @@
-namespace RockSchool.Domain.Entities;
+using RockSchool.Domain.Entities;
+
+namespace RockSchool.Domain.Teachers;
 
 public class Teacher
 {
@@ -57,7 +59,7 @@ public class Teacher
         };
     }
 
-    public void UpdateInfo(string firstName, string lastName, DateTime birthDate, int sex, long phone, int ageLimit)
+    public void UpdateInfo(string firstName, string lastName, DateTime birthDate, int sex, long phone, int ageLimit, bool allowGroupLessons, bool allowBands)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -65,6 +67,8 @@ public class Teacher
         Sex = sex;
         Phone = phone;
         AgeLimit = ageLimit;
+        AllowGroupLessons = allowGroupLessons;
+        AllowBands = allowBands;
     }
 
     public void SetActiveStatus(bool isActive)
@@ -76,6 +80,17 @@ public class Teacher
     {
         if (!_disciplines.Contains(discipline))
             _disciplines.Add(discipline);
+    }
+
+    public void UpdateDisciplines(Discipline[]? disciplines)
+    {
+        if (disciplines is null)
+            return;
+
+        foreach (var discipline in disciplines)
+        {
+            AddDiscipline(discipline);
+        }
     }
 
     public void RemoveDiscipline(Discipline discipline)

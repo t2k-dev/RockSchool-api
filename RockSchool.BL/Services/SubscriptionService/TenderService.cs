@@ -1,9 +1,10 @@
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Tenders;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
-    public class TenderService(TenderRepository tenderRepository) : ITenderService
+    public class TenderService(ITenderRepository tenderRepository) : ITenderService
     {
         public async Task<Tender[]> GetTendersBySubscriptionIdAsync(Guid subscriptionId)
         {

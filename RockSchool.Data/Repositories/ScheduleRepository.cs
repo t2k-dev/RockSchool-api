@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Schedules;
 
 namespace RockSchool.Data.Repositories;
 
-public class ScheduleRepository : BaseRepository
+public class ScheduleRepository : BaseRepository, IScheduleRepository
 {
     public ScheduleRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
     {

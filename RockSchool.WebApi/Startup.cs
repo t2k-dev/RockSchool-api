@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -20,9 +19,26 @@ using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TariffService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
+using RockSchool.BL.Teachers;
+using RockSchool.BL.Teachers.AddTeacher;
 using RockSchool.Data.Extensions;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Attendances;
+using RockSchool.Domain.Bands;
+using RockSchool.Domain.Branches;
+using RockSchool.Domain.Disciplines;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Notes;
+using RockSchool.Domain.Rooms;
+using RockSchool.Domain.Schedules;
+using RockSchool.Domain.Students;
+using RockSchool.Domain.Subscriptions;
+using RockSchool.Domain.Tariffs;
+using RockSchool.Domain.Teachers;
+using RockSchool.Domain.Tenders;
+using RockSchool.Domain.Users;
+using RockSchool.Domain.WorkingPeriods;
+using System;
 
 namespace RockSchool.WebApi;
 
@@ -61,23 +77,27 @@ public class Startup
         services.AddScoped<ITenderService, TenderService>();
         services.AddScoped<ITariffService, TariffService>();
 
-        services.AddScoped<RoomRepository>();
-        services.AddScoped<BandRepository>();
-        services.AddScoped<BandStudentRepository>();
-        services.AddScoped<SubscriptionRepository>();
-        services.AddScoped<SubscriptionsAttendancesRepository>();
-        services.AddScoped<BranchRepository>();
-        services.AddScoped<AttendanceRepository>();
-        services.AddScoped<DisciplineRepository>();
-        services.AddScoped<ScheduleRepository>();
-        services.AddScoped<StudentRepository>();
-        services.AddScoped<TeacherRepository>();
-        services.AddScoped<UserRepository>();
-        services.AddScoped<NoteRepository>();
-        services.AddScoped<WorkingPeriodsRepository>();
-        services.AddScoped<ScheduledWorkingPeriodsRepository>();
-        services.AddScoped<TenderRepository>();
-        services.AddScoped<TariffRepository>();
+        // Teacher
+        services.AddScoped<IAddTeacherService, AddTeacherService>();
+        services.AddScoped<ITeacherScreenDetailsService, TeacherScreenDetailsService>();
+
+        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IBandRepository, BandRepository>();
+        services.AddScoped<IBandStudentRepository, BandStudentRepository>();
+        services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+        services.AddScoped<ISubscriptionsAttendancesRepository, SubscriptionsAttendancesRepository>();
+        services.AddScoped<IBranchRepository, BranchRepository>();
+        services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+        services.AddScoped<IDisciplineRepository, DisciplineRepository>();
+        services.AddScoped<IScheduleRepository, ScheduleRepository>();
+        services.AddScoped<IStudentRepository, StudentRepository>();
+        services.AddScoped<ITeacherRepository, TeacherRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<INoteRepository, NoteRepository>();
+        services.AddScoped<IWorkingPeriodsRepository, WorkingPeriodsRepository>();
+        services.AddScoped<IScheduledWorkingPeriodsRepository, ScheduledWorkingPeriodsRepository>();
+        services.AddScoped<ITenderRepository, TenderRepository>();
+        services.AddScoped<ITariffRepository, TariffRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         // services.AddControllers();

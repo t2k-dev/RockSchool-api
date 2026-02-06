@@ -1,10 +1,9 @@
 ﻿using RockSchool.BL.Models;
 using RockSchool.Domain.Entities;
-using RockSchool.WebApi.Models.Teachers;
 
-namespace RockSchool.WebApi.Models;
+namespace RockSchool.WebApi.Models.Teachers;
 
-public class RegisterTeacherRequestDto
+public class AddTeacherRequest
 {
     public TeacherInfo Teacher { get; set; }
     public WorkingPeriod[] WorkingPeriods { get; set; }

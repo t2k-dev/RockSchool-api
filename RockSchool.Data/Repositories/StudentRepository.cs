@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Domain.Entities;
+using RockSchool.Domain.Students;
 
 namespace RockSchool.Data.Repositories;
 
-public class StudentRepository
+public class StudentRepository : IStudentRepository
 {
     private readonly RockSchoolContext _context;
 

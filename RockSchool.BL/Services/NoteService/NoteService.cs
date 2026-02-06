@@ -1,14 +1,15 @@
 ﻿using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
+using RockSchool.Domain.Notes;
 
 namespace RockSchool.BL.Services.NoteService
 {
     public class NoteService : INoteService
     {
-        private readonly NoteRepository _noteRepository;
+        private readonly INoteRepository _noteRepository;
 
-        public NoteService(NoteRepository noteRepository)
+        public NoteService(INoteRepository noteRepository)
         {
             _noteRepository = noteRepository;
         }

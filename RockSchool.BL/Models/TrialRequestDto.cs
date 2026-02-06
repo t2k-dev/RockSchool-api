@@ -1,4 +1,4 @@
-﻿using RockSchool.Domain.Entities;
+﻿using RockSchool.Domain.Students;
 
 namespace RockSchool.BL.Models
 {

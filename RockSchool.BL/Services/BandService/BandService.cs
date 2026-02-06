@@ -3,11 +3,12 @@ using RockSchool.BL.Helpers;
 using RockSchool.BL.Models.Dtos;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Bands;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BandService;
 
-public class BandService(BandRepository bandRepository, BandStudentRepository bandStudentRepository, IScheduleService scheduleService)
+public class BandService(IBandRepository bandRepository, IBandStudentRepository bandStudentRepository, IScheduleService scheduleService)
     : IBandService
 {
     public async Task<Band?> GetByIdAsync(Guid id)

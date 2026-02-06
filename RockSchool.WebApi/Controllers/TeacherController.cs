@@ -5,32 +5,39 @@ using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
-using RockSchool.WebApi.Factories;
+using RockSchool.BL.Teachers;
+using RockSchool.BL.Teachers.AddTeacher;
+using RockSchool.Domain.Teachers;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
-using RockSchool.WebApi.Models.Attendances;
-using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RockSchool.BL.Models;
-using RockSchool.Domain.Entities;
 
 namespace RockSchool.WebApi.Controllers;
 
 [EnableCors("MyPolicy")]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 [ApiController]
 public class TeacherController(
+    IAddTeacherService addTeacherService,
     ITeacherService teacherService,
-    IUserService userService,
-    IDisciplineService disciplineService,
-    IAttendanceService attendanceService,
-    ISubscriptionService subscriptionService)
-    : Controller
+    ITeacherScreenDetailsService teacherScreenDetailsService,
+    IAttendanceService attendanceService
+    ) : Controller
 {
+    [HttpGet]
+    public async Task<ActionResult> Get()
+    {
+        var teachers = await teacherService.GetAllTeachersAsync();
+
+        if (teachers.Length == 0) return NotFound();
+
+        return Ok(teachers);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
@@ -57,59 +64,19 @@ public class TeacherController(
         return Ok(result);
     }
 
-    [HttpGet]
-    public async Task<ActionResult> Get()
-    {
-        var teachers = await teacherService.GetAllTeachersAsync();
-
-        if (teachers.Length == 0) return NotFound();
-
-        return Ok(teachers);
-    }
-
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetTeacherScreenDetails(Guid id)
     {
-        throw new NotImplementedException();
-        /*
-        var teacher = await teacherService.GetTeacherByIdAsync(id);
-
-        var attendanceInfos = new List<ParentAttendanceInfo>();
-        var subscriptionInfos = new List<ParentSubscriptionInfo>();
-
-        var allAttendances = await attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(id, DateTime.MinValue, DateTime.MaxValue);
-        if (allAttendances != null)
-        {
-            attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
-            var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
-            attendanceInfos.AddRange(groupAttendanceInfos);
-        }
-
-        var subscriptions = await subscriptionService.GetSubscriptionsByTeacherId(id);
-        if (subscriptions != null)
-        {
-            subscriptionInfos = subscriptions.Where(a => a.GroupId == null).ToParentSubscriptionInfos();
-            var groupSubscriptionInfos = SubscriptionBuilder.BuildGroupSubscriptionInfos(subscriptions.Where(a => a.GroupId != null));
-            subscriptionInfos.AddRange(groupSubscriptionInfos);
-        }
+        var details = await teacherScreenDetailsService.Query(id);
 
         var teacherScreenDetails = new TeacherScreenDetailsResponse
         {
-            Teacher = new TeacherInfo
-            {
-                TeacherId = teacher.TeacherId,
-                FirstName = teacher.FirstName,
-                LastName = teacher.LastName,
-                WorkingPeriods = teacher.WorkingPeriods.ToArray(),
-                ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods.ToArray(),
-                Disciplines = teacher.DisciplineIds.ToArray(),
-                IsActive = teacher.IsActive,
-            },
-            Attendances = attendanceInfos.ToArray(),
-            Subscriptions = subscriptionInfos.ToArray(),
+            Teacher = details.Teacher.ToInfo(),
+            Attendances = [],
+            Subscriptions = [],
         };
 
-        return Ok(teacherScreenDetails);*/
+        return Ok(teacherScreenDetails);
     }
 
     [HttpGet("available")]
@@ -153,62 +120,58 @@ public class TeacherController(
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddTeacher([FromBody] RegisterTeacherRequestDto requestDto)
+    public async Task<ActionResult> AddTeacher([FromBody] AddTeacherRequest request)
     {
         if (!ModelState.IsValid)
         {
-            throw new Exception("Incorrect requestDto for registration.");
+            throw new Exception("Incorrect request for registration.");
         }
 
-        throw new NotImplementedException();
-        /*
-        var newTeacher = new Teacher
+        var teacherDto = new TeacherDto
         {
-            FirstName = requestDto.Teacher.FirstName,
-            LastName = requestDto.Teacher.LastName,
-            BirthDate = requestDto.Teacher.BirthDate.ToUniversalTime(),
-            Phone = requestDto.Teacher.Phone,
-            BranchId = requestDto.Teacher.BranchId,
-            Sex = requestDto.Teacher.Sex,
-            DisciplineIds = requestDto.Teacher.Disciplines,
-            WorkingPeriods = requestDto.WorkingPeriods,
-            AllowGroupLessons = requestDto.Teacher.AllowGroupLessons,
-            AllowBands = requestDto.Teacher.AllowBands,
-            AgeLimit = requestDto.Teacher.AgeLimit,
-            IsActive = true,
+            FirstName = request.Teacher.FirstName,
+            LastName = request.Teacher.LastName,
+            BirthDate = request.Teacher.BirthDate.ToUniversalTime(),
+            Phone = request.Teacher.Phone,
+            BranchId = request.Teacher.BranchId,
+            Sex = request.Teacher.Sex,
+            DisciplineIds = request.Teacher.Disciplines,
+            WorkingPeriods = request.WorkingPeriods,
+            AllowGroupLessons = request.Teacher.AllowGroupLessons,
+            AllowBands = request.Teacher.AllowBands,
+            AgeLimit = request.Teacher.AgeLimit,
         };
 
-        var teacherId = await teacherService.AddTeacher(newTeacher);
+        var teacherId = await addTeacherService.Handle(teacherDto);
 
-        return Ok(teacherId);*/
+        return Ok(teacherId);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(Guid id, [FromBody] TeacherFormDto model)
+    public async Task<ActionResult> UpdateTeacher(Guid id, [FromBody] UpdateTeacherRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        throw new NotImplementedException();
-        
-        /*var teacher = new Teacher
+        var teacherDto = new TeacherDto
         {
             TeacherId = id,
-            FirstName = model.Teacher.FirstName,
-            LastName = model.Teacher.LastName,
-            BirthDate = model.Teacher.BirthDate,
-            Sex = model.Teacher.Sex,
-            Phone = model.Teacher.Phone,
-            AgeLimit = model.Teacher.AgeLimit,
-            AllowGroupLessons = model.Teacher.AllowGroupLessons,
-            AllowBands = model.Teacher.AllowBands,
-            DisciplineIds = model.Teacher.Disciplines,
-            WorkingPeriods = model.WorkingPeriods,
+            FirstName = request.Teacher.FirstName,
+            LastName = request.Teacher.LastName,
+            BirthDate = request.Teacher.BirthDate.ToUniversalTime(),
+            Phone = request.Teacher.Phone,
+            BranchId = request.Teacher.BranchId,
+            Sex = request.Teacher.Sex,
+            DisciplineIds = request.Teacher.Disciplines,
+            WorkingPeriods = request.WorkingPeriods,
+            AllowGroupLessons = request.Teacher.AllowGroupLessons,
+            AllowBands = request.Teacher.AllowBands,
+            AgeLimit = request.Teacher.AgeLimit,
         };
 
-        await teacherService.UpdateTeacherAsync(teacher, model.DisciplinesChanged, model.PeriodsChanged);
+        await teacherService.UpdateTeacherAsync(teacherDto, request.DisciplinesChanged, request.PeriodsChanged);
 
-        return Ok();*/
+        return Ok();
     }
 
     [HttpPost("{id}/activate")]

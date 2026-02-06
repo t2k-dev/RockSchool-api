@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
+using RockSchool.Domain.Bands;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
-public class BandRepository : BaseRepository
+public class BandRepository : BaseRepository, IBandRepository
 {
     public BandRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
     {

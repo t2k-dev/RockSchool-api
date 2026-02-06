@@ -1,15 +1,16 @@
 using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Bands;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BandStudentService;
 
 public class BandStudentService : IBandStudentService
 {
-    private readonly BandStudentRepository _bandStudentRepository;
+    private readonly IBandStudentRepository _bandStudentRepository;
 
-    public BandStudentService(BandStudentRepository bandStudentRepository)
+    public BandStudentService(IBandStudentRepository bandStudentRepository)
     {
         _bandStudentRepository = bandStudentRepository;
     }

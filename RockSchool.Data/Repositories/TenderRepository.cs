@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Tenders;
 
 namespace RockSchool.Data.Repositories
 {
-    public class TenderRepository(RockSchoolContext rockSchoolContext) : BaseRepository(rockSchoolContext)
+    public class TenderRepository(RockSchoolContext rockSchoolContext) : BaseRepository(rockSchoolContext), ITenderRepository
     {
         public async Task<Guid> AddAsync(Tender tender)
         {

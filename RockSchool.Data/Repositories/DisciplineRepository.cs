@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
+using RockSchool.Domain.Disciplines;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.Data.Repositories;
 
-public class DisciplineRepository
+public class DisciplineRepository : IDisciplineRepository
 {
     private readonly RockSchoolContext _rockSchoolContext;
 

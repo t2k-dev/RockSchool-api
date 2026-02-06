@@ -1,9 +1,10 @@
 ﻿using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Schedules;
 
 namespace RockSchool.Data.Repositories;
 
-public class ScheduledWorkingPeriodsRepository : BaseRepository
+public class ScheduledWorkingPeriodsRepository : BaseRepository, IScheduledWorkingPeriodsRepository
 {
     public ScheduledWorkingPeriodsRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
     {

@@ -3,12 +3,13 @@ using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.BL.Helpers;
+using RockSchool.Domain.Attendances;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.AttendanceService
 {
     public class AttendanceSubmitService(
-        AttendanceRepository attendanceRepository,
+        IAttendanceRepository attendanceRepository,
         ITrialSubscriptionService trialSubscriptionService,
         ISubscriptionService subscriptionService)
         : IAttendanceSubmitService

@@ -2,10 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
+using RockSchool.Domain.Tariffs;
 
 namespace RockSchool.Data.Repositories;
 
-public class TariffRepository(RockSchoolContext rockSchoolContext) : BaseRepository(rockSchoolContext)
+public class TariffRepository(RockSchoolContext rockSchoolContext) : BaseRepository(rockSchoolContext), ITariffRepository
 {
     public async Task<Tariff[]> GetAllTariffsAsync()
     {

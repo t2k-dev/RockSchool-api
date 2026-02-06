@@ -1,16 +1,19 @@
 ﻿using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
+using RockSchool.BL.Teachers;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Disciplines;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Teachers;
 
 namespace RockSchool.BL.Services.TeacherService;
 
 public class TeacherService : ITeacherService
 {
-    private readonly DisciplineRepository _disciplineRepository;
-    private readonly TeacherRepository _teacherRepository;
+    private readonly IDisciplineRepository _disciplineRepository;
+    private readonly ITeacherRepository _teacherRepository;
     private readonly IScheduledWorkingPeriodsService _scheduledWorkingPeriodsService;
 
-    public TeacherService(TeacherRepository teacherRepository, DisciplineRepository disciplineRepository,
+    public TeacherService(ITeacherRepository teacherRepository, IDisciplineRepository disciplineRepository,
         IScheduledWorkingPeriodsService scheduledWorkingPeriodsService)
     {
         _teacherRepository = teacherRepository;
@@ -33,44 +36,22 @@ public class TeacherService : ITeacherService
 
     public async Task<Teacher> GetTeacherByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
-        /*
-        var teacherEntity = await _teacherRepository.GetByIdAsync(id);
-        if (teacherEntity == null)
+        var teacher = await _teacherRepository.GetByIdAsync(id);
+        if (teacher == null)
         {
-            throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
+            throw new KeyNotFoundException($"Teacher with ID {id} was not found.");
         }
 
-        var disciplines = teacherEntity.Disciplines.Select(teacherDiscipline => new Discipline
+        /*var disciplines = teacherEntity.Disciplines.Select(teacherDiscipline => new Discipline
             {
                 Name = teacherDiscipline.Name, 
                 DisciplineId = teacherDiscipline.DisciplineId, 
                 IsActive = teacherDiscipline.IsActive, 
                 // DEV Teachers = teacherDiscipline.Teachers,
             })
-            .ToList();
-        
-        var teacher = new Teacher
-        {
-            TeacherId = teacherEntity.TeacherId,
-            LastName = teacherEntity.LastName,
-            FirstName = teacherEntity.FirstName,
-            BirthDate = teacherEntity.BirthDate,
-            Sex = teacherEntity.Sex,
-            Phone = teacherEntity.Phone,
-            User = teacherEntity.User,
-            Disciplines = disciplines,
-            // DEV DisciplineIds = disciplines.Select(d => d.DisciplineId).ToArray(),
-            AllowGroupLessons = teacherEntity.AllowGroupLessons,
-            AllowBands = teacherEntity.AllowBands,
-            AgeLimit = teacherEntity.AgeLimit,
-            IsActive = teacherEntity.IsActive,
-            BranchId = teacherEntity.BranchId,
-            WorkingPeriods = teacherEntity.WorkingPeriods,
-            ScheduledWorkingPeriods = teacherEntity.ScheduledWorkingPeriods,
-        };
+            .ToList();*/
 
-        return teacher;*/
+        return teacher;
     }
 
     public async Task<Teacher[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
@@ -114,31 +95,38 @@ public class TeacherService : ITeacherService
         return teacherEntity.TeacherId;*/
     }
 
-    public async Task UpdateTeacherAsync(Teacher teacherDto, bool updateDisciplines, bool recalculatePeriods)
+    public async Task UpdateTeacherAsync(TeacherDto teacherDto, bool updateDisciplines, bool recalculatePeriods)
     {
-        throw new NotImplementedException();
-        /*var existingTeacher = await _teacherRepository.GetByIdAsync(teacherDto.TeacherId);
-        if (existingTeacher == null)
+        var teacher = await _teacherRepository.GetByIdAsync(teacherDto.TeacherId);
+        if (teacher == null)
         {
             throw new KeyNotFoundException($"TeacherEntity with ID {teacherDto.TeacherId} was not found.");
         }
 
+        teacher.UpdateInfo(
+            teacherDto.FirstName,
+            teacherDto.FirstName,
+            teacherDto.BirthDate,
+            teacherDto.Sex,
+            teacherDto.Phone,
+            teacherDto.AgeLimit,
+            teacherDto.AllowGroupLessons,
+            teacherDto.AllowBands);
+
         // Disciplines
         if (updateDisciplines)
         {
-            existingTeacher.Disciplines.Clear();
-            existingTeacher.Disciplines = await _disciplineRepository.GetByIdsAsync(teacherDto.DisciplineIds);
+            var disciplines = await _disciplineRepository.GetByIdsAsync(teacherDto.DisciplineIds);
+            teacher.UpdateDisciplines(disciplines);
         }
 
         // Periods
         if (recalculatePeriods)
         {
-            UpdateTeacherWorkingPeriods(existingTeacher, teacherDto.WorkingPeriods.ToList());
+            //UpdateTeacherWorkingPeriods(teacher, teacherDto.WorkingPeriods.ToList());
         }
 
-        UpdateTeacherDetails(teacherDto, existingTeacher);
-
-        await _teacherRepository.UpdateAsync(existingTeacher);*/
+        await _teacherRepository.UpdateAsync(teacher);
     }
 
     public async Task SetTeacherActiveAsync(Guid id, bool isActive)

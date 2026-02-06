@@ -1,6 +1,8 @@
 ﻿using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
+using RockSchool.Domain.Attendances;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Schedules;
 
 namespace RockSchool.BL.Services.AttendanceService;
 
@@ -9,9 +11,9 @@ namespace RockSchool.BL.Services.AttendanceService;
 /// </summary>
 public class AttendanceService : IAttendanceService
 {
-    private readonly AttendanceRepository _attendanceRepository;
+    private readonly IAttendanceRepository _attendanceRepository;
 
-    public AttendanceService(AttendanceRepository attendanceRepository, ScheduleRepository scheduleRepository)
+    public AttendanceService(IAttendanceRepository attendanceRepository, IScheduleRepository scheduleRepository)
     {
         _attendanceRepository = attendanceRepository;
     }

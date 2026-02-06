@@ -1,3 +1,6 @@
+using RockSchool.Domain.Students;
+using RockSchool.Domain.Teachers;
+
 namespace RockSchool.Domain.Entities;
 
 public class WaitingSchedule

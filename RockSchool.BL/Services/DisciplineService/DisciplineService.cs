@@ -1,13 +1,14 @@
 ﻿using RockSchool.Data.Repositories;
+using RockSchool.Domain.Disciplines;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.DisciplineService;
 
 public class DisciplineService : IDisciplineService
 {
-    private readonly DisciplineRepository _disciplineRepository;
+    private readonly IDisciplineRepository _disciplineRepository;
 
-    public DisciplineService(DisciplineRepository disciplineRepository)
+    public DisciplineService(IDisciplineRepository disciplineRepository)
     {
         _disciplineRepository = disciplineRepository;
     }

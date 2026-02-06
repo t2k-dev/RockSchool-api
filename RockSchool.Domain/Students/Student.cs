@@ -1,4 +1,6 @@
-namespace RockSchool.Domain.Entities;
+using RockSchool.Domain.Entities;
+
+namespace RockSchool.Domain.Students;
 
 public class Student
 {

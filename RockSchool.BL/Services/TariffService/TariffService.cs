@@ -1,10 +1,11 @@
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Tariffs;
 
 namespace RockSchool.BL.Services.TariffService;
 
-public class TariffService(TariffRepository tariffRepository) : ITariffService
+public class TariffService(ITariffRepository tariffRepository) : ITariffService
 {
     public async Task<IEnumerable<Tariff>> GetAllTariffsAsync()
     {

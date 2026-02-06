@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
+using RockSchool.Domain.Teachers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Bands;
@@ -180,8 +181,6 @@ namespace RockSchool.WebApi.Helpers
 
         public static TeacherInfo ToInfo(this Teacher teacher)
         {
-            throw new NotImplementedException();
-            /*
             return new TeacherInfo
             {
                 FirstName = teacher.FirstName,
@@ -196,9 +195,9 @@ namespace RockSchool.WebApi.Helpers
                 ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?.ToArray(),
                 WorkingPeriods = teacher.WorkingPeriods?.ToArray(),
                 Sex = teacher.Sex,
-                Disciplines = teacher.DisciplineIds,
+                Disciplines = teacher.Disciplines.Select(d=>d.DisciplineId).ToArray(),
                 TeacherId = teacher.TeacherId,
-            };*/
+            };
         }
 
         public static List<TeacherInfo> ToInfos(this IEnumerable<Teacher> items)

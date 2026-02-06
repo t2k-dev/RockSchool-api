@@ -17,7 +17,7 @@ using RockSchool.WebApi.Models.Students;
 namespace RockSchool.WebApi.Controllers;
 
 [EnableCors("MyPolicy")]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 [ApiController]
 public class StudentController(
     IStudentService studentService,
@@ -28,14 +28,14 @@ public class StudentController(
 {
 
     [HttpGet]
-    public async Task<ActionResult> Get()
+    public async Task<ActionResult> GetAllStudents()
     {
-        var studentsDto = await studentService.GetAllStudentsAsync();
+        var students = await studentService.GetAllStudentsAsync();
 
-        if (studentsDto?.Length == 0)
+        if (students?.Length == 0)
             return NotFound();
 
-        return Ok(studentsDto);
+        return Ok(students);
     }
 
     [HttpGet("{id}")]
