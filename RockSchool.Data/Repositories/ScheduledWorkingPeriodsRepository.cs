@@ -13,15 +13,13 @@ public class ScheduledWorkingPeriodsRepository : BaseRepository, IScheduledWorki
     public async Task AddRangeAsync(List<ScheduledWorkingPeriod> scheduledWorkingPeriods)
     {
         await RockSchoolContext.AddRangeAsync(scheduledWorkingPeriods);
-        await RockSchoolContext.SaveChangesAsync();
     }
 
-    public async Task DeleteForTeacherAfter(Guid teacherId, DateTime deleteAfter)
+    public void DeleteForTeacherAfter(Guid teacherId, DateTime deleteAfter)
     {
         var periodsToDelete = RockSchoolContext.ScheduledWorkingPeriods
             .Where(p => p.TeacherId == teacherId && p.StartDate >= deleteAfter);
         
         RockSchoolContext.ScheduledWorkingPeriods.RemoveRange(periodsToDelete);
-        await RockSchoolContext.SaveChangesAsync();
     }
 }

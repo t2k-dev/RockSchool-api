@@ -10,7 +10,7 @@ namespace RockSchool.BL.Services.TeacherService;
 public class TeacherService(
     ITeacherRepository teacherRepository,
     IDisciplineRepository disciplineRepository,
-    IScheduledWorkingPeriodsService scheduledWorkingPeriodsService,
+    IScheduledWorkingPeriodsRepository scheduledWorkingPeriodsRepository,
     IWorkingPeriodsRepository workingPeriodsRepository,
     IUnitOfWork unitOfWork)
     : ITeacherService
@@ -117,7 +117,7 @@ public class TeacherService(
         await unitOfWork.SaveChangesAsync();
     }
 
-    public async Task UpdatePeriodsAsync(Guid teacherId, WorkingPeriodDto[] workingPeriodDtos, DateTime? recalculatePeriodsAfter)
+    public async Task UpdatePeriodsAsync(Guid teacherId, WorkingPeriodDto[] workingPeriodDtos, DateTime recalculatePeriodsAfter)
     {
         var teacher = await teacherRepository.GetByIdAsync(teacherId);
         if (teacher == null)
@@ -145,13 +145,9 @@ public class TeacherService(
         await workingPeriodsRepository.DeleteWorkingPeriodsByTeacherId(teacherId);
         await workingPeriodsRepository.AddRangeAsync(workingPeriods.ToArray());
 
-
-        //existingTeacher.ScheduledWorkingPeriods.ToList().RemoveRange() (swp => swp.StartDate > DateTime.Now)
-        // Exclude future scheduled periods that are not actual and add new ones.
-        //var scheduledWorkingPeriods = teacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < recalculatePeriodsAfter.Value.ToUniversalTime()).ToList();
-
-        //var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, teacher.TeacherId, DateTime.Now, 12);
-        //scheduledWorkingPeriods.AddRange(newScheduledWorkingPeriods);
+        scheduledWorkingPeriodsRepository.DeleteForTeacherAfter(teacherId, recalculatePeriodsAfter);
+        var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriods.ToArray(), teacher.TeacherId, recalculatePeriodsAfter, 12);
+        await scheduledWorkingPeriodsRepository.AddRangeAsync(newScheduledWorkingPeriods);
 
         await unitOfWork.SaveChangesAsync();
     }
@@ -180,16 +176,16 @@ public class TeacherService(
         await teacherRepository.DeleteAsync(existingTeacher);
     }
 
-    private List<ScheduledWorkingPeriod> BuildScheduledWorkingPeriods(List<WorkingPeriodDto> workingPeriodDtos, Guid teacherId, DateTime startDate, int months)
+    private List<ScheduledWorkingPeriod> BuildScheduledWorkingPeriods(WorkingPeriod[] workingPeriods, Guid teacherId, DateTime startDate, int months)
     {
-        var scheduledWorkingPeriodEntities = new List<ScheduledWorkingPeriod>();
+        var scheduledWorkingPeriods = new List<ScheduledWorkingPeriod>();
 
         startDate = startDate.Date;
         var endDate = startDate.AddMonths(months);
 
         for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
         {
-            foreach (var workingPeriodEntity in workingPeriodDtos)
+            foreach (var workingPeriodEntity in workingPeriods)
             {
                 if ((int)currentDate.DayOfWeek == workingPeriodEntity.WeekDay)
                 {
@@ -200,11 +196,11 @@ public class TeacherService(
                     var periodEnd = localEnd.ToUniversalTime();
 
                     var scheduledWorkingPeriod = ScheduledWorkingPeriod.Create(teacherId, periodStart, periodEnd, workingPeriodEntity.RoomId);
-                    scheduledWorkingPeriodEntities.Add(scheduledWorkingPeriod);
+                    scheduledWorkingPeriods.Add(scheduledWorkingPeriod);
                 }
             }
         }
 
-        return scheduledWorkingPeriodEntities;
+        return scheduledWorkingPeriods;
     }
 }

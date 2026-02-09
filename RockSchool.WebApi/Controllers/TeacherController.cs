@@ -179,7 +179,7 @@ public class TeacherController(
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await teacherService.UpdatePeriodsAsync(id, request.WorkingPeriods?.ToDto(), DateTime.Now);
+        await teacherService.UpdatePeriodsAsync(id, request.WorkingPeriods.ToDto(), DateTime.UtcNow);
 
         return Ok();
     }
