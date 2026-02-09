@@ -1,6 +1,6 @@
 ﻿using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
-using RockSchool.Domain.Rooms;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.RoomService
 {

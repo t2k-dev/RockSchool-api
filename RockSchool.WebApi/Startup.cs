@@ -23,22 +23,10 @@ using RockSchool.BL.Teachers;
 using RockSchool.BL.Teachers.AddTeacher;
 using RockSchool.Data.Extensions;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Attendances;
-using RockSchool.Domain.Bands;
-using RockSchool.Domain.Branches;
-using RockSchool.Domain.Disciplines;
 using RockSchool.Domain.Entities;
-using RockSchool.Domain.Notes;
-using RockSchool.Domain.Rooms;
-using RockSchool.Domain.Schedules;
-using RockSchool.Domain.Students;
-using RockSchool.Domain.Subscriptions;
-using RockSchool.Domain.Tariffs;
-using RockSchool.Domain.Teachers;
-using RockSchool.Domain.Tenders;
-using RockSchool.Domain.Users;
-using RockSchool.Domain.WorkingPeriods;
+using RockSchool.Domain.Repositories;
 using System;
+using RockSchool.Data;
 
 namespace RockSchool.WebApi;
 
@@ -81,6 +69,7 @@ public class Startup
         services.AddScoped<IAddTeacherService, AddTeacherService>();
         services.AddScoped<ITeacherScreenDetailsService, TeacherScreenDetailsService>();
 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IBandRepository, BandRepository>();
         services.AddScoped<IBandStudentRepository, BandStudentRepository>();

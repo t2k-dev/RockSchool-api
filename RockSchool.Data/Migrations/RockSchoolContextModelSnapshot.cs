@@ -576,70 +576,11 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("TeacherId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("WorkingPeriodId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("ScheduledWorkingPeriodId");
-
-                    b.HasIndex("RoomId");
 
                     b.HasIndex("TeacherId");
 
-                    b.HasIndex("TeacherId1");
-
-                    b.HasIndex("WorkingPeriodId");
-
                     b.ToTable("ScheduledWorkingPeriods", (string)null);
-                });
-
-            modelBuilder.Entity("RockSchool.Domain.Entities.Student", b =>
-                {
-                    b.Property<Guid>("StudentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<bool>("IsWaiting")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int?>("Level")
-                        .HasColumnType("integer");
-
-                    b.Property<long>("Phone")
-                        .HasColumnType("bigint");
-
-                    b.Property<short>("Sex")
-                        .HasColumnType("smallint");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("StudentId");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("RockSchool.Domain.Entities.Subscription", b =>
@@ -937,63 +878,6 @@ namespace RockSchool.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("RockSchool.Domain.Entities.Teacher", b =>
-                {
-                    b.Property<Guid>("TeacherId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("AgeLimit")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("AllowBands")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("AllowGroupLessons")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("BranchId1")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<long>("Phone")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Sex")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("TeacherId");
-
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("BranchId1");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Teachers", (string)null);
-                });
-
             modelBuilder.Entity("RockSchool.Domain.Entities.TeacherDiscipline", b =>
                 {
                     b.Property<Guid>("TeacherId")
@@ -1119,9 +1003,6 @@ namespace RockSchool.Data.Migrations
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("TeacherId1")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("WeekDay")
                         .HasColumnType("integer");
 
@@ -1131,9 +1012,111 @@ namespace RockSchool.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.HasIndex("TeacherId1");
-
                     b.ToTable("WorkingPeriods", (string)null);
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Students.Student", b =>
+                {
+                    b.Property<Guid>("StudentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("IsWaiting")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int?>("Level")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("Phone")
+                        .HasColumnType("bigint");
+
+                    b.Property<short>("Sex")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("StudentId");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Students", (string)null);
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Teachers.Teacher", b =>
+                {
+                    b.Property<Guid>("TeacherId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AgeLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("AllowBands")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("AllowGroupLessons")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("BranchId1")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<long>("Phone")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Sex")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("TeacherId");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("BranchId1");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Teachers", (string)null);
                 });
 
             modelBuilder.Entity("RockSchool.Domain.Entities.Attendance", b =>
@@ -1154,7 +1137,7 @@ namespace RockSchool.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
 
@@ -1188,13 +1171,13 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Domain.Entities.Band", b =>
                 {
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", null)
                         .WithMany("Bands")
                         .HasForeignKey("TeacherId1");
 
@@ -1209,7 +1192,7 @@ namespace RockSchool.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Student", "Student")
+                    b.HasOne("RockSchool.Domain.Students.Student", "Student")
                         .WithMany("BandStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1222,7 +1205,7 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Domain.Entities.Discipline", b =>
                 {
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", null)
                         .WithMany("Disciplines")
                         .HasForeignKey("TeacherId");
                 });
@@ -1301,46 +1284,11 @@ namespace RockSchool.Data.Migrations
 
             modelBuilder.Entity("RockSchool.Domain.Entities.ScheduledWorkingPeriod", b =>
                 {
-                    b.HasOne("RockSchool.Domain.Entities.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
-                        .WithMany()
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", null)
+                        .WithMany("ScheduledWorkingPeriods")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
-                        .WithMany("ScheduledWorkingPeriods")
-                        .HasForeignKey("TeacherId1");
-
-                    b.HasOne("RockSchool.Domain.Entities.WorkingPeriod", "WorkingPeriod")
-                        .WithMany("ScheduledWorkingPeriods")
-                        .HasForeignKey("WorkingPeriodId");
-
-                    b.Navigation("Room");
-
-                    b.Navigation("Teacher");
-
-                    b.Navigation("WorkingPeriod");
-                });
-
-            modelBuilder.Entity("RockSchool.Domain.Entities.Student", b =>
-                {
-                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId");
-
-                    b.HasOne("RockSchool.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Branch");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RockSchool.Domain.Entities.Subscription", b =>
@@ -1355,7 +1303,7 @@ namespace RockSchool.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DisciplineId");
 
-                    b.HasOne("RockSchool.Domain.Entities.Student", "Student")
+                    b.HasOne("RockSchool.Domain.Students.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1365,7 +1313,7 @@ namespace RockSchool.Data.Migrations
                         .WithMany()
                         .HasForeignKey("TariffId");
 
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
 
@@ -1389,27 +1337,6 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Discipline");
                 });
 
-            modelBuilder.Entity("RockSchool.Domain.Entities.Teacher", b =>
-                {
-                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RockSchool.Domain.Entities.Branch", null)
-                        .WithMany("Teachers")
-                        .HasForeignKey("BranchId1");
-
-                    b.HasOne("RockSchool.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Branch");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("RockSchool.Domain.Entities.TeacherDiscipline", b =>
                 {
                     b.HasOne("RockSchool.Domain.Entities.Discipline", "Discipline")
@@ -1418,7 +1345,7 @@ namespace RockSchool.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1459,13 +1386,13 @@ namespace RockSchool.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Student", "Student")
+                    b.HasOne("RockSchool.Domain.Students.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1486,19 +1413,49 @@ namespace RockSchool.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", "Teacher")
-                        .WithMany()
+                    b.HasOne("RockSchool.Domain.Teachers.Teacher", null)
+                        .WithMany("WorkingPeriods")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RockSchool.Domain.Entities.Teacher", null)
-                        .WithMany("WorkingPeriods")
-                        .HasForeignKey("TeacherId1");
-
                     b.Navigation("Room");
+                });
 
-                    b.Navigation("Teacher");
+            modelBuilder.Entity("RockSchool.Domain.Students.Student", b =>
+                {
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId");
+
+                    b.HasOne("RockSchool.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Teachers.Teacher", b =>
+                {
+                    b.HasOne("RockSchool.Domain.Entities.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RockSchool.Domain.Entities.Branch", null)
+                        .WithMany("Teachers")
+                        .HasForeignKey("BranchId1");
+
+                    b.HasOne("RockSchool.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RockSchool.Domain.Entities.Attendance", b =>
@@ -1534,11 +1491,6 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("RockSchool.Domain.Entities.Student", b =>
-                {
-                    b.Navigation("BandStudents");
-                });
-
             modelBuilder.Entity("RockSchool.Domain.Entities.Subscription", b =>
                 {
                     b.Navigation("Schedules");
@@ -1546,7 +1498,12 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("Tenders");
                 });
 
-            modelBuilder.Entity("RockSchool.Domain.Entities.Teacher", b =>
+            modelBuilder.Entity("RockSchool.Domain.Students.Student", b =>
+                {
+                    b.Navigation("BandStudents");
+                });
+
+            modelBuilder.Entity("RockSchool.Domain.Teachers.Teacher", b =>
                 {
                     b.Navigation("Bands");
 
@@ -1555,11 +1512,6 @@ namespace RockSchool.Data.Migrations
                     b.Navigation("ScheduledWorkingPeriods");
 
                     b.Navigation("WorkingPeriods");
-                });
-
-            modelBuilder.Entity("RockSchool.Domain.Entities.WorkingPeriod", b =>
-                {
-                    b.Navigation("ScheduledWorkingPeriods");
                 });
 #pragma warning restore 612, 618
         }

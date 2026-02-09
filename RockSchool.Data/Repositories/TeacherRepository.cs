@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Teachers;
 
 namespace RockSchool.Data.Repositories;
@@ -39,10 +40,9 @@ public class TeacherRepository : ITeacherRepository
             .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
     }
 
-    public async Task UpdateAsync(Teacher teacher)
+    public void Update(Teacher teacher)
     {
         _context.Teachers.Update(teacher);
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Teacher teacher)

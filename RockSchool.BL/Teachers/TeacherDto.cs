@@ -1,6 +1,4 @@
-﻿using RockSchool.Domain.Entities;
-
-namespace RockSchool.BL.Teachers;
+﻿namespace RockSchool.BL.Teachers;
 
 public class TeacherDto
 {
@@ -15,5 +13,5 @@ public class TeacherDto
     public bool AllowGroupLessons { get; set; }
     public bool AllowBands { get; set; }
     public int[] DisciplineIds { get; set; }
-    public WorkingPeriod[] WorkingPeriods { get; set; }
+    public WorkingPeriodDto[]? WorkingPeriods { get; set; }
 }

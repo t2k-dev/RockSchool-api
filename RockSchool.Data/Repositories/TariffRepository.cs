@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
-using RockSchool.Domain.Tariffs;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.Data.Repositories;
 

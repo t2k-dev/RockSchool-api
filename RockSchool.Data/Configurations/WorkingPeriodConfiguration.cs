@@ -17,11 +17,7 @@ public class WorkingPeriodConfiguration : IEntityTypeConfiguration<WorkingPeriod
         builder.Property(wp => wp.EndTime).IsRequired();
         builder.Property(wp => wp.RoomId).IsRequired();
         
-        builder.HasOne(wp => wp.Teacher).WithMany().HasForeignKey("TeacherId");
+        //builder.HasOne(wp => wp.Teacher).WithMany().HasForeignKey("TeacherId");
         builder.HasOne(wp => wp.Room).WithMany().HasForeignKey("RoomId");
-        
-        builder.HasMany(wp => wp.ScheduledWorkingPeriods).WithOne(swp => swp.WorkingPeriod).HasForeignKey("WorkingPeriodId");
-        
-        builder.Metadata.FindNavigation(nameof(WorkingPeriod.ScheduledWorkingPeriods))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

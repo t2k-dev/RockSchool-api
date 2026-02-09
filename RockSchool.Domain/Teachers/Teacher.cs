@@ -1,4 +1,5 @@
 using RockSchool.Domain.Entities;
+using System.Linq;
 
 namespace RockSchool.Domain.Teachers;
 
@@ -76,25 +77,65 @@ public class Teacher
         IsActive = isActive;
     }
 
-    public void AddDiscipline(Discipline discipline)
-    {
-        if (!_disciplines.Contains(discipline))
-            _disciplines.Add(discipline);
-    }
-
     public void UpdateDisciplines(Discipline[]? disciplines)
     {
         if (disciplines is null)
             return;
 
+        _disciplines.Clear();
         foreach (var discipline in disciplines)
         {
-            AddDiscipline(discipline);
+            _disciplines.Add(discipline);
         }
     }
 
-    public void RemoveDiscipline(Discipline discipline)
+    public void AddWorkingPeriod(WorkingPeriod workingPeriod)
     {
-        _disciplines.Remove(discipline);
+        if (!_workingPeriods.Contains(workingPeriod))
+            _workingPeriods.Add(workingPeriod);
+    }
+
+    public void UpdateWorkingPeriods(WorkingPeriod[]? newWorkingPeriods)
+    {
+        if (newWorkingPeriods is null)
+            return;
+
+        _workingPeriods.Clear();
+        foreach (var workingPeriod in newWorkingPeriods)
+        {
+            _workingPeriods.Add(workingPeriod);
+        }
+
+        //ScheduledWorkingPeriods.ToList().RemoveRange()(swp => swp.StartDate > DateTime.Now);
+        // Exclude future scheduled periods that are not actual and add new ones.
+        //var scheduledWorkingPeriods = existingTeacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < DateTime.Now.ToUniversalTime()).ToList();
+
+        //var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, existingTeacher.TeacherId, DateTime.Now, 12);
+        //scheduledWorkingPeriods.AddRange(newScheduledWorkingPeriods);
+
+        /*
+        existingTeacher.WorkingPeriods = newWorkingPeriodsEntities;
+        existingTeacher.ScheduledWorkingPeriods = scheduledWorkingPeriods;
+        */
+    }
+
+    /// <summary>
+    /// Replaces working periods without clearing (use when periods are already deleted from DB)
+    /// </summary>
+    public void ReplaceWorkingPeriods(WorkingPeriod[]? newWorkingPeriods)
+    {
+        if (newWorkingPeriods is null)
+            return;
+
+        // Don't call Clear() - periods are already deleted from database
+        foreach (var workingPeriod in newWorkingPeriods)
+        {
+            _workingPeriods.Add(workingPeriod);
+        }
+    }
+
+    public void DeleteWorkingPeriods()
+    {
+        _workingPeriods.Clear();
     }
 }

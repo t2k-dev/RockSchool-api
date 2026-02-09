@@ -1,5 +1,5 @@
 ﻿using RockSchool.Data.Repositories;
-using RockSchool.Domain.Disciplines;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.DisciplineService;

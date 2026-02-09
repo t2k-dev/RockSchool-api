@@ -3,7 +3,7 @@ using RockSchool.BL.Helpers;
 using RockSchool.BL.Models.Dtos;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Bands;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BandService;

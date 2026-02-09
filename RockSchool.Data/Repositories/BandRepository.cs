@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
-using RockSchool.Domain.Bands;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.Data.Repositories;
 

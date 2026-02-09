@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RockSchool.Domain.Teachers;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Teachers
 {

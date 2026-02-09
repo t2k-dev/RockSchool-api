@@ -3,7 +3,7 @@ using RockSchool.BL.Models;
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
-using RockSchool.Domain.Tenders;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {

@@ -1,7 +1,7 @@
 ﻿using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
-using RockSchool.Domain.Notes;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.NoteService
 {

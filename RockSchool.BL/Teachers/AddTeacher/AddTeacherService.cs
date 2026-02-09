@@ -1,4 +1,4 @@
-﻿using RockSchool.Domain.Disciplines;
+﻿using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Teachers;
 
@@ -26,7 +26,7 @@ namespace RockSchool.BL.Teachers.AddTeacher
             await teacherRepository.AddAsync(teacher);
 
             var workingPeriodEntities = request.WorkingPeriods;
-            var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities, teacher.TeacherId, DateTime.Now.ToUniversalTime(), 3);
+            //var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities., teacher.TeacherId, DateTime.Now.ToUniversalTime(), 3);
 
             return teacher.TeacherId;
         }

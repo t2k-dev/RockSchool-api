@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using RockSchool.Domain.Entities;
 using RockSchool.Domain.Teachers;
 
 namespace RockSchool.Data.Configurations;
@@ -24,10 +25,13 @@ public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
         
         builder.HasOne(t => t.User).WithMany().HasForeignKey("UserId").IsRequired(false);
         builder.HasOne(t => t.Branch).WithMany().HasForeignKey("BranchId");
-        
+
+        builder.HasMany(t => t.WorkingPeriods).WithOne().HasForeignKey(t => t.TeacherId);
+        builder.HasMany(t => t.ScheduledWorkingPeriods).WithOne().HasForeignKey(t => t.TeacherId);
+
         builder.Metadata.FindNavigation(nameof(Teacher.Disciplines))!.SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(Teacher.WorkingPeriods))!.SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(Teacher.ScheduledWorkingPeriods))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        //builder.Metadata.FindNavigation(nameof(Teacher.WorkingPeriods))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        //builder.Metadata.FindNavigation(nameof(Teacher.ScheduledWorkingPeriods))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(Teacher.Bands))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

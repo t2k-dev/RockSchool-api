@@ -1,7 +1,7 @@
 ﻿using RockSchool.BL.Services.AttendanceService;
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Subscriptions;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {

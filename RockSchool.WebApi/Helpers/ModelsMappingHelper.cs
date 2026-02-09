@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RockSchool.BL.Teachers;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Teachers;
@@ -271,6 +272,23 @@ namespace RockSchool.WebApi.Helpers
                 StudentId = dto.StudentId,
                 BandRoleId = dto.BandRoleId
             };*/
+        }
+
+        // WorkingPeriod
+        public static WorkingPeriodDto[] ToDto(this WorkingPeriodInfo[] workingPeriodInfos)
+        {
+            if (workingPeriodInfos == null || workingPeriodInfos.Length == 0)
+                return Array.Empty<WorkingPeriodDto>();
+
+            return workingPeriodInfos.Select(wp => new WorkingPeriodDto
+            {
+                WorkingPeriodId = wp.WorkingPeriodId,
+                TeacherId = wp.TeacherId,
+                WeekDay = wp.WeekDay,
+                StartTime = wp.StartTime,
+                EndTime = wp.EndTime,
+                RoomId = wp.RoomId
+            }).ToArray();
         }
     }
 }

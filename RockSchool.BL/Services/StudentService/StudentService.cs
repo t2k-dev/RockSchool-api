@@ -1,5 +1,5 @@
 ﻿using RockSchool.Data.Repositories;
-using RockSchool.Domain.Branches;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Students;
 
 namespace RockSchool.BL.Services.StudentService;

@@ -136,7 +136,7 @@ public class TeacherController(
             BranchId = request.Teacher.BranchId,
             Sex = request.Teacher.Sex,
             DisciplineIds = request.Teacher.Disciplines,
-            WorkingPeriods = request.WorkingPeriods,
+            WorkingPeriods = request.WorkingPeriods?.ToDto(),
             AllowGroupLessons = request.Teacher.AllowGroupLessons,
             AllowBands = request.Teacher.AllowBands,
             AgeLimit = request.Teacher.AgeLimit,
@@ -163,13 +163,23 @@ public class TeacherController(
             BranchId = request.Teacher.BranchId,
             Sex = request.Teacher.Sex,
             DisciplineIds = request.Teacher.Disciplines,
-            WorkingPeriods = request.WorkingPeriods,
             AllowGroupLessons = request.Teacher.AllowGroupLessons,
             AllowBands = request.Teacher.AllowBands,
             AgeLimit = request.Teacher.AgeLimit,
         };
 
-        await teacherService.UpdateTeacherAsync(teacherDto, request.DisciplinesChanged, request.PeriodsChanged);
+        await teacherService.UpdateTeacherAsync(teacherDto, request.DisciplinesChanged);
+
+        return Ok();
+    }
+
+    [HttpPut("{id}/workingPeriods")]
+    public async Task<ActionResult> UpdatePeriods(Guid id, [FromBody] UpdateTeacherPeriodsRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await teacherService.UpdatePeriodsAsync(id, request.WorkingPeriods?.ToDto(), DateTime.Now);
 
         return Ok();
     }
@@ -209,6 +219,17 @@ public class TeacherController(
             LastName = teacher.LastName,
             TeacherId = teacher.TeacherId,
             Workload = Random.Shared.Next(1, 100),
+            /*WorkingPeriods = teacher.WorkingPeriods?
+                .Select(wp => new WorkingPeriodInfo
+                {
+                    WorkingPeriodId = wp.WorkingPeriodId,
+                    TeacherId = wp.TeacherId,
+                    WeekDay = wp.WeekDay,
+                    StartTime = wp.StartTime,
+                    EndTime = wp.EndTime,
+                    RoomId = wp.RoomId
+                })
+                .ToList(),*/
             ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?
                 .Select(swp => new ScheduledWorkingPeriodInfo
                 {

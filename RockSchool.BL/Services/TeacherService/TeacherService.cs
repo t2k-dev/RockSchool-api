@@ -1,31 +1,23 @@
 ﻿using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.BL.Teachers;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Disciplines;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Teachers;
 
 namespace RockSchool.BL.Services.TeacherService;
 
-public class TeacherService : ITeacherService
+public class TeacherService(
+    ITeacherRepository teacherRepository,
+    IDisciplineRepository disciplineRepository,
+    IScheduledWorkingPeriodsService scheduledWorkingPeriodsService,
+    IWorkingPeriodsRepository workingPeriodsRepository,
+    IUnitOfWork unitOfWork)
+    : ITeacherService
 {
-    private readonly IDisciplineRepository _disciplineRepository;
-    private readonly ITeacherRepository _teacherRepository;
-    private readonly IScheduledWorkingPeriodsService _scheduledWorkingPeriodsService;
-
-    public TeacherService(ITeacherRepository teacherRepository, IDisciplineRepository disciplineRepository,
-        IScheduledWorkingPeriodsService scheduledWorkingPeriodsService)
-    {
-        _teacherRepository = teacherRepository;
-        _disciplineRepository = disciplineRepository;
-        _scheduledWorkingPeriodsService = scheduledWorkingPeriodsService;
-    }
-
-    
-
     public async Task<Teacher[]> GetAllTeachersAsync()
     {
-        var teacherEntities = await _teacherRepository.GetAllAsync();
+        var teacherEntities = await teacherRepository.GetAllAsync();
         if (!teacherEntities.Any())
         {
             return [];
@@ -36,7 +28,7 @@ public class TeacherService : ITeacherService
 
     public async Task<Teacher> GetTeacherByIdAsync(Guid id)
     {
-        var teacher = await _teacherRepository.GetByIdAsync(id);
+        var teacher = await teacherRepository.GetByIdAsync(id);
         if (teacher == null)
         {
             throw new KeyNotFoundException($"Teacher with ID {id} was not found.");
@@ -56,12 +48,12 @@ public class TeacherService : ITeacherService
 
     public async Task<Teacher[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
     {
-        return await _teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
+        return await teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
     }
 
     public async Task<Teacher[]?> GetRehearsableTeachersAsync(int branchId)
     {
-        return await _teacherRepository.GetRehearsableTeachersAsync(branchId);
+        return await teacherRepository.GetRehearsableTeachersAsync(branchId);
     }
 
     public async Task<Guid> AddTeacher(Teacher addTeacherDto)
@@ -95,17 +87,17 @@ public class TeacherService : ITeacherService
         return teacherEntity.TeacherId;*/
     }
 
-    public async Task UpdateTeacherAsync(TeacherDto teacherDto, bool updateDisciplines, bool recalculatePeriods)
+    public async Task UpdateTeacherAsync(TeacherDto teacherDto, bool updateDisciplines)
     {
-        var teacher = await _teacherRepository.GetByIdAsync(teacherDto.TeacherId);
+        var teacher = await teacherRepository.GetByIdAsync(teacherDto.TeacherId);
         if (teacher == null)
         {
-            throw new KeyNotFoundException($"TeacherEntity with ID {teacherDto.TeacherId} was not found.");
+            throw new KeyNotFoundException($"Teacher with ID {teacherDto.TeacherId} was not found.");
         }
 
         teacher.UpdateInfo(
             teacherDto.FirstName,
-            teacherDto.FirstName,
+            teacherDto.LastName,
             teacherDto.BirthDate,
             teacherDto.Sex,
             teacherDto.Phone,
@@ -116,22 +108,57 @@ public class TeacherService : ITeacherService
         // Disciplines
         if (updateDisciplines)
         {
-            var disciplines = await _disciplineRepository.GetByIdsAsync(teacherDto.DisciplineIds);
+            var disciplines = await disciplineRepository.GetByIdsAsync(teacherDto.DisciplineIds);
             teacher.UpdateDisciplines(disciplines);
         }
 
-        // Periods
-        if (recalculatePeriods)
+        teacherRepository.Update(teacher);
+
+        await unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task UpdatePeriodsAsync(Guid teacherId, WorkingPeriodDto[] workingPeriodDtos, DateTime? recalculatePeriodsAfter)
+    {
+        var teacher = await teacherRepository.GetByIdAsync(teacherId);
+        if (teacher == null)
         {
-            //UpdateTeacherWorkingPeriods(teacher, teacherDto.WorkingPeriods.ToList());
+            throw new KeyNotFoundException($"Teacher with ID {teacherId} was not found.");
         }
 
-        await _teacherRepository.UpdateAsync(teacher);
+        // Delete existing periods via repository
+        //await workingPeriodsRepository.DeleteWorkingPeriodsByTeacherId(teacherId);
+
+        // Create and add new periods via repository
+        var workingPeriods = new List<WorkingPeriod>();
+        foreach (var workingPeriodDto in workingPeriodDtos)
+        {
+            var period = WorkingPeriod.Create(teacherId,
+                workingPeriodDto.WeekDay, 
+                workingPeriodDto.StartTime,
+                workingPeriodDto.EndTime, 
+                workingPeriodDto.RoomId
+                );
+
+            workingPeriods.Add(period);
+        }
+
+        await workingPeriodsRepository.DeleteWorkingPeriodsByTeacherId(teacherId);
+        await workingPeriodsRepository.AddRangeAsync(workingPeriods.ToArray());
+
+
+        //existingTeacher.ScheduledWorkingPeriods.ToList().RemoveRange() (swp => swp.StartDate > DateTime.Now)
+        // Exclude future scheduled periods that are not actual and add new ones.
+        //var scheduledWorkingPeriods = teacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < recalculatePeriodsAfter.Value.ToUniversalTime()).ToList();
+
+        //var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, teacher.TeacherId, DateTime.Now, 12);
+        //scheduledWorkingPeriods.AddRange(newScheduledWorkingPeriods);
+
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async Task SetTeacherActiveAsync(Guid id, bool isActive)
     {
-        var existingTeacher = await _teacherRepository.GetByIdAsync(id);
+        var existingTeacher = await teacherRepository.GetByIdAsync(id);
         if (existingTeacher == null)
         {
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
@@ -139,21 +166,21 @@ public class TeacherService : ITeacherService
 
         existingTeacher.SetActiveStatus(isActive);
 
-        await _teacherRepository.UpdateAsync(existingTeacher);
+        teacherRepository.Update(existingTeacher);
     }
 
     public async Task DeleteTeacherAsync(Guid id)
     {
-        var existingTeacher = await _teacherRepository.GetByIdAsync(id);
+        var existingTeacher = await teacherRepository.GetByIdAsync(id);
         if (existingTeacher == null)
         {
             throw new KeyNotFoundException($"TeacherEntity with ID {id} was not found.");
         }
 
-        await _teacherRepository.DeleteAsync(existingTeacher);
+        await teacherRepository.DeleteAsync(existingTeacher);
     }
 
-    private List<ScheduledWorkingPeriod> BuildScheduledWorkingPeriods(List<WorkingPeriod> workingPeriodEntities, Guid teacherId, DateTime startDate, int months)
+    private List<ScheduledWorkingPeriod> BuildScheduledWorkingPeriods(List<WorkingPeriodDto> workingPeriodDtos, Guid teacherId, DateTime startDate, int months)
     {
         var scheduledWorkingPeriodEntities = new List<ScheduledWorkingPeriod>();
 
@@ -162,7 +189,7 @@ public class TeacherService : ITeacherService
 
         for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
         {
-            foreach (var workingPeriodEntity in workingPeriodEntities)
+            foreach (var workingPeriodEntity in workingPeriodDtos)
             {
                 if ((int)currentDate.DayOfWeek == workingPeriodEntity.WeekDay)
                 {
@@ -179,23 +206,5 @@ public class TeacherService : ITeacherService
         }
 
         return scheduledWorkingPeriodEntities;
-    }
-
-    private void UpdateTeacherWorkingPeriods(Teacher existingTeacher, List<WorkingPeriod> workingPeriods)
-    {
-        var newWorkingPeriodsEntities = workingPeriods;
-
-        //existingTeacher.ScheduledWorkingPeriods.ToList().RemoveRange() (swp => swp.StartDate > DateTime.Now)
-        // Exclude future scheduled periods that are not actual and add new ones.
-        var scheduledWorkingPeriods = existingTeacher.ScheduledWorkingPeriods.Where(swp => swp.StartDate < DateTime.Now.ToUniversalTime()).ToList();
-
-        var newScheduledWorkingPeriods = BuildScheduledWorkingPeriods(newWorkingPeriodsEntities, existingTeacher.TeacherId, DateTime.Now, 12);
-        scheduledWorkingPeriods.AddRange(newScheduledWorkingPeriods);
-
-        // DEV existingTeacher.WorkingPeriods. Clear();
-        /*
-        existingTeacher.WorkingPeriods = newWorkingPeriodsEntities;
-        existingTeacher.ScheduledWorkingPeriods = scheduledWorkingPeriods;
-        */
     }
 }

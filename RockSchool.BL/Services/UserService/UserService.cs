@@ -2,7 +2,7 @@
 using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
-using RockSchool.Domain.Users;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.UserService;
 

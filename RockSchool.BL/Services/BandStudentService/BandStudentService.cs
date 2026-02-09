@@ -1,7 +1,7 @@
 using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Bands;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.BandStudentService;

@@ -5,10 +5,8 @@ using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Attendances;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
-using RockSchool.Domain.Schedules;
-using RockSchool.Domain.Subscriptions;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {

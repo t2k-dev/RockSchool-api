@@ -1,8 +1,7 @@
 ﻿using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Attendances;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
-using RockSchool.Domain.Schedules;
 
 namespace RockSchool.BL.Services.AttendanceService;
 

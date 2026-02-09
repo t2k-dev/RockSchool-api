@@ -15,10 +15,5 @@ public class ScheduledWorkingPeriodConfiguration : IEntityTypeConfiguration<Sche
         builder.Property(swp => swp.StartDate).IsRequired();
         builder.Property(swp => swp.EndDate).IsRequired();
         builder.Property(swp => swp.RoomId).IsRequired();
-        builder.Property(swp => swp.WorkingPeriodId).IsRequired(false);
-        
-        builder.HasOne(swp => swp.Teacher).WithMany().HasForeignKey("TeacherId");
-        builder.HasOne(swp => swp.Room).WithMany().HasForeignKey("RoomId");
-        builder.HasOne(swp => swp.WorkingPeriod).WithMany(wp => wp.ScheduledWorkingPeriods).HasForeignKey("WorkingPeriodId").IsRequired(false);
     }
 }

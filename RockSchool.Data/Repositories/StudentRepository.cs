@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Students;
 
 namespace RockSchool.Data.Repositories;

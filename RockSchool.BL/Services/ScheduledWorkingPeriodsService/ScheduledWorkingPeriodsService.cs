@@ -1,7 +1,7 @@
 ﻿using RockSchool.Data.Migrations;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
-using RockSchool.Domain.Schedules;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.ScheduledWorkingPeriodsService
 {
