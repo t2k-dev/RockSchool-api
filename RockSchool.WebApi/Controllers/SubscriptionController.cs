@@ -11,11 +11,11 @@ using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
-using RockSchool.WebApi.Models.Teachers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Helpers;
 using RockSchool.Domain.Students;
@@ -25,18 +25,16 @@ namespace RockSchool.WebApi.Controllers
 {
     [EnableCors("MyPolicy")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]s")]
     public class SubscriptionController(
         IStudentService studentService,
         ISubscriptionService subscriptionService,
         IScheduleService scheduleService,
-        INoteService noteService,
         IReschedulingService reschedulingService,
         ITeacherService teacherService,
-        ITrialSubscriptionService taxSubscriptionService,
         IPaymentService paymentService,
         ICancelSubscriptionService cancelSubscriptionService,
-        IAttendanceService attendanceService,
+        ITrialSubscriptionService trialSubscriptionService,
         ITenderService tenderService
         ) : Controller
     {
@@ -179,6 +177,8 @@ namespace RockSchool.WebApi.Controllers
                 return NotFound();
             }
 
+            throw new NotImplementedException();
+            /*
             // Get related attendances
             var attendances = await attendanceService.GetAttendancesBySubscriptionId(id);
             var attendanceInfos = attendances?.ToInfos();
@@ -252,14 +252,13 @@ namespace RockSchool.WebApi.Controllers
                 }
             };
 
-            return Ok(response);
+            return Ok(response);*/
         }
 
         [HttpPost("addTrial")]
         public async Task<ActionResult> AddTrial(AddTrialRequest request)
         {
-            var student = await studentService.GetByIdAsync(request.Student.StudentId);
-            var trialRequest = new TrialRequestDto
+            var addTrialDto = new AddTrialDto
             {
                 RoomId = request.RoomId,
                 BranchId = request.BranchId,
@@ -267,10 +266,10 @@ namespace RockSchool.WebApi.Controllers
                 TeacherId = request.TeacherId,
                 TrialDate = request.TrialDate,
                 TariffId = request.TariffId,
-                Student = student,
+                StudentId = request.Student.StudentId,
             };
 
-            await taxSubscriptionService.AddTrialSubscription(trialRequest);
+            await trialSubscriptionService.AddTrial(addTrialDto);
 
             return Ok(request.Student.StudentId);
         }

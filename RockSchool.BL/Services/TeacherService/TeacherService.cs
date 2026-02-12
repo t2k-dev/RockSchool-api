@@ -1,8 +1,9 @@
-﻿using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
+﻿using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.BL.Teachers;
 using RockSchool.Data.Repositories;
-using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Teachers;
 
 namespace RockSchool.BL.Services.TeacherService;
@@ -44,11 +45,6 @@ public class TeacherService(
             .ToList();*/
 
         return teacher;
-    }
-
-    public async Task<Teacher[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge)
-    {
-        return await teacherRepository.GetTeachersAsync(branchId, disciplineId, studentAge);
     }
 
     public async Task<Teacher[]?> GetRehearsableTeachersAsync(int branchId)
@@ -125,8 +121,6 @@ public class TeacherService(
             throw new KeyNotFoundException($"Teacher with ID {teacherId} was not found.");
         }
 
-        // Delete existing periods via repository
-        //await workingPeriodsRepository.DeleteWorkingPeriodsByTeacherId(teacherId);
 
         // Create and add new periods via repository
         var workingPeriods = new List<WorkingPeriod>();

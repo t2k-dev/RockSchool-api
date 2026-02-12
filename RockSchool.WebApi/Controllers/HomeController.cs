@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Home;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.NoteService;
@@ -15,37 +16,23 @@ namespace RockSchool.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HomeController : Controller
+    public class HomeController(
+        INoteService noteService,
+        IAttendanceService attendanceService,
+        IBranchService branchService,
+        IHomeService homeService
+        ) : Controller
     {
-        private readonly INoteService _noteService;
-        private readonly IAttendanceService _attendanceService;
-        private readonly IBranchService _branchService;
-
-        public HomeController(INoteService noteService, IAttendanceService attendanceService, IBranchService branchService)
-        {
-            _noteService = noteService;
-            _attendanceService = attendanceService;
-            _branchService = branchService;
-        }
-
         [EnableCors("MyPolicy")]
         [HttpGet("{branchId}")]
         public async Task<ActionResult> Get(int branchId)
         {
-            var branch = await _branchService.GetBranchByIdAsync(branchId);
-
-            var notes = await _noteService.GetNotesAsync(branchId);
-
-            var allAttendances = await _attendanceService.GetByBranchIdAsync(branchId);
-
-            var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
-            var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
-            attendanceInfos.AddRange(groupAttendanceInfos);
+            var myResult = await homeService.GetByBranch(branchId);
 
             var result = new HomeScreenDetails
             {
-                Branch = branch,
-                Attendances = attendanceInfos.ToArray(),
+                Branch = myResult.Branch,
+                //Attendances = myResult.Attendances.ToInfos(),
                 //Notes = notes.To,
             };
 

@@ -18,6 +18,7 @@ public class RockSchoolContext : DbContext
     public DbSet<Student> Students { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Attendance> Attendances { get; set; }
+    public DbSet<Attendee> Attendees { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Branch> Branches { get; set; }

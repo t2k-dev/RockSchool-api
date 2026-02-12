@@ -51,11 +51,11 @@ public class TeacherRepository : ITeacherRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Teacher[]> GetTeachersAsync(int branchId, int disciplineId, int studentAge)
+    public async Task<Teacher[]> GetTeachersAsync(int branchId, int disciplineId, int studentAge, DateTime startDate)
     {
         return await _context.Teachers
             .Include(t => t.WorkingPeriods)
-            .Include(t => t.ScheduledWorkingPeriods)
+            .Include(t => t.ScheduledWorkingPeriods.Where(swp => swp.StartDate >= startDate))
             .Include(t => t.Disciplines)
             .Include(t => t.Branch)
             .Where(t => t.BranchId == branchId 

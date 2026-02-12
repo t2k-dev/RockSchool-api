@@ -1,8 +1,8 @@
 ﻿using RockSchool.Domain.Students;
 
-namespace RockSchool.BL.Models
+namespace RockSchool.BL.Subscriptions.Trial
 {
-    public class TrialRequestDto
+    public class AddTrialDto
     {
         public int DisciplineId { get; set; }
         public int BranchId { get; set; }
@@ -10,7 +10,6 @@ namespace RockSchool.BL.Models
         public DateTime TrialDate { get; set; }
         public int RoomId { get; set; }
         public Guid TariffId { get; set; }
-        public Student Student { get; set; }
-
+        public Guid StudentId { get; set; }
     }
 }

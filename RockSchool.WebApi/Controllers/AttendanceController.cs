@@ -87,7 +87,7 @@ public class AttendanceController(
     public async Task<ActionResult> UpdateComment(Guid id, string comment)
     {
         // TODO: fix routing
-        await attendanceService.UpdateCommentAsync(id, comment);
+        //await attendanceService.UpdateCommentAsync(id, comment);
 
         return Ok();
     }
@@ -99,7 +99,7 @@ public class AttendanceController(
 
         attendance.MarkAsAttended(declineAttendanceRequest.StatusReason);
 
-        await attendanceService.UpdateAttendanceAsync(attendance);
+        //await attendanceService.UpdateAttendanceAsync(attendance);
 
         return Ok();
     }
@@ -111,7 +111,7 @@ public class AttendanceController(
 
         attendance.MarkAsMissed(declineAttendanceRequest.StatusReason);
 
-        await attendanceService.UpdateAttendanceAsync(attendance);
+        //await attendanceService.UpdateAttendanceAsync(attendance);
 
         return Ok();
     }

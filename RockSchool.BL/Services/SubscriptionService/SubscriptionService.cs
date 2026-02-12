@@ -14,7 +14,7 @@ namespace RockSchool.BL.Services.SubscriptionService
         ISubscriptionRepository subscriptionRepository,
         IScheduleRepository scheduleRepository,
         IAttendanceRepository attendanceRepository,
-        ISubscriptionsAttendancesRepository subscriptionsAttendancesRepository,
+        IAttendeeRepository subscriptionsAttendancesRepository,
         IAttendanceService attendanceService,
         INoteService noteService,
         IScheduleService scheduleService)
@@ -129,7 +129,8 @@ namespace RockSchool.BL.Services.SubscriptionService
 
         public async Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId)
         {
-            var attendances = await attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
+            throw new NotImplementedException();
+            /*var attendances = await attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
             var lastAttendance = attendances.MaxBy(a => a.StartDate);
 
             var schedules = await scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
@@ -140,7 +141,7 @@ namespace RockSchool.BL.Services.SubscriptionService
 
             var availableSlot = ScheduleHelper.GetNextAvailableSlot(lastAttendance.StartDate, orderedSchedules);
             
-            return availableSlot;
+            return availableSlot;*/
         }
 
         public async Task DecreaseAttendancesLeftCount(Guid subscriptionId)

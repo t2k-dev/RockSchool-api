@@ -7,6 +7,8 @@ using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.BL.Teachers;
 using RockSchool.BL.Teachers.AddTeacher;
+using RockSchool.BL.Teachers.AvailableTeachers;
+using RockSchool.Domain.Entities;
 using RockSchool.Domain.Teachers;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
@@ -14,6 +16,7 @@ using RockSchool.WebApi.Models.Teachers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers;
@@ -25,6 +28,7 @@ public class TeacherController(
     IAddTeacherService addTeacherService,
     ITeacherService teacherService,
     ITeacherScreenDetailsService teacherScreenDetailsService,
+    IAvailableTeachersService availableTeachersService,
     IAttendanceService attendanceService
     ) : Controller
 {
@@ -82,41 +86,44 @@ public class TeacherController(
     [HttpGet("available")]
     public async Task<ActionResult> GetAvailableTeachers(int disciplineId, int studentAge, int branchId)
     {
-        var teachers = await teacherService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
+        var availableTeacherDtos = await availableTeachersService.GetAvailableTeachersAsync(disciplineId, branchId, studentAge);
 
-        var availableTeacherDtos = new List<AvailableTeacherDto>();
-        foreach (var teacher in teachers)
+        var availableTeachers = new List<AvailableTeacherResponse>();
+        foreach (var teacherDto in availableTeacherDtos)
         {
-            var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
-            availableTeacherDtos.Add(availableTeacherDto);
+            var availableTeacherDto = BuildAvailableTeacherDto(teacherDto.Teacher, teacherDto.Attendances);
+            availableTeachers.Add(availableTeacherDto);
         }
 
-        return Ok(new { availableTeachers = availableTeacherDtos });
+        return Ok(new { availableTeachers = availableTeachers });
     }
 
     [HttpGet("rehearsable")]
     public async Task<ActionResult> GetRehearsableTeachers(int branchId)
     {
-        var teachers = await teacherService.GetRehearsableTeachersAsync(branchId);
+        throw new NotImplementedException();
+        /*var teachers = await teacherService.GetRehearsableTeachersAsync(branchId);
 
-        var availableTeacherDtos = new List<AvailableTeacherDto>();
+        var availableTeacherDtos = new List<AvailableTeacherResponse>();
         foreach (var teacher in teachers)
         {
             var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
             availableTeacherDtos.Add(availableTeacherDto);
         }
 
-        return Ok(new { teachers = availableTeacherDtos });
+        return Ok(new { teachers = availableTeacherDtos });*/
     }
 
     [HttpGet("{id}/workingPeriods")]
     public async Task<ActionResult> GetTeacherWorkingPeriods(Guid id)
     {
+        throw new NotImplementedException();
+        /*
         var teacher = await teacherService.GetTeacherByIdAsync(id);
 
         var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
 
-        return Ok(new { teacher = availableTeacherDto });
+        return Ok(new { teacher = availableTeacherDto });*/
     }
 
     [HttpPost]
@@ -200,36 +207,18 @@ public class TeacherController(
         return Ok();
     }
 
-    private async Task<AvailableTeacherDto> BuildAvailableTeacherDto(Teacher teacher)
+    private static AvailableTeacherResponse BuildAvailableTeacherDto(Teacher teacher, Attendance[] allAttendances)
     {
-
-
-        var allAttendances = await attendanceService.GetAttendancesByTeacherIdForPeriodOfTime(
-            teacher.TeacherId,
-            DateTime.MinValue,
-            DateTime.MaxValue);
-
         var attendanceInfos = allAttendances.Where(a => a.GroupId == null).ToParentAttendanceInfos();
         var groupAttendanceInfos = AttendanceBuilder.BuildGroupAttendanceInfos(allAttendances.Where(a => a.GroupId != null));
         attendanceInfos.AddRange(groupAttendanceInfos);
 
-        var availableTeacherDto = new AvailableTeacherDto
+        var availableTeacherDto = new AvailableTeacherResponse
         {
             FirstName = teacher.FirstName,
             LastName = teacher.LastName,
             TeacherId = teacher.TeacherId,
             Workload = Random.Shared.Next(1, 100),
-            /*WorkingPeriods = teacher.WorkingPeriods?
-                .Select(wp => new WorkingPeriodInfo
-                {
-                    WorkingPeriodId = wp.WorkingPeriodId,
-                    TeacherId = wp.TeacherId,
-                    WeekDay = wp.WeekDay,
-                    StartTime = wp.StartTime,
-                    EndTime = wp.EndTime,
-                    RoomId = wp.RoomId
-                })
-                .ToList(),*/
             ScheduledWorkingPeriods = teacher.ScheduledWorkingPeriods?
                 .Select(swp => new ScheduledWorkingPeriodInfo
                 {

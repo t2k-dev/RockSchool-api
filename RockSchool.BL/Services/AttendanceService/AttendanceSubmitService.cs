@@ -5,6 +5,7 @@ using RockSchool.Data.Repositories;
 using RockSchool.BL.Helpers;
 using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.BL.Subscriptions.Trial;
 
 namespace RockSchool.BL.Services.AttendanceService
 {
@@ -48,7 +49,7 @@ namespace RockSchool.BL.Services.AttendanceService
 
         private async Task<Attendance> SubmitSingleAttendance(Guid attendanceId, int status, string statusReason, string comment)
         {
-            var attendanceEntity = await attendanceRepository.GetAsync(attendanceId);
+            //var attendanceEntity = await attendanceRepository.GetAsync(attendanceId);
 
             throw new NotImplementedException();
             /*

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RockSchool.WebApi.Models.Teachers
 {
-    public class AvailableTeacherDto
+    public class AvailableTeacherResponse
     {
         public Guid TeacherId { get; set; }
         public string FirstName { get; set; }

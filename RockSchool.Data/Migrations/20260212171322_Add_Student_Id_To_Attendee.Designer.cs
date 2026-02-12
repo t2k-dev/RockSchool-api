@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RockSchool.Data.Data;
@@ -11,9 +12,11 @@ using RockSchool.Data.Data;
 namespace RockSchool.Data.Migrations
 {
     [DbContext(typeof(RockSchoolContext))]
-    partial class RockSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20260212171322_Add_Student_Id_To_Attendee")]
+    partial class Add_Student_Id_To_Attendee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -24,13 +24,13 @@ public class AttendanceConfiguration : IEntityTypeConfiguration<Attendance>
         builder.Property(a => a.TeacherId).IsRequired(false);
         builder.Property(a => a.GroupId).IsRequired(false);
         
-        builder.HasOne(a => a.Discipline).WithMany().HasForeignKey("DisciplineId").IsRequired(false);
-        builder.HasOne(a => a.Teacher).WithMany().HasForeignKey("TeacherId").IsRequired(false);
-        builder.HasOne(a => a.Branch).WithMany().HasForeignKey("BranchId");
-        builder.HasOne(a => a.Room).WithMany().HasForeignKey("RoomId");
+        //builder.HasOne(a => a.Discipline).WithMany().HasForeignKey("DisciplineId").IsRequired(false);
+        //builder.HasOne(a => a.Teacher).WithMany().HasForeignKey("TeacherId").IsRequired(false);
+        //builder.HasOne(a => a.Branch).WithMany().HasForeignKey("BranchId");
+        //builder.HasOne(a => a.Room).WithMany().HasForeignKey("RoomId");
         
-        builder.HasMany(a => a.Attendees).WithOne(at => at.Attendance).HasForeignKey("AttendanceId");
+        builder.HasMany(a => a.Attendees).WithOne().HasForeignKey(a => a.AttendanceId);
         
-        builder.Metadata.FindNavigation(nameof(Attendance.Attendees))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        //builder.Metadata.FindNavigation(nameof(Attendance.Attendees))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

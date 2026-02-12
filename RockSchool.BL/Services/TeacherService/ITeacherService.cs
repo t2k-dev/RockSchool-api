@@ -12,6 +12,5 @@ public interface ITeacherService
     Task UpdatePeriodsAsync(Guid teacherId, WorkingPeriodDto[] workingPeriodDtos, DateTime recalculatePeriodsAfter);
     Task SetTeacherActiveAsync(Guid id, bool isActive);
     Task DeleteTeacherAsync(Guid id);
-    Task<Teacher[]?> GetAvailableTeachersAsync(int disciplineId, int branchId, int studentAge);
     Task<Teacher[]?> GetRehearsableTeachersAsync(int branchId);
 }

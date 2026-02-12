@@ -73,6 +73,35 @@ public class Subscription
         };
     }
 
+    public static Subscription CreateTrial(
+        Guid studentId,
+        int branchId,
+        DateOnly startDate,
+        decimal price,
+        decimal finalPrice,
+        int disciplineId,
+        Guid teacherId
+        )
+    {
+        return new Subscription
+        {
+            SubscriptionId = Guid.NewGuid(),
+            StudentId = studentId,
+            BranchId = branchId,
+            StartDate = startDate,
+            AttendanceCount = 1,
+            AttendanceLength = 60,
+            AttendancesLeft = 1,
+            SubscriptionType = SubscriptionType.TrialLesson,
+            Price = price,
+            FinalPrice = finalPrice,
+            AmountOutstanding = finalPrice,
+            Status = SubscriptionStatus.Draft,
+            DisciplineId = disciplineId,
+            TeacherId = teacherId,
+        };
+    }
+
     public void RecordPayment(Tender tender)
     {
         if (tender.Amount > AmountOutstanding)

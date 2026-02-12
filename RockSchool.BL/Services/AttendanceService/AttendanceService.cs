@@ -27,15 +27,17 @@ public class AttendanceService : IAttendanceService
         return await _attendanceRepository.GetAsync(attendanceId);
     }
 
+    public async Task<Attendance[]> GetByRoomIdAsync(int roomId)
+    {
+        return await _attendanceRepository.GetByRoomIdAsync(roomId);
+    }
+
+    /*
     public async Task<Attendance[]> GetByBranchIdAsync(int branchId)
     {
         return await _attendanceRepository.GetByBranchIdAsync(branchId);
     }
 
-    public async Task<Attendance[]> GetByRoomIdAsync(int roomId)
-    {
-        return await _attendanceRepository.GetByRoomIdAsync(roomId);
-    }
     
 
     public async Task<Attendance[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate)
@@ -119,5 +121,5 @@ public class AttendanceService : IAttendanceService
         {
             await _attendanceRepository.DeleteAsync(attendance.AttendanceId);
         }
-    }
+    }*/
 }

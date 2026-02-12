@@ -56,7 +56,7 @@ public class StudentController(
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
         var student = await studentService.GetByIdAsync(id);
-        var attendances = await attendanceService.GetAttendancesByStudentId(id);
+        /*var attendances = await attendanceService.GetAttendancesByStudentId(id);
 
         var attendanceInfos = new List<AttendanceInfo>();
         foreach (var attendance in attendances)
@@ -78,7 +78,7 @@ public class StudentController(
                 GroupId = attendance.GroupId,
                 //Students = 
             });
-        }
+        }*/
 
         var subscriptions = await subscriptionService.GetSubscriptionsByStudentId(id);
         var subscriptionsInfos = subscriptions.Select(subscription => subscription.ToInfo());
@@ -91,7 +91,7 @@ public class StudentController(
         {
             Student = student,
             Subscriptions = subscriptionsInfos.ToArray(),
-            Attendances = attendanceInfos.ToArray(),
+           // Attendances = attendanceInfos.ToArray(),
             Bands = bandsInfos,
         };
 

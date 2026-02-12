@@ -7,18 +7,14 @@ public class Attendance
 {
     public Guid AttendanceId { get; private set; }
     public int? DisciplineId { get; private set; }
-    public Discipline? Discipline { get; private set; }
     public Guid? TeacherId { get; private set; }
-    public Teacher? Teacher { get; private set; }
     public AttendanceStatus Status { get; private set; }
     public string? StatusReason { get; private set; }
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
     public Guid? GroupId { get; private set; }
     public int BranchId { get; private set; }
-    public Branch Branch { get; private set; }
     public int RoomId { get; private set; }
-    public Room Room { get; private set; }
     public string? Comment { get; private set; }
     public bool IsCompleted { get; private set; }
     public AttendanceType AttendanceType { get; private set; }
@@ -49,6 +45,30 @@ public class Attendance
             DisciplineId = disciplineId,
             TeacherId = teacherId,
             GroupId = groupId,
+            Status = AttendanceStatus.New,
+            IsCompleted = false
+        };
+    }
+
+    public static Attendance CreateTrial(
+        DateTime startDate,
+        DateTime endDate,
+        int roomId,
+        int branchId,
+        int disciplineId,
+        Guid teacherId
+        )
+    {
+        return new Attendance
+        {
+            AttendanceId = Guid.NewGuid(),
+            StartDate = startDate,
+            EndDate = endDate,
+            RoomId = roomId,
+            BranchId = branchId,
+            AttendanceType = AttendanceType.TrialLesson,
+            DisciplineId = disciplineId,
+            TeacherId = teacherId,
             Status = AttendanceStatus.New,
             IsCompleted = false
         };

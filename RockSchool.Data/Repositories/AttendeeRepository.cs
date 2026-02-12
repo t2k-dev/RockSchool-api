@@ -5,11 +5,18 @@ using RockSchool.Domain.Repositories;
 
 namespace RockSchool.Data.Repositories;
 
-public class SubscriptionsAttendancesRepository : BaseRepository, ISubscriptionsAttendancesRepository
+public class AttendeeRepository : BaseRepository, IAttendeeRepository
 {
-    public SubscriptionsAttendancesRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
+    public AttendeeRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
     {
     }
+
+    public void AddAsync(Attendee attendee)
+    {
+        RockSchoolContext.Attendees.Add(attendee);
+    }
+
+
     /*
     public async Task<Attendee?> GetByIdAsync(Guid id)
     {
@@ -35,12 +42,6 @@ public class SubscriptionsAttendancesRepository : BaseRepository, ISubscriptions
             .ToArrayAsync();
     }
 
-    public async Task<Guid> AddAsync(Attendee attendee)
-    {
-        RockSchoolContext.Attendees.Add(attendee);
-        await RockSchoolContext.SaveChangesAsync();
-        return attendee.SubscriptionAttendanceId;
-    }
 
     public async Task UpdateAsync(Attendee attendee)
     {

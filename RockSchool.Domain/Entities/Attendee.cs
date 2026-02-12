@@ -4,20 +4,18 @@ namespace RockSchool.Domain.Entities;
 
 public class Attendee
 {
-    public Guid SubscriptionAttendanceId { get; private set; }
+    public Guid AttendeeId { get; private set; }
     public Guid SubscriptionId { get; private set; }
-    public Subscription Subscription { get; private set; }
+    public Guid StudentId { get; private set; }
     public Guid AttendanceId { get; private set; }
-    public Attendance Attendance { get; private set; }
     public AttendanceStatus Status { get; private set; }
-    //public string? StatusReason { get; private set; }
 
     private Attendee() { }
 
     public static Attendee Create(
         Guid subscriptionId,
-        Guid attendanceId,
-        AttendanceStatus status = AttendanceStatus.New)
+        Guid attendanceId
+        )
     {
         if (subscriptionId == Guid.Empty)
             throw new ArgumentException("Subscription ID is required", nameof(subscriptionId));
@@ -27,10 +25,10 @@ public class Attendee
 
         return new Attendee
         {
-            SubscriptionAttendanceId = Guid.NewGuid(),
+            AttendeeId = Guid.NewGuid(),
             SubscriptionId = subscriptionId,
             AttendanceId = attendanceId,
-            Status = status
+            Status = AttendanceStatus.New,
         };
     }
 
