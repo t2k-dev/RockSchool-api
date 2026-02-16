@@ -73,6 +73,7 @@ public class Startup
         services.AddScoped<IAddTeacherService, AddTeacherService>();
         services.AddScoped<ITeacherScreenDetailsService, TeacherScreenDetailsService>();
         services.AddScoped<IAvailableTeachersService, AvailableTeachersService>();
+        services.AddScoped<IAttendanceQueryService, AttendanceQueryService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IRoomRepository, RoomRepository>();

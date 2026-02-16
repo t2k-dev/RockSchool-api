@@ -76,7 +76,7 @@ public class TeacherController(
         var teacherScreenDetails = new TeacherScreenDetailsResponse
         {
             Teacher = details.Teacher.ToInfo(),
-            Attendances = [],
+            Attendances = details.Attendances,
             Subscriptions = [],
         };
 
