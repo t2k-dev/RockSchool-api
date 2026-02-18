@@ -20,6 +20,7 @@ using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TariffService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
+using RockSchool.BL.Students;
 using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.BL.Teachers;
 using RockSchool.BL.Teachers.AddTeacher;
@@ -74,6 +75,9 @@ public class Startup
         services.AddScoped<ITeacherScreenDetailsService, TeacherScreenDetailsService>();
         services.AddScoped<IAvailableTeachersService, AvailableTeachersService>();
         services.AddScoped<IAttendanceQueryService, AttendanceQueryService>();
+
+        // Student
+        services.AddScoped<IStudentScreenDetailsService, StudentScreenDetailsService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IRoomRepository, RoomRepository>();

@@ -54,7 +54,7 @@ namespace RockSchool.WebApi.Controllers
             var tenders = await tenderService.GetTendersBySubscriptionIdAsync(id);
             var tenderInfos = tenders?.ToInfos();
 
-            var response = new SubscriptionInfo
+            var response = new SubscriptionReachInfo
             {
                 SubscriptionId = subscription.SubscriptionId,
                 AttendanceCount = subscription.AttendanceCount,
@@ -126,7 +126,7 @@ namespace RockSchool.WebApi.Controllers
 
             var response = new 
             {
-                Subscription = new SubscriptionInfo{
+                Subscription = new SubscriptionReachInfo{
                     SubscriptionId = subscription.SubscriptionId,
                     AttendanceCount = subscription.AttendanceCount,
                     AttendancesLeft = subscription.AttendancesLeft,

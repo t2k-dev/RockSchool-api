@@ -9,6 +9,7 @@ using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BandStudentService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Students;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
@@ -23,7 +24,8 @@ public class StudentController(
     IStudentService studentService,
     IAttendanceService attendanceService,
     ISubscriptionService subscriptionService,
-    IBandStudentService bandStudentService)
+    IBandStudentService bandStudentService,
+    IStudentScreenDetailsService studentScreenDetailsService)
     : Controller
 {
 
@@ -55,47 +57,24 @@ public class StudentController(
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetStudentScreenDetails(Guid id)
     {
-        var student = await studentService.GetByIdAsync(id);
-        /*var attendances = await attendanceService.GetAttendancesByStudentId(id);
+        var details = await studentScreenDetailsService.Query(id);
 
-        var attendanceInfos = new List<AttendanceInfo>();
-        foreach (var attendance in attendances)
+        if (details.Student == null)
+            return NotFound();
+
+        var result = new StudentScreenDetailsResponse
         {
-            var subscription = attendance.Attendees;
-
-            attendanceInfos.Add(new AttendanceInfo
+            Student = new StudentInfo
             {
-                AttendanceId = attendance.AttendanceId,
-                StartDate = attendance.StartDate,
-                EndDate = attendance.EndDate,
-                Status = (int)attendance.Status,
-                Teacher = attendance.Teacher,
-                IsCompleted = attendance.IsCompleted,
-                RoomId = attendance.RoomId,
-                DisciplineId = attendance.DisciplineId,
-                AttendanceType = (int)attendance.AttendanceType,
-                Comment = attendance.Comment,
-                GroupId = attendance.GroupId,
-                //Students = 
-            });
-        }*/
-
-        var subscriptions = await subscriptionService.GetSubscriptionsByStudentId(id);
-        var subscriptionsInfos = subscriptions.Select(subscription => subscription.ToInfo());
-
-        var bandStudents = await bandStudentService.GetByStudentIdAsync(id);
-        var bands = bandStudents.Select(bs => bs.Band).Where(b => b != null).ToArray();
-        var bandsInfos = bands.ToInfos();
-
-        var studentScreenDetailsDto = new StudentScreenDetailsInfo
-        {
-            Student = student,
-            Subscriptions = subscriptionsInfos.ToArray(),
-           // Attendances = attendanceInfos.ToArray(),
-            Bands = bandsInfos,
+                FirstName = details.Student.FirstName,
+                LastName = details.Student.LastName,
+                StudentId = details.Student.StudentId,
+            },
+            Attendances = details.Attendances,
+            Subscriptions = details.Subscriptions.ToInfos().ToArray()
         };
 
-        return Ok(studentScreenDetailsDto);
+        return Ok(result);
     }
 
     [HttpPost]

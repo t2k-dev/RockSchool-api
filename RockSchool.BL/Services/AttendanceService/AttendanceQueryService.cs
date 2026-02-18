@@ -59,4 +59,58 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
             })
             .ToArrayAsync();
     }
+
+    public async Task<AttendanceWithAttendeesDto[]> GetByStudentIdAsync(Guid studentId)
+    {
+        return await context.Attendances
+            .Where(a => context.Attendees.Any(att => 
+                att.AttendanceId == a.AttendanceId && 
+                context.Subscriptions.Any(s => s.SubscriptionId == att.SubscriptionId && s.StudentId == studentId)))
+            .Select(a => new AttendanceWithAttendeesDto
+            {
+                AttendanceId = a.AttendanceId,
+                TeacherId = a.TeacherId ?? Guid.Empty,
+                StartDate = a.StartDate,
+                EndDate = a.EndDate,
+                Status = (int)a.Status,
+                Attendees = context.Attendees
+                    .Where(att => att.AttendanceId == a.AttendanceId)
+                    .Join(
+                        context.Subscriptions,
+                        att => att.SubscriptionId,
+                        s => s.SubscriptionId,
+                        (att, s) => new { Attendee = att, Subscription = s })
+                    .Join(
+                        context.Students,
+                        x => x.Subscription.StudentId,
+                        st => st.StudentId,
+                        (x, st) => new AttendeeDto
+                        {
+                            AttendeeId = x.Attendee.AttendeeId,
+                            SubscriptionId = x.Attendee.SubscriptionId,
+                            StudentId = x.Attendee.StudentId,
+                            Status = (int)x.Attendee.Status,
+                            Student = new StudentInfoDto
+                            {
+                                StudentId = st.StudentId,
+                                FirstName = st.FirstName,
+                                LastName = st.LastName
+                            },
+                            Subscription = new SubscriptionInfoDto
+                            {
+                                SubscriptionId = x.Subscription.SubscriptionId,
+                                GroupId = x.Subscription.GroupId,
+                                AttendanceCount = x.Subscription.AttendanceCount,
+                                AttendanceLength = x.Subscription.AttendanceLength,
+                                AttendancesLeft = x.Subscription.AttendancesLeft,
+                                StartDate = x.Subscription.StartDate,
+                                Status = (int)x.Subscription.Status,
+                                SubscriptionType = (int)x.Subscription.SubscriptionType,
+                                DisciplineId = x.Subscription.DisciplineId
+                            }
+                        })
+                    .ToList()
+            })
+            .ToArrayAsync();
+    }
 }

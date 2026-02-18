@@ -2,8 +2,8 @@
 
 namespace RockSchool.WebApi.Models.Subscriptions
 {
-    public class ParentSubscriptionInfo : SubscriptionInfo
+    public class ParentSubscriptionInfo : SubscriptionReachInfo
     {
-        public SubscriptionInfo[] ChildSubscriptions { get; set; }
+        public SubscriptionReachInfo[] ChildSubscriptions { get; set; }
     }
 }

@@ -4,10 +4,12 @@ using System.Linq;
 using RockSchool.BL.Teachers;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
+using RockSchool.Domain.Students;
 using RockSchool.Domain.Teachers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Bands;
+using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
 
@@ -88,10 +90,12 @@ namespace RockSchool.WebApi.Helpers
             };*/
         }
 
+
+
         // Subscription
-        public static SubscriptionInfo ToInfo(this Subscription subscription)
+        public static SubscriptionReachInfo ToReachInfo(this Subscription subscription)
         {
-            return new SubscriptionInfo
+            return new SubscriptionReachInfo
             {
                 SubscriptionId = subscription.SubscriptionId,
                 StartDate = subscription.StartDate,
@@ -131,7 +135,33 @@ namespace RockSchool.WebApi.Helpers
             return subscriptionDto.Select(dto => dto.ToParentSubscriptionInfo()).ToList();
         }
 
-        public static List<SubscriptionInfo> ToSubscriptionInfos(this IEnumerable<Subscription> subscriptions)
+        public static List<SubscriptionReachInfo> ToSubscriptionInfos(this IEnumerable<Subscription> subscriptions)
+        {
+            return subscriptions.Select(model => model.ToReachInfo()).ToList();
+        }
+
+        public static SubscriptionInfo ToInfo(this Subscription subscription)
+        {
+            return new SubscriptionInfo
+            {
+                SubscriptionId = subscription.SubscriptionId,
+                StartDate = subscription.StartDate,
+                Status = (int)subscription.Status,
+                DisciplineId = subscription.DisciplineId,
+                TrialStatus = subscription.TrialStatus,
+                TeacherId = subscription.TeacherId,
+                TeacherFullName = subscription.Teacher != null ? $"{subscription.Teacher.FirstName} {subscription.Teacher.LastName}" : null,
+                AttendanceCount = subscription.AttendanceCount,
+                AttendanceLength = subscription.AttendanceLength,
+                AttendancesLeft = subscription.AttendancesLeft,
+                SubscriptionType = (int)subscription.SubscriptionType,
+                AmountOutstanding = subscription.AmountOutstanding,
+                Price = subscription.Price,
+                FinalPrice = subscription.FinalPrice,
+            };
+        }
+
+        public static List<SubscriptionInfo> ToInfos(this IEnumerable<Subscription> subscriptions)
         {
             return subscriptions.Select(model => model.ToInfo()).ToList();
         }
