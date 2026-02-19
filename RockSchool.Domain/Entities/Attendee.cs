@@ -14,7 +14,8 @@ public class Attendee
 
     public static Attendee Create(
         Guid subscriptionId,
-        Guid attendanceId
+        Guid attendanceId,
+        Guid studentId
         )
     {
         if (subscriptionId == Guid.Empty)
@@ -27,6 +28,7 @@ public class Attendee
         {
             AttendeeId = Guid.NewGuid(),
             SubscriptionId = subscriptionId,
+            StudentId = studentId,
             AttendanceId = attendanceId,
             Status = AttendanceStatus.New,
         };

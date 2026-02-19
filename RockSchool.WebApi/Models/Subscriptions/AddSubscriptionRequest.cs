@@ -8,5 +8,5 @@ public class AddSubscriptionRequest
 {
     public Guid[] StudentIds { get; set; }
     public SubscriptionDetails Subscription { get; set; }
-    public Schedule[] Schedules { get; set; }
+    public ScheduleInfo[] Schedules { get; set; }
 }

@@ -7,6 +7,7 @@ using RockSchool.BL.Services.ScheduleService;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.Domain.Enums;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
@@ -28,83 +29,66 @@ namespace RockSchool.BL.Services.SubscriptionService
             return subscription.SubscriptionId;
         }
 
-        public async Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, Schedule[] schedules)
+        public async Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] scheduleDtos)
         {
-            throw new NotImplementedException();
-            /*
             var isGroup = studentIds.Length > 1;
             var groupId = isGroup ? Guid.NewGuid() : (Guid?)null;
 
             // Step 1: Create Subscriptions for each student
-            var subscriptionIds = new List<Guid>();
+            var subscriptionStudentPairs = new List<(Guid SubscriptionId, Guid StudentId)>();
             foreach (var studentId in studentIds)
             {
-                var subscription = new Subscription
-                {
-                    TeacherId = subscriptionDetails.TeacherId,
-                    DisciplineId = subscriptionDetails.DisciplineId,
-                    StartDate = subscriptionDetails.StartDate,
-                    StudentId = studentId,
-                    AttendanceCount = subscriptionDetails.AttendanceCount,
-                    AttendancesLeft = subscriptionDetails.AttendanceCount,
-                    AttendanceLength = subscriptionDetails.AttendanceLength,
-                    BranchId = subscriptionDetails.BranchId,
-                    GroupId = groupId,
-                    TrialStatus = null,
-                    Status = SubscriptionStatus.Draft,
-                    StatusReason = null,
-                    SubscriptionType = !isGroup ? SubscriptionType.Lesson : SubscriptionType.GroupLesson,
-                    TariffId = subscriptionDetails.TariffId,
-                    Price = subscriptionDetails.Price,
-                    FinalPrice = subscriptionDetails.FinalPrice,
-                    AmountOutstanding = subscriptionDetails.FinalPrice,
-                };
+                var subscription = Subscription.Create(studentId,
+                    subscriptionDetails.BranchId,
+                    subscriptionDetails.StartDate,
+                    subscriptionDetails.AttendanceCount,
+                    subscriptionDetails.AttendanceLength,
+                    groupId == null ? SubscriptionType.Lesson : SubscriptionType.GroupLesson,
+                    subscriptionDetails.Price,
+                    subscriptionDetails.FinalPrice,
+                    subscriptionDetails.DisciplineId,
+                    subscriptionDetails.TeacherId,
+                    groupId
+                );
 
-                var newSubscriptionId = await AddSubscriptionAsync(subscription);
-                subscriptionIds.Add(newSubscriptionId);
+                await subscriptionRepository.AddSubscriptionAsync(subscription);
+                subscriptionStudentPairs.Add((subscription.SubscriptionId, studentId));
 
                 // Step 2: Create Schedules for each subscription
-                foreach (var schedule in schedules)
+                foreach (var scheduleDto in scheduleDtos)
                 {
-                    var scheduleClone = new Schedule
-                    {
-                        SubscriptionId = newSubscriptionId,
-                        WeekDay = schedule.WeekDay,
-                        StartTime = schedule.StartTime,
-                        EndTime = schedule.EndTime,
-                        RoomId = schedule.RoomId
-                    };
-                    await scheduleService.AddScheduleAsync(scheduleClone);
+                    var schedule = Schedule.Create(
+                        scheduleDto.RoomId,
+                        scheduleDto.WeekDay,
+                        scheduleDto.StartTime,
+                        scheduleDto.EndTime,
+                        subscription.SubscriptionId
+                    );
+
+                    await scheduleRepository.AddAsync(schedule);
                 }
             }
 
             // Step 3: Generate and create Attendances (shared for group lessons, individual for private)
-            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, schedules, isGroup);
+            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, isGroup);
             var attendanceIds = new List<Guid>();
             
             foreach (var attendance in attendances)
             {
-                var attendanceId = await attendanceService.AddAttendanceAsync(attendance);
+                var attendanceId = await attendanceRepository.AddAsync(attendance);
                 attendanceIds.Add(attendanceId);
             }
 
             // Step 4: Create Attendees junction table entries
-            foreach (var subscriptionId in subscriptionIds)
+            foreach (var (subscriptionId, studentId) in subscriptionStudentPairs)
             {
                 foreach (var attendanceId in attendanceIds)
                 {
-                    var attendee = new Attendee()
-                    {
-                        SubscriptionAttendanceId = Guid.NewGuid(),
-                        SubscriptionId = subscriptionId,
-                        AttendanceId = attendanceId,
-                        Status = AttendanceStatus.New, // Initial status for the relationship
-                        StatusReason = null
-                    };
+                    var attendee = Attendee.Create(subscriptionId, attendanceId, studentId);
 
                     await subscriptionsAttendancesRepository.AddAsync(attendee);
                 }
-            }*/
+            }
         }
 
         public async Task<Subscription?> GetAsync(Guid subscriptionId)

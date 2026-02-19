@@ -59,10 +59,11 @@ namespace RockSchool.BL.Subscriptions.Trial
             // Add Attendee
             var attendee = Attendee.Create(
                 subscription.SubscriptionId,
-                trialAttendance.AttendanceId
+                trialAttendance.AttendanceId,
+                addTrialDto.StudentId
             );
 
-            attendeeRepository.AddAsync(attendee);
+            await attendeeRepository.AddAsync(attendee);
 
             // Add note
             //await noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());

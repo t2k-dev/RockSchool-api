@@ -11,9 +11,9 @@ public class AttendeeRepository : BaseRepository, IAttendeeRepository
     {
     }
 
-    public void AddAsync(Attendee attendee)
+    public async Task AddAsync(Attendee attendee)
     {
-        RockSchoolContext.Attendees.Add(attendee);
+        await RockSchoolContext.Attendees.AddAsync(attendee);
     }
 
 

@@ -4,5 +4,5 @@ namespace RockSchool.Domain.Repositories;
 
 public interface IAttendeeRepository
 {
-    void AddAsync(Attendee attendee);
+    Task AddAsync(Attendee attendee);
 }

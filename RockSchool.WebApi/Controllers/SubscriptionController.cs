@@ -277,7 +277,21 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSubscription(AddSubscriptionRequest request)
         {
-            await subscriptionService.AddSubscriptionAsync(request.Subscription, request.StudentIds, request.Schedules);
+            var scheduleDtos = new List<ScheduleDto>();
+            foreach (var requestSchedule in request.Schedules)
+            {
+                var scheduleDto = new ScheduleDto
+                {
+                    RoomId = requestSchedule.RoomId,
+                    WeekDay = requestSchedule.WeekDay,
+                    StartTime = TimeSpan.Parse(requestSchedule.StartTime),
+                    EndTime = TimeSpan.Parse(requestSchedule.EndTime),
+                };
+
+                scheduleDtos.Add(scheduleDto);
+            }
+
+            await subscriptionService.AddSubscriptionAsync(request.Subscription, request.StudentIds, scheduleDtos.ToArray());
             return Ok();
         }
 
