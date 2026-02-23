@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Teachers
 {
@@ -12,5 +13,6 @@ namespace RockSchool.BL.Teachers
     {
         public Teacher Teacher { get; set; }
         public AttendanceWithAttendeesDto[] Attendances { get; set; }
+        public Subscription[] Subscriptions { get; set; }
     }
 }
