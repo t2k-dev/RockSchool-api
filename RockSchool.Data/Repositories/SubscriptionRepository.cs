@@ -11,7 +11,7 @@ public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
     {
     }
 
-    public async Task AddSubscriptionAsync(Subscription subscription)
+    public async Task AddAsync(Subscription subscription)
     {
         await RockSchoolContext.Subscriptions.AddAsync(subscription);
     }

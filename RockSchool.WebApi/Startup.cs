@@ -10,6 +10,7 @@ using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BandService;
 using RockSchool.BL.Services.BandStudentService;
 using RockSchool.BL.Services.BranchService;
+using RockSchool.BL.Services.BusySlotsService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.RoomService;
@@ -21,6 +22,7 @@ using RockSchool.BL.Services.TariffService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.BL.Students;
+using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.BL.Teachers;
 using RockSchool.BL.Teachers.AddTeacher;
@@ -69,6 +71,7 @@ public class Startup
         services.AddScoped<ITenderService, TenderService>();
         services.AddScoped<ITariffService, TariffService>();
         services.AddScoped<IHomeService, HomeService>();
+        services.AddScoped<IBusySlotsService, BusySlotsService>();
 
         // Teacher
         services.AddScoped<IAddTeacherService, AddTeacherService>();

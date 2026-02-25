@@ -4,7 +4,7 @@ namespace RockSchool.Domain.Repositories;
 
 public interface ISubscriptionRepository
 {
-    Task AddSubscriptionAsync(Subscription subscription);
+    Task AddAsync(Subscription subscription);
     Task<Subscription?> GetAsync(Guid id);
     Task<Subscription[]> GetAllSubscriptionsAsync();
     Task<Subscription[]?> GetSubscriptionsByStudentIdAsync(Guid studentId);

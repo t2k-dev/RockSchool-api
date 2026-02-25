@@ -29,7 +29,6 @@ public class ScheduleRepository : BaseRepository, IScheduleRepository
     public async Task<Guid> AddAsync(Schedule schedule)
     {
         await RockSchoolContext.Schedules.AddAsync(schedule);
-        await RockSchoolContext.SaveChangesAsync();
         return schedule.ScheduleId;
     }
 

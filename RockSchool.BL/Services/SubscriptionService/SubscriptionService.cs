@@ -15,16 +15,17 @@ namespace RockSchool.BL.Services.SubscriptionService
         ISubscriptionRepository subscriptionRepository,
         IScheduleRepository scheduleRepository,
         IAttendanceRepository attendanceRepository,
-        IAttendeeRepository subscriptionsAttendancesRepository,
+        IAttendeeRepository attendeeRepository,
         IAttendanceService attendanceService,
         INoteService noteService,
-        IScheduleService scheduleService)
+        IScheduleService scheduleService,
+        IUnitOfWork unitOfWork)
         : ISubscriptionService
     {
         public async Task<Guid> AddSubscriptionAsync(Subscription subscription)
         {
 
-            await subscriptionRepository.AddSubscriptionAsync(subscription);
+            await subscriptionRepository.AddAsync(subscription);
 
             return subscription.SubscriptionId;
         }
@@ -51,7 +52,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                     groupId
                 );
 
-                await subscriptionRepository.AddSubscriptionAsync(subscription);
+                await subscriptionRepository.AddAsync(subscription);
                 subscriptionStudentPairs.Add((subscription.SubscriptionId, studentId));
 
                 // Step 2: Create Schedules for each subscription
@@ -86,9 +87,11 @@ namespace RockSchool.BL.Services.SubscriptionService
                 {
                     var attendee = Attendee.Create(subscriptionId, attendanceId, studentId);
 
-                    await subscriptionsAttendancesRepository.AddAsync(attendee);
+                    await attendeeRepository.AddAsync(attendee);
                 }
             }
+
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<Subscription?> GetAsync(Guid subscriptionId)

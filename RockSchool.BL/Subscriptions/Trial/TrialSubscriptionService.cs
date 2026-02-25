@@ -42,7 +42,7 @@ namespace RockSchool.BL.Subscriptions.Trial
                 addTrialDto.TeacherId
             );
 
-            await subscriptionRepository.AddSubscriptionAsync(subscription);
+            await subscriptionRepository.AddAsync(subscription);
 
             // Add Attendance
             var trialAttendance = Attendance.CreateTrial(
