@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Models;
-using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.TeacherService;
+using RockSchool.BL.Services.SubscriptionDetailsService;
 using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
@@ -35,7 +35,8 @@ namespace RockSchool.WebApi.Controllers
         IPaymentService paymentService,
         ICancelSubscriptionService cancelSubscriptionService,
         ITrialSubscriptionService trialSubscriptionService,
-        ITenderService tenderService
+        ITenderService tenderService,
+        ISubscriptionScreenDetailsService subscriptionScreenDetailsService
         ) : Controller
     {
 
@@ -171,80 +172,57 @@ namespace RockSchool.WebApi.Controllers
         [HttpGet("{id}/screen-data")]
         public async Task<ActionResult> GetSubscriptionScreenData(Guid id)
         {
-            var subscription = await subscriptionService.GetAsync(id);
-            if (subscription == null)
+            var result = await subscriptionScreenDetailsService.Query(id);
+
+            var scheduleInfos = result.Schedules?.Select(schedule => new ScheduleInfo
             {
-                return NotFound();
-            }
+                ScheduleId = schedule.ScheduleId,
+                SubscriptionId = schedule.SubscriptionId,
+                RoomId = schedule.RoomId,
+                WeekDay = schedule.WeekDay,
+                StartTime = schedule.StartTime.ToString(@"hh\:mm"),
+                EndTime = schedule.EndTime.ToString(@"hh\:mm"),
+            }).ToArray();
 
-            throw new NotImplementedException();
-            /*
-            // Get related attendances
-            var attendances = await attendanceService.GetAttendancesBySubscriptionId(id);
-            var attendanceInfos = attendances?.ToInfos();
+            var attendanceInfos = result.Attendances?.ToInfos();
+            var tenderInfos = result.Tenders?.ToInfos();
 
-            // Get schedules
-            var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
-            var scheduleInfos = schedules?.ToInfos();
-
-            // Get tenders
-            var tenders = await tenderService.GetTendersBySubscriptionIdAsync(id);
-            var tenderInfos = tenders.ToInfos();
-
-            // Get student information
-            var student = await studentService.GetByIdAsync(subscription.StudentId);
-            var studentInfo = student == null
-                ? null
-                : new StudentInfo
-                {
-                    StudentId = student.StudentId,
-                    FirstName = student.FirstName,
-                    LastName = student.LastName
-                };
-
-            // Get teacher information
-            Teacher teacher = null;
-            if (subscription.TeacherId != null)
+            var studentInfo = new StudentInfo
             {
-                teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
-            }
+                StudentId = result.Student.StudentId,
+                FirstName = result.Student.FirstName,
+                LastName = result.Student.LastName
+            };
 
-            var teacherInfo = teacher == null
+            var teacherInfo = result.Teacher == null
                 ? null
                 : new
                 {
-                    teacher.TeacherId,
-                    teacher.FirstName,
-                    teacher.LastName,
+                    result.Teacher.TeacherId,
+                    result.Teacher.FirstName,
+                    result.Teacher.LastName,
                 };
-
-            // Fix this mess
-            foreach (var attendanceInfo in attendanceInfos)
-            {
-                //attendanceInfo.Student = studentInfo;
-                attendanceInfo.Teacher = teacherInfo;
-            }
 
             var response = new
             {
                 Subscription = new
                 {
-                    SubscriptionId = subscription.SubscriptionId,
-                    AttendanceCount = subscription.AttendanceCount,
-                    AttendancesLeft = subscription.AttendancesLeft,
-                    AttendanceLength = subscription.AttendanceLength,
-                    DisciplineId = subscription.DisciplineId,
-                    Status = (int)subscription.Status,
-                    StartDate = subscription.StartDate,
-                    TrialStatus = subscription.TrialStatus,
-                    StudentId = subscription.StudentId,
-                    TeacherId = subscription.TeacherId,
-                    AmountOutstanding = subscription.AmountOutstanding,
-                    Price = subscription.Price,
-                    FinalPrice = subscription.FinalPrice,
+                    SubscriptionId = result.Subscription.SubscriptionId,
+                    AttendanceCount = result.Subscription.AttendanceCount,
+                    AttendancesLeft = result.Subscription.AttendancesLeft,
+                    AttendanceLength = result.Subscription.AttendanceLength,
+                    DisciplineId = result.Subscription.DisciplineId,
+                    Status = (int)result.Subscription.Status,
+                    StartDate = result.Subscription.StartDate,
+                    TrialStatus = result.Subscription.TrialStatus,
+                    StudentId = result.Subscription.StudentId,
+                    TeacherId = result.Subscription.TeacherId,
+                    AmountOutstanding = result.Subscription.AmountOutstanding,
+                    Price = result.Subscription.Price,
+                    FinalPrice = result.Subscription.FinalPrice,
                     Schedules = scheduleInfos,
-                    GroupId = subscription.GroupId,
-                    SubscriptionType = (int)subscription.SubscriptionType,
+                    GroupId = result.Subscription.GroupId,
+                    SubscriptionType = (int)result.Subscription.SubscriptionType,
                     Attendances = attendanceInfos,
                     Student = studentInfo,
                     Teacher = teacherInfo,
@@ -252,7 +230,7 @@ namespace RockSchool.WebApi.Controllers
                 }
             };
 
-            return Ok(response);*/
+            return Ok(response);
         }
 
         [HttpPost("addTrial")]

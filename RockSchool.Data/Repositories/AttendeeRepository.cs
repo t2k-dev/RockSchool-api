@@ -16,6 +16,13 @@ public class AttendeeRepository : BaseRepository, IAttendeeRepository
         await RockSchoolContext.Attendees.AddAsync(attendee);
     }
 
+    public async Task<Attendee[]> GetAllBySubscriptionIdAsync(Guid subscriptionId)
+    {
+        return await RockSchoolContext.Attendees
+            .Where(att => att.SubscriptionId == subscriptionId)
+            .ToArrayAsync();
+    }
+
 
     /*
     public async Task<Attendee?> GetByIdAsync(Guid id)

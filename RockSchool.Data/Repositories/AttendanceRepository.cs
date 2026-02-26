@@ -40,19 +40,14 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext) : IAttend
             .Include(a => a.Attendees)
             .ToArrayAsync();
     }
-    /*
+    
     public async Task<Attendance[]> GetByBranchIdAsync(int branchId)
     {
         return await rockSchoolContext.Attendances
-            .Where(a => a.BranchId == branchId) 
-            .Include(a => a.Teacher)
-            .Include(a => a.Attendees)
-                .ThenInclude(sa => sa.Subscription)
-                    .ThenInclude(s => s.Student)
-            .Include(a => a.Room)
+            .Where(a => a.BranchId == branchId)
             .ToArrayAsync();
     }
-
+    /*
     public async Task<Attendance[]?> GetByStudentIdAsync(Guid studentId)
     {
         return await rockSchoolContext.Attendances

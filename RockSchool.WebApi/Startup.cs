@@ -18,6 +18,7 @@ using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Services.SubscriptionDetailsService;
 using RockSchool.BL.Services.TariffService;
 using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
@@ -81,6 +82,9 @@ public class Startup
 
         // Student
         services.AddScoped<IStudentScreenDetailsService, StudentScreenDetailsService>();
+
+        // Subscription
+        services.AddScoped<ISubscriptionScreenDetailsService, SubscriptionScreenDetailsService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IRoomRepository, RoomRepository>();

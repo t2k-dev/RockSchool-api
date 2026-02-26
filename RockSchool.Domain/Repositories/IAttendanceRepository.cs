@@ -10,9 +10,9 @@ public interface IAttendanceRepository
     Task<Attendance[]?> GetByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate);
     Task<Guid> AddAsync(Attendance attendance);
     
-    /*
-    Task<Attendance[]> GetByBranchIdAsync(int branchId);
     
+    Task<Attendance[]> GetByBranchIdAsync(int branchId);
+    /*
     Task<Attendance[]?> GetByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate);
     Task<Attendance[]?> GetByStudentIdAsync(Guid studentId);
     Task<Attendance[]?> GetBySubscriptionIdAsync(Guid subscriptionId);

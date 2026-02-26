@@ -1,14 +1,13 @@
-﻿using RockSchool.Domain.Entities;
-using RockSchool.WebApi.Models.Attendances;
+﻿using RockSchool.BL.Models.Dtos;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.WebApi.Models
 {
     public class HomeScreenDetails
     {
-        //TODO: Refactor
-        public Branch Branch { get; set; }
-        public ParentAttendanceInfo[] Attendances { get; set; }
-        public object[] Rooms { get; set; }
-        public Note[] Notes { get; set; }
+        public Branch Branch { get; set; } = null!;
+        public AttendanceWithAttendeesDto[] Attendances { get; set; } = [];
+        public object[] Rooms { get; set; } = [];
+        public Note[] Notes { get; set; } = [];
     }
 }
