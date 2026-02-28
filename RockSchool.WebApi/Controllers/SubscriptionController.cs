@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
-using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
-using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.SubscriptionDetailsService;
 using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
@@ -20,6 +18,8 @@ using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Helpers;
 using RockSchool.Domain.Students;
 using RockSchool.Domain.Teachers;
+using RockSchool.BL.Students;
+using RockSchool.BL.Teachers;
 
 namespace RockSchool.WebApi.Controllers
 {

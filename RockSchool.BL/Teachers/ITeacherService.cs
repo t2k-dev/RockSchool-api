@@ -1,7 +1,6 @@
-﻿using RockSchool.BL.Teachers;
-using RockSchool.Domain.Teachers;
+﻿using RockSchool.Domain.Teachers;
 
-namespace RockSchool.BL.Services.TeacherService;
+namespace RockSchool.BL.Teachers;
 
 public interface ITeacherService
 {

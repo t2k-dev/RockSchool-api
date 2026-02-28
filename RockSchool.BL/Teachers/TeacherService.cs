@@ -1,12 +1,11 @@
 ﻿using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
-using RockSchool.BL.Teachers;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Teachers;
 
-namespace RockSchool.BL.Services.TeacherService;
+namespace RockSchool.BL.Teachers;
 
 public class TeacherService(
     ITeacherRepository teacherRepository,
@@ -50,37 +49,6 @@ public class TeacherService(
     public async Task<Teacher[]?> GetRehearsableTeachersAsync(int branchId)
     {
         return await teacherRepository.GetRehearsableTeachersAsync(branchId);
-    }
-
-    public async Task<Guid> AddTeacher(Teacher addTeacherDto)
-    {
-        throw new NotImplementedException();
-        /*
-        var disciplines = await _disciplineRepository.GetByIdsAsync(addTeacherDto.DisciplineIds);
-        var workingPeriodEntities = addTeacherDto.WorkingPeriods;
-        var scheduledWorkingPeriods = BuildScheduledWorkingPeriods(workingPeriodEntities, addTeacherDto.TeacherId, DateTime.Now.ToUniversalTime(), 3);
-
-        // Teacher
-        var teacherEntity = new TeacherEntity
-        {
-            LastName = addTeacherDto.LastName,
-            FirstName = addTeacherDto.FirstName,
-            BirthDate = addTeacherDto.BirthDate,
-            Phone = addTeacherDto.Phone,
-            BranchId = addTeacherDto.BranchId.Value,
-            Disciplines = disciplines,
-            WorkingPeriods = workingPeriodEntities,
-            ScheduledWorkingPeriods = scheduledWorkingPeriods,
-            Sex = addTeacherDto.Sex,
-            AllowGroupLessons = addTeacherDto.AllowGroupLessons,
-            AllowBands = addTeacherDto.AllowBands,
-            AgeLimit = addTeacherDto.AgeLimit,
-            IsActive = addTeacherDto.IsActive,
-        };
-
-        await _teacherRepository.AddAsync(teacherEntity);
-
-        return teacherEntity.TeacherId;*/
     }
 
     public async Task UpdateTeacherAsync(TeacherDto teacherDto, bool updateDisciplines)

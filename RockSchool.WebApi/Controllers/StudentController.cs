@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Common.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BandStudentService;
-using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Students;
+using RockSchool.BL.Students.AddStudent;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Attendances;
 using RockSchool.WebApi.Models.Students;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -25,7 +26,8 @@ public class StudentController(
     IAttendanceService attendanceService,
     ISubscriptionService subscriptionService,
     IBandStudentService bandStudentService,
-    IStudentScreenDetailsService studentScreenDetailsService)
+    IStudentScreenDetailsService studentScreenDetailsService,
+    IAddStudentService addStudentService)
     : Controller
 {
 
@@ -80,25 +82,23 @@ public class StudentController(
     [HttpPost]
     public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
-
-        /*
         if (!ModelState.IsValid)
-            throw new Exception("Incorrect requestDto for registration.");
+            return BadRequest(ModelState);
 
-        var newStudent = new Student()
+        var addStudentDto = new AddStudentDto
         {
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,
             BirthDate = requestDto.BirthDate.ToUniversalTime(),
             Sex = requestDto.Sex,
-            Phone = requestDto.Phone ?? 0, //TODO: fix
+            Phone = requestDto.Phone ?? 0,
             Level = requestDto.Level,
             BranchId = requestDto.BranchId
         };
 
-        var id = await studentService.AddStudentAsync(newStudent);
+        var id = await addStudentService.Handle(addStudentDto);
 
-        return Ok(id);*/
+        return Ok(id);
     }
 
     [HttpPut("{id}")]
@@ -107,11 +107,8 @@ public class StudentController(
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        throw new AbandonedMutexException();
-        /*
-        var updateStudentDto = new Student()
+        var studentPersonalDataDto = new PersonalDataDto
         {
-            StudentId = id,
             FirstName = requestDto.FirstName,
             LastName = requestDto.LastName,
             BirthDate = requestDto.BirthDate,
@@ -119,9 +116,9 @@ public class StudentController(
             Phone = requestDto.Phone,
             Level = requestDto.Level
         };
-        await studentService.UpdateStudentAsync(updateStudentDto);
+        await studentService.UpdatePersonalDataAsync(id, studentPersonalDataDto);
 
-        return Ok(id);*/
+        return Ok(id);
     }
 
     [HttpDelete("{id}")]

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.SubscriptionService;
-using RockSchool.BL.Services.TeacherService;
 using RockSchool.BL.Services.UserService;
 using RockSchool.BL.Teachers;
 using RockSchool.BL.Teachers.AddTeacher;

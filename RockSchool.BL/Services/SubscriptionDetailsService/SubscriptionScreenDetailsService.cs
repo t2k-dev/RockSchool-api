@@ -1,8 +1,8 @@
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.ScheduleService;
-using RockSchool.BL.Services.StudentService;
 using RockSchool.BL.Services.SubscriptionService;
-using RockSchool.BL.Services.TeacherService;
+using RockSchool.BL.Students;
+using RockSchool.BL.Teachers;
 using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionDetailsService;

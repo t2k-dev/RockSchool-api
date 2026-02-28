@@ -17,7 +17,6 @@ public class StudentRepository : IStudentRepository
     public async Task AddAsync(Student student)
     {
         await _context.Students.AddAsync(student);
-        await _context.SaveChangesAsync();
     }
 
     public async Task<Student?> GetByIdAsync(Guid studentId)
@@ -27,10 +26,9 @@ public class StudentRepository : IStudentRepository
             .SingleOrDefaultAsync(s => s.StudentId == studentId);
     }
 
-    public async Task UpdateAsync(Student student)
+    public void Update(Student student)
     {
         _context.Students.Update(student);
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Student student)
