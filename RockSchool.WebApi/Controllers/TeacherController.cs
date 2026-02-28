@@ -117,13 +117,10 @@ public class TeacherController(
     [HttpGet("{id}/workingPeriods")]
     public async Task<ActionResult> GetTeacherWorkingPeriods(Guid id)
     {
-        throw new NotImplementedException();
-        /*
-        var teacher = await teacherService.GetTeacherByIdAsync(id);
+        var availableTeacherDtos = await availableTeachersService.GetAvailableTeacherAsync(id);
+        var availableTeacherDto = BuildAvailableTeacherDto(availableTeacherDtos.Teacher, availableTeacherDtos.Attendances);
 
-        var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
-
-        return Ok(new { teacher = availableTeacherDto });*/
+        return Ok(new { teacher = availableTeacherDto });
     }
 
     [HttpPost]

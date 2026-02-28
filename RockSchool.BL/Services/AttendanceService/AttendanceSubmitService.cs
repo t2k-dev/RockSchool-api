@@ -11,57 +11,38 @@ namespace RockSchool.BL.Services.AttendanceService
 {
     public class AttendanceSubmitService(
         IAttendanceRepository attendanceRepository,
-        ITrialSubscriptionService trialSubscriptionService,
-        ISubscriptionService subscriptionService)
+        ISubscriptionRepository subscriptionRepository,
+        IUnitOfWork unitOfWork)
         : IAttendanceSubmitService
     {
         public async Task SubmitAttendance(Guid attendanceId, int status, string statusReason, string comment)
         {
-            var submittedAttendance = await SubmitSingleAttendance(attendanceId, status, statusReason, comment);
+            await SubmitSingleAttendance(attendanceId, (AttendanceStatus)status, statusReason);
 
             //await subscriptionService.DecreaseAttendancesLeftCount(submittedAttendance.SubscriptionId);
+
+            await unitOfWork.SaveChangesAsync();
         }
 
-        public async Task AcceptTrial(Guid attendanceId, string statusReason, string comment)
+        private async Task<Attendance> SubmitSingleAttendance(Guid attendanceId, AttendanceStatus status, string statusReason)
         {
-            // Update attendance
-            var submittedAttendance = await SubmitSingleAttendance(attendanceId, (int)AttendanceStatus.Attended, statusReason, comment);
+            var attendance = await attendanceRepository.GetAsync(attendanceId);
 
-            // Update subscription
-            //await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Positive, statusReason);
-        }
-
-        public async Task DeclineTrial(Guid attendanceId, string statusReason, string comment)
-        {
-            // Update attendance
-            var submittedAttendance = await SubmitSingleAttendance(attendanceId, (int)AttendanceStatus.Attended, statusReason, comment);
-
-            // Update subscription
-            //await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Negative, statusReason);
-        }
-
-        public async Task MissedTrial(Guid attendanceId, string statusReason, string comment)
-        {
-            var submittedAttendance = await SubmitSingleAttendance(attendanceId, (int)AttendanceStatus.Missed, statusReason, comment);
+            switch (status)
+            {
+                case AttendanceStatus.Attended:
+                    attendance.MarkAsAttended(statusReason);
+                    break;
+                case AttendanceStatus.Missed:
+                    attendance.MarkAsMissed(statusReason);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
+            }
             
-            //await trialSubscriptionService.CompleteTrial(submittedAttendance.SubscriptionId, TrialStatus.Missed, statusReason);
+            attendanceRepository.Update(attendance);
+
+            return attendance;
         }
-
-        private async Task<Attendance> SubmitSingleAttendance(Guid attendanceId, int status, string statusReason, string comment)
-        {
-            //var attendanceEntity = await attendanceRepository.GetAsync(attendanceId);
-
-            throw new NotImplementedException();
-            /*
-            attendanceEntity.Status = (AttendanceStatus)status;
-            attendanceEntity.StatusReason = statusReason;
-            attendanceEntity.IsCompleted = true;
-            attendanceEntity.Comment = comment;
-
-            await attendanceRepository.UpdateAsync(attendanceEntity);
-
-            return attendanceEntity;*/
-        }
-
     }
 }

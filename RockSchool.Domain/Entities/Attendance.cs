@@ -8,6 +8,7 @@ public class Attendance
     public Guid AttendanceId { get; private set; }
     public int? DisciplineId { get; private set; }
     public Guid? TeacherId { get; private set; }
+    public Teacher? Teacher { get; private set; }
     public AttendanceStatus Status { get; private set; }
     public string? StatusReason { get; private set; }
     public DateTime StartDate { get; private set; }

@@ -1,4 +1,5 @@
 using RockSchool.Domain.Enums;
+using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Students;
 using RockSchool.Domain.Teachers;
 
@@ -132,5 +133,14 @@ public class Subscription
 
         FinalPrice = Price - discountAmount;
         AmountOutstanding = FinalPrice;
+    }
+
+    // Trials
+    public void CompleteTrial(Guid subscriptionId, TrialStatus trialStatus, string statusReason)
+    {
+        AttendancesLeft -= 1;
+        Status = SubscriptionStatus.Completed;
+        TrialStatus = trialStatus;
+        StatusReason = statusReason;
     }
 }

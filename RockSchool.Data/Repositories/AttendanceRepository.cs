@@ -57,15 +57,13 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext) : IAttend
                 .ThenInclude(sa => sa.Subscription)
             .ToArrayAsync();
     }
-
+    */
     public async Task<Attendance[]?> GetBySubscriptionIdAsync(Guid subscriptionId)
     {
         return await rockSchoolContext.Attendances
             .Where(a => a.Attendees.Any(sa => sa.SubscriptionId == subscriptionId))
-            .Include(a => a.Attendees)
-                .ThenInclude(sa => sa.Subscription)
             .ToArrayAsync();
-    }*/
+    }
 
     public async Task<Guid> AddAsync(Attendance attendance)
     {
@@ -73,10 +71,9 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext) : IAttend
         return attendance.AttendanceId;
     }
 
-    public async Task UpdateAsync(Attendance attendance)
+    public void Update(Attendance attendance)
     {
         rockSchoolContext.Attendances.Update(attendance);
-        await rockSchoolContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)

@@ -66,6 +66,32 @@ public class TeacherRepository : ITeacherRepository
             .ToArrayAsync();
     }
 
+    public async Task<Teacher[]> GetAvailableTeachersAsync(int branchId, int disciplineId, int studentAge)
+    {
+        return await _context.Teachers
+            .Include(t => t.WorkingPeriods)
+            .Include(t => t.Disciplines)
+            .Include(t => t.Branch)
+            .Where(t => t.BranchId == branchId
+                        && t.AgeLimit >= studentAge
+                        && t.Disciplines.Any(d => d.DisciplineId == disciplineId)
+                        && t.IsActive)
+            .AsSplitQuery()
+            .ToArrayAsync();
+    }
+
+    public async Task<Teacher?> GetTeacherAsync(Guid teacherId, DateTime startDate)
+    {
+        return await _context.Teachers
+            .Include(t => t.WorkingPeriods)
+            .Include(t => t.ScheduledWorkingPeriods.Where(swp => swp.StartDate >= startDate))
+            .Include(t => t.Disciplines)
+            .Include(t => t.Branch)
+            .Where(t => t.IsActive)
+            .AsSplitQuery()
+            .SingleOrDefaultAsync(t => t.TeacherId == teacherId);
+    }
+
     public async Task<Teacher[]> GetRehearsableTeachersAsync(int branchId)
     {
         return await _context.Teachers

@@ -44,7 +44,7 @@ namespace RockSchool.BL.Subscriptions
             }
 
             // Step 3: Attendances
-            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, false, subscription.SubscriptionId);
+            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, AttendanceType.Rent, subscription.SubscriptionId);
             foreach (var attendance in attendances)
             {
                 await attendanceRepository.AddAsync(attendance);

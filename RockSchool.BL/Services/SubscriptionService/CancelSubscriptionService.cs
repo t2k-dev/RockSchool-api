@@ -7,22 +7,24 @@ namespace RockSchool.BL.Services.SubscriptionService
 {
     public class CancelSubscriptionService(
         IAttendanceService attendanceService,
-        ISubscriptionRepository subscriptionRepository
+        ISubscriptionRepository subscriptionRepository,
+        IUnitOfWork unitOfWork
         ) : ICancelSubscriptionService
     {
         public async Task Cancel(Guid subscriptionId, DateTime cancelDate, string cancelReason)
         {
-            throw new NotImplementedException();
             // Update subscription
-            /*var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
             subscription.Cancel(cancelReason);
 
-            await subscriptionRepository.UpdateSubscriptionAsync(subscription);
+            subscriptionRepository.Update(subscription);
 
 
             // Cancel attendances
-            await attendanceService.CancelFromDate(subscriptionId, cancelDate);*/
+            await attendanceService.CancelFromDate(subscriptionId, cancelDate);
+
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

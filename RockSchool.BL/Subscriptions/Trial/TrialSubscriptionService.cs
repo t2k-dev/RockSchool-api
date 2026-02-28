@@ -1,21 +1,12 @@
-﻿using Azure.Core;
-using RockSchool.BL.Models;
-using RockSchool.BL.Services.StudentService;
-using RockSchool.BL.Services.TariffService;
+﻿using RockSchool.BL.Services.TariffService;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RockSchool.BL.Subscriptions.Trial
 {
     public class TrialSubscriptionService(
-        IStudentRepository studentRepository, 
         ISubscriptionRepository subscriptionRepository,
         IAttendanceRepository attendanceRepository,
         IAttendeeRepository attendeeRepository,
@@ -71,17 +62,59 @@ namespace RockSchool.BL.Subscriptions.Trial
             await unitOfWork.SaveChangesAsync();
         }
 
-        public async Task CompleteTrial(Guid subscriptionId, TrialStatus trialStatus, string statusReason)
+        public async Task AcceptTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment)
         {
-            var subscriptionEntity = await subscriptionRepository.GetAsync(subscriptionId);
-            throw new NotImplementedException();
-            /*
-            subscriptionEntity.AttendancesLeft -= 1;
-            subscriptionEntity.Status = SubscriptionStatus.Completed;
-            subscriptionEntity.TrialStatus = trialStatus;
-            subscriptionEntity.StatusReason = statusReason;
+            // Update attendance
+            var attendance = await attendanceRepository.GetAsync(attendanceId);
+            attendance.MarkAsAttended(statusReason);
 
-            await subscriptionRepository.UpdateSubscriptionAsync(subscriptionEntity);*/
+            attendanceRepository.Update(attendance);
+
+            // Update subscription
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+
+            subscription.CompleteTrial(subscriptionId, TrialStatus.Positive, null);
+
+            subscriptionRepository.Update(subscription);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeclineTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment)
+        {
+            // Update attendance
+            var attendance = await attendanceRepository.GetAsync(attendanceId);
+            attendance.MarkAsAttended(statusReason);
+
+            attendanceRepository.Update(attendance);
+
+            // Update subscription
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+
+            subscription.CompleteTrial(subscriptionId, TrialStatus.Negative, null);
+
+            subscriptionRepository.Update(subscription);
+
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task MissedTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment)
+        {
+            // Update attendance
+            var attendance = await attendanceRepository.GetAsync(attendanceId);
+            attendance.MarkAsMissed(statusReason);
+
+            attendanceRepository.Update(attendance);
+
+            // Update subscription
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+
+            subscription.CompleteTrial(subscriptionId, TrialStatus.Missed, null);
+
+            subscriptionRepository.Update(subscription);
+
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

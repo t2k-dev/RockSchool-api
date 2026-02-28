@@ -71,7 +71,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             }
 
             // Step 3: Generate and create Attendances (shared for group lessons, individual for private)
-            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, isGroup);
+            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, isGroup ? AttendanceType.GroupLesson : AttendanceType.Lesson, groupId);
             var attendanceIds = new List<Guid>();
             
             foreach (var attendance in attendances)

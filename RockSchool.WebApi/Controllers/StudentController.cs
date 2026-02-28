@@ -80,7 +80,7 @@ public class StudentController(
     [HttpPost]
     public async Task<ActionResult> AddStudent([FromBody] RegisterStudentRequestDto requestDto)
     {
-        throw new NotImplementedException();
+
         /*
         if (!ModelState.IsValid)
             throw new Exception("Incorrect requestDto for registration.");

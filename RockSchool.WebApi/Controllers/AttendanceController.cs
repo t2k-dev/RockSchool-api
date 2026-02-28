@@ -9,6 +9,7 @@ using RockSchool.WebApi.Models.Attendances;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.Domain.Entities;
 
 
@@ -20,7 +21,9 @@ namespace RockSchool.WebApi.Controllers;
 public class AttendanceController(
     IAttendanceService attendanceService,
     ISubscriptionService subscriptionService,
-    IAttendanceSubmitService attendanceSubmitService)
+    IAttendanceSubmitService attendanceSubmitService,
+    ITrialSubscriptionService trialSubscriptionService
+    )
     : Controller
 {
     [HttpGet]
@@ -42,7 +45,7 @@ public class AttendanceController(
     [HttpPost("{id}/declineTrial")]
     public async Task<ActionResult> DeclineTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await attendanceSubmitService.DeclineTrial(id, request.StatusReason, request.Comment);
+        await trialSubscriptionService.DeclineTrial(id, request.SubscriptionId, request.StatusReason, request.Comment);
 
         return Ok();
     }
@@ -50,7 +53,7 @@ public class AttendanceController(
     [HttpPost("{id}/acceptTrial")]
     public async Task<ActionResult> AcceptTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await attendanceSubmitService.AcceptTrial(id, request.StatusReason, request.Comment);
+        await trialSubscriptionService.AcceptTrial(id, request.SubscriptionId, request.StatusReason, request.Comment);
 
         return Ok();
     }
@@ -58,7 +61,7 @@ public class AttendanceController(
     [HttpPost("{id}/missedTrial")]
     public async Task<ActionResult> MissedTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await attendanceSubmitService.MissedTrial(id, request.StatusReason, request.Comment);
+        await trialSubscriptionService.MissedTrial(id, request.SubscriptionId, request.StatusReason, request.Comment);
 
         return Ok();
     }

@@ -50,10 +50,9 @@ public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
             .ToArrayAsync();
     }
 
-    public async Task UpdateSubscriptionAsync(Subscription subscription)
+    public void Update(Subscription subscription)
     {
         RockSchoolContext.Subscriptions.Update(subscription);
-        await RockSchoolContext.SaveChangesAsync();
     }
 
     public async Task DeleteSubscriptionAsync(Subscription subscription)

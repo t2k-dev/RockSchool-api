@@ -10,5 +10,7 @@ public interface ITeacherRepository
     void Update(Teacher teacher);
     Task DeleteAsync(Teacher teacher);
     Task<Teacher[]> GetTeachersAsync(int branchId, int disciplineId, int studentAge, DateTime startDate);
+    Task<Teacher[]> GetAvailableTeachersAsync(int branchId, int disciplineId, int studentAge);
+    Task<Teacher?> GetTeacherAsync(Guid teacherId, DateTime startDate);
     Task<Teacher[]> GetRehearsableTeachersAsync(int branchId);
 }

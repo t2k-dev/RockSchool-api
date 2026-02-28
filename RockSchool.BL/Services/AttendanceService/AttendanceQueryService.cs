@@ -9,6 +9,7 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
     public async Task<AttendanceWithAttendeesDto[]> GetByTeacherIdForPeriodAsync(Guid teacherId, DateTime startDate, DateTime endDate)
     {
         return await context.Attendances
+            .Include(a => a.Teacher)
             .Where(a => a.TeacherId == teacherId
                         && a.StartDate >= startDate
                         && a.EndDate <= endDate)
@@ -19,6 +20,14 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
                 StartDate = a.StartDate,
                 EndDate = a.EndDate,
                 Status = (int)a.Status,
+                AttendanceType = a.AttendanceType,
+                RoomId = a.RoomId,
+                Teacher = a.Teacher != null ? new TeacherInfoDto
+                {
+                    TeacherId = a.Teacher.TeacherId,
+                    FirstName = a.Teacher.FirstName,
+                    LastName = a.Teacher.LastName
+                } : null,
                 Attendees = context.Attendees
                     .Where(att => att.AttendanceId == a.AttendanceId)
                     .Join(
@@ -63,6 +72,7 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
     public async Task<AttendanceWithAttendeesDto[]> GetByStudentIdAsync(Guid studentId)
     {
         return await context.Attendances
+            .Include(a => a.Teacher)
             .Where(a => context.Attendees.Any(att => 
                 att.AttendanceId == a.AttendanceId && 
                 context.Subscriptions.Any(s => s.SubscriptionId == att.SubscriptionId && s.StudentId == studentId)))
@@ -73,6 +83,14 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
                 StartDate = a.StartDate,
                 EndDate = a.EndDate,
                 Status = (int)a.Status,
+                AttendanceType = a.AttendanceType,
+                RoomId = a.RoomId,
+                Teacher = a.Teacher != null ? new TeacherInfoDto
+                {
+                    TeacherId = a.Teacher.TeacherId,
+                    FirstName = a.Teacher.FirstName,
+                    LastName = a.Teacher.LastName
+                } : null,
                 Attendees = context.Attendees
                     .Where(att => att.AttendanceId == a.AttendanceId)
                     .Join(
@@ -117,16 +135,23 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
     public async Task<AttendanceWithAttendeesDto[]> GetByBranchIdAsync(int branchId)
     {
         return await context.Attendances
+            .Include(a => a.Teacher)
             .Where(a => a.BranchId == branchId)
             .Select(a => new AttendanceWithAttendeesDto
             {
                 AttendanceId = a.AttendanceId,
-                TeacherId = a.TeacherId ?? Guid.Empty,
                 StartDate = a.StartDate,
                 EndDate = a.EndDate,
                 Status = (int)a.Status,
                 AttendanceType = a.AttendanceType,
                 RoomId = a.RoomId,
+                DisciplineId = a.DisciplineId,
+                Teacher = a.Teacher != null ? new TeacherInfoDto
+                {
+                    TeacherId = a.Teacher.TeacherId,
+                    FirstName = a.Teacher.FirstName,
+                    LastName = a.Teacher.LastName
+                } : null,
                 Attendees = context.Attendees
                     .Where(att => att.AttendanceId == a.AttendanceId)
                     .Join(

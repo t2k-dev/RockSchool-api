@@ -10,6 +10,6 @@ public interface ISubscriptionRepository
     Task<Subscription[]?> GetSubscriptionsByStudentIdAsync(Guid studentId);
     Task<Subscription[]?> GetSubscriptionsByTeacherIdAsync(Guid teacherId);
     Task<Subscription[]?> GetByGroupIdAsync(Guid groupId);
-    Task UpdateSubscriptionAsync(Subscription subscription);
+    void Update(Subscription subscription);
     Task DeleteSubscriptionAsync(Subscription subscription);
 }

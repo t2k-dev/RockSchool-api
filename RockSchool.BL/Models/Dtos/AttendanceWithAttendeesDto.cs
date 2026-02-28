@@ -6,12 +6,14 @@ public class AttendanceWithAttendeesDto
 {
     public Guid AttendanceId { get; set; }
     public Guid TeacherId { get; set; }
+    public int? DisciplineId { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int Status { get; set; }
     public AttendanceType AttendanceType { get; set; }
     public List<AttendeeDto> Attendees { get; set; } = new();
     public int RoomId { get; set; }
+    public TeacherInfoDto? Teacher { get; set; }
 }
 
 public class AttendeeDto
@@ -42,4 +44,11 @@ public class SubscriptionInfoDto
     public int Status { get; set; }
     public int SubscriptionType { get; set; }
     public int? DisciplineId { get; set; }
+}
+
+public class TeacherInfoDto
+{
+    public Guid TeacherId { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
 }

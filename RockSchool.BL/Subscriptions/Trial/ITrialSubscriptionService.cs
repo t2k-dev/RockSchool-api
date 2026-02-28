@@ -6,6 +6,11 @@ namespace RockSchool.BL.Subscriptions.Trial
     public interface ITrialSubscriptionService
     {
         Task AddTrial(AddTrialDto addTrialDto);
-        Task CompleteTrial(Guid subscriptionId, TrialStatus trialStatus, string statusReason);
+
+        Task AcceptTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
+
+        Task DeclineTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
+
+        Task MissedTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
     }
 }

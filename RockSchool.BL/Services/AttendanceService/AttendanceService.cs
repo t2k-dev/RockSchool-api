@@ -32,6 +32,21 @@ public class AttendanceService : IAttendanceService
         return await _attendanceRepository.GetByRoomIdAsync(roomId);
     }
 
+    public async Task CancelFromDate(Guid subscriptionId, DateTime cancelDate)
+    {
+        var attendances = await _attendanceRepository.GetBySubscriptionIdAsync(subscriptionId);
+        if (attendances == null)
+        {
+            return;
+        }
+
+        var attendancesToCancel = attendances.Where(a => a.StartDate >= cancelDate && a.Status == AttendanceStatus.New);
+        foreach (var attendance in attendancesToCancel)
+        {
+            await _attendanceRepository.DeleteAsync(attendance.AttendanceId);
+        }
+    }
+
     /*
     public async Task<Attendance[]> GetByBranchIdAsync(int branchId)
     {
@@ -108,18 +123,5 @@ public class AttendanceService : IAttendanceService
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }
 
-    public async Task CancelFromDate(Guid subscriptionId, DateTime cancelDate)
-    {
-        var attendances = await GetAttendancesBySubscriptionId(subscriptionId);
-        if (attendances == null)
-        {
-            return;
-        }
-
-        var attendancesToCancel = attendances.Where(a => a.StartDate >= cancelDate && a.Status == AttendanceStatus.New);
-        foreach (var attendance in attendancesToCancel)
-        {
-            await _attendanceRepository.DeleteAsync(attendance.AttendanceId);
-        }
-    }*/
+    */
 }

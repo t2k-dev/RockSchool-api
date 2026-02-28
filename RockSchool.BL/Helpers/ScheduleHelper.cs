@@ -6,7 +6,7 @@ namespace RockSchool.BL.Helpers;
 
 public static class ScheduleHelper
 {
-    public static List<Attendance> GenerateAttendances(SubscriptionDetails subscriptionDetails, ScheduleDto[] schedules, bool isGroup, Guid? subscriptionId = null)
+    public static List<Attendance> GenerateAttendances(SubscriptionDetails subscriptionDetails, ScheduleDto[] schedules, AttendanceType attendanceType, Guid? groupId = null)
     {
         var attendances = new List<Attendance>();
 
@@ -28,10 +28,10 @@ public static class ScheduleHelper
                 attendanceStartDate.AddMinutes(lessonMinutes),
                 availableSlot.RoomId,
                 subscriptionDetails.BranchId,
-                isGroup ? AttendanceType.GroupLesson : AttendanceType.Lesson,
+                attendanceType,
                 subscriptionDetails.DisciplineId,
                 subscriptionDetails.TeacherId,
-                isGroup ? Guid.NewGuid() : null
+                groupId
                 );  
 
             attendances.Add(newAttendance);
