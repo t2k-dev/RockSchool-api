@@ -34,8 +34,8 @@ public class Subscription
     private readonly List<Schedule> _schedules = new();
     public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
 
-    private readonly List<Tender> _tenders = new();
-    public IReadOnlyCollection<Tender> Tenders => _tenders.AsReadOnly();
+    private readonly List<Payment> _payments = new();
+    public IReadOnlyCollection<Payment> Payments => _payments.AsReadOnly();
 
     // Constructor for EF
     private Subscription() { }
@@ -103,13 +103,13 @@ public class Subscription
         };
     }
 
-    public void RecordPayment(Tender tender)
+    public void RecordPayment(Payment payment)
     {
-        if (tender.Amount > AmountOutstanding)
+        if (payment.Amount > AmountOutstanding)
             throw new InvalidOperationException("Payment amount exceeds outstanding balance");
 
-        _tenders.Add(tender);
-        AmountOutstanding -= tender.Amount;
+        _payments.Add(payment);
+        AmountOutstanding -= payment.Amount;
     }
 
     public void Cancel(string reason)

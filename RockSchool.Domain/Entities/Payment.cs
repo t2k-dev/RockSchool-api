@@ -5,36 +5,30 @@ namespace RockSchool.Domain.Entities;
 public class Payment
 {
     public Guid PaymentId { get; private set; }
-    public int Amount { get; private set; }
+    public decimal Amount { get; private set; }
     public DateTime PaidOn { get; private set; }
-    public TenderType PaymentType { get; private set; }
+    public PaymentType PaymentType { get; private set; }
+    public Guid SubscriptionId { get; private set; }
+    public Subscription Subscription { get; private set; }
 
     private Payment() { }
 
-    public static Payment Create(int amount, DateTime paidOn, TenderType paymentType)
+    public static Payment Create(
+        decimal amount,
+        DateTime paidOn,
+        PaymentType paymentType,
+        Guid subscriptionId)
     {
         if (amount <= 0)
-            throw new ArgumentException("Amount must be greater than zero", nameof(amount));
+            throw new InvalidOperationException("Payment amount must be greater than zero");
 
         return new Payment
         {
             PaymentId = Guid.NewGuid(),
             Amount = amount,
             PaidOn = paidOn,
-            PaymentType = paymentType
+            PaymentType = paymentType,
+            SubscriptionId = subscriptionId
         };
-    }
-
-    public void UpdateAmount(int amount)
-    {
-        if (amount <= 0)
-            throw new ArgumentException("Amount must be greater than zero", nameof(amount));
-
-        Amount = amount;
-    }
-
-    public void UpdatePaymentDate(DateTime paidOn)
-    {
-        PaidOn = paidOn;
     }
 }

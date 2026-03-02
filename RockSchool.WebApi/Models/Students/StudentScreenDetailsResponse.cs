@@ -51,7 +51,5 @@ namespace RockSchool.WebApi.Models.Students
         public decimal Price { get; set; }
 
         public decimal FinalPrice { get; set; }
-
-        //public TenderInfo[] Tenders { get; set; }
     }
 }

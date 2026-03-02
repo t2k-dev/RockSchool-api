@@ -1,4 +1,4 @@
-﻿namespace RockSchool.BL.Models
+﻿namespace RockSchool.BL.Subscriptions
 {
     public class SubscriptionDetails
     {

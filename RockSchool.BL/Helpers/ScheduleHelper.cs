@@ -1,4 +1,5 @@
 ﻿using RockSchool.BL.Models;
+using RockSchool.BL.Subscriptions;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 

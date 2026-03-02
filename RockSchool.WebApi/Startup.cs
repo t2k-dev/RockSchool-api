@@ -32,6 +32,7 @@ using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
 using System;
+using RockSchool.BL.Subscriptions.Payments;
 
 namespace RockSchool.WebApi;
 
@@ -66,7 +67,6 @@ public class Startup
         services.AddScoped<ICancelSubscriptionService, CancelSubscriptionService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IRentalSubscriptionService, RentalSubscriptionService>();
-        services.AddScoped<ITenderService, TenderService>();
         services.AddScoped<ITariffService, TariffService>();
         services.AddScoped<IHomeService, HomeService>();
         services.AddScoped<IBusySlotsService, BusySlotsService>();
@@ -100,7 +100,7 @@ public class Startup
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IWorkingPeriodsRepository, WorkingPeriodsRepository>();
         services.AddScoped<IScheduledWorkingPeriodsRepository, ScheduledWorkingPeriodsRepository>();
-        services.AddScoped<ITenderRepository, TenderRepository>();
+        services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<ITariffRepository, TariffRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

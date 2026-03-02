@@ -2,7 +2,7 @@ using RockSchool.Domain.Entities;
 using RockSchool.Domain.Students;
 using RockSchool.Domain.Teachers;
 
-namespace RockSchool.BL.Models;
+namespace RockSchool.BL.Subscriptions;
 
 public class SubscriptionScreenDetailsResult
 {
@@ -11,5 +11,5 @@ public class SubscriptionScreenDetailsResult
     public Teacher? Teacher { get; set; }
     public Schedule[] Schedules { get; set; } = [];
     public Attendance[] Attendances { get; set; } = [];
-    public Tender[] Tenders { get; set; } = [];
+    public Payment[] Payments { get; set; } = [];
 }

@@ -1,6 +1,6 @@
 ﻿namespace RockSchool.Domain.Enums;
 
-public enum TenderType
+public enum PaymentType
 {
     Cash = 1,
     Bill = 2,

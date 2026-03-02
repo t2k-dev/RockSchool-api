@@ -2,15 +2,15 @@ using System;
 
 namespace RockSchool.WebApi.Models
 {
-    public class TenderInfo
+    public class PaymentInfo
     {
-        public Guid TenderId { get; set; }
+        public Guid PaymentId { get; set; }
 
         public Decimal Amount { get; set; }
 
         public DateTime PaidOn { get; set; }
 
-        public int TenderType { get; set; }
+        public int PaymentType { get; set; }
 
         public Guid SubscriptionId { get; set; }
     }

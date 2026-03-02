@@ -9,10 +9,13 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
     public void Configure(EntityTypeBuilder<Payment> builder)
     {
         builder.ToTable("Payments");
-        builder.HasKey(p => p.PaymentId);
+        builder.HasKey(t => t.PaymentId);
         
-        builder.Property(p => p.Amount).IsRequired();
-        builder.Property(p => p.PaidOn).IsRequired();
-        builder.Property(p => p.PaymentType).IsRequired().HasConversion<int>();
+        builder.Property(t => t.Amount).HasColumnType("decimal(18,2)").IsRequired();
+        builder.Property(t => t.PaidOn).IsRequired();
+        builder.Property(t => t.PaymentType).IsRequired().HasConversion<int>();
+        builder.Property(t => t.SubscriptionId).IsRequired();
+        
+        builder.HasOne(t => t.Subscription).WithMany(s => s.Payments).HasForeignKey("SubscriptionId");
     }
 }

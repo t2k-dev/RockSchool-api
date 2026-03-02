@@ -35,9 +35,9 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
         builder.HasOne(s => s.Teacher).WithMany().HasForeignKey("TeacherId").IsRequired(false);
         
         builder.HasMany(s => s.Schedules).WithOne(sc => sc.Subscription).HasForeignKey("SubscriptionId");
-        builder.HasMany(s => s.Tenders).WithOne(t => t.Subscription).HasForeignKey("SubscriptionId");
+        builder.HasMany(s => s.Payments).WithOne(t => t.Subscription).HasForeignKey("SubscriptionId");
         
         builder.Metadata.FindNavigation(nameof(Subscription.Schedules))!.SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(Subscription.Tenders))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata.FindNavigation(nameof(Subscription.Payments))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using RockSchool.BL.Models;
+using RockSchool.BL.Subscriptions;
 using RockSchool.Domain.Entities;
 
 namespace RockSchool.WebApi.Models.Subscriptions

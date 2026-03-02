@@ -1,7 +1,7 @@
-using RockSchool.BL.Models;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Students;
+using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Teachers;
 using RockSchool.Domain.Repositories;
 
@@ -14,7 +14,8 @@ public class SubscriptionScreenDetailsService(
     ITeacherService teacherService,
     IAttendeeRepository attendeeRepository,
     IAttendanceRepository attendanceRepository,
-    ITenderService tenderService) : ISubscriptionScreenDetailsService
+    IPaymentRepository paymentRepository
+    ) : ISubscriptionScreenDetailsService
 {
     public async Task<SubscriptionScreenDetailsResult> Query(Guid subscriptionId)
     {
@@ -49,8 +50,8 @@ public class SubscriptionScreenDetailsService(
             }
         }
 
-        // Get tenders
-        var tenders = await tenderService.GetTendersBySubscriptionIdAsync(subscriptionId);
+        // Get payments
+        var payments = await paymentRepository.GetBySubscriptionIdAsync(subscriptionId);
 
         return new SubscriptionScreenDetailsResult
         {
@@ -59,7 +60,7 @@ public class SubscriptionScreenDetailsService(
             Teacher = teacher,
             Schedules = schedules ?? [],
             Attendances = attendances.ToArray(),
-            Tenders = tenders ?? []
+            Payments = payments ?? []
         };
     }
 }

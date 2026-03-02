@@ -20,6 +20,7 @@ using RockSchool.Domain.Students;
 using RockSchool.Domain.Teachers;
 using RockSchool.BL.Students;
 using RockSchool.BL.Teachers;
+using RockSchool.BL.Subscriptions.Payments;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -35,7 +36,6 @@ namespace RockSchool.WebApi.Controllers
         IPaymentService paymentService,
         ICancelSubscriptionService cancelSubscriptionService,
         ITrialSubscriptionService trialSubscriptionService,
-        ITenderService tenderService,
         ISubscriptionScreenDetailsService subscriptionScreenDetailsService
         ) : Controller
     {
@@ -52,8 +52,8 @@ namespace RockSchool.WebApi.Controllers
             var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
             var scheduleInfos = schedules?.ToInfos();
 
-            var tenders = await tenderService.GetTendersBySubscriptionIdAsync(id);
-            var tenderInfos = tenders?.ToInfos();
+            var payments = await paymentService.GetBySubscriptionIdAsync(id);
+            var paymentInfos = payments?.ToInfos();
 
             var response = new SubscriptionReachInfo
             {
@@ -71,7 +71,7 @@ namespace RockSchool.WebApi.Controllers
                 Price = subscription.Price,
                 FinalPrice = subscription.FinalPrice,
                 Schedules = scheduleInfos,
-                Tenders = tenderInfos,
+                Payments = paymentInfos,
             };
 
             return Ok(response);
@@ -122,8 +122,7 @@ namespace RockSchool.WebApi.Controllers
                 teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
             }
 
-            var tenders = await tenderService.GetTendersBySubscriptionIdAsync(id);
-            var tenderInfos = tenders?.ToInfos();
+            var payments = await paymentService.GetBySubscriptionIdAsync(id);
 
             var response = new 
             {
@@ -141,7 +140,7 @@ namespace RockSchool.WebApi.Controllers
                     AmountOutstanding = subscription.AmountOutstanding,
                     Price = subscription.Price,
                     FinalPrice = subscription.FinalPrice,
-                    Tenders = tenderInfos,
+                    Payments = payments?.ToInfos(),
                 },
                 Teacher = teacher == null 
                     ? null
@@ -185,7 +184,7 @@ namespace RockSchool.WebApi.Controllers
             }).ToArray();
 
             var attendanceInfos = result.Attendances?.ToInfos();
-            var tenderInfos = result.Tenders?.ToInfos();
+            var paymentInfos = result.Payments?.ToInfos();
 
             var studentInfo = new StudentInfo
             {
@@ -226,7 +225,7 @@ namespace RockSchool.WebApi.Controllers
                     Attendances = attendanceInfos,
                     Student = studentInfo,
                     Teacher = teacherInfo,
-                    Tenders = tenderInfos
+                    Payments = paymentInfos
                 }
             };
 
@@ -294,10 +293,10 @@ namespace RockSchool.WebApi.Controllers
         public async Task<ActionResult> Pay(Guid id, PaymentRequest request)
         {
 
-            var payment = Tender.Create(
+            var payment = Payment.Create(
                 request.Amount,
                 request.PaidOn.ToUniversalTime(),
-                (TenderType)request.PaymentType,
+                (PaymentType)request.PaymentType,
                 id);
 
             await paymentService.Pay(id, payment);

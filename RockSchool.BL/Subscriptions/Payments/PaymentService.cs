@@ -4,16 +4,22 @@ using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
+using RockSchool.BL.Services.SubscriptionService;
 
-namespace RockSchool.BL.Services.SubscriptionService
+namespace RockSchool.BL.Subscriptions.Payments
 {
-    public class PaymentService(ITenderRepository tenderRepository, ISubscriptionService subscriptionService) : IPaymentService
+    public class PaymentService(IPaymentRepository paymentRepository, ISubscriptionService subscriptionService) : IPaymentService
     {
-        public async Task Pay(Guid subscriptionId, Tender tender)
+        public async Task<Payment[]> GetBySubscriptionIdAsync(Guid subscriptionId)
+        {
+            return await paymentRepository.GetBySubscriptionIdAsync(subscriptionId);
+        }
+
+        public async Task Pay(Guid subscriptionId, Payment payment)
         {
             throw new NotImplementedException();
             /*
-            // Add tender
+            // Add payment
             await tenderRepository.AddAsync(tender);
 
             // Update subscription

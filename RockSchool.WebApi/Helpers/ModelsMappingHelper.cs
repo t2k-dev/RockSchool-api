@@ -236,23 +236,23 @@ namespace RockSchool.WebApi.Helpers
             return items.Select(model => model.ToInfo()).ToList();
         }
 
-        // Tender
-        public static TenderInfo ToInfo(this Tender tender)
+        // Payment
+        public static PaymentInfo ToInfo(this Payment payment)
         {
 
-            return new TenderInfo
+            return new PaymentInfo
             {
-                TenderId = tender.TenderId,
-                Amount = tender.Amount,
-                PaidOn = tender.PaidOn,
-                TenderType = (int)tender.TenderType,
-                SubscriptionId = tender.SubscriptionId,
+                PaymentId = payment.PaymentId,
+                Amount = payment.Amount,
+                PaidOn = payment.PaidOn,
+                PaymentType = (int)payment.PaymentType,
+                SubscriptionId = payment.SubscriptionId,
             };
         }
 
-        public static TenderInfo[] ToInfos(this Tender[] tenders)
+        public static PaymentInfo[] ToInfos(this Payment[] payments)
         {
-            return tenders.Select(t => t.ToInfo()).ToArray();
+            return payments.Select(t => t.ToInfo()).ToArray();
         }
 
         // Band

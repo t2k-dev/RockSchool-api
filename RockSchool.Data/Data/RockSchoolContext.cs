@@ -28,7 +28,7 @@ public class RockSchoolContext : DbContext
     public DbSet<ScheduledWorkingPeriod> ScheduledWorkingPeriods { get; set; }
     public DbSet<Note> Notes { get; set; }
     public DbSet<WaitingSchedule> WaitingSchedules { get; set; }
-    public DbSet<Tender> Tenders { get; set; } = null!;
+    public DbSet<Payment> Payments { get; set; } = null!;
     public DbSet<Tariff> Tariffs { get; set; }
     public DbSet<Band> Bands { get; set; }
     public DbSet<BandStudent> BandStudents { get; set; }

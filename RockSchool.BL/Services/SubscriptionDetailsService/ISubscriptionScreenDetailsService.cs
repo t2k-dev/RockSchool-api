@@ -1,4 +1,4 @@
-using RockSchool.BL.Models;
+using RockSchool.BL.Subscriptions;
 
 namespace RockSchool.BL.Services.SubscriptionDetailsService;
 

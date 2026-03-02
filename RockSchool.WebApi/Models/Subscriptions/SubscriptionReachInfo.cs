@@ -49,6 +49,6 @@ namespace RockSchool.WebApi.Models.Subscriptions
 
         public decimal FinalPrice { get; set; }
 
-        public TenderInfo[] Tenders { get; set; }
+        public PaymentInfo[] Payments { get; set; }
     }
 }

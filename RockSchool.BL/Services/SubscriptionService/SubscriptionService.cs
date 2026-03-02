@@ -8,6 +8,7 @@ using RockSchool.Data.Repositories;
 using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
+using RockSchool.BL.Subscriptions;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
