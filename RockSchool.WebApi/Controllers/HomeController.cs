@@ -22,6 +22,7 @@ namespace RockSchool.WebApi.Controllers
             {
                 Branch = myResult.Branch,
                 Attendances = myResult.Attendances,
+                Notes = myResult.Notes
             };
 
             return Ok(result);

@@ -29,24 +29,6 @@ public class DisciplineService : IDisciplineService
         return disciplines;
     }
 
-    public async Task UpdateDisciplineAsync(Discipline disciplineDto)
-    {
-        throw new NotImplementedException();
-        /*
-        var discipline = await _disciplineRepository.GetByIdAsync(disciplineDto.DisciplineId);
-
-        if (discipline == null)
-            throw new ArgumentNullException("DisciplineEntity not found.");
-
-        discipline.
-
-        discipline.Name = disciplineDto.Name;
-        discipline.IsActive = disciplineDto.IsActive;
-
-        await _disciplineRepository.UpdateAsync(discipline);*/
-    }
-
-
     public async Task DeleteDisciplineAsync(int id)
     {
         var discipline = await _disciplineRepository.GetByIdAsync(id);

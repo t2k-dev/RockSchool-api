@@ -1,5 +1,4 @@
-﻿using RockSchool.BL.Services.TeacherService;
-using RockSchool.Domain.Repositories;
+﻿using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Teachers;
 
 namespace RockSchool.BL.Teachers.AvailableTeachers
@@ -14,6 +13,20 @@ namespace RockSchool.BL.Teachers.AvailableTeachers
             var result = new List<AvailableTeachersDto>();
 
             var availableTeachers = await teacherRepository.GetAvailableTeachersAsync(branchId, disciplineId, studentAge);
+            foreach (var availableTeacher in availableTeachers)
+            {
+                var availableTeachersDto = await GetTeacherWithAttendances(availableTeacher.TeacherId);
+                result.Add(availableTeachersDto);
+            }
+
+            return result.ToArray();
+        }
+
+        public async Task<AvailableTeachersDto[]?> GetRehearsableTeachersAsync(int branchId)
+        {
+            var result = new List<AvailableTeachersDto>();
+
+            var availableTeachers = await teacherRepository.GetRehearsableTeachersAsync(branchId);
             foreach (var availableTeacher in availableTeachers)
             {
                 var availableTeachersDto = await GetTeacherWithAttendances(availableTeacher.TeacherId);

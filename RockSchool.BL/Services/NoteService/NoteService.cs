@@ -30,7 +30,6 @@ namespace RockSchool.BL.Services.NoteService
 
         public async Task UpdateNoteAsync(Note note)
         {
-            throw new NotImplementedException("Note");
             var existingEntity = await _noteRepository.GetByIdAsync(note.NoteId);
 
             if (existingEntity == null)

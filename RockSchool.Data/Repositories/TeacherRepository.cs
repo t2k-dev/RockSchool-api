@@ -95,9 +95,6 @@ public class TeacherRepository : ITeacherRepository
     public async Task<Teacher[]> GetRehearsableTeachersAsync(int branchId)
     {
         return await _context.Teachers
-            .Include(t => t.WorkingPeriods)
-            .Include(t => t.ScheduledWorkingPeriods)
-            .Include(t => t.Disciplines)
             .Include(t => t.Branch)
             .Where(t => t.BranchId == branchId
                         && t.AllowBands

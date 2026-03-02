@@ -14,7 +14,6 @@ using RockSchool.BL.Services.BusySlotsService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.RoomService;
-using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.SubscriptionDetailsService;
@@ -58,7 +57,6 @@ public class Startup
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<ITrialSubscriptionService, TrialSubscriptionService>();
         services.AddScoped<IReschedulingService, ReschedulingService>();
-        services.AddScoped<IScheduledWorkingPeriodsService, ScheduledWorkingPeriodsService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();

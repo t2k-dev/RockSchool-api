@@ -1,5 +1,4 @@
 ﻿using RockSchool.BL.Services.AttendanceService;
-using RockSchool.BL.Services.ScheduledWorkingPeriodsService;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
@@ -46,11 +45,6 @@ public class TeacherService(
         return teacher;
     }
 
-    public async Task<Teacher[]?> GetRehearsableTeachersAsync(int branchId)
-    {
-        return await teacherRepository.GetRehearsableTeachersAsync(branchId);
-    }
-
     public async Task UpdateTeacherAsync(TeacherDto teacherDto, bool updateDisciplines)
     {
         var teacher = await teacherRepository.GetByIdAsync(teacherDto.TeacherId);
@@ -88,7 +82,6 @@ public class TeacherService(
         {
             throw new KeyNotFoundException($"Teacher with ID {teacherId} was not found.");
         }
-
 
         // Create and add new periods via repository
         var workingPeriods = new List<WorkingPeriod>();

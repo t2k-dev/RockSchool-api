@@ -8,6 +8,6 @@ namespace RockSchool.WebApi.Models
         public Branch Branch { get; set; } = null!;
         public AttendanceWithAttendeesDto[] Attendances { get; set; } = [];
         public object[] Rooms { get; set; } = [];
-        public Note[] Notes { get; set; } = [];
+        public NoteDto[] Notes { get; set; } = [];
     }
 }

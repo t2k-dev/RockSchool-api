@@ -1,4 +1,5 @@
-﻿using RockSchool.BL.Services.AttendanceService;
+﻿using RockSchool.BL.Helpers;
+using RockSchool.BL.Services.AttendanceService;
 using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Home
@@ -6,7 +7,8 @@ namespace RockSchool.BL.Home
     public class HomeService(
         IBranchRepository branchRepository,
         IAttendanceRepository attendanceRepository,
-        IAttendanceQueryService attendanceQueryService
+        IAttendanceQueryService attendanceQueryService,
+        INoteRepository noteRepository
 
         ) : IHomeService
     {
@@ -25,11 +27,13 @@ namespace RockSchool.BL.Home
         {
             var branch = await branchRepository.GetByIdAsync(branchId);
             var attendances = await attendanceQueryService.GetByBranchIdAsync(branchId);
+            var notes = await noteRepository.GetNotes(branchId);
 
             return new HomeDetailsWithAttendeesDto
             {
                 Branch = branch!,
-                Attendances = attendances
+                Attendances = attendances,
+                Notes =  notes.ToDto(),
             };
         }
     }

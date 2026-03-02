@@ -1,9 +1,31 @@
 ﻿using RockSchool.BL.Models;
+using RockSchool.BL.Models.Dtos;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Helpers
 {
     public static class MappingHelper
     {
+        // Notes
+        public static NoteDto ToDto(this Note entity)
+        {
+            return new NoteDto
+            {
+                NoteId = entity.NoteId,
+                Description = entity.Description,
+                Comment = entity.Comment,
+                CompleteDate = entity.CompleteDate,
+                ActualCompleteDate = entity.ActualCompleteDate,
+                Status = entity.Status
+            };
+        }
+
+        public static NoteDto[] ToDto(this IEnumerable<Note> entities)
+        {
+            return entities.Select(a => a.ToDto())
+                .ToArray();
+        }
+
         /*
         // Attendance
         public static Attendance ToModel(this AttendanceEntity entity)

@@ -100,17 +100,16 @@ public class TeacherController(
     [HttpGet("rehearsable")]
     public async Task<ActionResult> GetRehearsableTeachers(int branchId)
     {
-        throw new NotImplementedException();
-        /*var teachers = await teacherService.GetRehearsableTeachersAsync(branchId);
+        var teachers = await availableTeachersService.GetRehearsableTeachersAsync(branchId);
 
         var availableTeacherDtos = new List<AvailableTeacherResponse>();
         foreach (var teacher in teachers)
         {
-            var availableTeacherDto = await BuildAvailableTeacherDto(teacher);
+            var availableTeacherDto = BuildAvailableTeacherDto(teacher.Teacher, teacher.Attendances);
             availableTeacherDtos.Add(availableTeacherDto);
         }
 
-        return Ok(new { teachers = availableTeacherDtos });*/
+        return Ok(new { teachers = availableTeacherDtos });
     }
 
     [HttpGet("{id}/workingPeriods")]
