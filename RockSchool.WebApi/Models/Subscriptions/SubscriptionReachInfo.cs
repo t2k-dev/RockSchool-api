@@ -30,7 +30,7 @@ namespace RockSchool.WebApi.Models.Subscriptions
 
         public int? AttendanceLength { get; set; }
 
-        public TrialStatus? TrialStatus { get; set; }
+        public TrialDecision? TrialDecision { get; set; }
 
         public int SubscriptionType { get; set; }
 

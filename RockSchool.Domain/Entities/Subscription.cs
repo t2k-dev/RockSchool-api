@@ -23,13 +23,14 @@ public class Subscription
     public Teacher? Teacher { get; private set; }
     public int BranchId { get; private set; }
     public Branch Branch { get; private set; }
-    public TrialStatus? TrialStatus { get; private set; }
+    public TrialDecision? TrialDecision { get; private set; }
     public Guid? TariffId { get; private set; }
     public Tariff? Tariff { get; private set; }
     public SubscriptionType SubscriptionType { get; private set; }
     public decimal Price { get; private set; }
     public decimal FinalPrice { get; private set; }
     public decimal AmountOutstanding { get; private set; }
+    public Guid? BaseSubscriptionId { get; private set; }
 
     private readonly List<Schedule> _schedules = new();
     public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
@@ -50,6 +51,7 @@ public class Subscription
         SubscriptionType subscriptionType,
         decimal price,
         decimal finalPrice,
+        Guid? baseSubscriptionsId = null,
         int? disciplineId = null,
         Guid? teacherId = null,
         Guid? groupId = null)
@@ -68,6 +70,7 @@ public class Subscription
             FinalPrice = finalPrice,
             AmountOutstanding = finalPrice,
             Status = SubscriptionStatus.Draft,
+            BaseSubscriptionId = baseSubscriptionsId,
             DisciplineId = disciplineId,
             TeacherId = teacherId,
             GroupId = groupId
@@ -110,6 +113,11 @@ public class Subscription
 
         _payments.Add(payment);
         AmountOutstanding -= payment.Amount;
+
+        if (AmountOutstanding == 0)
+        {
+            Status = SubscriptionStatus.Active;
+        }
     }
 
     public void Cancel(string reason)
@@ -136,11 +144,11 @@ public class Subscription
     }
 
     // Trials
-    public void CompleteTrial(Guid subscriptionId, TrialStatus trialStatus, string statusReason)
+    public void CompleteTrial(Guid subscriptionId, TrialDecision trialDecision, string statusReason)
     {
         AttendancesLeft -= 1;
         Status = SubscriptionStatus.Completed;
-        TrialStatus = trialStatus;
+        TrialDecision = trialDecision;
         StatusReason = statusReason;
     }
 }

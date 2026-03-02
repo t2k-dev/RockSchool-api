@@ -64,7 +64,7 @@ namespace RockSchool.WebApi.Controllers
                 DisciplineId = subscription.DisciplineId,
                 Status = (int)subscription.Status,
                 StartDate = subscription.StartDate,
-                TrialStatus = subscription.TrialStatus,
+                TrialDecision = subscription.TrialDecision,
                 StudentId = subscription.StudentId,
                 TeacherId = subscription.TeacherId,
                 AmountOutstanding = subscription.AmountOutstanding,
@@ -213,7 +213,7 @@ namespace RockSchool.WebApi.Controllers
                     DisciplineId = result.Subscription.DisciplineId,
                     Status = (int)result.Subscription.Status,
                     StartDate = result.Subscription.StartDate,
-                    TrialStatus = result.Subscription.TrialStatus,
+                    TrialDecision = result.Subscription.TrialDecision,
                     StudentId = result.Subscription.StudentId,
                     TeacherId = result.Subscription.TeacherId,
                     AmountOutstanding = result.Subscription.AmountOutstanding,
@@ -292,14 +292,7 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost("{id}/pay")]
         public async Task<ActionResult> Pay(Guid id, PaymentRequest request)
         {
-
-            var payment = Payment.Create(
-                request.Amount,
-                request.PaidOn.ToUniversalTime(),
-                (PaymentType)request.PaymentType,
-                id);
-
-            await paymentService.Pay(id, payment);
+            await paymentService.Pay(id, request.Amount, request.PaymentType, request.PaidOn);
 
             return Ok();
         }

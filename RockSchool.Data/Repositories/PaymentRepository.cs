@@ -10,7 +10,6 @@ namespace RockSchool.Data.Repositories
         public async Task<Guid> AddAsync(Payment payment)
         {
             await RockSchoolContext.Payments.AddAsync(payment);
-            await RockSchoolContext.SaveChangesAsync();
             return payment.PaymentId;
         }
 

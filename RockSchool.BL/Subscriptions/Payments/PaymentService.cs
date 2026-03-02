@@ -1,39 +1,35 @@
-﻿using RockSchool.BL.Helpers;
-using RockSchool.BL.Models;
-using RockSchool.Domain.Enums;
-using RockSchool.Data.Repositories;
+﻿using RockSchool.Domain.Enums;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
-using RockSchool.BL.Services.SubscriptionService;
 
 namespace RockSchool.BL.Subscriptions.Payments
 {
-    public class PaymentService(IPaymentRepository paymentRepository, ISubscriptionService subscriptionService) : IPaymentService
+    public class PaymentService(IPaymentRepository paymentRepository, ISubscriptionRepository subscriptionRepository, IUnitOfWork unitOfWork) : IPaymentService
     {
         public async Task<Payment[]> GetBySubscriptionIdAsync(Guid subscriptionId)
         {
             return await paymentRepository.GetBySubscriptionIdAsync(subscriptionId);
         }
 
-        public async Task Pay(Guid subscriptionId, Payment payment)
+        public async Task Pay(Guid subscriptionId, decimal amount, int paymentType, DateTime paidOn)
         {
-            throw new NotImplementedException();
-            /*
             // Add payment
-            await tenderRepository.AddAsync(tender);
+            var payment = Payment.Create(
+                amount,
+                paidOn.ToUniversalTime(),
+                (PaymentType)paymentType,
+                subscriptionId);
+
+            await paymentRepository.AddAsync(payment);
 
             // Update subscription
-            var subscription = await subscriptionService.GetAsync(subscriptionId);
-            var newAmountOutstanding = subscription.AmountOutstanding - tender.Amount;
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            if (newAmountOutstanding == 0)
-            {
-                subscription.Status = SubscriptionStatus.Active;
-            }
+            subscription.RecordPayment(payment);
 
-            subscription.AmountOutstanding = newAmountOutstanding;
+            subscriptionRepository.Update(subscription);
 
-            await subscriptionService.UpdateSubscriptionAsync(subscription);*/
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

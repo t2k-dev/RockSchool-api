@@ -27,7 +27,8 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
         builder.Property(s => s.TeacherId).IsRequired(false);
         builder.Property(s => s.GroupId).IsRequired(false);
         builder.Property(s => s.TariffId).IsRequired(false);
-        builder.Property(s => s.TrialStatus).HasConversion<int?>().IsRequired(false);
+        builder.Property(s => s.TrialDecision).HasConversion<int?>().IsRequired(false);
+        builder.Property(s => s.BaseSubscriptionId).IsRequired(false);
         
         builder.HasOne(s => s.Student).WithMany().HasForeignKey("StudentId");
         builder.HasOne(s => s.Branch).WithMany().HasForeignKey("BranchId");

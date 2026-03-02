@@ -73,7 +73,7 @@ namespace RockSchool.BL.Subscriptions.Trial
             // Update subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            subscription.CompleteTrial(subscriptionId, TrialStatus.Positive, null);
+            subscription.CompleteTrial(subscriptionId, TrialDecision.Positive, null);
 
             subscriptionRepository.Update(subscription);
 
@@ -91,7 +91,7 @@ namespace RockSchool.BL.Subscriptions.Trial
             // Update subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            subscription.CompleteTrial(subscriptionId, TrialStatus.Negative, null);
+            subscription.CompleteTrial(subscriptionId, TrialDecision.Negative, null);
 
             subscriptionRepository.Update(subscription);
 
@@ -110,7 +110,7 @@ namespace RockSchool.BL.Subscriptions.Trial
             // Update subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            subscription.CompleteTrial(subscriptionId, TrialStatus.Missed, null);
+            subscription.CompleteTrial(subscriptionId, TrialDecision.Missed, null);
 
             subscriptionRepository.Update(subscription);
 

@@ -48,6 +48,7 @@ namespace RockSchool.BL.Services.SubscriptionService
                     groupId == null ? SubscriptionType.Lesson : SubscriptionType.GroupLesson,
                     subscriptionDetails.Price,
                     subscriptionDetails.FinalPrice,
+                    null,
                     subscriptionDetails.DisciplineId,
                     subscriptionDetails.TeacherId,
                     groupId
