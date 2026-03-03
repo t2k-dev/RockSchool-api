@@ -24,11 +24,11 @@ public class TariffService(ITariffRepository tariffRepository) : ITariffService
         return tariffEntity;
     }
 
-    public async Task<Tariff[]?> GetTariffsAsync(SubscriptionType subscriptionType)
+    public async Task<Tariff[]?> GetTariffsAsync()
     {
         var currentDate = DateTime.UtcNow;
 
-        var tariffEntities = await tariffRepository.GetTariffsByTypeAsync(subscriptionType, currentDate);
+        var tariffEntities = await tariffRepository.GetTariffsAsync(currentDate);
         if (tariffEntities == null)
         {
             throw new InvalidOperationException("No tariffs found");

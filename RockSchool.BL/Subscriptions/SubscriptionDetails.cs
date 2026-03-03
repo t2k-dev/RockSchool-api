@@ -14,5 +14,6 @@
         public decimal Price { get; set; }
         public decimal FinalPrice { get; set; }
         public Guid TariffId { get; set; }
+        public Guid? BaseSubscriptionId { get; set; }
     }
 }

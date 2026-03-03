@@ -5,20 +5,12 @@ using RockSchool.Domain.Repositories;
 
 namespace RockSchool.Data.Repositories;
 
-public class ScheduleRepository : BaseRepository, IScheduleRepository
+public class ScheduleRepository(RockSchoolContext rockSchoolContext)
+    : BaseRepository(rockSchoolContext), IScheduleRepository
 {
-    public ScheduleRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
-    {
-    }
-
     public async Task<Schedule[]> GetAllAsync()
     {
         return await RockSchoolContext.Schedules.ToArrayAsync();
-    }
-
-    public async Task<Schedule[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
-    {
-        return await RockSchoolContext.Schedules.Where(s => s.SubscriptionId == subscriptionId).ToArrayAsync();
     }
 
     public async Task<Schedule?> GetByIdAsync(Guid scheduleId)
@@ -52,13 +44,5 @@ public class ScheduleRepository : BaseRepository, IScheduleRepository
             RockSchoolContext.Schedules.Remove(schedule);
             await RockSchoolContext.SaveChangesAsync();
         }
-    }
-
-    public async Task DeleteBySubscriptionAsync(Guid subscriptionId)
-    {
-        var schedules = await RockSchoolContext.Schedules.Where(s => s.SubscriptionId == subscriptionId).ToArrayAsync();
-
-        RockSchoolContext.Schedules.RemoveRange(schedules);
-        await RockSchoolContext.SaveChangesAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿using RockSchool.BL.Services.TariffService;
+﻿using Azure.Core;
+using RockSchool.BL.Services.TariffService;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
@@ -10,7 +11,8 @@ namespace RockSchool.BL.Subscriptions.Trial
         ISubscriptionRepository subscriptionRepository,
         IAttendanceRepository attendanceRepository,
         IAttendeeRepository attendeeRepository,
-        ITariffService tariffService, 
+        ITariffService tariffService,
+        INoteRepository noteRepository,
         IUnitOfWork unitOfWork
         ) : ITrialSubscriptionService
     {
@@ -57,7 +59,8 @@ namespace RockSchool.BL.Subscriptions.Trial
             await attendeeRepository.AddAsync(attendee);
 
             // Add note
-            //await noteService.AddNoteAsync(request.BranchId, $"Пробное занятие {request.Student.FirstName}.", request.TrialDate.ToUniversalTime());
+            /*var note = Note.Create($"Пробное занятие {addTrialDto.Student.FirstName}.", addTrialDto.TrialDate, addTrialDto.BranchId);
+            await noteRepository.AddNoteAsync(note);*/
             
             await unitOfWork.SaveChangesAsync();
         }

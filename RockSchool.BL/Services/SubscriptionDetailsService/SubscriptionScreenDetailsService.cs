@@ -10,6 +10,7 @@ namespace RockSchool.BL.Services.SubscriptionDetailsService;
 public class SubscriptionScreenDetailsService(
     ISubscriptionService subscriptionService,
     IScheduleService scheduleService,
+    IScheduleSlotRepository scheduleSlotRepository,
     IStudentService studentService,
     ITeacherService teacherService,
     IAttendeeRepository attendeeRepository,
@@ -34,7 +35,7 @@ public class SubscriptionScreenDetailsService(
             : null;
 
         // Get schedules
-        var schedules = await scheduleService.GetAllBySubscriptionIdAsync(subscriptionId);
+        var scheduleSlots = await scheduleSlotRepository.GetByScheduleIdAsync(subscription.ScheduleId.Value);
 
         // Get attendances by collecting attendance IDs from attendees, then fetching them
         var attendees = await attendeeRepository.GetAllBySubscriptionIdAsync(subscriptionId);
@@ -58,7 +59,7 @@ public class SubscriptionScreenDetailsService(
             Subscription = subscription,
             Student = student,
             Teacher = teacher,
-            Schedules = schedules ?? [],
+            ScheduleSlots = scheduleSlots ?? [],
             Attendances = attendances.ToArray(),
             Payments = payments ?? []
         };

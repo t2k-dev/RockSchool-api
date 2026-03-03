@@ -2,11 +2,9 @@
 
 namespace RockSchool.WebApi.Models
 {
-    public class ScheduleInfo
+    public class ScheduleSlotInfo
     {
         public Guid ScheduleId { get; set; }
-        public Guid? SubscriptionId { get; set; }
-        public Guid? BandId { get; set; }
         public int WeekDay { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }

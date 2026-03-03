@@ -27,6 +27,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
         builder.Property(s => s.TeacherId).IsRequired(false);
         builder.Property(s => s.GroupId).IsRequired(false);
         builder.Property(s => s.TariffId).IsRequired(false);
+        builder.Property(s => s.ScheduleId).IsRequired(false);
         builder.Property(s => s.TrialDecision).HasConversion<int?>().IsRequired(false);
         builder.Property(s => s.BaseSubscriptionId).IsRequired(false);
         
@@ -34,11 +35,10 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
         builder.HasOne(s => s.Branch).WithMany().HasForeignKey("BranchId");
         builder.HasOne(s => s.Discipline).WithMany().HasForeignKey("DisciplineId").IsRequired(false);
         builder.HasOne(s => s.Teacher).WithMany().HasForeignKey("TeacherId").IsRequired(false);
+        builder.HasOne(s => s.Schedule).WithMany().HasForeignKey("ScheduleId").IsRequired(false);
         
-        builder.HasMany(s => s.Schedules).WithOne(sc => sc.Subscription).HasForeignKey("SubscriptionId");
         builder.HasMany(s => s.Payments).WithOne(t => t.Subscription).HasForeignKey("SubscriptionId");
         
-        builder.Metadata.FindNavigation(nameof(Subscription.Schedules))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(Subscription.Payments))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

@@ -3,55 +3,52 @@ namespace RockSchool.Domain.Entities;
 public class Schedule
 {
     public Guid ScheduleId { get; private set; }
-    public Guid? SubscriptionId { get; private set; }
-    public Subscription? Subscription { get; private set; }
-    public Guid? BandId { get; private set; }
-    public Band? Band { get; private set; }
-    public int RoomId { get; private set; }
-    public Room? Room { get; private set; }
-    public int WeekDay { get; private set; }
-    public TimeSpan StartTime { get; private set; }
-    public TimeSpan EndTime { get; private set; }
+    public string Name { get; private set; }
+    public bool IsActive { get; set; }
 
+    private readonly List<ScheduleSlot> _scheduleSlots = new();
+    public IReadOnlyCollection<ScheduleSlot> ScheduleSlots => _scheduleSlots.AsReadOnly();
+
+    // Constructor for EF
     private Schedule() { }
 
-    public static Schedule Create(
-        int roomId,
-        int weekDay,
-        TimeSpan startTime,
-        TimeSpan endTime,
-        Guid? subscriptionId = null,
-        Guid? bandId = null)
+    // Factory method for creation
+    public static Schedule Create(string name)
     {
-        if (startTime >= endTime)
-            throw new InvalidOperationException("Start time must be before end time");
-
-        if (weekDay < 0 || weekDay > 6)
-            throw new InvalidOperationException("Week day must be between 0 and 6");
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Schedule name cannot be empty", nameof(name));
 
         return new Schedule
         {
             ScheduleId = Guid.NewGuid(),
-            RoomId = roomId,
-            WeekDay = weekDay,
-            StartTime = startTime,
-            EndTime = endTime,
-            SubscriptionId = subscriptionId,
-            BandId = bandId
+            Name = name,
+            IsActive = true
         };
     }
 
-    public void UpdateTime(TimeSpan startTime, TimeSpan endTime)
+    public void AddScheduleSlot(ScheduleSlot slot)
     {
-        if (startTime >= endTime)
-            throw new InvalidOperationException("Start time must be before end time");
+        if (slot == null)
+            throw new ArgumentNullException(nameof(slot));
 
-        StartTime = startTime;
-        EndTime = endTime;
+        if (slot.ScheduleId != ScheduleId)
+            throw new InvalidOperationException("Schedule slot does not belong to this schedule");
+
+        _scheduleSlots.Add(slot);
     }
 
-    public void ChangeRoom(int roomId)
+    public void RemoveScheduleSlot(Guid slotId)
     {
-        RoomId = roomId;
+        var slot = _scheduleSlots.FirstOrDefault(s => s.ScheduleSlotId == slotId);
+        if (slot != null)
+            _scheduleSlots.Remove(slot);
+    }
+
+    public void UpdateName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Schedule name cannot be empty", nameof(name));
+
+        Name = name;
     }
 }

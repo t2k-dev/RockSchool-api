@@ -36,7 +36,7 @@ namespace RockSchool.WebApi.Models.Subscriptions
 
         public Guid? GroupId { get; set; }
 
-        public ScheduleInfo[] Schedules { get; set; }
+        public ScheduleSlotInfo[] ScheduleSlots { get; set; }
 
         /// <summary>
         /// Additional field.

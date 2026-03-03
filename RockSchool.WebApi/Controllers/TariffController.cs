@@ -35,6 +35,20 @@ public class TariffController : ControllerBase
         }
     }
 
+    [HttpGet("current")]
+    public async Task<ActionResult> GetCurrentTariffs()
+    {
+        try
+        {
+            var tariffs = await _tariffService.GetTariffsAsync();
+            return Ok(tariffs);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpGet("{subscriptionType}/single")]
     public async Task<ActionResult> GetTariff(int subscriptionType, int? disciplineId)
     {
@@ -58,7 +72,7 @@ public class TariffController : ControllerBase
     {
         try
         {
-            var trialTariff = await _tariffService.GetTariffsAsync((SubscriptionType)subscriptionType);
+            var trialTariff = await _tariffService.GetTariffsAsync();
             if (trialTariff == null)
             {
                 return NotFound(new { message = "Trial tariff not found" });

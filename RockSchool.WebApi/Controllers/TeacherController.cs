@@ -76,7 +76,7 @@ public class TeacherController(
         {
             Teacher = details.Teacher.ToInfo(),
             Attendances = details.Attendances,
-            Subscriptions = details.Subscriptions.ToSubscriptionInfos().ToArray(),
+            Subscriptions = details.Subscriptions.ToInfos().ToArray(),
         };
 
         return Ok(teacherScreenDetails);

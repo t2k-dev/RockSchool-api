@@ -13,11 +13,6 @@ public class ScheduleService : IScheduleService
         _scheduleRepository = scheduleRepository;
     }
 
-    public async Task<Schedule[]?> GetAllBySubscriptionIdAsync(Guid subscriptionId)
-    {
-        return await _scheduleRepository.GetAllBySubscriptionIdAsync(subscriptionId);
-    }
-
     public async Task<Schedule[]?> GetAllSchedulesAsync()
     {
         var schedules = await _scheduleRepository.GetAllAsync();
@@ -38,8 +33,4 @@ public class ScheduleService : IScheduleService
         await _scheduleRepository.AddManyAsync(schedules);
     }
 
-    public async Task DeleteBySubscriptionAsync(Guid subscriptionId)
-    {
-        await _scheduleRepository.DeleteBySubscriptionAsync(subscriptionId);
-    }
 }

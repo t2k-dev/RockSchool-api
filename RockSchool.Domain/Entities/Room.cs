@@ -12,10 +12,10 @@ public class Room
     public int? Status { get; private set; }
 
     private readonly List<RoomDiscipline> _roomDisciplines = new();
-    private readonly List<Schedule> _schedules = new();
+    private readonly List<ScheduleSlot> _scheduleSlots = new();
 
     public IReadOnlyCollection<RoomDiscipline> RoomDisciplines => _roomDisciplines.AsReadOnly();
-    public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
+    public IReadOnlyCollection<ScheduleSlot> ScheduleSlots => _scheduleSlots.AsReadOnly();
 
     private Room() { }
 

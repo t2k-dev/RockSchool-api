@@ -83,6 +83,8 @@ public class Startup
 
         // Subscription
         services.AddScoped<ISubscriptionScreenDetailsService, SubscriptionScreenDetailsService>();
+        services.AddScoped<ISubscriptionFormDataService, SubscriptionFormDataService>();
+        services.AddScoped<ISubscriptionGetService, SubscriptionGetService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IRoomRepository, RoomRepository>();
@@ -94,6 +96,7 @@ public class Startup
         services.AddScoped<IAttendanceRepository, AttendanceRepository>();
         services.AddScoped<IDisciplineRepository, DisciplineRepository>();
         services.AddScoped<IScheduleRepository, ScheduleRepository>();
+        services.AddScoped<IScheduleSlotRepository, ScheduleSlotRepository>();
         services.AddScoped<IStudentRepository, StudentRepository>();
         services.AddScoped<ITeacherRepository, TeacherRepository>();
         services.AddScoped<IUserRepository, UserRepository>();

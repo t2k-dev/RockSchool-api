@@ -16,11 +16,10 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(r => r.SupportsRent).IsRequired();
         builder.Property(r => r.SupportsRehearsal).IsRequired();
         builder.Property(r => r.IsActive).IsRequired();
-        //builder.Property(r => r.Status).IsRequired();
         
         builder.HasOne(r => r.Branch).WithMany().HasForeignKey("BranchId");
         
         builder.Metadata.FindNavigation(nameof(Room.RoomDisciplines))!.SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(Room.Schedules))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata.FindNavigation(nameof(Room.ScheduleSlots))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

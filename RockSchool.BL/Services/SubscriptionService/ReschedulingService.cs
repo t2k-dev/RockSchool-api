@@ -48,7 +48,7 @@ namespace RockSchool.BL.Services.SubscriptionService
             return null;
         }
 
-        public async Task UpdateSchedules(Guid subscriptionId, DateTime startingDate, Schedule[] newSchedules)
+        public async Task UpdateSchedules(Guid subscriptionId, DateTime startingDate, ScheduleSlot[] newSchedules)
         {
             throw new NotImplementedException();
             /*

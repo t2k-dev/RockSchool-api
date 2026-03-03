@@ -4,12 +4,11 @@ using RockSchool.Domain.Teachers;
 
 namespace RockSchool.BL.Subscriptions;
 
-public class SubscriptionScreenDetailsResult
+public class SubscriptionFormDataResult
 {
     public Subscription Subscription { get; set; } = null!;
-    public Student Student { get; set; } = null!;
+    public Student[] Students { get; set; } = [];
     public Teacher? Teacher { get; set; }
     public ScheduleSlot[] ScheduleSlots { get; set; } = [];
-    public Attendance[] Attendances { get; set; } = [];
     public Payment[] Payments { get; set; } = [];
 }

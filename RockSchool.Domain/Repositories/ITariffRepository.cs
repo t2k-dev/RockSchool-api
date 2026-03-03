@@ -6,6 +6,7 @@ namespace RockSchool.Domain.Repositories;
 public interface ITariffRepository
 {
     Task<Tariff[]> GetAllTariffsAsync();
+    Task<Tariff[]?> GetTariffsAsync(DateTime date);
     Task<Tariff[]?> GetTariffsByTypeAsync(SubscriptionType type, DateTime date);
     Task<Tariff?> GetTrialTariffAsync(DateTime date);
     Task<Tariff?> GetByIdAsync(Guid id);

@@ -29,18 +29,28 @@ namespace RockSchool.BL.Subscriptions
 
             await subscriptionRepository.AddAsync(subscription);
 
-            // Step 2: Create Schedules
-            foreach (var scheduleDto in scheduleDtos)
+            // Step 2: Create a Schedule for this rental subscription with all the time slots
+            if (scheduleDtos.Length > 0)
             {
-                var schedule = Schedule.Create(
-                    scheduleDto.RoomId,
-                    scheduleDto.WeekDay,
-                    scheduleDto.StartTime,
-                    scheduleDto.EndTime,
-                    subscription.SubscriptionId
-                );
-
+                var schedule = Schedule.Create($"{subscription.StartDate:yyyy-MM-dd} - Rental Schedule");
+                
+                foreach (var scheduleDto in scheduleDtos)
+                {
+                    var slot = ScheduleSlot.Create(
+                        schedule.ScheduleId,
+                        scheduleDto.RoomId,
+                        scheduleDto.WeekDay,
+                        scheduleDto.StartTime,
+                        scheduleDto.EndTime
+                    );
+                    schedule.AddScheduleSlot(slot);
+                }
+                
                 await scheduleRepository.AddAsync(schedule);
+                
+                // Update subscription to reference the schedule
+                subscription.AssignSchedule(schedule.ScheduleId);
+                subscriptionRepository.Update(subscription);
             }
 
             // Step 3: Attendances

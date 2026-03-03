@@ -80,12 +80,8 @@ namespace RockSchool.BL.Helpers
             return new Schedule
             {
                 ScheduleId = entity.ScheduleId,
-                SubscriptionId = entity.SubscriptionId,
                 BandId = entity.BandId,
-                StartTime = entity.StartTime,
-                EndTime = entity.EndTime,
-                WeekDay = entity.WeekDay,
-                RoomId = entity.RoomId,
+                Name = entity.Name,
             };
         }
 

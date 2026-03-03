@@ -26,14 +26,13 @@ public class Subscription
     public TrialDecision? TrialDecision { get; private set; }
     public Guid? TariffId { get; private set; }
     public Tariff? Tariff { get; private set; }
+    public Guid? ScheduleId { get; private set; }
+    public Schedule? Schedule { get; private set; }
     public SubscriptionType SubscriptionType { get; private set; }
     public decimal Price { get; private set; }
     public decimal FinalPrice { get; private set; }
     public decimal AmountOutstanding { get; private set; }
     public Guid? BaseSubscriptionId { get; private set; }
-
-    private readonly List<Schedule> _schedules = new();
-    public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
 
     private readonly List<Payment> _payments = new();
     public IReadOnlyCollection<Payment> Payments => _payments.AsReadOnly();
@@ -129,9 +128,9 @@ public class Subscription
         StatusReason = reason;
     }
 
-    public void AddSchedule(Schedule schedule)
+    public void AssignSchedule(Guid scheduleId)
     {
-        _schedules.Add(schedule);
+        ScheduleId = scheduleId;
     }
 
     public void ApplyDiscount(decimal discountAmount)

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Azure.Core;
+using RockSchool.BL.Models;
 using RockSchool.BL.Teachers;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
@@ -12,6 +11,9 @@ using RockSchool.WebApi.Models.Bands;
 using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
 using RockSchool.WebApi.Models.Teachers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RockSchool.WebApi.Helpers
 {
@@ -92,29 +94,6 @@ namespace RockSchool.WebApi.Helpers
 
 
 
-        // Subscription
-        public static SubscriptionReachInfo ToReachInfo(this Subscription subscription)
-        {
-            return new SubscriptionReachInfo
-            {
-                SubscriptionId = subscription.SubscriptionId,
-                StartDate = subscription.StartDate,
-                Student = subscription.Student,
-                Status = (int)subscription.Status,
-                DisciplineId = subscription.DisciplineId,
-                TrialDecision = subscription.TrialDecision,
-                AttendanceCount = subscription.AttendanceCount,
-                AttendanceLength = subscription.AttendanceLength,
-                AttendancesLeft = subscription.AttendancesLeft,
-                Teacher = subscription.Teacher,
-                Schedules = subscription.Schedules?.ToInfos(),
-                SubscriptionType = (int)subscription.SubscriptionType,
-                AmountOutstanding = subscription.AmountOutstanding,
-                Price = subscription.Price,
-                FinalPrice = subscription.FinalPrice,
-            };
-        }
-
         public static ParentSubscriptionInfo ToParentSubscriptionInfo(this Subscription subscription)
         {
             return new ParentSubscriptionInfo
@@ -133,11 +112,6 @@ namespace RockSchool.WebApi.Helpers
         public static List<ParentSubscriptionInfo> ToParentSubscriptionInfos(this IEnumerable<Subscription> subscriptionDto)
         {
             return subscriptionDto.Select(dto => dto.ToParentSubscriptionInfo()).ToList();
-        }
-
-        public static List<SubscriptionReachInfo> ToSubscriptionInfos(this IEnumerable<Subscription> subscriptions)
-        {
-            return subscriptions.Select(model => model.ToReachInfo()).ToList();
         }
 
         public static SubscriptionInfo ToInfo(this Subscription subscription)
@@ -168,44 +142,54 @@ namespace RockSchool.WebApi.Helpers
 
         // Schedule
 
-        public static ScheduleInfo ToInfo(this Schedule schedule)
+        public static ScheduleSlotInfo ToInfo(this ScheduleSlot slot)
         {
-            var scheduleInfo = new ScheduleInfo
+            var scheduleInfo = new ScheduleSlotInfo
                 {
-                    ScheduleId = schedule.ScheduleId,
-                    SubscriptionId = schedule.SubscriptionId,
-                    RoomId = schedule.RoomId,
-                    WeekDay = schedule.WeekDay,
-                    StartTime = schedule.StartTime.ToString(@"hh\:mm"),
-                    EndTime = schedule.EndTime.ToString(@"hh\:mm"),
+                    ScheduleId = slot.ScheduleId,
+                    WeekDay = slot.WeekDay,
+                    StartTime = slot.StartTime.ToString(@"hh\:mm"),
+                    EndTime = slot.EndTime.ToString(@"hh\:mm"),
+                    RoomId = slot.RoomId,
                 };
             return scheduleInfo;
         }
 
-        public static ScheduleInfo[] ToInfos(this IEnumerable<Schedule> schedules)
+        public static ScheduleSlotInfo[] ToInfos(this IEnumerable<ScheduleSlot> slots)
         {
-            return schedules.Select(model => model.ToInfo()).ToArray();
+            return slots.Select(slot => slot.ToInfo()).ToArray();
         }
 
-        public static Schedule ToModel(this ScheduleInfo scheduleInfo, Guid subscriptionId)
+        public static ScheduleSlot ToModel(this ScheduleSlotInfo scheduleInfo, Guid scheduleId)
         {
-            throw new NotImplementedException();
-            /*
-            var schedule = new Schedule
+            return ScheduleSlot.Create(
+                scheduleId,
+                scheduleInfo.RoomId,
+                scheduleInfo.WeekDay,
+                TimeSpan.Parse(scheduleInfo.StartTime),
+                TimeSpan.Parse(scheduleInfo.EndTime)
+            );
+        }
+
+        public static List<ScheduleSlot> ToModel(this IEnumerable<ScheduleSlotInfo> scheduleInfos, Guid scheduleId)
+        {
+            return scheduleInfos.Select(model => model.ToModel(scheduleId)).ToList();
+        }
+
+        public static ScheduleDto ToDto(this ScheduleSlotInfo scheduleInfo)
+        {
+            return new ScheduleDto
             {
-                ScheduleId = scheduleInfo.ScheduleId,
-                SubscriptionId = subscriptionId,
                 RoomId = scheduleInfo.RoomId,
                 WeekDay = scheduleInfo.WeekDay,
-                StartTime =  TimeSpan.Parse(scheduleInfo.StartTime),
+                StartTime = TimeSpan.Parse(scheduleInfo.StartTime),
                 EndTime = TimeSpan.Parse(scheduleInfo.EndTime),
             };
-            return schedule;*/
         }
 
-        public static List<Schedule> ToModel(this IEnumerable<ScheduleInfo> scheduleInfos, Guid subscriptionId)
+        public static ScheduleDto[] ToDto(this IEnumerable<ScheduleSlotInfo> scheduleInfos)
         {
-            return scheduleInfos.Select(model => model.ToModel(subscriptionId)).ToList();
+            return scheduleInfos.Select(model => model.ToDto()).ToArray();
         }
 
         // Teacher

@@ -2,6 +2,6 @@
 {
     public class UpdateSchedulesRequest
     {
-        public ScheduleInfo[] Schedules { get; set; }
+        public ScheduleSlotInfo[] Schedules { get; set; }
     }
 }

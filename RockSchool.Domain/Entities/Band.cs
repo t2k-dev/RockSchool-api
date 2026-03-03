@@ -11,11 +11,12 @@ public class Band
     public Teacher Teacher { get; private set; }
     public int Status { get; private set; }
 
+    public Guid? ScheduleId { get; private set; }
+    public Schedule? Schedule { get; private set; }
+
     private readonly List<BandStudent> _bandStudents = new();
-    private readonly List<Schedule> _schedules = new();
 
     public IReadOnlyCollection<BandStudent> BandStudents => _bandStudents.AsReadOnly();
-    public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
 
     private Band() { }
 

@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Models;
-using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.SubscriptionDetailsService;
-using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
@@ -14,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RockSchool.BL.Subscriptions.Trial;
-using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Helpers;
 using RockSchool.Domain.Students;
 using RockSchool.Domain.Teachers;
@@ -36,42 +32,34 @@ namespace RockSchool.WebApi.Controllers
         IPaymentService paymentService,
         ICancelSubscriptionService cancelSubscriptionService,
         ITrialSubscriptionService trialSubscriptionService,
-        ISubscriptionScreenDetailsService subscriptionScreenDetailsService
+        ISubscriptionScreenDetailsService subscriptionScreenDetailsService,
+        ISubscriptionFormDataService subscriptionFormDataService,
+        ISubscriptionGetService subscriptionGetService
         ) : Controller
     {
 
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(Guid id)
         {
-            var subscription = await subscriptionService.GetAsync(id);
-            if (subscription == null)
-            {
-                return NotFound();
-            }
-
-            var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
-            var scheduleInfos = schedules?.ToInfos();
-
-            var payments = await paymentService.GetBySubscriptionIdAsync(id);
-            var paymentInfos = payments?.ToInfos();
+            var result = await subscriptionGetService.Query(id);
 
             var response = new SubscriptionReachInfo
             {
-                SubscriptionId = subscription.SubscriptionId,
-                AttendanceCount = subscription.AttendanceCount,
-                AttendancesLeft = subscription.AttendancesLeft,
-                AttendanceLength = subscription.AttendanceLength,
-                DisciplineId = subscription.DisciplineId,
-                Status = (int)subscription.Status,
-                StartDate = subscription.StartDate,
-                TrialDecision = subscription.TrialDecision,
-                StudentId = subscription.StudentId,
-                TeacherId = subscription.TeacherId,
-                AmountOutstanding = subscription.AmountOutstanding,
-                Price = subscription.Price,
-                FinalPrice = subscription.FinalPrice,
-                Schedules = scheduleInfos,
-                Payments = paymentInfos,
+                SubscriptionId = result.Subscription.SubscriptionId,
+                AttendanceCount = result.Subscription.AttendanceCount,
+                AttendancesLeft = result.Subscription.AttendancesLeft,
+                AttendanceLength = result.Subscription.AttendanceLength,
+                DisciplineId = result.Subscription.DisciplineId,
+                Status = (int)result.Subscription.Status,
+                StartDate = result.Subscription.StartDate,
+                TrialDecision = result.Subscription.TrialDecision,
+                StudentId = result.Subscription.StudentId,
+                TeacherId = result.Subscription.TeacherId,
+                AmountOutstanding = result.Subscription.AmountOutstanding,
+                Price = result.Subscription.Price,
+                FinalPrice = result.Subscription.FinalPrice,
+                ScheduleSlots = result.ScheduleSlots.ToInfos(),
+                Payments = result.Payments.ToInfos(),
             };
 
             return Ok(response);
@@ -80,82 +68,50 @@ namespace RockSchool.WebApi.Controllers
         [HttpGet("{id}/form-data")]
         public async Task<ActionResult> GetSubscriptionFormData(Guid id)
         {
-            var subscription = await subscriptionService.GetAsync(id);
-            if (subscription == null)
-            {
-                return NotFound();
-            }
+            var result = await subscriptionFormDataService.Query(id);
 
-            var groupId = subscription.GroupId;
-
-            var students = new List<Student>();
-            if (groupId != null)
+            var scheduleInfos = result.ScheduleSlots.Select(slot => new ScheduleSlotInfo
             {
-                var subscriptions = await subscriptionService.GetSubscriptionByGroupIdAsync(groupId.Value);
-                foreach (var groupSubscription in subscriptions)
+                ScheduleId = slot.ScheduleId,
+                RoomId = slot.RoomId,
+                WeekDay = slot.WeekDay,
+                StartTime = slot.StartTime.ToString(@"hh\:mm"),
+                EndTime = slot.EndTime.ToString(@"hh\:mm"),
+            }).ToArray();
+
+            var response = new
+            {
+                Subscription = new SubscriptionReachInfo
                 {
-                    var student = await studentService.GetByIdAsync(groupSubscription.StudentId);
-                    students.Add(student);
-                }
-            }
-            else
-            {
-                var student = await studentService.GetByIdAsync(subscription.StudentId);
-                students.Add(student);
-            }
-
-            var schedules = await scheduleService.GetAllBySubscriptionIdAsync(id);
-            var scheduleInfos = schedules?.Select(schedule => new ScheduleInfo
-                {
-                    ScheduleId = schedule.ScheduleId,
-                    SubscriptionId = schedule.SubscriptionId,
-                    RoomId = schedule.RoomId,
-                    WeekDay = schedule.WeekDay,
-                    StartTime = schedule.StartTime.ToString(@"hh\:mm"),
-                    EndTime = schedule.EndTime.ToString(@"hh\:mm"),
-                })
-                .ToArray();
-
-            Teacher teacher = null;
-            if (subscription.TeacherId != null)
-            {
-                teacher = await teacherService.GetTeacherByIdAsync(subscription.TeacherId.Value);
-            }
-
-            var payments = await paymentService.GetBySubscriptionIdAsync(id);
-
-            var response = new 
-            {
-                Subscription = new SubscriptionReachInfo{
-                    SubscriptionId = subscription.SubscriptionId,
-                    AttendanceCount = subscription.AttendanceCount,
-                    AttendancesLeft = subscription.AttendancesLeft,
-                    AttendanceLength = subscription.AttendanceLength,
-                    DisciplineId = subscription.DisciplineId,
-                    Status = (int)subscription.Status,
-                    StartDate = subscription.StartDate,
-                    Schedules = scheduleInfos,
-                    GroupId = subscription.GroupId,
-                    SubscriptionType = (int)subscription.SubscriptionType,
-                    AmountOutstanding = subscription.AmountOutstanding,
-                    Price = subscription.Price,
-                    FinalPrice = subscription.FinalPrice,
-                    Payments = payments?.ToInfos(),
+                    SubscriptionId = result.Subscription.SubscriptionId,
+                    AttendanceCount = result.Subscription.AttendanceCount,
+                    AttendancesLeft = result.Subscription.AttendancesLeft,
+                    AttendanceLength = result.Subscription.AttendanceLength,
+                    DisciplineId = result.Subscription.DisciplineId,
+                    Status = (int)result.Subscription.Status,
+                    StartDate = result.Subscription.StartDate,
+                    ScheduleSlots = scheduleInfos,
+                    GroupId = result.Subscription.GroupId,
+                    SubscriptionType = (int)result.Subscription.SubscriptionType,
+                    AmountOutstanding = result.Subscription.AmountOutstanding,
+                    Price = result.Subscription.Price,
+                    FinalPrice = result.Subscription.FinalPrice,
+                    Payments = result.Payments?.ToInfos(),
                 },
-                Teacher = teacher == null 
+                Teacher = result.Teacher == null
                     ? null
                     : new
-                {
-                    teacher.TeacherId,
-                    teacher.FirstName,
-                    teacher.LastName,
-                },
-                Students = students.Select(s => new StudentInfo
                     {
-                        StudentId = s.StudentId,
-                        FirstName = s.FirstName,
-                        LastName = s.LastName
-                    }).ToArray()
+                        result.Teacher.TeacherId,
+                        result.Teacher.FirstName,
+                        result.Teacher.LastName,
+                    },
+                Students = result.Students.Select(s => new StudentInfo
+                {
+                    StudentId = s.StudentId,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName
+                }).ToArray()
             };
 
             return Ok(response);
@@ -172,35 +128,6 @@ namespace RockSchool.WebApi.Controllers
         public async Task<ActionResult> GetSubscriptionScreenData(Guid id)
         {
             var result = await subscriptionScreenDetailsService.Query(id);
-
-            var scheduleInfos = result.Schedules?.Select(schedule => new ScheduleInfo
-            {
-                ScheduleId = schedule.ScheduleId,
-                SubscriptionId = schedule.SubscriptionId,
-                RoomId = schedule.RoomId,
-                WeekDay = schedule.WeekDay,
-                StartTime = schedule.StartTime.ToString(@"hh\:mm"),
-                EndTime = schedule.EndTime.ToString(@"hh\:mm"),
-            }).ToArray();
-
-            var attendanceInfos = result.Attendances?.ToInfos();
-            var paymentInfos = result.Payments?.ToInfos();
-
-            var studentInfo = new StudentInfo
-            {
-                StudentId = result.Student.StudentId,
-                FirstName = result.Student.FirstName,
-                LastName = result.Student.LastName
-            };
-
-            var teacherInfo = result.Teacher == null
-                ? null
-                : new
-                {
-                    result.Teacher.TeacherId,
-                    result.Teacher.FirstName,
-                    result.Teacher.LastName,
-                };
 
             var response = new
             {
@@ -219,13 +146,25 @@ namespace RockSchool.WebApi.Controllers
                     AmountOutstanding = result.Subscription.AmountOutstanding,
                     Price = result.Subscription.Price,
                     FinalPrice = result.Subscription.FinalPrice,
-                    Schedules = scheduleInfos,
+                    Schedules = result.ScheduleSlots.ToInfos(),
                     GroupId = result.Subscription.GroupId,
                     SubscriptionType = (int)result.Subscription.SubscriptionType,
-                    Attendances = attendanceInfos,
-                    Student = studentInfo,
-                    Teacher = teacherInfo,
-                    Payments = paymentInfos
+                    Attendances = result.Attendances.ToInfos(),
+                    Student = new StudentInfo
+                    {
+                        StudentId = result.Student.StudentId,
+                        FirstName = result.Student.FirstName,
+                        LastName = result.Student.LastName
+                    },
+                    Teacher = result.Teacher == null
+                        ? null
+                        : new
+                        {
+                            result.Teacher.TeacherId,
+                            result.Teacher.FirstName,
+                            result.Teacher.LastName,
+                        },
+                    Payments = result.Payments.ToInfos()
                 }
             };
 
@@ -254,21 +193,7 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSubscription(AddSubscriptionRequest request)
         {
-            var scheduleDtos = new List<ScheduleDto>();
-            foreach (var requestSchedule in request.Schedules)
-            {
-                var scheduleDto = new ScheduleDto
-                {
-                    RoomId = requestSchedule.RoomId,
-                    WeekDay = requestSchedule.WeekDay,
-                    StartTime = TimeSpan.Parse(requestSchedule.StartTime),
-                    EndTime = TimeSpan.Parse(requestSchedule.EndTime),
-                };
-
-                scheduleDtos.Add(scheduleDto);
-            }
-
-            await subscriptionService.AddSubscriptionAsync(request.Subscription, request.StudentIds, scheduleDtos.ToArray());
+            await subscriptionService.AddSubscriptionAsync(request.Subscription, request.StudentIds, request.Schedules.ToDto());
             return Ok();
         }
 

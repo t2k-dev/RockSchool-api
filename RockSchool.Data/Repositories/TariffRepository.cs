@@ -24,6 +24,14 @@ public class TariffRepository(RockSchoolContext rockSchoolContext) : BaseReposit
             .ToArrayAsync();
     }
 
+    public async Task<Tariff[]?> GetTariffsAsync(DateTime date)
+    {
+        return await RockSchoolContext.Tariffs
+            .Where(t => t.StartDate <= date
+                         && t.EndDate >= date)
+            .ToArrayAsync();
+    }
+
     public async Task<Tariff?> GetTrialTariffAsync(DateTime date)
     {
         return await RockSchoolContext.Tariffs

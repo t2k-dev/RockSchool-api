@@ -33,10 +33,26 @@ namespace RockSchool.BL.Services.SubscriptionService
 
         public async Task AddSubscriptionAsync(SubscriptionDetails subscriptionDetails, Guid[] studentIds, ScheduleDto[] scheduleDtos)
         {
-            var isGroup = studentIds.Length > 1;
-            var groupId = isGroup ? Guid.NewGuid() : (Guid?)null;
+            // Step 1: Create schedule
+            var schedule = Schedule.Create($"Schedule {DateTime.Now}");
 
-            // Step 1: Create Subscriptions for each student
+            foreach (var scheduleDto in scheduleDtos)
+            {
+                var slot = ScheduleSlot.Create(
+                    schedule.ScheduleId,
+                    scheduleDto.RoomId,
+                    scheduleDto.WeekDay,
+                    scheduleDto.StartTime,
+                    scheduleDto.EndTime
+                );
+                schedule.AddScheduleSlot(slot);
+            }
+
+            await scheduleRepository.AddAsync(schedule);
+
+            // Step 2: Create Subscriptions for each student
+            var groupId = studentIds.Length > 1 ? Guid.NewGuid() : (Guid?)null;
+
             var subscriptionStudentPairs = new List<(Guid SubscriptionId, Guid StudentId)>();
             foreach (var studentId in studentIds)
             {
@@ -48,34 +64,22 @@ namespace RockSchool.BL.Services.SubscriptionService
                     groupId == null ? SubscriptionType.Lesson : SubscriptionType.GroupLesson,
                     subscriptionDetails.Price,
                     subscriptionDetails.FinalPrice,
-                    null,
+                    subscriptionDetails.BaseSubscriptionId,
                     subscriptionDetails.DisciplineId,
                     subscriptionDetails.TeacherId,
                     groupId
                 );
 
+                subscription.AssignSchedule(schedule.ScheduleId);
+
                 await subscriptionRepository.AddAsync(subscription);
                 subscriptionStudentPairs.Add((subscription.SubscriptionId, studentId));
-
-                // Step 2: Create Schedules for each subscription
-                foreach (var scheduleDto in scheduleDtos)
-                {
-                    var schedule = Schedule.Create(
-                        scheduleDto.RoomId,
-                        scheduleDto.WeekDay,
-                        scheduleDto.StartTime,
-                        scheduleDto.EndTime,
-                        subscription.SubscriptionId
-                    );
-
-                    await scheduleRepository.AddAsync(schedule);
-                }
             }
 
             // Step 3: Generate and create Attendances (shared for group lessons, individual for private)
-            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, isGroup ? AttendanceType.GroupLesson : AttendanceType.Lesson, groupId);
+            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, groupId != null ? AttendanceType.GroupLesson : AttendanceType.Lesson, groupId);
+
             var attendanceIds = new List<Guid>();
-            
             foreach (var attendance in attendances)
             {
                 var attendanceId = await attendanceRepository.AddAsync(attendance);

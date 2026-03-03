@@ -5,12 +5,9 @@ using RockSchool.Domain.Repositories;
 
 namespace RockSchool.Data.Repositories;
 
-public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
+public class SubscriptionRepository(RockSchoolContext rockSchoolContext)
+    : BaseRepository(rockSchoolContext), ISubscriptionRepository
 {
-    public SubscriptionRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
-    {
-    }
-
     public async Task AddAsync(Subscription subscription)
     {
         await RockSchoolContext.Subscriptions.AddAsync(subscription);
@@ -31,7 +28,6 @@ public class SubscriptionRepository : BaseRepository, ISubscriptionRepository
         return await RockSchoolContext.Subscriptions
             .Where(a => a.StudentId == studentId)
             .Include(s => s.Teacher)
-            .Include(s => s.Schedules)
             .ToArrayAsync();
     }
 

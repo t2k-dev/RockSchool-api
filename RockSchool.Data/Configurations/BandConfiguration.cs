@@ -18,9 +18,9 @@ public class BandConfiguration : IEntityTypeConfiguration<Band>
         builder.HasOne(b => b.Teacher).WithMany().HasForeignKey("TeacherId");
         
         builder.HasMany(b => b.BandStudents).WithOne(bs => bs.Band).HasForeignKey("BandId");
-        builder.HasMany(b => b.Schedules).WithOne(s => s.Band).HasForeignKey("BandId");
+        //builder.HasOne(b => b.Schedule).WithOne().HasForeignKey("ScheduleId");
         
         builder.Metadata.FindNavigation(nameof(Band.BandStudents))!.SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(Band.Schedules))!.SetPropertyAccessMode(PropertyAccessMode.Field);
+        //builder.Metadata.FindNavigation(nameof(Band.Schedule))!.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
