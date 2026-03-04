@@ -8,7 +8,7 @@ public class Attendee
     public Guid SubscriptionId { get; private set; }
     public Guid StudentId { get; private set; }
     public Guid AttendanceId { get; private set; }
-    public AttendanceStatus Status { get; private set; }
+    public AttendeeStatus Status { get; private set; }
 
     private Attendee() { }
 
@@ -30,31 +30,22 @@ public class Attendee
             SubscriptionId = subscriptionId,
             StudentId = studentId,
             AttendanceId = attendanceId,
-            Status = AttendanceStatus.New,
+            Status = AttendeeStatus.New,
         };
     }
 
     public void MarkAsAttended(string? reason = null)
     {
-        Status = AttendanceStatus.Attended;
-        //StatusReason = reason;
+        Status = AttendeeStatus.Attended;
     }
 
     public void MarkAsMissed(string? reason = null)
     {
-        Status = AttendanceStatus.Missed;
-        //StatusReason = reason;
+        Status = AttendeeStatus.Missed;
     }
 
-    public void Cancel(string? reason = null)
+    public void MarkAsCanceled(string? reason = null)
     {
-        Status = AttendanceStatus.CanceledByAdmin;
-        //StatusReason = reason;
-    }
-
-    public void UpdateStatus(AttendanceStatus status, string? reason = null)
-    {
-        Status = status;
-        //StatusReason = reason;
+        Status = AttendeeStatus.Canceled;
     }
 }

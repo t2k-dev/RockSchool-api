@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.AttendanceService;
+using RockSchool.BL.Services.AttendeeService;
 using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Subscriptions.Trial;
+using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
@@ -9,8 +12,6 @@ using RockSchool.WebApi.Models.Attendances;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RockSchool.BL.Subscriptions.Trial;
-using RockSchool.Domain.Entities;
 
 
 namespace RockSchool.WebApi.Controllers;
@@ -22,7 +23,8 @@ public class AttendanceController(
     IAttendanceService attendanceService,
     ISubscriptionService subscriptionService,
     IAttendanceSubmitService attendanceSubmitService,
-    ITrialSubscriptionService trialSubscriptionService
+    ITrialSubscriptionService trialSubscriptionService,
+    IAttendeeService attendeeService
     )
     : Controller
 {
@@ -62,6 +64,16 @@ public class AttendanceController(
     public async Task<ActionResult> MissedTrial(Guid id, SubmitAttendanceRequest request)
     {
         await trialSubscriptionService.MissedTrial(id, request.SubscriptionId, request.StatusReason, request.Comment);
+
+        return Ok();
+    }
+
+    [HttpPut("{id}/submitAttendee")]
+    public async Task<ActionResult> UpdateStatus(Guid id, SubmitAttendeeRequest request)
+    {
+        var updated = await attendeeService.UpdateStatus(id, request.AttendeeId, request.AttendeeStatus);
+        if (!updated)
+            return NotFound();
 
         return Ok();
     }

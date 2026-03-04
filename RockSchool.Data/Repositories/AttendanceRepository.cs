@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RockSchool.Data.Data;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
@@ -19,7 +19,9 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext) : IAttend
     
     public async Task<Attendance?> GetAsync(Guid attendanceId)
     {
-        return await rockSchoolContext.Attendances.FirstOrDefaultAsync(a => a.AttendanceId == attendanceId);
+        return await rockSchoolContext.Attendances
+            .Include(a => a.Attendees)
+            .FirstOrDefaultAsync(a => a.AttendanceId == attendanceId);
     }
 
     public async Task<Attendance[]?> GetByTeacherIdForPeriodOfTimeAsync(Guid teacherId, DateTime startDate, DateTime endDate)
