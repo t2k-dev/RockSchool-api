@@ -16,5 +16,6 @@ namespace RockSchool.BL.Services.SubscriptionService
         Task DecreaseAttendancesLeftCount(Guid subscriptionId);
         Task UpdateSubscriptionAsync(Subscription subscription);
         Task LinkPaymentToSubscription(Guid subscriptionId, Guid paymentId);
+        Task ReduceAttendanceCount(Guid subscriptionId);
     }
 }

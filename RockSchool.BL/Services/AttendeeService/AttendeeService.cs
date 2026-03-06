@@ -1,3 +1,4 @@
+using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Repositories;
 
@@ -5,6 +6,8 @@ namespace RockSchool.BL.Services.AttendeeService;
 
 public class AttendeeService(
     IAttendanceRepository attendanceRepository,
+    ISubscriptionRepository subscriptionRepository,
+    ISubscriptionService subscriptionService,
     IUnitOfWork unitOfWork) : IAttendeeService
 {
     public async Task<bool> UpdateStatus(Guid attendanceId, Guid attendeeId, int attendeeStatus)
@@ -17,9 +20,13 @@ public class AttendeeService(
         {
             case AttendeeStatus.Attended:
                 attendee.MarkAsAttended();
+                await subscriptionService.ReduceAttendanceCount(attendee.SubscriptionId);
+
                 break;
             case AttendeeStatus.Missed:
                 attendee.MarkAsMissed();
+                await subscriptionService.ReduceAttendanceCount(attendee.SubscriptionId);
+
                 break;
         }
 
@@ -33,6 +40,7 @@ public class AttendeeService(
         }
 
         attendanceRepository.Update(attendance);
+
 
         await unitOfWork.SaveChangesAsync();
 

@@ -171,6 +171,15 @@ namespace RockSchool.BL.Services.SubscriptionService
             await subscriptionRepository.UpdateSubscriptionAsync(existingEntity);*/
         }
 
+        public async Task ReduceAttendanceCount(Guid subscriptionId)
+        {
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+            
+            subscription.ReduceAttendanceCount();
+
+            subscriptionRepository.Update(subscription);
+        }
+
         private static void ModifySubscriptionAttributes(Subscription updatedSubscription, Subscription existingEntity)
         {
             throw new NotImplementedException();

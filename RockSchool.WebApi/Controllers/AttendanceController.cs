@@ -36,7 +36,6 @@ public class AttendanceController(
         return Ok(attendances);
     }
 
-    [EnableCors("MyPolicy")]
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {

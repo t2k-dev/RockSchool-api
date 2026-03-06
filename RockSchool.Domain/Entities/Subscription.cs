@@ -150,4 +150,9 @@ public class Subscription
         TrialDecision = trialDecision;
         StatusReason = statusReason;
     }
+
+    public void ReduceAttendanceCount()
+    {
+        AttendancesLeft -= 1;
+    }
 }
