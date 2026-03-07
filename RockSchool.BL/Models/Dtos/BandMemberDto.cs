@@ -2,7 +2,7 @@
 
 namespace RockSchool.BL.Models.Dtos
 {
-    public class BandMember
+    public class BandMemberDto
     {
         public Guid StudentId { get; set; }
         public BandRoleId BandRoleId { get; set; }

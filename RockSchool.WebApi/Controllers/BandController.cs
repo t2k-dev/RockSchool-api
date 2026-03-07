@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.BandService;
-using RockSchool.BL.Services.BandStudentService;
+using RockSchool.BL.Services.BandMemberService;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models.Bands;
 using System;
 using System.Threading.Tasks;
+using RockSchool.BL.Models;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -14,7 +15,7 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class BandController(
     IBandService bandService,
-    IBandStudentService bandStudentService)
+    IBandMemberService bandMemberService)
     : Controller
 {
     [HttpGet]
@@ -49,70 +50,62 @@ public class BandController(
         return Ok(result);
     }
 
-    [HttpGet("teacher/{teacherId}")]
-    public async Task<ActionResult> GetBandsByTeacher(Guid teacherId)
-    {
-        var bands = await bandService.GetByTeacherIdAsync(teacherId);
-        var result = bands.ToInfos();
-        return Ok(result);
-    }
-
     [HttpPost]
-    public async Task<ActionResult> CreateBand([FromBody] CreateBandRequest request)
+    public async Task<ActionResult> AddBand([FromBody] CreateBandRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var bandId = await bandService.AddBandAsync(request.Name, request.TeacherId, request.Members, request.Schedules);
+        var scheduleSlots = request.ScheduleSlots?.ToDto() ?? [];
+
+        var bandId = await bandService.AddBandAsync(request.Name, request.TeacherId, request.Members, scheduleSlots);
         
-        return Ok();
+        return Ok(bandId);
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateBand(Guid id, [FromBody] CreateBandRequest dto)
+    [HttpPut("{id}/activate")]
+    public async Task<ActionResult> ActivateBand(Guid id)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        /*var band = dto.ToModel();
-        band.BandId = id;
-        
-        await bandService.UpdateBandAsync(band);
-        */
+        var band = await bandService.ActivateBandAsync(id);
+        if (band == null)
+            return NotFound();
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteBand(Guid id)
+    [HttpPut("{id}/deactivate")]
+    public async Task<ActionResult> DeactivateBand(Guid id)
     {
-        await bandService.DeleteBandAsync(id);
+        var band = await bandService.DeactivateBandAsync(id);
+        if (band == null)
+            return NotFound();
         return NoContent();
     }
 
     [HttpPost("add-student")]
     public async Task<ActionResult> AddStudentToBand([FromBody] AddStudentToBandDto dto)
     {
-        if (!ModelState.IsValid)
+        throw new NotImplementedException();
+        /*if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var bandStudent = dto.ToModel();
-        var bandStudentId = await bandStudentService.AddStudentToBandAsync(bandStudent);
-        
-        return Ok(bandStudentId);
+        var bandMember = dto.ToModel();
+        var bandMemberId = await bandMemberService.AddStudentToBandAsync(bandMember);
+
+        return Ok(bandMemberId);*/
     }
 
-    [HttpDelete("{bandId}/students/{studentId}")]
-    public async Task<ActionResult> RemoveStudentFromBand(Guid bandId, Guid studentId)
+    [HttpDelete("{bandId}/students/{bandMemberId}")]
+    public async Task<ActionResult> RemoveStudentFromBand(Guid bandMemberId)
     {
-        await bandStudentService.RemoveStudentFromBandAsync(bandId, studentId);
+        await bandMemberService.DeleteBandMemberAsync(bandMemberId);
         return NoContent();
     }
 
     [HttpGet("{id}/students")]
-    public async Task<ActionResult> GetBandStudents(Guid id)
+    public async Task<ActionResult> GetBandMembers(Guid id)
     {
-        var bandStudents = await bandStudentService.GetByBandIdAsync(id);
-        var result = bandStudents.ToInfos();
+        var bandMembers = await bandMemberService.GetByBandIdAsync(id);
+        var result = bandMembers.ToInfos();
         return Ok(result);
     }
 }

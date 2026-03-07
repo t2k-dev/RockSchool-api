@@ -1,3 +1,4 @@
+using RockSchool.BL.Models;
 using RockSchool.BL.Models.Dtos;
 using RockSchool.Domain.Entities;
 
@@ -7,8 +8,9 @@ public interface IBandService
 {
     Task<Band?> GetByIdAsync(Guid id);
     Task<Band[]> GetAllAsync();
-    Task<Band[]> GetByTeacherIdAsync(Guid teacherId);
-    Task<Guid> AddBandAsync(string name, Guid teacherId, BandMember[] members, Schedule[] schedules);
+    Task<Guid> AddBandAsync(string name, Guid teacherId, BandMemberDto[] members, ScheduleSlotDto[] schedules);
     Task UpdateBandAsync(Band band);
     Task DeleteBandAsync(Guid id);
+    Task<Band?> ActivateBandAsync(Guid id);
+    Task<Band?> DeactivateBandAsync(Guid id);
 }

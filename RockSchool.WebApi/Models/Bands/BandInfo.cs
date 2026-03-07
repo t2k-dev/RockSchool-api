@@ -9,5 +9,6 @@ public class BandInfo
     public Guid TeacherId { get; set; }
     public object? Teacher { get; set; }
     public int Status { get; set; }
-    public BandStudentInfo[]? BandStudents { get; set; }
+    public bool IsActive { get; set; }
+    public BandMemberInfo[]? BandMembers { get; set; }
 }

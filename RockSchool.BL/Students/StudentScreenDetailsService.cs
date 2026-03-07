@@ -1,5 +1,5 @@
 using RockSchool.BL.Services.AttendanceService;
-using RockSchool.BL.Services.BandStudentService;
+using RockSchool.BL.Services.BandMemberService;
 using RockSchool.BL.Services.SubscriptionService;
 
 namespace RockSchool.BL.Students;
@@ -8,7 +8,7 @@ public class StudentScreenDetailsService(
     IStudentService studentService,
     IAttendanceQueryService attendanceQueryService,
     ISubscriptionService subscriptionService,
-    IBandStudentService bandStudentService) : IStudentScreenDetailsService
+    IBandMemberService bandMemberService) : IStudentScreenDetailsService
 {
     public async Task<StudentScreenDetailsResult> Query(Guid studentId)
     {
@@ -18,9 +18,9 @@ public class StudentScreenDetailsService(
 
         var subscriptions = await subscriptionService.GetSubscriptionsByStudentId(studentId);
 
-        var bandStudents = await bandStudentService.GetByStudentIdAsync(studentId);
-        var bands = bandStudents
-            .Select(bs => bs.Band)
+        var bandMembers = await bandMemberService.GetByStudentIdAsync(studentId);
+        var bands = bandMembers
+            .Select(bm => bm.Band)
             .Where(b => b != null)
             .ToArray();
 

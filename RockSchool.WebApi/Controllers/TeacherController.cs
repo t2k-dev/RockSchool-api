@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.UserService;
@@ -27,8 +26,7 @@ public class TeacherController(
     IAddTeacherService addTeacherService,
     ITeacherService teacherService,
     ITeacherScreenDetailsService teacherScreenDetailsService,
-    IAvailableTeachersService availableTeachersService,
-    IAttendanceService attendanceService
+    IAvailableTeachersService availableTeachersService
     ) : Controller
 {
     [HttpGet]
@@ -72,11 +70,15 @@ public class TeacherController(
     {
         var details = await teacherScreenDetailsService.Query(id);
 
+        if (details.Teacher == null)
+            return NotFound();
+
         var teacherScreenDetails = new TeacherScreenDetailsResponse
         {
             Teacher = details.Teacher.ToInfo(),
             Attendances = details.Attendances,
             Subscriptions = details.Subscriptions.ToInfos().ToArray(),
+            Bands = details.Bands.ToInfos(),
         };
 
         return Ok(teacherScreenDetails);

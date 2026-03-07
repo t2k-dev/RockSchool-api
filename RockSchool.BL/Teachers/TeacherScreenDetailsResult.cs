@@ -11,8 +11,9 @@ namespace RockSchool.BL.Teachers
 {
     public class TeacherScreenDetailsResult
     {
-        public Teacher Teacher { get; set; }
-        public AttendanceWithAttendeesDto[] Attendances { get; set; }
-        public Subscription[] Subscriptions { get; set; }
+        public Teacher Teacher { get; set; } = null!;
+        public AttendanceWithAttendeesDto[] Attendances { get; set; } = [];
+        public Subscription[] Subscriptions { get; set; } = [];
+        public Band[] Bands { get; set; } = [];
     }
 }

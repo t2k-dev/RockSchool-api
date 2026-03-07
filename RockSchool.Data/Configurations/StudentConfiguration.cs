@@ -53,12 +53,12 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
             .IsRequired(false);
         
         // Collections - configure backing field
-        builder.HasMany(s => s.BandStudents)
-            .WithOne(bs => bs.Student)
+        builder.HasMany(s => s.BandMembers)
+            .WithOne(bm => bm.Student)
             .HasForeignKey("StudentId");
         
         builder.Metadata
-            .FindNavigation(nameof(Student.BandStudents))!
+            .FindNavigation(nameof(Student.BandMembers))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

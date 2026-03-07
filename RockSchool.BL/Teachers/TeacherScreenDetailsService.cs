@@ -11,9 +11,9 @@ namespace RockSchool.BL.Teachers
 {
     public class TeacherScreenDetailsService(
         ITeacherRepository teacherRepository,
-        IAttendanceRepository attendanceRepository,
         IAttendanceQueryService attendanceQueryService,
-        ISubscriptionRepository subscriptionRepository
+        ISubscriptionRepository subscriptionRepository,
+        IBandRepository bandRepository
         ) : ITeacherScreenDetailsService
     {
         public async Task<TeacherScreenDetailsResult> Query(Guid teacherId)
@@ -22,23 +22,21 @@ namespace RockSchool.BL.Teachers
 
             //var subscriptionInfos = new List<ParentSubscriptionInfo>();
 
-            var allAttendances = await attendanceQueryService.GetByTeacherIdForPeriodAsync(teacherId, DateTime.MinValue, DateTime.MaxValue);
-            if (allAttendances != null)
-            {
-                
-            }
+            var allAttendances = await attendanceQueryService.GetByTeacherIdForPeriodAsync(
+                teacherId,
+                DateTime.MinValue,
+                DateTime.MaxValue);
 
             var subscriptions = await subscriptionRepository.GetSubscriptionsByTeacherIdAsync(teacherId);
-            if (subscriptions != null)
-            {
 
-            }
+            var bands = await bandRepository.GetByTeacherIdAsync(teacherId);
 
             var result = new TeacherScreenDetailsResult
             {
-                Teacher = teacher,
-                Attendances = allAttendances.ToArray(),
-                Subscriptions = subscriptions.ToArray(),
+                Teacher = teacher!,
+                Attendances = allAttendances ?? [],
+                Subscriptions = subscriptions ?? [],
+                Bands = bands,
             };
 
             return result;

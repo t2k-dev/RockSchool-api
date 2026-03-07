@@ -1,9 +1,9 @@
 ﻿using RockSchool.BL.Helpers;
 using RockSchool.BL.Services.AttendanceService;
-using RockSchool.BL.Services.ScheduleService;
 using RockSchool.Domain.Enums;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
+using RockSchool.BL.Schedules;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {

@@ -1,6 +1,6 @@
 ﻿namespace RockSchool.BL.Models
 {
-    public class ScheduleDto
+    public class ScheduleSlotDto
     {
         public Guid ScheduleId { get; set; }
         public Guid? SubscriptionId { get; set; }

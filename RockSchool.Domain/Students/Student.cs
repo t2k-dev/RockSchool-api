@@ -15,8 +15,8 @@ public class Student
     public Branch? Branch { get; private set; }
     public bool IsWaiting { get; private set; }
 
-    private readonly List<BandStudent> _bandStudents = new();
-    public IReadOnlyCollection<BandStudent> BandStudents => _bandStudents.AsReadOnly();
+    private readonly List<BandMember> _bandMembers = new();
+    public IReadOnlyCollection<BandMember> BandMembers => _bandMembers.AsReadOnly();
 
     private Student() { }
 

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Common.Models;
 using RockSchool.BL.Services.AttendanceService;
-using RockSchool.BL.Services.BandStudentService;
+using RockSchool.BL.Services.BandMemberService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Students;
 using RockSchool.BL.Students.AddStudent;
@@ -25,7 +25,7 @@ public class StudentController(
     IStudentService studentService,
     IAttendanceService attendanceService,
     ISubscriptionService subscriptionService,
-    IBandStudentService bandStudentService,
+    IBandMemberService bandMemberService,
     IStudentScreenDetailsService studentScreenDetailsService,
     IAddStudentService addStudentService)
     : Controller
@@ -73,7 +73,8 @@ public class StudentController(
                 StudentId = details.Student.StudentId,
             },
             Attendances = details.Attendances,
-            Subscriptions = details.Subscriptions.ToInfos().ToArray()
+            Subscriptions = details.Subscriptions.ToInfos().ToArray(),
+            Bands = details.Bands.ToInfos()
         };
 
         return Ok(result);

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Students;
@@ -32,7 +32,7 @@ public class RockSchoolContext : DbContext
     public DbSet<Payment> Payments { get; set; } = null!;
     public DbSet<Tariff> Tariffs { get; set; }
     public DbSet<Band> Bands { get; set; }
-    public DbSet<BandStudent> BandStudents { get; set; }
+    public DbSet<BandMember> BandMembers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,4 +1,4 @@
-﻿using Azure.Core;
+using Azure.Core;
 using RockSchool.BL.Models;
 using RockSchool.BL.Teachers;
 using RockSchool.Domain.Entities;
@@ -176,9 +176,9 @@ namespace RockSchool.WebApi.Helpers
             return scheduleInfos.Select(model => model.ToModel(scheduleId)).ToList();
         }
 
-        public static ScheduleDto ToDto(this ScheduleSlotInfo scheduleInfo)
+        public static ScheduleSlotDto ToDto(this ScheduleSlotInfo scheduleInfo)
         {
-            return new ScheduleDto
+            return new ScheduleSlotDto
             {
                 RoomId = scheduleInfo.RoomId,
                 WeekDay = scheduleInfo.WeekDay,
@@ -187,7 +187,7 @@ namespace RockSchool.WebApi.Helpers
             };
         }
 
-        public static ScheduleDto[] ToDto(this IEnumerable<ScheduleSlotInfo> scheduleInfos)
+        public static ScheduleSlotDto[] ToDto(this IEnumerable<ScheduleSlotInfo> scheduleInfos)
         {
             return scheduleInfos.Select(model => model.ToDto()).ToArray();
         }
@@ -249,7 +249,8 @@ namespace RockSchool.WebApi.Helpers
                 TeacherId = band.TeacherId,
                 Teacher = band.Teacher,
                 Status = band.Status,
-                BandStudents = band.BandStudents?.Select(bs => bs.ToInfo()).ToArray()
+                IsActive = band.IsActive,
+                BandMembers = band.BandMembers?.Select(bm => bm.ToInfo()).ToArray()
             };
         }
 
@@ -258,34 +259,22 @@ namespace RockSchool.WebApi.Helpers
             return bands.Select(b => b.ToInfo()).ToArray();
         }
 
-        // BandStudent
-        public static BandStudentInfo ToInfo(this BandStudent bandStudent)
+        // BandMember
+        public static BandMemberInfo ToInfo(this BandMember bandMember)
         {
-            return new BandStudentInfo
+            return new BandMemberInfo
             {
-                BandStudentId = bandStudent.BandStudentId,
-                BandId = bandStudent.BandId,
-                StudentId = bandStudent.StudentId,
-                Student = bandStudent.Student,
-                BandRoleId = bandStudent.BandRoleId
+                BandMemberId = bandMember.BandMemberId,
+                BandId = bandMember.BandId,
+                StudentId = bandMember.StudentId,
+                Student = bandMember.Student,
+                BandRoleId = bandMember.BandRoleId
             };
         }
 
-        public static BandStudentInfo[] ToInfos(this BandStudent[] bandStudents)
+        public static BandMemberInfo[] ToInfos(this BandMember[] bandMembers)
         {
-            return bandStudents.Select(bs => bs.ToInfo()).ToArray();
-        }
-
-        public static BandStudent ToModel(this AddStudentToBandDto dto)
-        {
-            throw new NotImplementedException();
-            /*
-            return new BandStudent
-            {
-                BandId = dto.BandId,
-                StudentId = dto.StudentId,
-                BandRoleId = dto.BandRoleId
-            };*/
+            return bandMembers.Select(bm => bm.ToInfo()).ToArray();
         }
 
         // WorkingPeriod

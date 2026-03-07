@@ -1,3 +1,4 @@
+using RockSchool.Domain.Enums;
 using RockSchool.Domain.Students;
 using RockSchool.Domain.Teachers;
 
@@ -10,13 +11,14 @@ public class Band
     public Guid TeacherId { get; private set; }
     public Teacher Teacher { get; private set; }
     public int Status { get; private set; }
+    public bool IsActive { get; private set; }
 
     public Guid? ScheduleId { get; private set; }
     public Schedule? Schedule { get; private set; }
 
-    private readonly List<BandStudent> _bandStudents = new();
+    private readonly List<BandMember> _bandMembers = new();
 
-    public IReadOnlyCollection<BandStudent> BandStudents => _bandStudents.AsReadOnly();
+    public IReadOnlyCollection<BandMember> BandMembers => _bandMembers.AsReadOnly();
 
     private Band() { }
 
@@ -33,16 +35,14 @@ public class Band
             BandId = Guid.NewGuid(),
             Name = name,
             TeacherId = teacherId,
-            Status = 1 // Active
+            Status = 1, // Active
+            IsActive = true
         };
     }
 
-    public void UpdateName(string name)
+    public void AssignSchedule(Guid scheduleId)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Band name is required", nameof(name));
-
-        Name = name;
+        ScheduleId = scheduleId;
     }
 
     public void ChangeTeacher(Guid teacherId)
@@ -58,24 +58,31 @@ public class Band
         Status = status;
     }
 
-    public void AddStudent(Student student, int bandRoleId)
+    public void Activate()
     {
-        if (student == null)
-            throw new ArgumentNullException(nameof(student));
+        IsActive = true;
+    }
 
-        if (_bandStudents.Any(bs => bs.StudentId == student.StudentId))
+    public void Deactivate()
+    {
+        IsActive = false;
+    }
+
+    public void AddMember(Guid studentId, BandRoleId bandRoleId)
+    {
+        if (_bandMembers.Any(bm => bm.StudentId == studentId))
             throw new InvalidOperationException("Student is already a member of this band");
 
-        var bandStudent = BandStudent.Create(BandId, student.StudentId, bandRoleId);
-        _bandStudents.Add(bandStudent);
+        var bandMember = BandMember.Create(BandId, studentId, bandRoleId);
+        _bandMembers.Add(bandMember);
     }
 
     public void RemoveStudent(Guid studentId)
     {
-        var bandStudent = _bandStudents.FirstOrDefault(bs => bs.StudentId == studentId);
-        if (bandStudent != null)
+        var bandMember = _bandMembers.FirstOrDefault(bm => bm.StudentId == studentId);
+        if (bandMember != null)
         {
-            _bandStudents.Remove(bandStudent);
+            _bandMembers.Remove(bandMember);
         }
     }
 }

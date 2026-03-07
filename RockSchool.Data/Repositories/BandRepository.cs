@@ -15,8 +15,8 @@ public class BandRepository : BaseRepository, IBandRepository
     {
         return await RockSchoolContext.Bands
             .Include(b => b.Teacher)
-            .Include(b => b.BandStudents!)
-                .ThenInclude(bs => bs.Student)
+            .Include(b => b.BandMembers!)
+                .ThenInclude(bm => bm.Student)
             .FirstOrDefaultAsync(b => b.BandId == id);
     }
 
@@ -24,8 +24,8 @@ public class BandRepository : BaseRepository, IBandRepository
     {
         return await RockSchoolContext.Bands
             .Include(b => b.Teacher)
-            .Include(b => b.BandStudents!)
-                .ThenInclude(bs => bs.Student)
+            .Include(b => b.BandMembers!)
+                .ThenInclude(bm => bm.Student)
             .ToArrayAsync();
     }
 
@@ -33,16 +33,12 @@ public class BandRepository : BaseRepository, IBandRepository
     {
         return await RockSchoolContext.Bands
             .Where(b => b.TeacherId == teacherId)
-            .Include(b => b.Teacher)
-            .Include(b => b.BandStudents!)
-                .ThenInclude(bs => bs.Student)
             .ToArrayAsync();
     }
 
     public async Task<Guid> AddAsync(Band band)
     {
-        RockSchoolContext.Bands.Add(band);
-        await RockSchoolContext.SaveChangesAsync();
+        await RockSchoolContext.Bands.AddAsync(band);
         return band.BandId;
     }
 

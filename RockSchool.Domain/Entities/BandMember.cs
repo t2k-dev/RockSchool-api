@@ -3,18 +3,18 @@ using RockSchool.Domain.Students;
 
 namespace RockSchool.Domain.Entities;
 
-public class BandStudent
+public class BandMember
 {
-    public Guid BandStudentId { get; private set; }
+    public Guid BandMemberId { get; private set; }
     public Guid BandId { get; private set; }
     public Band Band { get; private set; }
     public Guid StudentId { get; private set; }
     public Student Student { get; private set; }
     public BandRoleId BandRoleId { get; private set; }
 
-    private BandStudent() { }
+    private BandMember() { }
 
-    public static BandStudent Create(Guid bandId, Guid studentId, int bandRoleId)
+    public static BandMember Create(Guid bandId, Guid studentId, BandRoleId bandRoleId)
     {
         if (bandId == Guid.Empty)
             throw new ArgumentException("Band ID is required", nameof(bandId));
@@ -22,9 +22,9 @@ public class BandStudent
         if (studentId == Guid.Empty)
             throw new ArgumentException("Student ID is required", nameof(studentId));
 
-        return new BandStudent
+        return new BandMember
         {
-            BandStudentId = Guid.NewGuid(),
+            BandMemberId = Guid.NewGuid(),
             BandId = bandId,
             StudentId = studentId,
             BandRoleId = (BandRoleId)bandRoleId

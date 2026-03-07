@@ -9,13 +9,12 @@ using RockSchool.BL.Home;
 using RockSchool.BL.Services.AttendeeService;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.BandService;
-using RockSchool.BL.Services.BandStudentService;
+using RockSchool.BL.Services.BandMemberService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.BusySlotsService;
 using RockSchool.BL.Services.DisciplineService;
 using RockSchool.BL.Services.NoteService;
 using RockSchool.BL.Services.RoomService;
-using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.SubscriptionDetailsService;
 using RockSchool.BL.Services.TariffService;
@@ -34,6 +33,7 @@ using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
 using System;
 using RockSchool.BL.Subscriptions.Payments;
+using RockSchool.BL.Schedules;
 
 namespace RockSchool.WebApi;
 
@@ -52,7 +52,7 @@ public class Startup
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IBandService, BandService>();
-        services.AddScoped<IBandStudentService, BandStudentService>();
+        services.AddScoped<IBandMemberService, BandMemberService>();
         services.AddScoped<IDisciplineService, DisciplineService>();
         services.AddScoped<IScheduleService, ScheduleService>();
         services.AddScoped<IStudentService, StudentService>();
@@ -91,7 +91,7 @@ public class Startup
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IBandRepository, BandRepository>();
-        services.AddScoped<IBandStudentRepository, BandStudentRepository>();
+        services.AddScoped<IBandMemberRepository, BandMemberRepository>();
         services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
         services.AddScoped<IAttendeeRepository, AttendeeRepository>();
         services.AddScoped<IBranchRepository, BranchRepository>();

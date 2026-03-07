@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Services.ScheduleService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.SubscriptionDetailsService;
 using RockSchool.WebApi.Models;
@@ -17,6 +16,7 @@ using RockSchool.Domain.Teachers;
 using RockSchool.BL.Students;
 using RockSchool.BL.Teachers;
 using RockSchool.BL.Subscriptions.Payments;
+using RockSchool.BL.Schedules;
 
 namespace RockSchool.WebApi.Controllers
 {

@@ -14,7 +14,7 @@ namespace RockSchool.BL.Subscriptions
         IUnitOfWork unitOfWork
         ) : IRentalSubscriptionService
     {
-        public async Task<Guid> AddRentalSubscription(SubscriptionDetails subscriptionDetails, ScheduleDto[] scheduleDtos)
+        public async Task<Guid> AddRentalSubscription(SubscriptionDetails subscriptionDetails, ScheduleSlotDto[] scheduleDtos)
         {
             // Step 1: Subscription
             var subscription = Subscription.Create(subscriptionDetails.StudentId,

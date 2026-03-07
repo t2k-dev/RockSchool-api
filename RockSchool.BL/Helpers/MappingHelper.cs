@@ -1,4 +1,4 @@
-﻿using RockSchool.BL.Models;
+using RockSchool.BL.Models;
 using RockSchool.BL.Models.Dtos;
 using RockSchool.Domain.Entities;
 
@@ -348,43 +348,20 @@ namespace RockSchool.BL.Helpers
             return entities?.Select(t => t.ToModel()).ToArray() ?? [];
         }
 
-        // Band
-        public static Band ToModel(this BandEntity entity)
+        // Band - identity mapping (entity is already domain model)
+        public static Band ToModel(this Band entity) => entity;
+
+        public static Band[] ToModel(this IEnumerable<Band> entities)
         {
-            return new Band
-            {
-                BandId = entity.BandId,
-                Name = entity.Name,
-                TeacherId = entity.TeacherId,
-                Teacher = entity.Teacher?.ToDto(),
-                Status = entity.Status,
-                // Remove BandStudents to prevent circular reference when called from BandStudent.ToModel()
-                // BandStudents = entity.BandStudents?.Select(bs => bs.ToModel()).ToList()
-            };
+            return entities?.ToArray() ?? [];
         }
 
-        public static Band[] ToModel(this IEnumerable<BandEntity> entities)
-        {
-            return entities?.Select(b => b.ToModel()).ToArray() ?? [];
-        }
+        // BandMember - identity mapping (entity is already domain model)
+        public static BandMember ToModel(this BandMember entity) => entity;
 
-        // BandStudent
-        public static BandStudent ToModel(this BandStudentEntity entity)
+        public static BandMember[] ToModel(this IEnumerable<BandMember> entities)
         {
-            return new BandStudent
-            {
-                BandStudentId = entity.BandStudentId,
-                BandId = entity.BandId,
-                Band = entity.Band?.ToModel(),
-                StudentId = entity.StudentId,
-                Student = entity.Student?.ToDto(),
-                BandRoleId = entity.BandRoleId
-            };
-        }
-
-        public static BandStudent[] ToModel(this IEnumerable<BandStudentEntity> entities)
-        {
-            return entities?.Select(bs => bs.ToModel()).ToArray() ?? [];
+            return entities?.ToArray() ?? [];
         }
 
         // Attendees

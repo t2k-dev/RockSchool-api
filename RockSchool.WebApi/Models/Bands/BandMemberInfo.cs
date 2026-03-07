@@ -4,9 +4,9 @@ using RockSchool.Domain.Enums;
 
 namespace RockSchool.WebApi.Models.Bands;
 
-public class BandStudentInfo
+public class BandMemberInfo
 {
-    public Guid BandStudentId { get; set; }
+    public Guid BandMemberId { get; set; }
     public Guid BandId { get; set; }
     public Guid StudentId { get; set; }
     public object? Student { get; set; }

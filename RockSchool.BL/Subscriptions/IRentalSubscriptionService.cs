@@ -5,6 +5,6 @@ namespace RockSchool.BL.Subscriptions
 {
     public interface IRentalSubscriptionService
     {
-        Task<Guid> AddRentalSubscription(SubscriptionDetails details, ScheduleDto[] scheduleDtos);
+        Task<Guid> AddRentalSubscription(SubscriptionDetails details, ScheduleSlotDto[] scheduleDtos);
     }
 }

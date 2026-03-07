@@ -7,7 +7,7 @@ namespace RockSchool.BL.Helpers;
 
 public static class ScheduleHelper
 {
-    public static List<Attendance> GenerateAttendances(SubscriptionDetails subscriptionDetails, ScheduleDto[] schedules, AttendanceType attendanceType, Guid? groupId = null)
+    public static List<Attendance> GenerateAttendances(SubscriptionDetails subscriptionDetails, ScheduleSlotDto[] schedules, AttendanceType attendanceType, Guid? groupId = null)
     {
         var attendances = new List<Attendance>();
 
@@ -44,7 +44,7 @@ public static class ScheduleHelper
         return attendances;
     }
 
-    public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, ScheduleDto[] orderedSchedules, int lengthInMinutes = 60)
+    public static AvailableSlot GetNextAvailableSlot(DateTime startingFrom, ScheduleSlotDto[] orderedSchedules, int lengthInMinutes = 60)
     {
         const int timeZone = 5; // DEV move somewhere
         var schedule = GetNextSchedule(startingFrom, orderedSchedules);
@@ -61,7 +61,7 @@ public static class ScheduleHelper
         };
     }
 
-    private static ScheduleDto GetNextSchedule(DateTime startingFrom, ScheduleDto[]  orderedSchedules)
+    private static ScheduleSlotDto GetNextSchedule(DateTime startingFrom, ScheduleSlotDto[]  orderedSchedules)
     {
         foreach (var schedule in orderedSchedules)
         {
@@ -74,7 +74,7 @@ public static class ScheduleHelper
         return orderedSchedules[0];
     }
 
-    private static DateTime GetNextDate(DateTime startingFrom, ScheduleDto schedule)
+    private static DateTime GetNextDate(DateTime startingFrom, ScheduleSlotDto schedule)
     {
         var daysUntilNext = (schedule.WeekDay - (int)startingFrom.DayOfWeek + 7) % 7;
 

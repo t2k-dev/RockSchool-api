@@ -17,10 +17,10 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(AddRentalSubscriptionRequest request)
         {
-            var scheduleDtos = new List<ScheduleDto>();
+            var scheduleDtos = new List<ScheduleSlotDto>();
             foreach (var requestSchedule in request.Schedules)
             {
-                var scheduleDto = new ScheduleDto
+                var scheduleDto = new ScheduleSlotDto
                 {
                     RoomId = requestSchedule.RoomId,
                     WeekDay = requestSchedule.WeekDay,
