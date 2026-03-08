@@ -1,7 +1,7 @@
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Repositories;
 
-namespace RockSchool.BL.Services.BandMemberService;
+namespace RockSchool.BL.Bands;
 
 public class BandMemberService : IBandMemberService
 {

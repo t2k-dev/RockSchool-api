@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Bands;
 using RockSchool.BL.Common.Models;
 using RockSchool.BL.Services.AttendanceService;
-using RockSchool.BL.Services.BandMemberService;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Students;
 using RockSchool.BL.Students.AddStudent;

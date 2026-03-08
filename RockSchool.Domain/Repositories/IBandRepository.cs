@@ -8,6 +8,6 @@ public interface IBandRepository
     Task<Band[]> GetAllAsync();
     Task<Band[]> GetByTeacherIdAsync(Guid teacherId);
     Task<Guid> AddAsync(Band band);
-    Task UpdateAsync(Band band);
+    void Update(Band band);
     Task DeleteAsync(Guid id);
 }

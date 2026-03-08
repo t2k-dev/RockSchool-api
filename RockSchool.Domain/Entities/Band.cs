@@ -68,7 +68,7 @@ public class Band
         IsActive = false;
     }
 
-    public void AddMember(Guid studentId, BandRoleId bandRoleId)
+    public void AddMember(Guid studentId, BandRoleId? bandRoleId)
     {
         if (_bandMembers.Any(bm => bm.StudentId == studentId))
             throw new InvalidOperationException("Student is already a member of this band");
@@ -77,7 +77,7 @@ public class Band
         _bandMembers.Add(bandMember);
     }
 
-    public void RemoveStudent(Guid studentId)
+    public void RemoveMember(Guid studentId)
     {
         var bandMember = _bandMembers.FirstOrDefault(bm => bm.StudentId == studentId);
         if (bandMember != null)

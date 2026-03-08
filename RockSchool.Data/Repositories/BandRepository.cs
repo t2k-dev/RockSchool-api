@@ -5,12 +5,8 @@ using RockSchool.Domain.Repositories;
 
 namespace RockSchool.Data.Repositories;
 
-public class BandRepository : BaseRepository, IBandRepository
+public class BandRepository(RockSchoolContext rockSchoolContext) : BaseRepository(rockSchoolContext), IBandRepository
 {
-    public BandRepository(RockSchoolContext rockSchoolContext) : base(rockSchoolContext)
-    {
-    }
-
     public async Task<Band?> GetByIdAsync(Guid id)
     {
         return await RockSchoolContext.Bands
@@ -42,10 +38,9 @@ public class BandRepository : BaseRepository, IBandRepository
         return band.BandId;
     }
 
-    public async Task UpdateAsync(Band band)
+    public void Update(Band band)
     {
         RockSchoolContext.Bands.Update(band);
-        await RockSchoolContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)

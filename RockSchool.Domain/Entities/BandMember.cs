@@ -10,11 +10,11 @@ public class BandMember
     public Band Band { get; private set; }
     public Guid StudentId { get; private set; }
     public Student Student { get; private set; }
-    public BandRoleId BandRoleId { get; private set; }
+    public BandRoleId? BandRoleId { get; private set; }
 
     private BandMember() { }
 
-    public static BandMember Create(Guid bandId, Guid studentId, BandRoleId bandRoleId)
+    public static BandMember Create(Guid bandId, Guid studentId, BandRoleId? bandRoleId)
     {
         if (bandId == Guid.Empty)
             throw new ArgumentException("Band ID is required", nameof(bandId));
@@ -27,7 +27,7 @@ public class BandMember
             BandMemberId = Guid.NewGuid(),
             BandId = bandId,
             StudentId = studentId,
-            BandRoleId = (BandRoleId)bandRoleId
+            BandRoleId = bandRoleId
         };
     }
 

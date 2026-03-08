@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Services.BandService;
-using RockSchool.BL.Services.BandMemberService;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models.Bands;
 using System;
 using System.Threading.Tasks;
 using RockSchool.BL.Models;
+using RockSchool.BL.Bands;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -81,17 +80,15 @@ public class BandController(
         return NoContent();
     }
 
-    [HttpPost("add-student")]
-    public async Task<ActionResult> AddStudentToBand([FromBody] AddStudentToBandDto dto)
+    [HttpPost("{id}/add-member")]
+    public async Task<ActionResult> AddMemberToBand(Guid id,[FromBody] AddMemberToBandDto dto)
     {
-        throw new NotImplementedException();
-        /*if (!ModelState.IsValid)
+        if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var bandMember = dto.ToModel();
-        var bandMemberId = await bandMemberService.AddStudentToBandAsync(bandMember);
+        await bandService.AddBandMemberAsync(id, dto.StudentId, null);
 
-        return Ok(bandMemberId);*/
+        return Ok();
     }
 
     [HttpDelete("{bandId}/students/{bandMemberId}")]

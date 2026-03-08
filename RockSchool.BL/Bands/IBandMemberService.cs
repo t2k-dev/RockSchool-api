@@ -1,6 +1,6 @@
 using RockSchool.Domain.Entities;
 
-namespace RockSchool.BL.Services.BandMemberService;
+namespace RockSchool.BL.Bands;
 
 public interface IBandMemberService
 {

@@ -14,7 +14,7 @@ public class BandMemberConfiguration : IEntityTypeConfiguration<BandMember>
         
         builder.Property(bm => bm.BandId).IsRequired();
         builder.Property(bm => bm.StudentId).IsRequired();
-        builder.Property(bm => bm.BandRoleId).IsRequired().HasConversion<int>();
+        builder.Property(bm => bm.BandRoleId).HasConversion<int>();
         
         builder.HasOne(bm => bm.Band).WithMany(b => b.BandMembers).HasForeignKey("BandId");
         builder.HasOne(bm => bm.Student).WithMany(s => s.BandMembers).HasForeignKey("StudentId");

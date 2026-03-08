@@ -10,5 +10,5 @@ public class BandMemberInfo
     public Guid BandId { get; set; }
     public Guid StudentId { get; set; }
     public object? Student { get; set; }
-    public BandRoleId BandRoleId { get; set; }
+    public BandRoleId? BandRoleId { get; set; }
 }

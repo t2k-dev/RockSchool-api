@@ -8,8 +8,6 @@ using Newtonsoft.Json;
 using RockSchool.BL.Home;
 using RockSchool.BL.Services.AttendeeService;
 using RockSchool.BL.Services.AttendanceService;
-using RockSchool.BL.Services.BandService;
-using RockSchool.BL.Services.BandMemberService;
 using RockSchool.BL.Services.BranchService;
 using RockSchool.BL.Services.BusySlotsService;
 using RockSchool.BL.Services.DisciplineService;
@@ -34,6 +32,7 @@ using RockSchool.Domain.Repositories;
 using System;
 using RockSchool.BL.Subscriptions.Payments;
 using RockSchool.BL.Schedules;
+using RockSchool.BL.Bands;
 
 namespace RockSchool.WebApi;
 

@@ -8,7 +8,7 @@ using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Repositories;
 
-namespace RockSchool.BL.Services.BandService;
+namespace RockSchool.BL.Bands;
 
 public class BandService(IBandRepository bandRepository, IBandMemberRepository bandMemberRepository, IScheduleService scheduleService, IUnitOfWork unitOfWork)
     : IBandService
@@ -42,22 +42,31 @@ public class BandService(IBandRepository bandRepository, IBandMemberRepository b
         return bandId;
     }
 
-    public async Task UpdateBandAsync(Band band)
+    public async Task AddBandMemberAsync(Guid bandId, Guid studentId, BandRoleId? bandRoleId)
     {
-        await bandRepository.UpdateAsync(band);
-    }
+        var band = await bandRepository.GetByIdAsync(bandId);
+        if (band == null)
+            throw new InvalidOperationException($"Band with id {bandId} not found");
 
-    public async Task DeleteBandAsync(Guid id)
-    {
-        await bandRepository.DeleteAsync(id);
+        var member = BandMember.Create(bandId, studentId, bandRoleId);
+        await bandMemberRepository.AddAsync(member);
+
+        //bandRepository.Update(band);
+
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async Task<Band?> ActivateBandAsync(Guid id)
     {
         var band = await bandRepository.GetByIdAsync(id);
         if (band == null) return null;
+        
         band.Activate();
-        await bandRepository.UpdateAsync(band);
+        
+        bandRepository.Update(band);
+
+        await unitOfWork.SaveChangesAsync();
+
         return band;
     }
 
@@ -65,8 +74,25 @@ public class BandService(IBandRepository bandRepository, IBandMemberRepository b
     {
         var band = await bandRepository.GetByIdAsync(id);
         if (band == null) return null;
+        
         band.Deactivate();
-        await bandRepository.UpdateAsync(band);
+        
+        bandRepository.Update(band);
+
         return band;
     }
+
+    public async Task UpdateBandAsync(Band band)
+    {
+        bandRepository.Update(band);
+    }
+
+    public async Task DeleteBandAsync(Guid id)
+    {
+        await bandRepository.DeleteAsync(id);
+    }
+
+
+
+
 }

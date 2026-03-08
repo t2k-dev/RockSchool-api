@@ -4,7 +4,7 @@ using RockSchool.Domain.Enums;
 
 namespace RockSchool.WebApi.Models.Bands;
 
-public class AddStudentToBandDto
+public class AddMemberToBandDto
 {
     public Guid BandId { get; set; }
     public Guid StudentId { get; set; }
