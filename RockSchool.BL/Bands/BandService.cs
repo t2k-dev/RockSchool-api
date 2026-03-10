@@ -1,4 +1,5 @@
 using AutoMapper.Execution;
+using RockSchool.BL.Attendances;
 using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.BL.Models.Dtos;
@@ -56,9 +57,9 @@ public class BandService(IBandRepository bandRepository, IBandMemberRepository b
         await unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<Band?> ActivateBandAsync(Guid id)
+    public async Task<Band?> ActivateBandAsync(Guid bandId)
     {
-        var band = await bandRepository.GetByIdAsync(id);
+        var band = await bandRepository.GetByIdAsync(bandId);
         if (band == null) return null;
         
         band.Activate();
@@ -70,9 +71,9 @@ public class BandService(IBandRepository bandRepository, IBandMemberRepository b
         return band;
     }
 
-    public async Task<Band?> DeactivateBandAsync(Guid id)
+    public async Task<Band?> DeactivateBandAsync(Guid bandId)
     {
-        var band = await bandRepository.GetByIdAsync(id);
+        var band = await bandRepository.GetByIdAsync(bandId);
         if (band == null) return null;
         
         band.Deactivate();
@@ -80,6 +81,22 @@ public class BandService(IBandRepository bandRepository, IBandMemberRepository b
         bandRepository.Update(band);
 
         return band;
+    }
+
+    public async Task CreateAttendances(Guid bandId, DateTime startDate)
+    {
+        var band = await bandRepository.GetByIdAsync(bandId);
+
+        var attendances = AttendanceScheduleHelper.Generate(
+            10, 
+            120,
+            DateOnly.FromDateTime(DateTime.UtcNow.Date), 
+            band.BranchId.Value,
+            null,
+            band.TeacherId,
+            band.Schedule.ScheduleSlots.ToDto(),
+            AttendanceType.BandRehearsal
+            );
     }
 
     public async Task UpdateBandAsync(Band band)

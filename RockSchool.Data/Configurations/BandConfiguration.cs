@@ -16,8 +16,8 @@ public class BandConfiguration : IEntityTypeConfiguration<Band>
         builder.Property(b => b.Status).IsRequired();
         builder.Property(b => b.IsActive).IsRequired().HasDefaultValue(true);
         
-        builder.HasOne(b => b.Teacher).WithMany().HasForeignKey("TeacherId");
-        
+        //builder.HasOne(b => b.Teacher).WithMany().HasForeignKey("TeacherId");
+        builder.HasOne(s => s.Branch).WithMany().HasForeignKey("BranchId");
         builder.HasMany(b => b.BandMembers).WithOne(bm => bm.Band).HasForeignKey("BandId");
         //builder.HasOne(b => b.Schedule).WithOne().HasForeignKey("ScheduleId");
         

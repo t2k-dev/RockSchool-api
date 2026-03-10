@@ -13,6 +13,10 @@ public class Band
     public int Status { get; private set; }
     public bool IsActive { get; private set; }
 
+    public int? BranchId { get; private set; }
+    public Branch? Branch { get; private set; }
+
+
     public Guid? ScheduleId { get; private set; }
     public Schedule? Schedule { get; private set; }
 

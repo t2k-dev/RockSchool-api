@@ -1,4 +1,4 @@
-﻿using RockSchool.BL.Helpers;
+﻿using RockSchool.BL.Attendances;
 using RockSchool.BL.Models;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
@@ -54,7 +54,17 @@ namespace RockSchool.BL.Subscriptions
             }
 
             // Step 3: Attendances
-            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleDtos, AttendanceType.Rent, subscription.SubscriptionId);
+            var attendances = AttendanceScheduleHelper.Generate(
+                subscriptionDetails.AttendanceCount,
+                subscriptionDetails.AttendanceLength,
+                subscriptionDetails.StartDate,
+                subscriptionDetails.BranchId,
+                subscriptionDetails.DisciplineId,
+                subscriptionDetails.TeacherId,
+                scheduleDtos, 
+                AttendanceType.Rent
+                );
+
             foreach (var attendance in attendances)
             {
                 await attendanceRepository.AddAsync(attendance);

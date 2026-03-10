@@ -3,35 +3,42 @@ using RockSchool.BL.Subscriptions;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 
-namespace RockSchool.BL.Helpers;
+namespace RockSchool.BL.Attendances;
 
-public static class ScheduleHelper
+public static class AttendanceScheduleHelper
 {
-    public static List<Attendance> GenerateAttendances(SubscriptionDetails subscriptionDetails, ScheduleSlotDto[] schedules, AttendanceType attendanceType, Guid? groupId = null)
+    public static List<Attendance> Generate(
+        int attendancesToAdd,
+        int lessonMinutes,
+        DateOnly startSince,
+        int branchId,
+        int? disciplineId,
+        Guid? teacherId,
+        ScheduleSlotDto[] scheduleSlots, 
+        AttendanceType attendanceType, 
+        Guid? groupId = null)
     {
         var attendances = new List<Attendance>();
 
-        var attendancesToAdd = subscriptionDetails.AttendanceCount;
-        var lessonMinutes = subscriptionDetails.AttendanceLength;
-        var startDate = subscriptionDetails.StartDate.ToDateTime(TimeOnly.MinValue);
-        var orderedSchedules = schedules
+        var startDate = startSince.ToDateTime(TimeOnly.MinValue);
+        var orderedScheduleSlots = scheduleSlots
             .OrderBy(s => s.WeekDay)
             .ThenBy(s => s.StartTime)
             .ToArray();
 
         while (attendancesToAdd > 0)
         {
-            var availableSlot = GetNextAvailableSlot(startDate, orderedSchedules);
+            var availableSlot = GetNextAvailableSlot(startDate, orderedScheduleSlots);
             var attendanceStartDate = availableSlot.StartDate;
 
             var newAttendance = Attendance.Create(
                 attendanceStartDate,
                 attendanceStartDate.AddMinutes(lessonMinutes),
                 availableSlot.RoomId,
-                subscriptionDetails.BranchId,
+                branchId,
                 attendanceType,
-                subscriptionDetails.DisciplineId,
-                subscriptionDetails.TeacherId,
+                disciplineId,
+                teacherId,
                 groupId
                 );  
 

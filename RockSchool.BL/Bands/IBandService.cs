@@ -11,6 +11,7 @@ public interface IBandService
     Task<Band[]> GetAllAsync();
     Task<Guid> AddBandAsync(string name, Guid teacherId, BandMemberDto[] members, ScheduleSlotDto[] schedules);
     Task AddBandMemberAsync(Guid bandId, Guid studentId, BandRoleId? bandRoleId);
+    Task CreateAttendances(Guid bandId, DateTime startDate);
     Task UpdateBandAsync(Band band);
     Task DeleteBandAsync(Guid id);
     Task<Band?> ActivateBandAsync(Guid id);

@@ -91,6 +91,17 @@ public class BandController(
         return Ok();
     }
 
+    [HttpPost("{id}/generate-attendances")]
+    public async Task<ActionResult> GenerateAttendances(Guid id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await bandService.CreateAttendances(id, DateTime.Now);
+
+        return Ok();
+    }
+
     [HttpDelete("{bandId}/students/{bandMemberId}")]
     public async Task<ActionResult> RemoveStudentFromBand(Guid bandMemberId)
     {

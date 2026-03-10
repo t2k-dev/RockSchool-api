@@ -14,6 +14,7 @@ public class Attendance
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
     public Guid? GroupId { get; private set; }
+    public Guid? BandId { get; private set; }
     public int BranchId { get; private set; }
     public int RoomId { get; private set; }
     public string? Comment { get; private set; }

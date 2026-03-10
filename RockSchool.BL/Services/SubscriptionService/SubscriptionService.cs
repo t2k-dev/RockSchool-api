@@ -1,5 +1,4 @@
 ﻿using Azure.Core;
-using RockSchool.BL.Helpers;
 using RockSchool.BL.Models;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.NoteService;
@@ -9,6 +8,7 @@ using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Schedules;
+using RockSchool.BL.Attendances;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
@@ -63,7 +63,16 @@ namespace RockSchool.BL.Services.SubscriptionService
             }
 
             // Step 3: Generate and create Attendances (shared for group lessons, individual for private)
-            var attendances = ScheduleHelper.GenerateAttendances(subscriptionDetails, scheduleSlotDtos, groupId != null ? AttendanceType.GroupLesson : AttendanceType.Lesson, groupId);
+            var attendances = AttendanceScheduleHelper.Generate(
+                subscriptionDetails.AttendanceCount,
+                subscriptionDetails.AttendanceLength,
+                subscriptionDetails.StartDate,
+                subscriptionDetails.BranchId,
+                subscriptionDetails.DisciplineId,
+                subscriptionDetails.TeacherId,
+                scheduleSlotDtos, 
+                groupId != null ? AttendanceType.GroupLesson : AttendanceType.Lesson, 
+                groupId);
 
             var attendanceIds = new List<Guid>();
             foreach (var attendance in attendances)

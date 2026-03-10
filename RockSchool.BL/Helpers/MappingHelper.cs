@@ -26,6 +26,25 @@ namespace RockSchool.BL.Helpers
                 .ToArray();
         }
 
+        // Schedule
+        public static ScheduleSlotDto ToDto(this ScheduleSlot entity)
+        {
+            return new ScheduleSlotDto
+            {
+                ScheduleId = entity.ScheduleId,
+                StartTime = entity.StartTime,
+                EndTime = entity.EndTime,
+                WeekDay = entity.WeekDay,
+                RoomId = entity.RoomId,
+            };
+        }
+
+        public static ScheduleSlotDto[] ToDto(this IEnumerable<ScheduleSlot> entities)
+        {
+            return entities.Select(w => w.ToDto())
+                .ToArray();
+        }
+
         /*
         // Attendance
         public static Attendance ToModel(this AttendanceEntity entity)
@@ -72,23 +91,6 @@ namespace RockSchool.BL.Helpers
                 Address = entity.Address,
                 Rooms = entity.Rooms?.ToModel()
             };
-        }
-
-        // Schedule
-        public static Schedule ToModel(this ScheduleEntity entity)
-        {
-            return new Schedule
-            {
-                ScheduleId = entity.ScheduleId,
-                BandId = entity.BandId,
-                Name = entity.Name,
-            };
-        }
-
-        public static Schedule[] ToModel(this IEnumerable<ScheduleEntity> entities)
-        {
-            return entities.Select(w => w.ToModel())
-                .ToArray();
         }
 
         // ScheduledWorkingPeriod
