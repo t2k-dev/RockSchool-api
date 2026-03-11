@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.AttendeeService;
-using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;

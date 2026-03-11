@@ -11,6 +11,8 @@ public interface IAttendanceService
 
     Task CancelFromDate(Guid subscriptionId, DateTime cancelDate);
 
+    Task UpdateDateAndLocationAsync(Guid attendanceId, DateTime startDate, DateTime endDate, int roomId);
+
     /*Task<Attendance[]?> GetAttendancesByTeacherIdForPeriodOfTime(Guid teacherId, DateTime startDate, DateTime endDate);
     Task<Attendance[]?> GetAttendancesByStudentId(Guid studentId);
     Task<Attendance[]?> GetAttendancesBySubscriptionId(Guid subscriptionId);
@@ -20,6 +22,6 @@ public interface IAttendanceService
     Task AddAttendancesAsync(Attendance[] attendances);
     Task UpdateAttendanceAsync(Attendance attendanceDto);
     Task UpdateCommentAsync(Guid attendanceId, string comment);
-    Task UpdateDateAndLocationAsync(Guid attendanceId, DateTime startDate, DateTime endDate, int roomId);
+    
     */
 }

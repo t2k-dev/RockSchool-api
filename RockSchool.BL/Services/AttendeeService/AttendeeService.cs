@@ -1,4 +1,4 @@
-using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Subscriptions;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Repositories;
 

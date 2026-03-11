@@ -16,6 +16,7 @@ public static class AttendanceScheduleHelper
         Guid? teacherId,
         ScheduleSlotDto[] scheduleSlots, 
         AttendanceType attendanceType, 
+        Guid? bandId = null,
         Guid? groupId = null)
     {
         var attendances = new List<Attendance>();
@@ -37,6 +38,7 @@ public static class AttendanceScheduleHelper
                 availableSlot.RoomId,
                 branchId,
                 attendanceType,
+                bandId,
                 disciplineId,
                 teacherId,
                 groupId

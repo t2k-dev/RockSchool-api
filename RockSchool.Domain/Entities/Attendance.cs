@@ -32,6 +32,7 @@ public class Attendance
         int roomId,
         int branchId,
         AttendanceType attendanceType,
+        Guid? bandId = null,
         int? disciplineId = null,
         Guid? teacherId = null,
         Guid? groupId = null)
@@ -44,6 +45,7 @@ public class Attendance
             RoomId = roomId,
             BranchId = branchId,
             AttendanceType = attendanceType,
+            BandId = bandId,
             DisciplineId = disciplineId,
             TeacherId = teacherId,
             GroupId = groupId,

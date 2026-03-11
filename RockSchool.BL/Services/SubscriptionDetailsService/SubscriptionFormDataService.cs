@@ -1,4 +1,3 @@
-using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Students;
 using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Teachers;

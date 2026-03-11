@@ -16,8 +16,7 @@ public class ScheduleSlotConfiguration : IEntityTypeConfiguration<ScheduleSlot>
         builder.Property(s => s.WeekDay).IsRequired();
         builder.Property(s => s.StartTime).IsRequired();
         builder.Property(s => s.EndTime).IsRequired();
-        
-        builder.HasOne(s => s.Room).WithMany().HasForeignKey("RoomId");
+
         builder.HasIndex(s => s.ScheduleId);
     }
 }

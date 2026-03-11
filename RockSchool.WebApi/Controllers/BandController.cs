@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Bands;
+using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models.Bands;
+using RockSchool.WebApi.Models.Subscriptions;
 using System;
 using System.Threading.Tasks;
-using RockSchool.BL.Models;
-using RockSchool.BL.Bands;
 
 namespace RockSchool.WebApi.Controllers;
 
@@ -14,7 +15,9 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class BandController(
     IBandService bandService,
-    IBandMemberService bandMemberService)
+    IBandMemberService bandMemberService,
+    IBandFormDataService bandFormDataService,
+    IReschedulingService reschedulingService)
     : Controller
 {
     [HttpGet]
@@ -49,6 +52,20 @@ public class BandController(
         return Ok(result);
     }
 
+    [HttpGet("{id}/form-data")]
+    public async Task<ActionResult> GetBandFormData(Guid id)
+    {
+        var result = await bandFormDataService.Query(id);
+
+        var response = new
+        {
+            Band = result.Band.ToInfo(),
+            ScheduleSlots = result.ScheduleSlots.ToInfos(),
+        };
+
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<ActionResult> AddBand([FromBody] CreateBandRequest request)
     {
@@ -78,6 +95,15 @@ public class BandController(
         if (band == null)
             return NotFound();
         return NoContent();
+    }
+
+    [HttpPut("{id}/schedules")]
+    public async Task<ActionResult> UpdateSchedules(Guid id, [FromBody] UpdateSchedulesRequest request)
+    {
+        var newSchedules = request.Schedules.ToDto();
+        await reschedulingService.UpdateScheduleByBand(id, DateTime.Now, newSchedules);
+
+        return Ok();
     }
 
     [HttpPost("{id}/add-member")]

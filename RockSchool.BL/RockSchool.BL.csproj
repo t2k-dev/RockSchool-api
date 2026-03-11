@@ -7,6 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Services\ScheduleService\**" />
+      <EmbeddedResource Remove="Services\ScheduleService\**" />
+      <None Remove="Services\ScheduleService\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\RockSchool.Data\RockSchool.Data.csproj" />
     </ItemGroup>
 
@@ -19,10 +25,6 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Services\ScheduleService\" />
     </ItemGroup>
 
 </Project>

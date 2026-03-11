@@ -6,11 +6,10 @@ using RockSchool.Data.Repositories;
 using RockSchool.Domain.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
-using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Schedules;
 using RockSchool.BL.Attendances;
 
-namespace RockSchool.BL.Services.SubscriptionService
+namespace RockSchool.BL.Subscriptions
 {
     public class SubscriptionService(
         ISubscriptionRepository subscriptionRepository,
@@ -70,8 +69,9 @@ namespace RockSchool.BL.Services.SubscriptionService
                 subscriptionDetails.BranchId,
                 subscriptionDetails.DisciplineId,
                 subscriptionDetails.TeacherId,
-                scheduleSlotDtos, 
-                groupId != null ? AttendanceType.GroupLesson : AttendanceType.Lesson, 
+                scheduleSlotDtos,
+                groupId != null ? AttendanceType.GroupLesson : AttendanceType.Lesson,
+                null,
                 groupId);
 
             var attendanceIds = new List<Guid>();

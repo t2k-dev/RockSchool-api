@@ -11,7 +11,12 @@ using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Bands;
 
-public class BandService(IBandRepository bandRepository, IBandMemberRepository bandMemberRepository, IScheduleService scheduleService, IUnitOfWork unitOfWork)
+public class BandService(
+    IBandRepository bandRepository,
+    IBandMemberRepository bandMemberRepository,
+    IScheduleService scheduleService,
+    IAttendanceRepository attendanceRepository,
+    IUnitOfWork unitOfWork)
     : IBandService
 {
     public async Task<Band?> GetByIdAsync(Guid id)
@@ -52,8 +57,6 @@ public class BandService(IBandRepository bandRepository, IBandMemberRepository b
         var member = BandMember.Create(bandId, studentId, bandRoleId);
         await bandMemberRepository.AddAsync(member);
 
-        //bandRepository.Update(band);
-
         await unitOfWork.SaveChangesAsync();
     }
 
@@ -85,18 +88,26 @@ public class BandService(IBandRepository bandRepository, IBandMemberRepository b
 
     public async Task CreateAttendances(Guid bandId, DateTime startDate)
     {
-        var band = await bandRepository.GetByIdAsync(bandId);
+        var band = await bandRepository.GetByIdWithScheduleAsync(bandId);
 
         var attendances = AttendanceScheduleHelper.Generate(
             10, 
             120,
-            DateOnly.FromDateTime(DateTime.UtcNow.Date), 
+            DateOnly.FromDateTime(startDate),
             band.BranchId.Value,
             null,
             band.TeacherId,
             band.Schedule.ScheduleSlots.ToDto(),
-            AttendanceType.BandRehearsal
+            AttendanceType.BandRehearsal,
+            bandId
             );
+
+        foreach (var attendance in attendances)
+        {
+            await attendanceRepository.AddAsync(attendance);
+        }
+
+        unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateBandAsync(Band band)

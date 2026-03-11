@@ -49,6 +49,14 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext) : IAttend
             .Where(a => a.BranchId == branchId)
             .ToArrayAsync();
     }
+
+    public async Task<Attendance[]> GetByBandIdAsync(Guid bandId)
+    {
+        return await rockSchoolContext.Attendances
+            .Where(a => a.BandId == bandId)
+            .ToArrayAsync();
+    }
+
     /*
     public async Task<Attendance[]?> GetByStudentIdAsync(Guid studentId)
     {

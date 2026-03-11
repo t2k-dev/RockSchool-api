@@ -11,12 +11,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.WebApi.Helpers;
-using RockSchool.Domain.Students;
-using RockSchool.Domain.Teachers;
 using RockSchool.BL.Students;
 using RockSchool.BL.Teachers;
 using RockSchool.BL.Subscriptions.Payments;
 using RockSchool.BL.Schedules;
+using RockSchool.BL.Subscriptions;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -208,8 +207,8 @@ namespace RockSchool.WebApi.Controllers
         [HttpPut("{id}/schedules")]
         public async Task<ActionResult> UpdateSchedules(Guid id, [FromBody] UpdateSchedulesRequest request)
         {
-            var newSchedules = request.Schedules.ToModel(id).ToArray();
-            await reschedulingService.UpdateSchedules(id, DateTime.Now, newSchedules);
+            var newSchedules = request.Schedules.ToDto();
+            await reschedulingService.UpdateScheduleBySubscription(id, DateTime.Now, newSchedules);
 
             return Ok();
         }

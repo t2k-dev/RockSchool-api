@@ -1,8 +1,7 @@
 ﻿using RockSchool.BL.Models;
-using RockSchool.BL.Subscriptions;
 using RockSchool.Domain.Entities;
 
-namespace RockSchool.BL.Services.SubscriptionService
+namespace RockSchool.BL.Subscriptions
 {
     public interface ISubscriptionService
     {

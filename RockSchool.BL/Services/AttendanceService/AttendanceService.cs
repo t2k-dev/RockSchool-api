@@ -47,6 +47,18 @@ public class AttendanceService : IAttendanceService
         }
     }
 
+    public async Task UpdateDateAndLocationAsync(Guid attendanceId, DateTime startDate, DateTime endDate, int roomId)
+    {
+        var attendance = await _attendanceRepository.GetAsync(attendanceId);
+
+        if (attendance == null)
+            throw new NullReferenceException("AttendanceEntity not found.");
+
+        attendance.UpdateSchedule(startDate, endDate, roomId);
+
+        _attendanceRepository.Update(attendance);
+    }
+
     /*
     public async Task<Attendance[]> GetByBranchIdAsync(int branchId)
     {
@@ -107,18 +119,6 @@ public class AttendanceService : IAttendanceService
             throw new NullReferenceException("AttendanceEntity not found.");
 
         attendanceEntity.AddComment(comment);
-
-        await _attendanceRepository.UpdateAsync(attendanceEntity);
-    }
-
-    public async Task UpdateDateAndLocationAsync(Guid attendanceId, DateTime startDate, DateTime endDate, int roomId)
-    {
-        var attendanceEntity = await _attendanceRepository.GetAsync(attendanceId);
-
-        if (attendanceEntity == null)
-            throw new NullReferenceException("AttendanceEntity not found.");
-
-        attendanceEntity.UpdateSchedule(startDate, endDate, roomId);
 
         await _attendanceRepository.UpdateAsync(attendanceEntity);
     }

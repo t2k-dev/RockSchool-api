@@ -51,6 +51,7 @@ public class Startup
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IBandService, BandService>();
+        services.AddScoped<IBandFormDataService, BandFormDataService>();
         services.AddScoped<IBandMemberService, BandMemberService>();
         services.AddScoped<IDisciplineService, DisciplineService>();
         services.AddScoped<IScheduleService, ScheduleService>();

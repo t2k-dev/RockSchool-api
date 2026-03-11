@@ -1,10 +1,12 @@
-﻿using RockSchool.Domain.Entities;
+﻿using RockSchool.BL.Models;
+using RockSchool.Domain.Entities;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
     public interface IReschedulingService
     {
         Task<Attendance> RescheduleAttendanceByStudent(Guid attendanceId, DateTime startDate);
-        Task UpdateSchedules(Guid subscriptionId, DateTime startingDate, ScheduleSlot[] newSchedules);
+        Task UpdateScheduleBySubscription(Guid subscriptionId, DateTime startingDate, ScheduleSlotDto[] newSchedules);
+        Task UpdateScheduleByBand(Guid bandId, DateTime startingDate, ScheduleSlotDto[] newSchedules);
     }
 }

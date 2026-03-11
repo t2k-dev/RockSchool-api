@@ -16,6 +16,14 @@ public class BandRepository(RockSchoolContext rockSchoolContext) : BaseRepositor
             .FirstOrDefaultAsync(b => b.BandId == id);
     }
 
+    public async Task<Band?> GetByIdWithScheduleAsync(Guid id)
+    {
+        return await RockSchoolContext.Bands
+            .Include(b => b.Schedule)
+                .ThenInclude(s => s.ScheduleSlots)
+            .FirstOrDefaultAsync(b => b.BandId == id);
+    }
+
     public async Task<Band[]> GetAllAsync()
     {
         return await RockSchoolContext.Bands

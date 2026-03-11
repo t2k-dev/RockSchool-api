@@ -1,16 +1,25 @@
-﻿using RockSchool.BL.Helpers;
+﻿using RockSchool.BL.Attendances;
+using RockSchool.BL.Helpers;
+using RockSchool.BL.Models;
+using RockSchool.BL.Schedules;
 using RockSchool.BL.Services.AttendanceService;
-using RockSchool.Domain.Enums;
+using RockSchool.BL.Subscriptions;
 using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
-using RockSchool.BL.Schedules;
+using RockSchool.Domain.Enums;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Services.SubscriptionService
 {
     public class ReschedulingService(
         IAttendanceService attendanceService,
+        IAttendanceRepository attendanceRepository,
         ISubscriptionService subscriptionService,
-        IScheduleService scheduleService)
+        ISubscriptionRepository subscriptionRepository,
+        IScheduleService scheduleService,
+        IScheduleRepository scheduleRepository,
+        IBandRepository bandRepository,
+        IUnitOfWork unitOfWork)
         : IReschedulingService
     {
         public async Task<Attendance> RescheduleAttendanceByStudent(Guid attendanceId, DateTime startDate)
@@ -48,39 +57,73 @@ namespace RockSchool.BL.Services.SubscriptionService
             return null;
         }
 
-        public async Task UpdateSchedules(Guid subscriptionId, DateTime startingDate, ScheduleSlot[] newSchedules)
+        public async Task UpdateScheduleBySubscription(Guid subscriptionId, DateTime startingDate, ScheduleSlotDto[] scheduleSlotDtos)
         {
-            throw new NotImplementedException();
-            /*
-            // Update Schedules
-            await scheduleService.DeleteBySubscriptionAsync(subscriptionId);
+            // Assign new schedule to subscription
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            foreach (var schedule in newSchedules)
+            if (subscription.ScheduleId.HasValue)
             {
-                schedule.SubscriptionId = subscriptionId;
+                await scheduleRepository.DeleteAsync(subscription.ScheduleId.Value);
             }
-            await scheduleService.AddSchedulesAsync(newSchedules);
 
-            // Update Attendances
-            var orderedSchedules = newSchedules
+            var scheduleId = await scheduleService.AddScheduleAsync(scheduleSlotDtos);
+
+            subscription.AssignSchedule(scheduleId);
+
+            subscriptionRepository.Update(subscription);
+
+            // Regenerate attendances
+            var attendances = await attendanceRepository.GetByBandIdAsync(subscriptionId);
+            RegenerateAttendances(attendances, startingDate, scheduleSlotDtos);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateScheduleByBand(Guid bandId, DateTime startingDate, ScheduleSlotDto[] scheduleSlotDtos)
+        {
+            // Assign new schedule to band
+            var band = await bandRepository.GetByIdAsync(bandId);
+
+            if (band.ScheduleId.HasValue)
+            {
+                await scheduleRepository.DeleteAsync(band.ScheduleId.Value);
+            }
+
+            var scheduleId = await scheduleService.AddScheduleAsync(scheduleSlotDtos);
+
+            band.AssignSchedule(scheduleId);
+
+            bandRepository.Update(band);
+
+            // Regenerate attendances
+            var attendances = await attendanceRepository.GetByBandIdAsync(bandId);
+            RegenerateAttendances(attendances, startingDate, scheduleSlotDtos);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        private void RegenerateAttendances(Attendance[] attendances, DateTime startingDate, ScheduleSlotDto[] scheduleSlotDtos)
+        {
+            if (attendances.Length <= 0) 
+                return;
+
+            var orderedScheduleSlots = scheduleSlotDtos
                 .OrderBy(s => s.WeekDay)
                 .ThenBy(s => s.StartTime)
                 .ToArray();
 
-            var attendances = await attendanceService.GetAttendancesBySubscriptionId(subscriptionId);
-            if (attendances != null)
+            var attendancesToUpdate = attendances.Where(a => a.StartDate > startingDate);
+
+            foreach (var attendance in attendancesToUpdate)
             {
-                var attendancesToUpdate = attendances.Where(a => a.StartDate > startingDate);
+                var slot = AttendanceScheduleHelper.GetNextAvailableSlot(startingDate, orderedScheduleSlots);
 
-                foreach (var attendance in attendancesToUpdate)
-                {
-                    var slot = ScheduleHelper.GetNextAvailableSlot(startingDate, orderedSchedules);
+                attendance.UpdateSchedule(slot.StartDate, slot.EndDate, slot.RoomId);
+                attendanceRepository.Update(attendance);
 
-                    await attendanceService.UpdateDateAndLocationAsync(attendance.AttendanceId, slot.StartDate, slot.EndDate, slot.RoomId);
-
-                    startingDate = slot.EndDate;
-                }
-            }*/
+                startingDate = slot.EndDate;
+            }
         }
     }
 }

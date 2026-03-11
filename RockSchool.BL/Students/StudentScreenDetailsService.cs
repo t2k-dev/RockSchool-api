@@ -1,6 +1,6 @@
 using RockSchool.BL.Bands;
 using RockSchool.BL.Services.AttendanceService;
-using RockSchool.BL.Services.SubscriptionService;
+using RockSchool.BL.Subscriptions;
 
 namespace RockSchool.BL.Students;
 
