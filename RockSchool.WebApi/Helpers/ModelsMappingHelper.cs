@@ -114,9 +114,9 @@ namespace RockSchool.WebApi.Helpers
             return subscriptionDto.Select(dto => dto.ToParentSubscriptionInfo()).ToList();
         }
 
-        public static SubscriptionInfo ToInfo(this Subscription subscription)
+        public static StudentSubscriptionInfo ToStudentInfo(this Subscription subscription)
         {
-            return new SubscriptionInfo
+            return new StudentSubscriptionInfo
             {
                 SubscriptionId = subscription.SubscriptionId,
                 StartDate = subscription.StartDate,
@@ -135,9 +135,36 @@ namespace RockSchool.WebApi.Helpers
             };
         }
 
-        public static List<SubscriptionInfo> ToInfos(this IEnumerable<Subscription> subscriptions)
+        public static List<StudentSubscriptionInfo> ToStudentInfos(this IEnumerable<Subscription> subscriptions)
         {
-            return subscriptions.Select(model => model.ToInfo()).ToList();
+            return subscriptions.Select(model => model.ToStudentInfo()).ToList();
+        }
+
+
+        public static TeacherSubscriptionInfo ToTeacherInfo(this Subscription subscription)
+        {
+            return new TeacherSubscriptionInfo
+            {
+                SubscriptionId = subscription.SubscriptionId,
+                StartDate = subscription.StartDate,
+                Status = (int)subscription.Status,
+                DisciplineId = subscription.DisciplineId,
+                TrialDecision = subscription.TrialDecision,
+                StudentId = subscription.StudentId,
+                StudentFullName = subscription.Student != null ? $"{subscription.Student.FirstName} {subscription.Student.LastName}" : null,
+                AttendanceCount = subscription.AttendanceCount,
+                AttendanceLength = subscription.AttendanceLength,
+                AttendancesLeft = subscription.AttendancesLeft,
+                SubscriptionType = (int)subscription.SubscriptionType,
+                AmountOutstanding = subscription.AmountOutstanding,
+                Price = subscription.Price,
+                FinalPrice = subscription.FinalPrice,
+            };
+        }
+
+        public static List<TeacherSubscriptionInfo> ToTeacherInfos(this IEnumerable<Subscription> subscriptions)
+        {
+            return subscriptions.Select(model => model.ToTeacherInfo()).ToList();
         }
 
         // Schedule

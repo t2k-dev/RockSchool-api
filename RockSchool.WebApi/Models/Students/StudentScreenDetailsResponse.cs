@@ -8,12 +8,12 @@ namespace RockSchool.WebApi.Models.Students
     public class StudentScreenDetailsResponse
     {
         public StudentInfo Student { get; set; }
-        public SubscriptionInfo[] Subscriptions { get; set; }
+        public StudentSubscriptionInfo[] Subscriptions { get; set; }
         public AttendanceWithAttendeesDto[] Attendances { get; set; }
         public BandInfo[] Bands { get; set; }
     }
 
-    public class SubscriptionInfo
+    public class StudentSubscriptionInfo
     {
         public Guid SubscriptionId { get; set; }
 
@@ -38,8 +38,6 @@ namespace RockSchool.WebApi.Models.Students
         public int SubscriptionType { get; set; }
 
         public Guid? GroupId { get; set; }
-
-        //public ScheduleInfo[] Schedules { get; set; }
 
         /// <summary>
         /// Additional field.

@@ -17,6 +17,7 @@ public class BandController(
     IBandService bandService,
     IBandMemberService bandMemberService,
     IBandFormDataService bandFormDataService,
+    IBandScreenDetailsService bandScreenDetailsService,
     IReschedulingService reschedulingService)
     : Controller
 {
@@ -43,11 +44,16 @@ public class BandController(
     [HttpGet("{id}/screen-details")]
     public async Task<ActionResult> GetBandScreenDetails(Guid id)
     {
-        var band = await bandService.GetByIdAsync(id);
+        var details = await bandScreenDetailsService.Query(id);
 
-        var result = new BandScreenDetailsDto
+        if (details.Band == null)
+            return NotFound();
+
+        var result = new
         {
-            Band = band.ToInfo(),
+            Band = details.Band.ToInfo(),
+            Attendances = details.Attendances,
+            BandMembers = details.BandMembers.ToInfos()
         };
         return Ok(result);
     }

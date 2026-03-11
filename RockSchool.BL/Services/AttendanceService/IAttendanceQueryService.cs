@@ -7,4 +7,5 @@ public interface IAttendanceQueryService
     Task<AttendanceWithAttendeesDto[]> GetByTeacherIdForPeriodAsync(Guid teacherId, DateTime startDate, DateTime endDate);
     Task<AttendanceWithAttendeesDto[]> GetByStudentIdAsync(Guid studentId);
     Task<AttendanceWithAttendeesDto[]> GetByBranchIdAsync(int branchId);
+    Task<AttendanceWithAttendeesDto[]> GetByBandIdAsync(Guid bandId);
 }

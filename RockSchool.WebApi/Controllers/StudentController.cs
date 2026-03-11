@@ -73,7 +73,7 @@ public class StudentController(
                 StudentId = details.Student.StudentId,
             },
             Attendances = details.Attendances,
-            Subscriptions = details.Subscriptions.ToInfos().ToArray(),
+            Subscriptions = details.Subscriptions.ToStudentInfos().ToArray(),
             Bands = details.Bands.ToInfos()
         };
 

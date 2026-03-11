@@ -22,6 +22,7 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
                 Status = (int)a.Status,
                 AttendanceType = a.AttendanceType,
                 RoomId = a.RoomId,
+                DisciplineId = a.DisciplineId,
                 Teacher = a.Teacher != null ? new TeacherInfoDto
                 {
                     TeacherId = a.Teacher.TeacherId,
@@ -137,6 +138,67 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
         return await context.Attendances
             .Include(a => a.Teacher)
             .Where(a => a.BranchId == branchId)
+            .Select(a => new AttendanceWithAttendeesDto
+            {
+                AttendanceId = a.AttendanceId,
+                StartDate = a.StartDate,
+                EndDate = a.EndDate,
+                Status = (int)a.Status,
+                AttendanceType = a.AttendanceType,
+                RoomId = a.RoomId,
+                DisciplineId = a.DisciplineId,
+                Teacher = a.Teacher != null ? new TeacherInfoDto
+                {
+                    TeacherId = a.Teacher.TeacherId,
+                    FirstName = a.Teacher.FirstName,
+                    LastName = a.Teacher.LastName
+                } : null,
+                Attendees = context.Attendees
+                    .Where(att => att.AttendanceId == a.AttendanceId)
+                    .Join(
+                        context.Subscriptions,
+                        att => att.SubscriptionId,
+                        s => s.SubscriptionId,
+                        (att, s) => new { Attendee = att, Subscription = s })
+                    .Join(
+                        context.Students,
+                        x => x.Subscription.StudentId,
+                        st => st.StudentId,
+                        (x, st) => new AttendeeDto
+                        {
+                            AttendeeId = x.Attendee.AttendeeId,
+                            SubscriptionId = x.Attendee.SubscriptionId,
+                            StudentId = x.Attendee.StudentId,
+                            Status = (int)x.Attendee.Status,
+                            Student = new StudentInfoDto
+                            {
+                                StudentId = st.StudentId,
+                                FirstName = st.FirstName,
+                                LastName = st.LastName
+                            },
+                            Subscription = new SubscriptionInfoDto
+                            {
+                                SubscriptionId = x.Subscription.SubscriptionId,
+                                GroupId = x.Subscription.GroupId,
+                                AttendanceCount = x.Subscription.AttendanceCount,
+                                AttendanceLength = x.Subscription.AttendanceLength,
+                                AttendancesLeft = x.Subscription.AttendancesLeft,
+                                StartDate = x.Subscription.StartDate,
+                                Status = (int)x.Subscription.Status,
+                                SubscriptionType = (int)x.Subscription.SubscriptionType,
+                                DisciplineId = x.Subscription.DisciplineId
+                            }
+                        })
+                    .ToList()
+            })
+            .ToArrayAsync();
+    }
+
+    public async Task<AttendanceWithAttendeesDto[]> GetByBandIdAsync(Guid bandId)
+    {
+        return await context.Attendances
+            .Include(a => a.Teacher)
+            .Where(a => a.BandId == bandId)
             .Select(a => new AttendanceWithAttendeesDto
             {
                 AttendanceId = a.AttendanceId,
