@@ -11,11 +11,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.WebApi.Helpers;
-using RockSchool.BL.Students;
-using RockSchool.BL.Teachers;
 using RockSchool.BL.Subscriptions.Payments;
-using RockSchool.BL.Schedules;
 using RockSchool.BL.Subscriptions;
+using RockSchool.BL.Subscriptions.Rehearsal;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -23,14 +21,12 @@ namespace RockSchool.WebApi.Controllers
     [ApiController]
     [Route("api/[controller]s")]
     public class SubscriptionController(
-        IStudentService studentService,
         ISubscriptionService subscriptionService,
-        IScheduleService scheduleService,
         IReschedulingService reschedulingService,
-        ITeacherService teacherService,
         IPaymentService paymentService,
         ICancelSubscriptionService cancelSubscriptionService,
         ITrialSubscriptionService trialSubscriptionService,
+        IRehearsalSubscriptionService rehearsalSubscriptionService,
         ISubscriptionScreenDetailsService subscriptionScreenDetailsService,
         ISubscriptionFormDataService subscriptionFormDataService,
         ISubscriptionGetService subscriptionGetService
@@ -187,6 +183,21 @@ namespace RockSchool.WebApi.Controllers
             await trialSubscriptionService.AddTrial(addTrialDto);
 
             return Ok(request.Student.StudentId);
+        }
+
+        [HttpPost("addRehearsal")]
+        public async Task<ActionResult> AddRehearsal([FromBody]AddRehearsalRequest request)
+        {
+            var addRehearsalDto = new AddRehearsalDto
+            {
+                StudentId = request.StudentId,
+                BandId = request.BandId,
+                TariffId = request.TariffId,
+            };
+
+            await rehearsalSubscriptionService.AddRehearsal(addRehearsalDto);
+
+            return Ok();
         }
 
         [HttpPost]

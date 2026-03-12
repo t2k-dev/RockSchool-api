@@ -54,6 +54,7 @@ public class AttendanceRepository(RockSchoolContext rockSchoolContext) : IAttend
     {
         return await rockSchoolContext.Attendances
             .Where(a => a.BandId == bandId)
+            .Include(a => a.Attendees)
             .ToArrayAsync();
     }
 

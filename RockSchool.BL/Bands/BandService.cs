@@ -89,6 +89,14 @@ public class BandService(
     public async Task CreateAttendances(Guid bandId, DateTime startDate)
     {
         var band = await bandRepository.GetByIdWithScheduleAsync(bandId);
+        if (band == null)
+            throw new InvalidOperationException($"Band with id {bandId} not found");
+
+        if (!band.BranchId.HasValue)
+            throw new InvalidOperationException("Band branch is not assigned");
+
+        if (band.Schedule == null)
+            throw new InvalidOperationException("Band schedule is not assigned");
 
         var attendances = AttendanceScheduleHelper.Generate(
             10, 
@@ -107,7 +115,7 @@ public class BandService(
             await attendanceRepository.AddAsync(attendance);
         }
 
-        unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateBandAsync(Band band)

@@ -33,6 +33,7 @@ using System;
 using RockSchool.BL.Subscriptions.Payments;
 using RockSchool.BL.Schedules;
 using RockSchool.BL.Bands;
+using RockSchool.BL.Subscriptions.Rehearsal;
 
 namespace RockSchool.WebApi;
 
@@ -59,6 +60,7 @@ public class Startup
         services.AddScoped<IStudentService, StudentService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<ITrialSubscriptionService, TrialSubscriptionService>();
+        services.AddScoped<IRehearsalSubscriptionService, RehearsalSubscriptionService>();
         services.AddScoped<IReschedulingService, ReschedulingService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IUserService, UserService>();
