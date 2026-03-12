@@ -3,7 +3,7 @@ using RockSchool.Domain.Students;
 
 namespace RockSchool.BL.Students.AddStudent;
 
-public class AddStudentService(IStudentRepository studentRepository) : IAddStudentService
+public class AddStudentService(IStudentRepository studentRepository, IUnitOfWork unitOfWork) : IAddStudentService
 {
     public async Task<Guid> Handle(AddStudentDto request)
     {
@@ -24,6 +24,7 @@ public class AddStudentService(IStudentRepository studentRepository) : IAddStude
         }
 
         await studentRepository.AddAsync(student);
+        await unitOfWork.SaveChangesAsync();
 
         return student.StudentId;
     }
