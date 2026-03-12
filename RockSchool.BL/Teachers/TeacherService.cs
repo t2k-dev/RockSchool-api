@@ -70,7 +70,7 @@ public class TeacherService(
             teacher.UpdateDisciplines(disciplines);
         }
 
-        teacherRepository.Update(teacher);
+        //teacherRepository.Update(teacher);
 
         await unitOfWork.SaveChangesAsync();
     }

@@ -27,7 +27,6 @@ public class TeacherRepository : ITeacherRepository
     public async Task AddAsync(Teacher teacher)
     {
         await _context.Teachers.AddAsync(teacher);
-        await _context.SaveChangesAsync();
     }
 
     public async Task<Teacher?> GetByIdAsync(Guid teacherId)
