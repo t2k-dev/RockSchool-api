@@ -6,6 +6,8 @@ namespace RockSchool.WebApi.Models.Subscriptions
     {
         public Guid AttendanceId { get; set; }
         public DateTime NewStartDate { get; set; }
-
+        public DateTime NewEndDate { get; set; }
+        public int RoomId { get; set; }
+        public string StatusReason { get; set; }
     }
 }

@@ -9,6 +9,7 @@ public interface IBandService
 {
     Task<Band?> GetByIdAsync(Guid id);
     Task<Band[]> GetAllAsync();
+    Task<Band[]> GetActiveByBranchIdAsync(int branchId);
     Task<Guid> AddBandAsync(string name, Guid teacherId, BandMemberDto[] members, ScheduleSlotDto[] schedules);
     Task AddBandMemberAsync(Guid bandId, Guid studentId, BandRoleId? bandRoleId);
     Task CreateAttendances(Guid bandId, DateTime startDate);

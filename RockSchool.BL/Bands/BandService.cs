@@ -30,6 +30,11 @@ public class BandService(
         return await bandRepository.GetAllAsync();
     }
 
+    public async Task<Band[]> GetActiveByBranchIdAsync(int branchId)
+    {
+        return await bandRepository.GetActiveByBranchIdAsync(branchId);
+    }
+
     public async Task<Guid> AddBandAsync(string name, Guid teacherId, BandMemberDto[] members, ScheduleSlotDto[] scheduleSlotDtos)
     {
         var band = Band.Create(name, teacherId);

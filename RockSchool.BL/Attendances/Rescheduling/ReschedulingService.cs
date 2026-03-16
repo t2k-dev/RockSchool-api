@@ -8,12 +8,14 @@ using RockSchool.Data.Repositories;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Repositories;
+using RockSchool.Domain.Students;
 
-namespace RockSchool.BL.Services.SubscriptionService
+namespace RockSchool.BL.Attendances.Rescheduling
 {
     public class ReschedulingService(
         IAttendanceService attendanceService,
         IAttendanceRepository attendanceRepository,
+        IAttendeeRepository attendeeRepository,
         ISubscriptionService subscriptionService,
         ISubscriptionRepository subscriptionRepository,
         IScheduleService scheduleService,
@@ -22,39 +24,40 @@ namespace RockSchool.BL.Services.SubscriptionService
         IUnitOfWork unitOfWork)
         : IReschedulingService
     {
-        public async Task<Attendance> RescheduleAttendanceByStudent(Guid attendanceId, DateTime startDate)
+        public async Task<Attendance> RescheduleAttendanceByAdmin(Guid attendanceId, DateTime startDate, DateTime endDate, int roomId, string statusReason)
         {
-            throw new NotImplementedException();
-            /*
             
-            // Update current attendance
             var attendance = await attendanceService.GetAttendanceAsync(attendanceId);
-            attendance.Status = AttendanceStatus.CanceledByStudent;
-            */
-            /*var subscription = await subscriptionService.GetAsync(attendance.SubscriptionId);
 
-            await attendanceService.UpdateAttendanceAsync(attendance);
+            // Create new attendance
+            var newAttendance = Attendance.Create(
+                startDate,
+                endDate,
+                roomId,
+                attendance.BranchId,
+                attendance.AttendanceType,
+                attendance.BandId,
+                attendance.DisciplineId,
+                attendance.TeacherId,
+                attendance.GroupId);
 
-            // Create Attendance
-            var endDate = startDate.AddMinutes(subscription.AttendanceLength);
-            var newAttendance = new Attendance
+            // Cancel the existing
+            attendance.CanceledByAdmin(statusReason);
+
+            // Recreate the attendees
+            foreach (var attendee in attendance.Attendees)
             {
-                Status = AttendanceStatus.New,
-                StartDate = startDate,
-                EndDate = endDate,
+                attendee.MarkAsCanceled();
 
-                TeacherId = attendance.TeacherId,
-                DisciplineId = attendance.DisciplineId,
-                RoomId = attendance.RoomId,
-                BranchId = attendance.BranchId,
-                GroupId = attendance.GroupId,
-                AttendanceType = attendance.AttendanceType,
-            };
+                var newAttendee = Attendee.Create(attendee.SubscriptionId, newAttendance.AttendanceId, attendee.StudentId);
+                await attendeeRepository.AddAsync(newAttendee);
+            }
 
-            await attendanceService.AddAttendanceAsync(newAttendance);
+            await attendanceRepository.AddAsync(newAttendance);
 
-            return newAttendance;*/
-            return null;
+            await unitOfWork.SaveChangesAsync();
+
+            return newAttendance;
         }
 
         public async Task UpdateScheduleBySubscription(Guid subscriptionId, DateTime startingDate, ScheduleSlotDto[] scheduleSlotDtos)

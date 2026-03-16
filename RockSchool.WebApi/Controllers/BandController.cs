@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Attendances.Rescheduling;
 using RockSchool.BL.Bands;
-using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models.Bands;
 using RockSchool.WebApi.Models.Subscriptions;

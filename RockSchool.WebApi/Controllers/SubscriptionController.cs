@@ -14,6 +14,7 @@ using RockSchool.WebApi.Helpers;
 using RockSchool.BL.Subscriptions.Payments;
 using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Subscriptions.Rehearsal;
+using RockSchool.BL.Attendances.Rescheduling;
 
 namespace RockSchool.WebApi.Controllers
 {
@@ -210,7 +211,7 @@ namespace RockSchool.WebApi.Controllers
         [HttpPost("rescheduleAttendance")]
         public async Task<ActionResult> RescheduleAttendance(RescheduleAttendanceRequest request)
         {
-            var attendance = await reschedulingService.RescheduleAttendanceByStudent(request.AttendanceId, request.NewStartDate);
+            var attendance = await reschedulingService.RescheduleAttendanceByAdmin(request.AttendanceId, request.NewStartDate, request.NewEndDate, request.RoomId, request.StatusReason);
 
             return Ok(attendance);
         }

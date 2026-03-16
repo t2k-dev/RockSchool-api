@@ -10,7 +10,5 @@ namespace RockSchool.BL.Subscriptions.Trial
         Task AcceptTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
 
         Task DeclineTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
-
-        Task MissedTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
     }
 }

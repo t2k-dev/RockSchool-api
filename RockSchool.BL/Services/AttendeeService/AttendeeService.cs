@@ -1,4 +1,5 @@
 using RockSchool.BL.Subscriptions;
+using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
 using RockSchool.Domain.Repositories;
 
@@ -25,7 +26,19 @@ public class AttendeeService(
                 break;
             case AttendeeStatus.Missed:
                 attendee.MarkAsMissed();
-                await subscriptionService.ReduceAttendanceCount(attendee.SubscriptionId);
+
+                var subscription = await subscriptionRepository.GetAsync(attendee.SubscriptionId);
+
+                if (attendance.AttendanceType == AttendanceType.TrialLesson)
+                {
+                    subscription.CompleteTrial(TrialDecision.Missed);
+                }
+                else
+                {
+                    subscription.ReduceAttendanceCount();
+                }
+
+                subscriptionRepository.Update(subscription);
 
                 break;
         }

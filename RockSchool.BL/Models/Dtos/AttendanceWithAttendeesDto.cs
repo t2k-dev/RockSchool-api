@@ -10,6 +10,7 @@ public class AttendanceWithAttendeesDto
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int Status { get; set; }
+    public bool IsCompleted { get; set; }
     public AttendanceType AttendanceType { get; set; }
     public List<AttendeeDto> Attendees { get; set; } = new();
     public int RoomId { get; set; }

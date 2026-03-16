@@ -34,6 +34,7 @@ using RockSchool.BL.Subscriptions.Payments;
 using RockSchool.BL.Schedules;
 using RockSchool.BL.Bands;
 using RockSchool.BL.Subscriptions.Rehearsal;
+using RockSchool.BL.Attendances.Rescheduling;
 
 namespace RockSchool.WebApi;
 

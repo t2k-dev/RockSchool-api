@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using RockSchool.BL.Attendances.Rescheduling;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Services.AttendeeService;
-using RockSchool.BL.Subscriptions;
 using RockSchool.BL.Subscriptions.Trial;
-using RockSchool.Domain.Entities;
-using RockSchool.Domain.Enums;
-using RockSchool.WebApi.Helpers;
 using RockSchool.WebApi.Models;
-using RockSchool.WebApi.Models.Attendances;
+using RockSchool.WebApi.Models.Subscriptions;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
@@ -21,8 +17,7 @@ namespace RockSchool.WebApi.Controllers;
 [ApiController]
 public class AttendanceController(
     IAttendanceService attendanceService,
-    ISubscriptionService subscriptionService,
-    IAttendanceSubmitService attendanceSubmitService,
+    IReschedulingService reschedulingService,
     ITrialSubscriptionService trialSubscriptionService,
     IAttendeeService attendeeService
     )
@@ -59,14 +54,6 @@ public class AttendanceController(
         return Ok();
     }
 
-    [HttpPost("{id}/missedTrial")]
-    public async Task<ActionResult> MissedTrial(Guid id, SubmitAttendanceRequest request)
-    {
-        await trialSubscriptionService.MissedTrial(id, request.SubscriptionId, request.StatusReason, request.Comment);
-
-        return Ok();
-    }
-
     [HttpPut("{id}/submitAttendee")]
     public async Task<ActionResult> UpdateStatus(Guid id, SubmitAttendeeRequest request)
     {
@@ -77,56 +64,11 @@ public class AttendanceController(
         return Ok();
     }
 
-    [HttpPost("{id}/submit")]
-    public async Task<ActionResult> Submit(Guid id, AttendanceInfo attendanceInfo)
+    [HttpPost("{id}/reschedule")]
+    public async Task<ActionResult> RescheduleAttendance(Guid id, RescheduleAttendanceRequest request)
     {
-        await attendanceSubmitService.SubmitAttendance(id, attendanceInfo.Status, attendanceInfo.StatusReason, attendanceInfo.Comment);
+        var attendance = await reschedulingService.RescheduleAttendanceByAdmin(id, request.NewStartDate, request.NewEndDate, request.RoomId, request.StatusReason);
 
-        return Ok();
-    }
-
-    [HttpPost("submit")]
-    public async Task<ActionResult> SubmitGroup(SubmitGroupAttendanceRequest request)
-    {
-        var attendanceInfos = request.ChildAttendances;
-        foreach (var attendanceInfo in attendanceInfos)
-        {
-            await attendanceSubmitService.SubmitAttendance(attendanceInfo.AttendanceId, attendanceInfo.Status, attendanceInfo.StatusReason, request.Comment);
-        }
-
-        return Ok();
-    }
-
-    [HttpPut("{id}/comment/{comment}")]
-    public async Task<ActionResult> UpdateComment(Guid id, string comment)
-    {
-        // TODO: fix routing
-        //await attendanceService.UpdateCommentAsync(id, comment);
-
-        return Ok();
-    }
-
-    [HttpPost("{id}/attend")]
-    public async Task<ActionResult> Attend(Guid id, SubmitAttendanceRequest declineAttendanceRequest)
-    {
-        var attendance = await attendanceService.GetAttendanceAsync(id);
-
-        attendance.MarkAsAttended(declineAttendanceRequest.StatusReason);
-
-        //await attendanceService.UpdateAttendanceAsync(attendance);
-
-        return Ok();
-    }
-
-    [HttpPost("{id}/missed")]
-    public async Task<ActionResult> Missed(Guid id, SubmitAttendanceRequest declineAttendanceRequest)
-    {
-        var attendance = await attendanceService.GetAttendanceAsync(id);
-
-        attendance.MarkAsMissed(declineAttendanceRequest.StatusReason);
-
-        //await attendanceService.UpdateAttendanceAsync(attendance);
-
-        return Ok();
+        return Ok(attendance);
     }
 }

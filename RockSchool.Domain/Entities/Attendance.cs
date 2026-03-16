@@ -92,10 +92,11 @@ public class Attendance
         IsCompleted = true;
     }
 
-    public void Cancel(string? reason = null)
+    public void CanceledByAdmin(string? reason = null)
     {
         Status = AttendanceStatus.CanceledByAdmin;
         StatusReason = reason;
+        IsCompleted = true;
     }
 
     public void AddComment(string comment)

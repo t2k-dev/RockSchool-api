@@ -5,6 +5,7 @@ namespace RockSchool.Domain.Repositories;
 public interface IBandRepository
 {
     Task<Band[]> GetAllAsync();
+    Task<Band[]> GetActiveByBranchIdAsync(int branchId);
     Task<Band?> GetByIdAsync(Guid id);
     Task<Band?> GetByIdWithScheduleAsync(Guid id);
     Task<Band[]> GetByTeacherIdAsync(Guid teacherId);

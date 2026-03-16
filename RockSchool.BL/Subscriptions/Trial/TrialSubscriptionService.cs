@@ -76,7 +76,7 @@ namespace RockSchool.BL.Subscriptions.Trial
             // Update subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            subscription.CompleteTrial(subscriptionId, TrialDecision.Positive, null);
+            subscription.CompleteTrial(TrialDecision.Positive);
 
             subscriptionRepository.Update(subscription);
 
@@ -94,28 +94,10 @@ namespace RockSchool.BL.Subscriptions.Trial
             // Update subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
 
-            subscription.CompleteTrial(subscriptionId, TrialDecision.Negative, null);
+            subscription.CompleteTrial(TrialDecision.Negative);
 
             subscriptionRepository.Update(subscription);
 
-
-            await unitOfWork.SaveChangesAsync();
-        }
-
-        public async Task MissedTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment)
-        {
-            // Update attendance
-            var attendance = await attendanceRepository.GetAsync(attendanceId);
-            attendance.MarkAsMissed(statusReason);
-
-            attendanceRepository.Update(attendance);
-
-            // Update subscription
-            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
-
-            subscription.CompleteTrial(subscriptionId, TrialDecision.Missed, null);
-
-            subscriptionRepository.Update(subscription);
 
             await unitOfWork.SaveChangesAsync();
         }

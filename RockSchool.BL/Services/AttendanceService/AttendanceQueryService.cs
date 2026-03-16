@@ -137,7 +137,9 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
     {
         return await context.Attendances
             .Include(a => a.Teacher)
-            .Where(a => a.BranchId == branchId)
+            .Where(a => a.BranchId == branchId
+                        && a.StartDate >= DateTime.UtcNow.AddDays(-15)
+                        && a.EndDate <= DateTime.UtcNow.AddDays(15))
             .Select(a => new AttendanceWithAttendeesDto
             {
                 AttendanceId = a.AttendanceId,
@@ -146,6 +148,7 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
                 Status = (int)a.Status,
                 AttendanceType = a.AttendanceType,
                 RoomId = a.RoomId,
+                IsCompleted = a.IsCompleted,
                 DisciplineId = a.DisciplineId,
                 Teacher = a.Teacher != null ? new TeacherInfoDto
                 {

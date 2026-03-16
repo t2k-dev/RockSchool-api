@@ -20,7 +20,7 @@ public class BandRepository(RockSchoolContext rockSchoolContext) : BaseRepositor
     {
         return await RockSchoolContext.Bands
             .Include(b => b.Schedule)
-                .ThenInclude(s => s.ScheduleSlots)
+                .ThenInclude(s => s!.ScheduleSlots)
             .FirstOrDefaultAsync(b => b.BandId == id);
     }
 
@@ -30,6 +30,13 @@ public class BandRepository(RockSchoolContext rockSchoolContext) : BaseRepositor
             .Include(b => b.Teacher)
             .Include(b => b.BandMembers!)
                 .ThenInclude(bm => bm.Student)
+            .ToArrayAsync();
+    }
+
+    public async Task<Band[]> GetActiveByBranchIdAsync(int branchId)
+    {
+        return await RockSchoolContext.Bands
+            .Where(b => b.IsActive && b.BranchId == branchId)
             .ToArrayAsync();
     }
 
