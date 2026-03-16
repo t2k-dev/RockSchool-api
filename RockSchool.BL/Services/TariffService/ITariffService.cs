@@ -7,6 +7,7 @@ public interface ITariffService
 {
     Task<IEnumerable<Tariff>> GetAllTariffsAsync();
     Task<Tariff?> GetTrialTariffAsync();
+    Task<Tariff[]?> GetTariffsAsync(SubscriptionType subscriptionType);
     Task<Tariff?> GetTariffAsync(SubscriptionType subscriptionType, int? disciplineId);
     Task<Tariff[]?> GetTariffsAsync();
     Task<Tariff?> GetTariffAsync(Guid tariffId);

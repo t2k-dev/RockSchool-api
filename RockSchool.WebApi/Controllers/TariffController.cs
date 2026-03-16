@@ -72,7 +72,7 @@ public class TariffController : ControllerBase
     {
         try
         {
-            var trialTariff = await _tariffService.GetTariffsAsync();
+            var trialTariff = await _tariffService.GetTariffsAsync((SubscriptionType)subscriptionType);
             if (trialTariff == null)
             {
                 return NotFound(new { message = "Trial tariff not found" });
