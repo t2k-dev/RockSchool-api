@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Services.DisciplineService;
-using RockSchool.BL.Services.SubscriptionService;
-using RockSchool.BL.Services.UserService;
 using RockSchool.BL.Teachers;
 using RockSchool.BL.Teachers.AddTeacher;
 using RockSchool.BL.Teachers.AvailableTeachers;
@@ -14,7 +11,6 @@ using RockSchool.WebApi.Models.Teachers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers;

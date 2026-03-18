@@ -39,6 +39,17 @@ public class TeacherRepository : ITeacherRepository
             .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
     }
 
+    public async Task<Teacher?> GetByIdAsync(Guid teacherId, DateTime startDate, DateTime endDate)
+    {
+        return await _context.Teachers
+            .Include(t => t.User)
+            .Include(t => t.Disciplines)
+            .Include(t => t.WorkingPeriods)
+            .Include(t => t.ScheduledWorkingPeriods
+                .Where(swp => swp.StartDate >= startDate && swp.StartDate <= endDate))
+            .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
+    }
+
     public void Update(Teacher teacher)
     {
         _context.Teachers.Update(teacher);

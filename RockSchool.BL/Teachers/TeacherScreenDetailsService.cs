@@ -18,14 +18,15 @@ namespace RockSchool.BL.Teachers
     {
         public async Task<TeacherScreenDetailsResult> Query(Guid teacherId)
         {
-            var teacher = await teacherRepository.GetByIdAsync(teacherId);
+            var startDate = DateTime.UtcNow.AddDays(-7);
+            var endDate = DateTime.UtcNow.AddDays(14);
 
-            //var subscriptionInfos = new List<ParentSubscriptionInfo>();
+            var teacher = await teacherRepository.GetByIdAsync(teacherId, startDate, endDate);
 
             var allAttendances = await attendanceQueryService.GetByTeacherIdForPeriodAsync(
                 teacherId,
-                DateTime.MinValue,
-                DateTime.MaxValue);
+                startDate,
+                endDate);
 
             var subscriptions = await subscriptionRepository.GetSubscriptionsByTeacherIdAsync(teacherId);
 
