@@ -1,13 +1,14 @@
 using RockSchool.BL.Bands;
 using RockSchool.BL.Services.AttendanceService;
 using RockSchool.BL.Subscriptions;
+using RockSchool.Domain.Repositories;
 
 namespace RockSchool.BL.Students;
 
 public class StudentScreenDetailsService(
     IStudentService studentService,
     IAttendanceQueryService attendanceQueryService,
-    ISubscriptionService subscriptionService,
+    ISubscriptionRepository subscriptionRepository,
     IBandMemberService bandMemberService) : IStudentScreenDetailsService
 {
     public async Task<StudentScreenDetailsResult> Query(Guid studentId)
@@ -16,7 +17,7 @@ public class StudentScreenDetailsService(
 
         var allAttendances = await attendanceQueryService.GetByStudentIdAsync(studentId);
 
-        var subscriptions = await subscriptionService.GetSubscriptionsByStudentId(studentId);
+        var subscriptions = await subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
 
         var bandMembers = await bandMemberService.GetByStudentIdAsync(studentId);
         var bands = bandMembers

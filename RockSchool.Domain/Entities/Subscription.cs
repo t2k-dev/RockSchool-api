@@ -143,11 +143,12 @@ public class Subscription
     }
 
     // Trials
-    public void CompleteTrial(TrialDecision trialDecision)
+    public void CompleteTrial(TrialDecision trialDecision, string? statusReason = null)
     {
         AttendancesLeft -= 1;
         Status = SubscriptionStatus.Completed;
         TrialDecision = trialDecision;
+        StatusReason = statusReason;
     }
 
     public void ReduceAttendanceCount()

@@ -92,28 +92,6 @@ namespace RockSchool.WebApi.Helpers
             };*/
         }
 
-
-
-        public static ParentSubscriptionInfo ToParentSubscriptionInfo(this Subscription subscription)
-        {
-            return new ParentSubscriptionInfo
-            {
-                SubscriptionId = subscription.SubscriptionId,
-                StartDate = subscription.StartDate,
-                Student = subscription.Student,
-                Status = (int)subscription.Status,
-                DisciplineId = subscription.DisciplineId,
-                TrialDecision = subscription.TrialDecision,
-                AttendanceCount = subscription.AttendanceCount,
-                AttendancesLeft = subscription.AttendancesLeft,
-            };
-        }
-
-        public static List<ParentSubscriptionInfo> ToParentSubscriptionInfos(this IEnumerable<Subscription> subscriptionDto)
-        {
-            return subscriptionDto.Select(dto => dto.ToParentSubscriptionInfo()).ToList();
-        }
-
         public static StudentSubscriptionInfo ToStudentInfo(this Subscription subscription)
         {
             return new StudentSubscriptionInfo
@@ -121,6 +99,7 @@ namespace RockSchool.WebApi.Helpers
                 SubscriptionId = subscription.SubscriptionId,
                 StartDate = subscription.StartDate,
                 Status = (int)subscription.Status,
+                StatusReason = subscription.StatusReason,
                 DisciplineId = subscription.DisciplineId,
                 TrialDecision = subscription.TrialDecision,
                 TeacherId = subscription.TeacherId,
@@ -148,6 +127,7 @@ namespace RockSchool.WebApi.Helpers
                 SubscriptionId = subscription.SubscriptionId,
                 StartDate = subscription.StartDate,
                 Status = (int)subscription.Status,
+                StatusReason = subscription.StatusReason,
                 DisciplineId = subscription.DisciplineId,
                 TrialDecision = subscription.TrialDecision,
                 StudentId = subscription.StudentId,

@@ -41,7 +41,7 @@ public class AttendanceController(
     [HttpPost("{id}/declineTrial")]
     public async Task<ActionResult> DeclineTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await trialSubscriptionService.DeclineTrial(id, request.SubscriptionId, request.StatusReason, request.Comment);
+        await trialSubscriptionService.DeclineTrial(id, request.SubscriptionId, request.StatusReason);
 
         return Ok();
     }
@@ -49,7 +49,7 @@ public class AttendanceController(
     [HttpPost("{id}/acceptTrial")]
     public async Task<ActionResult> AcceptTrial(Guid id, SubmitAttendanceRequest request)
     {
-        await trialSubscriptionService.AcceptTrial(id, request.SubscriptionId, request.StatusReason, request.Comment);
+        await trialSubscriptionService.AcceptTrial(id, request.SubscriptionId, request.StatusReason);
 
         return Ok();
     }

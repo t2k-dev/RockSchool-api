@@ -7,8 +7,8 @@ namespace RockSchool.BL.Subscriptions.Trial
     {
         Task AddTrial(AddTrialDto addTrialDto);
 
-        Task AcceptTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
+        Task AcceptTrial(Guid attendanceId, Guid subscriptionId, string statusReason);
 
-        Task DeclineTrial(Guid attendanceId, Guid subscriptionId, string statusReason, string comment);
+        Task DeclineTrial(Guid attendanceId, Guid subscriptionId, string? statusReason);
     }
 }

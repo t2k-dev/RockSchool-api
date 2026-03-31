@@ -29,6 +29,8 @@ namespace RockSchool.WebApi.Models.Students
 
         public int Status { get; set; }
 
+        public string StatusReason { get; set; }
+
         public int? AttendanceCount { get; set; }
 
         public int? AttendanceLength { get; set; }

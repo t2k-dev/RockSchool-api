@@ -6,7 +6,6 @@ namespace RockSchool.BL.Subscriptions
     public interface ISubscriptionService
     {
         Task<Subscription?> GetAsync(Guid subscriptionId);
-        Task<Subscription[]> GetSubscriptionsByStudentId(Guid studentId);
         Task<Subscription[]?> GetSubscriptionsByTeacherId(Guid teacherId);
         Task<Subscription[]?> GetSubscriptionByGroupIdAsync(Guid groupId);
         Task<AvailableSlot> GetNextAvailableSlotAsync(Guid subscriptionId);

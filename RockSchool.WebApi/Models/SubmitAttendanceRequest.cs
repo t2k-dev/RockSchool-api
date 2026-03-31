@@ -6,6 +6,5 @@ namespace RockSchool.WebApi.Models
     {
         public Guid SubscriptionId { get; set; }
         public string StatusReason { get; set; }
-        public string Comment { get; set; }
     }
 }

@@ -100,11 +100,6 @@ namespace RockSchool.BL.Subscriptions
             return await subscriptionRepository.GetAsync(subscriptionId);
         }
 
-        public async Task<Subscription[]> GetSubscriptionsByStudentId(Guid studentId)
-        {
-            return await subscriptionRepository.GetSubscriptionsByStudentIdAsync(studentId);
-        }
-
         public async Task<Subscription[]?> GetSubscriptionByGroupIdAsync(Guid groupId)
         {
             return await subscriptionRepository.GetByGroupIdAsync(groupId);
