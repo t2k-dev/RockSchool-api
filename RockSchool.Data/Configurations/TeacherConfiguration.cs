@@ -24,7 +24,7 @@ public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
         builder.Property(t => t.IsActive).IsRequired();
         
         builder.HasOne(t => t.User).WithMany().HasForeignKey("UserId").IsRequired(false);
-        builder.HasOne(t => t.Branch).WithMany().HasForeignKey(t => t.BranchId);
+        builder.HasOne(t => t.Branch).WithMany(b => b.Teachers).HasForeignKey(t => t.BranchId);
 
         builder.HasMany(t => t.WorkingPeriods).WithOne().HasForeignKey(t => t.TeacherId);
         builder.HasMany(t => t.ScheduledWorkingPeriods).WithOne().HasForeignKey(t => t.TeacherId);

@@ -17,7 +17,7 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(r => r.SupportsRehearsal).IsRequired();
         builder.Property(r => r.IsActive).IsRequired();
         
-        builder.HasOne(r => r.Branch).WithMany().HasForeignKey("BranchId");
+        builder.HasOne(r => r.Branch).WithMany(b => b.Rooms).HasForeignKey(b => b.BranchId);
         
         builder.Metadata.FindNavigation(nameof(Room.RoomDisciplines))!.SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(Room.ScheduleSlots))!.SetPropertyAccessMode(PropertyAccessMode.Field);
