@@ -9,7 +9,7 @@ using RockSchool.WebApi.Models;
 
 namespace RockSchool.WebApi.Controllers
 {
-    [EnableCors("MyPolicy")]
+    // [EnableCors("MyPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class NoteController : Controller

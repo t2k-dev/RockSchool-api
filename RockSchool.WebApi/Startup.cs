@@ -121,13 +121,13 @@ public class Startup
         );
         services.AddCors(options =>
         {
-            options.AddPolicy("MyPolicy",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:3000")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
+            options.AddPolicy("MyPolicy", builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
         });
 
         services.AddSwaggerGen();
@@ -147,13 +147,11 @@ public class Startup
             });
         }
 
-        app.UseHttpsRedirection();
-
         app.UseRouting();
 
-        app.UseAuthorization();
+        app.UseCors("MyPolicy");
 
-        app.UseCors();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }

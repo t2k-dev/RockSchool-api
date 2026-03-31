@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers;
 
-[EnableCors("MyPolicy")]
+// [EnableCors("MyPolicy")]
 [Route("api/[controller]s")]
 [ApiController]
 public class StudentController(

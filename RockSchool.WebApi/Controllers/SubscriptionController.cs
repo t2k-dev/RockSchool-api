@@ -18,7 +18,7 @@ using RockSchool.BL.Attendances.Rescheduling;
 
 namespace RockSchool.WebApi.Controllers
 {
-    [EnableCors("MyPolicy")]
+    // [EnableCors("MyPolicy")]
     [ApiController]
     [Route("api/[controller]s")]
     public class SubscriptionController(

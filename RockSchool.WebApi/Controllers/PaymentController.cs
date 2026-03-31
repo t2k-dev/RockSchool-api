@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RockSchool.WebApi.Controllers
 {
-    [EnableCors("MyPolicy")]
+    // [EnableCors("MyPolicy")]
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : Controller

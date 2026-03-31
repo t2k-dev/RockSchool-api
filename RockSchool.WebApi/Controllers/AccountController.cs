@@ -10,7 +10,7 @@ using RockSchool.BL.Models;
 namespace RockSchool.WebApi.Controllers;
 
 [Route("api/[controller]")]
-[EnableCors("MyPolicy")]
+// [EnableCors("MyPolicy")]
 [ApiController]
 public class AccountController : Controller
 {

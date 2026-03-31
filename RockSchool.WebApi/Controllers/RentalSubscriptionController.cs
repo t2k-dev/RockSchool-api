@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RockSchool.WebApi.Controllers
 {
-    [EnableCors("MyPolicy")]
+    // [EnableCors("MyPolicy")]
     [ApiController]
     [Route("api/[controller]")]
     public class RentalSubscriptionController(IRentalSubscriptionService rentalSubscriptionService) : Controller
