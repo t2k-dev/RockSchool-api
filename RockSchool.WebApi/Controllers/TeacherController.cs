@@ -23,7 +23,7 @@ public class TeacherController(
     ITeacherService teacherService,
     ITeacherScreenDetailsService teacherScreenDetailsService,
     IAvailableTeachersService availableTeachersService
-    ) : Controller
+) : Controller
 {
     [HttpGet]
     public async Task<ActionResult> Get()
