@@ -30,7 +30,7 @@ public class TeacherController(
     {
         var teachers = await teacherService.GetAllTeachersAsync();
 
-        if (teachers.Length == 0) return NotFound();
+        // if (teachers.Length == 0) return NoContent();
 
         return Ok(teachers);
     }
