@@ -4,16 +4,9 @@ stages:
 docker-build:
   stage: docker-build
   image: docker:24.0.5
-  services:
-    - name: docker:24.0.5-dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
-    IMAGE_NAME: rockschool-api
-    IMAGE_TAG: $CI_COMMIT_SHORT_SHA
   script:
     - docker info
-    - docker build --pull -t $IMAGE_NAME:$IMAGE_TAG -f Dockerfile .
+    - docker build --pull -t rockschool-api:$CI_COMMIT_SHORT_SHA -t rockschool-api:latest -f Dockerfile .
   only:
     - main
     - master
