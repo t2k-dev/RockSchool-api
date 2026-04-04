@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.UserService;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Account;
