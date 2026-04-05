@@ -189,7 +189,8 @@ public class AttendanceQueryService(RockSchoolContext context) : IAttendanceQuer
                                 StartDate = x.Subscription.StartDate,
                                 Status = (int)x.Subscription.Status,
                                 SubscriptionType = (int)x.Subscription.SubscriptionType,
-                                DisciplineId = x.Subscription.DisciplineId
+                                DisciplineId = x.Subscription.DisciplineId,
+                                StudentId = x.Subscription.StudentId,
                             }
                         })
                     .ToList()
