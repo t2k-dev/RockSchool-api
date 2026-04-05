@@ -4,9 +4,13 @@ stages:
 docker-build:
   stage: docker-build
   image: docker:24.0.5
+  variables:
+    TZ: Asia/Almaty
   script:
+    - BUILD_TAG=$(date +"%Y%m%d-%H%M")
+    - echo "Using image tag: $BUILD_TAG"
     - docker info
-    - docker build --pull -t rockschool-api:$CI_COMMIT_SHORT_SHA -t rockschool-api:latest -f Dockerfile .
+    - docker build --pull -t rockschool-api:$BUILD_TAG -t rockschool-api:latest -f Dockerfile .
   only:
     - main
     - master
