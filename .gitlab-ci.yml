@@ -11,10 +11,7 @@ docker-build:
     - IMAGE_TAG="${BUILD_TAG}-${CI_COMMIT_SHORT_SHA}"
     - echo "Using image tag: $IMAGE_TAG"
     - docker info
-    - docker build --pull \
-      -t rockschool-api:$IMAGE_TAG \
-      -t rockschool-api:latest \
-      -f Dockerfile .
+    - docker build --pull -t rockschool-api:$IMAGE_TAG -t rockschool-api:latest -f Dockerfile .
   only:
     - main
     - master
