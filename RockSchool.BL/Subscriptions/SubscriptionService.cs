@@ -164,10 +164,10 @@ namespace RockSchool.BL.Subscriptions
         public async Task ReduceAttendanceCount(Guid subscriptionId)
         {
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+            if (subscription == null)
+                throw new InvalidOperationException($"Subscription with id {subscriptionId} not found");
             
             subscription.ReduceAttendanceCount();
-
-            subscriptionRepository.Update(subscription);
         }
 
         private static void ModifySubscriptionAttributes(Subscription updatedSubscription, Subscription existingEntity)

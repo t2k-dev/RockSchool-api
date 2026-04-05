@@ -28,6 +28,8 @@ namespace RockSchool.BL.Attendances.Rescheduling
         {
             
             var attendance = await attendanceService.GetAttendanceAsync(attendanceId);
+            if (attendance == null)
+                throw new InvalidOperationException($"Attendance with id {attendanceId} not found");
 
             // Create new attendance
             var newAttendance = Attendance.Create(
@@ -64,6 +66,8 @@ namespace RockSchool.BL.Attendances.Rescheduling
         {
             // Assign new schedule to subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+            if (subscription == null)
+                throw new InvalidOperationException($"Subscription with id {subscriptionId} not found");
 
             if (subscription.ScheduleId.HasValue)
             {
@@ -73,8 +77,6 @@ namespace RockSchool.BL.Attendances.Rescheduling
             var scheduleId = await scheduleService.AddScheduleAsync(scheduleSlotDtos);
 
             subscription.AssignSchedule(scheduleId);
-
-            subscriptionRepository.Update(subscription);
 
             // Regenerate attendances
             var attendances = await attendanceRepository.GetByBandIdAsync(subscriptionId);
@@ -87,6 +89,8 @@ namespace RockSchool.BL.Attendances.Rescheduling
         {
             // Assign new schedule to band
             var band = await bandRepository.GetByIdAsync(bandId);
+            if (band == null)
+                throw new InvalidOperationException($"Band with id {bandId} not found");
 
             if (band.ScheduleId.HasValue)
             {
@@ -96,8 +100,6 @@ namespace RockSchool.BL.Attendances.Rescheduling
             var scheduleId = await scheduleService.AddScheduleAsync(scheduleSlotDtos);
 
             band.AssignSchedule(scheduleId);
-
-            bandRepository.Update(band);
 
             // Regenerate attendances
             var attendances = await attendanceRepository.GetByBandIdAsync(bandId);
@@ -123,7 +125,6 @@ namespace RockSchool.BL.Attendances.Rescheduling
                 var slot = AttendanceScheduleHelper.GetNextAvailableSlot(startingDate, orderedScheduleSlots);
 
                 attendance.UpdateSchedule(slot.StartDate, slot.EndDate, slot.RoomId);
-                attendanceRepository.Update(attendance);
 
                 startingDate = slot.EndDate;
             }

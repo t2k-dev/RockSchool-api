@@ -14,8 +14,12 @@ public class AttendeeService(
     public async Task<bool> UpdateStatus(Guid attendanceId, Guid attendeeId, int attendeeStatus)
     {
         var attendance = await attendanceRepository.GetAsync(attendanceId);
+        if (attendance == null)
+            return false;
 
         var attendee = attendance.Attendees.SingleOrDefault(a => a.AttendeeId == attendeeId);
+        if (attendee == null)
+            return false;
 
         switch ((AttendeeStatus)attendeeStatus)
         {
@@ -28,6 +32,8 @@ public class AttendeeService(
                 attendee.MarkAsMissed();
 
                 var subscription = await subscriptionRepository.GetAsync(attendee.SubscriptionId);
+                if (subscription == null)
+                    return false;
 
                 if (attendance.AttendanceType == AttendanceType.TrialLesson)
                 {
@@ -37,8 +43,6 @@ public class AttendeeService(
                 {
                     subscription.ReduceAttendanceCount();
                 }
-
-                subscriptionRepository.Update(subscription);
 
                 break;
         }
@@ -51,9 +55,6 @@ public class AttendeeService(
         {
             attendance.MarkAsAttended();
         }
-
-        attendanceRepository.Update(attendance);
-
 
         await unitOfWork.SaveChangesAsync();
 

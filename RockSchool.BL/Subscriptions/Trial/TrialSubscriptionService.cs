@@ -69,16 +69,16 @@ namespace RockSchool.BL.Subscriptions.Trial
         {
             // Update attendance
             var attendance = await attendanceRepository.GetAsync(attendanceId);
+            if (attendance == null)
+                throw new InvalidOperationException($"Attendance with id {attendanceId} not found");
             attendance.MarkAsAttended(statusReason);
-
-            attendanceRepository.Update(attendance);
 
             // Update subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+            if (subscription == null)
+                throw new InvalidOperationException($"Subscription with id {subscriptionId} not found");
 
             subscription.CompleteTrial(TrialDecision.Positive);
-
-            subscriptionRepository.Update(subscription);
 
             await unitOfWork.SaveChangesAsync();
         }
@@ -87,11 +87,10 @@ namespace RockSchool.BL.Subscriptions.Trial
         {
             // Update subscription
             var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+            if (subscription == null)
+                throw new InvalidOperationException($"Subscription with id {subscriptionId} not found");
 
             subscription.CompleteTrial(TrialDecision.Negative, statusReason);
-
-            subscriptionRepository.Update(subscription);
-
 
             await unitOfWork.SaveChangesAsync();
         }

@@ -27,6 +27,8 @@ namespace RockSchool.BL.Services.AttendanceService
         private async Task<Attendance> SubmitSingleAttendance(Guid attendanceId, AttendanceStatus status, string statusReason)
         {
             var attendance = await attendanceRepository.GetAsync(attendanceId);
+            if (attendance == null)
+                throw new InvalidOperationException($"Attendance with id {attendanceId} not found");
 
             switch (status)
             {
@@ -39,8 +41,6 @@ namespace RockSchool.BL.Services.AttendanceService
                 default:
                     throw new ArgumentOutOfRangeException(nameof(status), status, null);
             }
-            
-            attendanceRepository.Update(attendance);
 
             return attendance;
         }

@@ -13,21 +13,17 @@ namespace RockSchool.BL.Subscriptions.Payments
 
         public async Task Pay(Guid subscriptionId, decimal amount, int paymentType, DateTime paidOn)
         {
-            // Add payment
+            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
+            if (subscription == null)
+                throw new InvalidOperationException($"Subscription with id {subscriptionId} not found");
+
             var payment = Payment.Create(
                 amount,
                 paidOn.ToUniversalTime(),
                 (PaymentType)paymentType,
                 subscriptionId);
 
-            await paymentRepository.AddAsync(payment);
-
-            // Update subscription
-            var subscription = await subscriptionRepository.GetAsync(subscriptionId);
-
             subscription.RecordPayment(payment);
-
-            subscriptionRepository.Update(subscription);
 
             await unitOfWork.SaveChangesAsync();
         }

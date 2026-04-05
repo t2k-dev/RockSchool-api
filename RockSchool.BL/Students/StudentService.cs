@@ -15,10 +15,10 @@ public class StudentService(
     public async Task UpdatePersonalDataAsync(Guid studentId, PersonalDataDto studentDto)
     {
         var student = await studentRepository.GetByIdAsync(studentId);
+        if (student == null)
+            throw new InvalidOperationException("StudentEntity not found.");
 
         student.UpdateInfo(studentDto.FirstName, studentDto.LastName, studentDto.Sex, studentDto.BirthDate, studentDto.Phone, studentDto.Level);
-
-        studentRepository.Update(student);
 
         await unitOfWork.SaveChangesAsync();
     }

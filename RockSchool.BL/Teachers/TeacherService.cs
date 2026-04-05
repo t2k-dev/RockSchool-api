@@ -116,8 +116,7 @@ public class TeacherService(
         }
 
         existingTeacher.SetActiveStatus(isActive);
-
-        teacherRepository.Update(existingTeacher);
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteTeacherAsync(Guid id)

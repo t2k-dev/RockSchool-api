@@ -71,8 +71,6 @@ public class BandService(
         if (band == null) return null;
         
         band.Activate();
-        
-        bandRepository.Update(band);
 
         await unitOfWork.SaveChangesAsync();
 
@@ -85,8 +83,8 @@ public class BandService(
         if (band == null) return null;
         
         band.Deactivate();
-        
-        bandRepository.Update(band);
+
+        await unitOfWork.SaveChangesAsync();
 
         return band;
     }
