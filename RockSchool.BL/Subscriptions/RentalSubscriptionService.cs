@@ -50,7 +50,6 @@ namespace RockSchool.BL.Subscriptions
                 
                 // Update subscription to reference the schedule
                 subscription.AssignSchedule(schedule.ScheduleId);
-                subscriptionRepository.Update(subscription);
             }
 
             // Step 3: Attendances
