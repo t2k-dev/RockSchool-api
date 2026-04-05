@@ -45,6 +45,8 @@ public class SubscriptionInfoDto
     public int Status { get; set; }
     public int SubscriptionType { get; set; }
     public int? DisciplineId { get; set; }
+    public Guid? TeacherId { get; set; }
+    public Guid StudentId { get; set; }
 }
 
 public class TeacherInfoDto
