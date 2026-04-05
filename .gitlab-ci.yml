@@ -7,10 +7,14 @@ docker-build:
   variables:
     TZ: Asia/Almaty
   script:
-    - BUILD_TAG=$(date +"%Y%m%d-%H%M")
-    - echo "Using image tag: $BUILD_TAG"
+    - BUILD_TAG=$(date +"%Y%m%d-%H%M%S")
+    - IMAGE_TAG="${BUILD_TAG}-${CI_COMMIT_SHORT_SHA}"
+    - echo "Using image tag: $IMAGE_TAG"
     - docker info
-    - docker build --pull -t rockschool-api:$BUILD_TAG -t rockschool-api:latest -f Dockerfile .
+    - docker build --pull \
+      -t rockschool-api:$IMAGE_TAG \
+      -t rockschool-api:latest \
+      -f Dockerfile .
   only:
     - main
     - master
