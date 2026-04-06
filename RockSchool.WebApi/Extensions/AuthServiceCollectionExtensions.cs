@@ -20,11 +20,19 @@ public static class AuthServiceCollectionExtensions
 {
     public static IServiceCollection AddRockSchoolAuth(this IServiceCollection services, IConfiguration configuration)
     {
+        var authBehaviorOptions = configuration.GetSection(AuthBehaviorOptions.SectionName).Get<AuthBehaviorOptions>()
+                                  ?? new AuthBehaviorOptions();
+
         services
             .AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
             .ValidateDataAnnotations()
             .Validate(options => options.ExpirationInMinutes > 0, "JWT expiration must be greater than zero.")
+            .ValidateOnStart();
+
+        services
+            .AddOptions<AuthBehaviorOptions>()
+            .Bind(configuration.GetSection(AuthBehaviorOptions.SectionName))
             .ValidateOnStart();
 
         services
@@ -82,24 +90,44 @@ public static class AuthServiceCollectionExtensions
             })
             .AddJwtBearer();
 
-        services.AddAuthorization(options =>
+        if (authBehaviorOptions.UseAuthorization)
         {
-            options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
+            services.AddAuthorization(options =>
+            {
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+
+                options.AddPolicy(AuthorizationPolicyNames.AuthenticatedUser, policy =>
+                    policy.RequireAuthenticatedUser());
+
+                options.AddPolicy(AuthorizationPolicyNames.Admin, policy =>
+                    policy.RequireRole(RockSchoolRoles.Admin));
+
+                options.AddPolicy(AuthorizationPolicyNames.Teacher, policy =>
+                    policy.RequireRole(RockSchoolRoles.Teacher));
+
+                options.AddPolicy(AuthorizationPolicyNames.Student, policy =>
+                    policy.RequireRole(RockSchoolRoles.Student));
+            });
+        }
+        else
+        {
+            var allowAllPolicy = new AuthorizationPolicyBuilder()
+                .RequireAssertion(_ => true)
                 .Build();
 
-            options.AddPolicy(AuthorizationPolicyNames.AuthenticatedUser, policy =>
-                policy.RequireAuthenticatedUser());
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = allowAllPolicy;
+                options.FallbackPolicy = allowAllPolicy;
 
-            options.AddPolicy(AuthorizationPolicyNames.Admin, policy =>
-                policy.RequireRole(RockSchoolRoles.Admin));
-
-            options.AddPolicy(AuthorizationPolicyNames.Teacher, policy =>
-                policy.RequireRole(RockSchoolRoles.Teacher));
-
-            options.AddPolicy(AuthorizationPolicyNames.Student, policy =>
-                policy.RequireRole(RockSchoolRoles.Student));
-        });
+                options.AddPolicy(AuthorizationPolicyNames.AuthenticatedUser, allowAllPolicy);
+                options.AddPolicy(AuthorizationPolicyNames.Admin, allowAllPolicy);
+                options.AddPolicy(AuthorizationPolicyNames.Teacher, allowAllPolicy);
+                options.AddPolicy(AuthorizationPolicyNames.Student, allowAllPolicy);
+            });
+        }
 
         return services;
     }
