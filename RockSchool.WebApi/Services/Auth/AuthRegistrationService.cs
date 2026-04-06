@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using RockSchool.BL.Services.EmailService;
 using RockSchool.Domain.Entities;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Account;
@@ -9,7 +8,6 @@ namespace RockSchool.WebApi.Services.Auth;
 
 public class AuthRegistrationService : IAuthRegistrationService
 {
-    private readonly IEmailService _emailService;
     private readonly IPasswordGenerator _passwordGenerator;
     private readonly IUserAccountService _userAccountService;
     private readonly ILookupNormalizer _lookupNormalizer;
@@ -19,14 +17,12 @@ public class AuthRegistrationService : IAuthRegistrationService
         UserManager<User> userManager,
         ILookupNormalizer lookupNormalizer,
         IUserAccountService userAccountService,
-        IPasswordGenerator passwordGenerator,
-        IEmailService emailService)
+        IPasswordGenerator passwordGenerator)
     {
         _userManager = userManager;
         _lookupNormalizer = lookupNormalizer;
         _userAccountService = userAccountService;
         _passwordGenerator = passwordGenerator;
-        _emailService = emailService;
     }
 
     public async Task<RegisterResponse> RegisterAsync(RegisterUserRequestDto request, CancellationToken cancellationToken = default)
@@ -38,7 +34,7 @@ public class AuthRegistrationService : IAuthRegistrationService
             throw new InvalidOperationException("User with this login already exists.");
 
         var generatedPassword = _passwordGenerator.Generate();
-        var user = User.Create(login, role.RoleId);
+        var user = User.Create(login, request.FirstName, request.LastName, role.RoleId);
 
         user.Email = login;
         user.NormalizedEmail = _lookupNormalizer.NormalizeEmail(login);
@@ -47,20 +43,13 @@ public class AuthRegistrationService : IAuthRegistrationService
         if (!createResult.Succeeded)
             throw new InvalidOperationException(string.Join("; ", createResult.Errors.Select(error => error.Description)));
 
-        try
-        {
-            await _emailService.SendPasswordEmailAsync(login, login, generatedPassword);
-        }
-        catch
-        {
-            await _userManager.DeleteAsync(user);
-            throw;
-        }
-
         return new RegisterResponse
         {
             Login = login,
-            Message = "Account created. The generated password was sent to the specified email."
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Password = generatedPassword,
+            Message = "Account created. Use the generated password to sign in."
         };
     }
 }

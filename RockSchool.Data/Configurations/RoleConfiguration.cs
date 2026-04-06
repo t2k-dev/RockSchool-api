@@ -13,5 +13,12 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         
         builder.Property(r => r.RoleName).IsRequired().HasMaxLength(100);
         builder.Property(r => r.IsActive).IsRequired();
+
+        builder.HasData(new
+        {
+            RoleId = 4,
+            RoleName = "SuperAdmin",
+            IsActive = true
+        });
     }
 }

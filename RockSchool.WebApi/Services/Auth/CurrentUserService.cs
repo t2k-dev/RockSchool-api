@@ -32,6 +32,8 @@ public class CurrentUserService : ICurrentUserService
         {
             UserId = user.Id,
             Login = user.Login,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
             RoleId = user.RoleId,
             Role = user.Role.RoleName,
             IsActive = user.IsActive

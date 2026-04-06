@@ -37,6 +37,8 @@ public class JwtTokenService : IJwtTokenService
         {
             UserId = user.Id,
             Login = user.Login,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
             RoleId = user.RoleId,
             Role = roleName,
             Token = token,
@@ -50,7 +52,10 @@ public class JwtTokenService : IJwtTokenService
         yield return new Claim(ClaimTypes.NameIdentifier, user.Id.ToString());
         yield return new Claim(ClaimTypes.Name, user.Login);
         yield return new Claim(ClaimTypes.Email, user.Email ?? user.Login);
+        yield return new Claim(AuthClaimTypes.Login, user.Login);
         yield return new Claim(AuthClaimTypes.RoleId, user.RoleId.ToString(CultureInfo.InvariantCulture));
+        yield return new Claim(ClaimTypes.GivenName, user.FirstName);
+        yield return new Claim(ClaimTypes.Surname, user.LastName);
 
         if (!string.IsNullOrWhiteSpace(roleName))
             yield return new Claim(ClaimTypes.Role, roleName);

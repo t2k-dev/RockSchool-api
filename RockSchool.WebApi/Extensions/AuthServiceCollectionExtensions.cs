@@ -101,6 +101,9 @@ public static class AuthServiceCollectionExtensions
                 options.AddPolicy(AuthorizationPolicyNames.AuthenticatedUser, policy =>
                     policy.RequireAuthenticatedUser());
 
+                options.AddPolicy(AuthorizationPolicyNames.SuperAdmin, policy =>
+                    policy.RequireRole(RockSchoolRoles.SuperAdmin));
+
                 options.AddPolicy(AuthorizationPolicyNames.Admin, policy =>
                     policy.RequireRole(RockSchoolRoles.Admin));
 
@@ -123,6 +126,7 @@ public static class AuthServiceCollectionExtensions
                 options.FallbackPolicy = allowAllPolicy;
 
                 options.AddPolicy(AuthorizationPolicyNames.AuthenticatedUser, allowAllPolicy);
+                options.AddPolicy(AuthorizationPolicyNames.SuperAdmin, allowAllPolicy);
                 options.AddPolicy(AuthorizationPolicyNames.Admin, allowAllPolicy);
                 options.AddPolicy(AuthorizationPolicyNames.Teacher, allowAllPolicy);
                 options.AddPolicy(AuthorizationPolicyNames.Student, allowAllPolicy);
