@@ -1,31 +1,40 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
+
 namespace RockSchool.Domain.Entities;
 
-public class User
+public class User : IdentityUser<Guid>
 {
-    public Guid UserId { get; private set; }
-    public string Login { get; private set; }
-    public string PasswordHash { get; private set; }
+    [NotMapped]
+    public Guid UserId => Id;
+
+    [NotMapped]
+    public string Login => UserName ?? string.Empty;
+
     public int RoleId { get; private set; }
-    public Role Role { get; private set; }
+    public Role Role { get; private set; } = null!;
     public bool IsActive { get; private set; }
 
-    private User() { }
+    private User()
+    {
+    }
 
-    public static User Create(string login, string passwordHash, int roleId)
+    public static User Create(string login, int roleId)
     {
         if (string.IsNullOrWhiteSpace(login))
             throw new ArgumentException("Login is required", nameof(login));
 
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new ArgumentException("Password hash is required", nameof(passwordHash));
+        var normalizedLogin = login.Trim();
 
         return new User
         {
-            UserId = Guid.NewGuid(),
-            Login = login,
-            PasswordHash = passwordHash,
+            Id = Guid.NewGuid(),
+            UserName = normalizedLogin,
+            NormalizedUserName = normalizedLogin.ToUpperInvariant(),
             RoleId = roleId,
-            IsActive = true
+            IsActive = true,
+            SecurityStamp = Guid.NewGuid().ToString("N"),
+            ConcurrencyStamp = Guid.NewGuid().ToString("N")
         };
     }
 
@@ -35,6 +44,7 @@ public class User
             throw new ArgumentException("Password hash is required", nameof(newPasswordHash));
 
         PasswordHash = newPasswordHash;
+        SecurityStamp = Guid.NewGuid().ToString("N");
     }
 
     public void ChangeRole(int roleId)
@@ -45,10 +55,14 @@ public class User
     public void Activate()
     {
         IsActive = true;
+        LockoutEnabled = false;
+        LockoutEnd = null;
     }
 
     public void Deactivate()
     {
         IsActive = false;
+        LockoutEnabled = true;
+        LockoutEnd = DateTimeOffset.MaxValue;
     }
 }

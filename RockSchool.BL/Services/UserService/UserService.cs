@@ -48,7 +48,7 @@ public class UserService : IUserService
 
         var userDto = new UserDto
         {
-            UserId = user.UserId,
+            UserId = user.Id,
             Login = user.Login,
             PasswordHash = user.PasswordHash,
             RoleId = user.RoleId,
@@ -87,11 +87,7 @@ public class UserService : IUserService
     {
         throw new NotImplementedException();
         /*
-        return new User
-        {
-            Login = userDto.Login,
-            RoleId = userDto.RoleId
-        };
+        return User.Create(userDto.Login, userDto.RoleId);
         */
     }
 }

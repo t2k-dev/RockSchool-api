@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(Guid userId)
     {
-        return await _context.Users.SingleOrDefaultAsync(u => u.UserId == userId);
+        return await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
     }
 
     public async Task AddAsync(User user)

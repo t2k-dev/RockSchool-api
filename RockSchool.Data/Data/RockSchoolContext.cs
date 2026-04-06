@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RockSchool.Domain.Entities;
 using RockSchool.Domain.Enums;
@@ -6,7 +8,7 @@ using RockSchool.Domain.Teachers;
 
 namespace RockSchool.Data.Data;
 
-public class RockSchoolContext : DbContext
+public class RockSchoolContext : IdentityUserContext<User, Guid, IdentityUserClaim<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>>
 {
     public RockSchoolContext(DbContextOptions<RockSchoolContext> options) : base(options)
     {
@@ -21,7 +23,6 @@ public class RockSchoolContext : DbContext
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Attendee> Attendees { get; set; }
     public DbSet<Role> Roles { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<TeacherDiscipline> TeacherDisciplines { get; set; }
@@ -36,7 +37,7 @@ public class RockSchoolContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Apply all entity configurations
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(RockSchoolContext).Assembly);
     }
 }

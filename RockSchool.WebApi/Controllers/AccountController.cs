@@ -1,48 +1,61 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RockSchool.BL.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Account;
-using System;
-using System.Threading.Tasks;
-using RockSchool.BL.Models;
+using RockSchool.WebApi.Security;
+using RockSchool.WebApi.Services.Auth;
 
 namespace RockSchool.WebApi.Controllers;
 
 [Route("api/[controller]")]
-// [EnableCors("MyPolicy")]
 [ApiController]
-public class AccountController : Controller
+public class AccountController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly IAuthLoginService _authLoginService;
+    private readonly IAuthRegistrationService _authRegistrationService;
 
-    public AccountController(IUserService userService)
+    public AccountController(
+        IAuthRegistrationService authRegistrationService,
+        IAuthLoginService authLoginService,
+        ICurrentUserService currentUserService)
     {
-        _userService = userService;
+        _authRegistrationService = authRegistrationService;
+        _authLoginService = authLoginService;
+        _currentUserService = currentUserService;
     }
 
-    // Not in use
+    [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<ActionResult> Register([FromBody] RegisterUserRequestDto requestDto)
+    public async Task<ActionResult<RegisterResponse>> Register(
+        [FromBody] RegisterUserRequestDto requestDto,
+        CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid) throw new Exception("Incorrect model for registration.");
+        if (!ModelState.IsValid)
+            throw new ArgumentException("Incorrect model for registration.");
 
-        var serviceDto = new UserDto()
-        {
-            Login = requestDto.Login,
-            RoleId = requestDto.RoleId
-        };
-
-        await _userService.AddUserAsync(serviceDto);
-
-        return Ok();
+        var response = await _authRegistrationService.RegisterAsync(requestDto, cancellationToken);
+        return Ok(response);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult> Login([FromBody] LoginRequest requestDto)
+    public async Task<ActionResult<AuthResponse>> Login(
+        [FromBody] LoginRequest requestDto,
+        CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid) throw new Exception("Incorrect model for registration.");
+        if (!ModelState.IsValid)
+            throw new ArgumentException("Incorrect model for login.");
 
+        var response = await _authLoginService.LoginAsync(requestDto, cancellationToken);
+        return Ok(response);
+    }
 
-        return Ok("tutBudetToken");
+    [Authorize(Policy = AuthorizationPolicyNames.AuthenticatedUser)]
+    [HttpGet("me")]
+    public async Task<ActionResult<CurrentUserResponse>> Me(CancellationToken cancellationToken)
+    {
+        var response = await _currentUserService.GetCurrentUserAsync(User, cancellationToken);
+        return Ok(response);
     }
 }
