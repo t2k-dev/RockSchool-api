@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RockSchool.BL.Services.SubscriptionService;
 using RockSchool.BL.Services.SubscriptionDetailsService;
 using RockSchool.WebApi.Models;
 using RockSchool.WebApi.Models.Students;
 using RockSchool.WebApi.Models.Subscriptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using RockSchool.BL.Subscriptions.Trial;
 using RockSchool.WebApi.Helpers;
 using RockSchool.BL.Subscriptions.Payments;
