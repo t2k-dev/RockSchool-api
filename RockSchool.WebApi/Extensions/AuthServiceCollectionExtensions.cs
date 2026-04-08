@@ -55,6 +55,7 @@ public static class AuthServiceCollectionExtensions
         services.AddScoped<IUserAccountService, UserAccountService>();
         services.AddScoped<IAuthRegistrationService, AuthRegistrationService>();
         services.AddScoped<IAuthLoginService, AuthLoginService>();
+        services.AddScoped<IAuthPasswordService, AuthPasswordService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddSingleton<IPasswordGenerator, PasswordGenerator>();

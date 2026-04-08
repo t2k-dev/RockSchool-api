@@ -13,15 +13,18 @@ public class AccountController : ControllerBase
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IAuthLoginService _authLoginService;
+    private readonly IAuthPasswordService _authPasswordService;
     private readonly IAuthRegistrationService _authRegistrationService;
 
     public AccountController(
         IAuthRegistrationService authRegistrationService,
         IAuthLoginService authLoginService,
+        IAuthPasswordService authPasswordService,
         ICurrentUserService currentUserService)
     {
         _authRegistrationService = authRegistrationService;
         _authLoginService = authLoginService;
+        _authPasswordService = authPasswordService;
         _currentUserService = currentUserService;
     }
 
@@ -57,5 +60,18 @@ public class AccountController : ControllerBase
     {
         var response = await _currentUserService.GetCurrentUserAsync(User, cancellationToken);
         return Ok(response);
+    }
+
+    [Authorize(Policy = AuthorizationPolicyNames.AuthenticatedUser)]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(
+        [FromBody] ChangePasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            throw new ArgumentException("Incorrect model for changing password.");
+
+        await _authPasswordService.ChangePasswordAsync(User, request, cancellationToken);
+        return NoContent();
     }
 }
