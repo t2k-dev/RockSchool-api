@@ -43,15 +43,20 @@ public class AccountController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Login(
-        [FromBody] LoginRequest requestDto,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest requestDto, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
             throw new ArgumentException("Incorrect model for login.");
 
         var response = await _authLoginService.LoginAsync(requestDto, cancellationToken);
         return Ok(response);
+    }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult<AuthResponse>> Logout([FromBody] string userName, CancellationToken cancellationToken)
+    {
+        // TODO: Implement
+        return Ok();
     }
 
     [Authorize(Policy = AuthorizationPolicyNames.AuthenticatedUser)]
